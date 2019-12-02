@@ -1,4 +1,4 @@
 
 const functions = require('firebase-functions');
 
-exports.requestCompany = require("./src/requestCompany");
+exports.requestCompany = functions.https.onRequest(require("./src/requestCompany"));
