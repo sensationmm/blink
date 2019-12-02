@@ -5,7 +5,7 @@ const somethingServer = express();
 
 somethingServer.use(cors());
 
-somethingServer.get('/something', function (req, res) {
+somethingServer.get('/something', function (req: any, res: any) {
     res.send("something!")
 })
 

@@ -1,2 +1,2 @@
 
-exports.requestCompany = require("src/requestCompany");
+exports.requestCompany = require("./src/requestCompany");

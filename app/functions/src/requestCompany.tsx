@@ -1,12 +1,13 @@
-const cors = require('cors');
-const express = require('express');
+
+const companyCors = require('cors');
+const companyEXpress = require('express');
 const request = require('request');
 
-const companyServer = express();
+const companyServer = companyEXpress();
 
-companyServer.use(cors());
+companyServer.use(companyCors());
 
-companyServer.get('/company/:companyId/', function (req, res) {
+companyServer.get('/company/:companyId/', function (req: any, res: any) {
 
     const { companyId } = req.params;
 
@@ -17,7 +18,7 @@ companyServer.get('/company/:companyId/', function (req, res) {
         }
     };
 
-    request(headerOption, function (error, response, body) {
+    request(headerOption, function (error: any, response: any, body: any) {
         // console.log("Body:", body);
         res.send(JSON.parse(body))
     }
