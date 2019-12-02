@@ -28,6 +28,6 @@ jobs:
       #   run: yarn add tslint
       - name: Deploy to Firebase
         working-directory: ./app
-        run: firebase deploy --token $FIREBASE_TOKEN
+        run: ./node_modules/.bin/firebase deploy --token $FIREBASE_TOKEN
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
