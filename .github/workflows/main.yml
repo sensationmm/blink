@@ -34,7 +34,7 @@ jobs:
         run: npm install firebase-tools
       - name: LS
         working-directory: ./app
-        run: echo ls
+        run: ls
       - name: Deploy to Firebase
         # uses: w9jds/firebase-action@master
         working-directory: ./app
