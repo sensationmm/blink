@@ -18,7 +18,7 @@ jobs:
       - name: Build
         working-directory: ./app
         run: yarn run build
-      - name: Deploy functions to Firebase
+      - name: Deploy hosting to Firebase
         working-directory: ./app
         run: ./node_modules/.bin/firebase deploy --only hosting --token $FIREBASE_TOKEN
         env:
@@ -31,11 +31,3 @@ jobs:
         run: ./node_modules/.bin/firebase deploy --only functions --token $FIREBASE_TOKEN
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-      # - name: Install tslint
-      #   working-directory: ./app
-      #   run: yarn add tslint
-      # - name: Deploy functions to Firebase
-      #   working-directory: ./app
-      #   run: ./node_modules/.bin/firebase deploy --only functions --token $FIREBASE_TOKEN
-      #   env:
-      #     FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
