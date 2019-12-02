@@ -24,6 +24,9 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Install Firebase Tools
+        working-directory: ./app
+        run: npm install firebase-tools
       - name: Deploy hosting to Firebase
         working-directory: ./app
         run: ./node_modules/.bin/firebase deploy --only hosting -p ./app/build --token $FIREBASE_TOKEN
