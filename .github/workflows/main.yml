@@ -40,5 +40,7 @@ jobs:
         # run: firebase deploy --token FIREBASE_TOKEN --only hosting --non-interactive
         # with:
         #   args: deploy --only hosting
+      - name: Deploy functions to Firebase
+        run: ./node_modules/.bin/firebase deploy --only functions -p build --token $FIREBASE_TOKEN
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
