@@ -24,8 +24,8 @@ jobs:
   #   needs: build
   #   runs-on: ubuntu-latest
   #   steps:
-      - name: Checkout Repo
-        uses: actions/checkout@master
+      # - name: Checkout Repo
+      #   uses: actions/checkout@master
       # - name: Install Firebase CLI
       #   working-directory: ./app
       #   run: npm install -g firebase-cli
