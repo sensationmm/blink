@@ -24,6 +24,7 @@ jobs:
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
       - name: Deploy functions to Firebase
+        working-directory: ./app
         run: ./node_modules/.bin/firebase deploy --only functions -p build --token $FIREBASE_TOKEN
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
