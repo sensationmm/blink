@@ -19,10 +19,10 @@ jobs:
         working-directory: ./app
         run: npm run build
 
-  deploy:
-    name: Deploy
-    needs: build
-    runs-on: ubuntu-latest
+  # deploy:
+  #   name: Deploy
+  #   needs: build
+  #   runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
         uses: actions/checkout@master
