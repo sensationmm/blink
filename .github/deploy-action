@@ -1,0 +1,6 @@
+action "Deploy" {
+  uses = "./.github/firebase-deploy"
+  args = "--only hosting"
+  secrets = ["FIREBASE_AUTH_TOKEN"]
+  needs = ["Build"]
+}
