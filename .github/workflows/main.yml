@@ -14,10 +14,10 @@ jobs:
         uses: actions/checkout@master
       - name: Install Dependencies
         working-directory: ./app
-        run: npm install
+        run: yarn install
       - name: Build
         working-directory: ./app
-        run: npm run build
+        run: yarn run build
 
   # deploy:
   #   name: Deploy
@@ -29,9 +29,9 @@ jobs:
       # - name: Install Firebase CLI
       #   working-directory: ./app
       #   run: npm install -g firebase-cli
-      - name: Install Firebase Tools
-        working-directory: ./app
-        run: npm install firebase-tools
+      # - name: Install Firebase Tools
+      #   working-directory: ./app
+      #   run: npm install firebase-tools
       - name: LS
         working-directory: ./app
         run: ls
