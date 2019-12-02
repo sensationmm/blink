@@ -29,13 +29,14 @@ jobs:
       # - name: Install Firebase CLI
       #   working-directory: ./app
       #   run: npm install -g firebase-cli
-      - name: Install Firebase Tools
-        working-directory: ./app
-        run: npm install firebase-tools
+      # - name: Install Firebase Tools
+      #   working-directory: ./app
+      #   run: npm install firebase-tools
       - name: Deploy to Firebase
         # uses: w9jds/firebase-action@master
         working-directory: ./app
-        run: ./node_modules/.bin/firebase deploy --only hosting -p ./build -P production --token=$FIREBASE_TOKEN
+        # run: ./node_modules/.bin/firebase deploy --only hosting -p ./build -P production --token=$FIREBASE_TOKEN
+        run: ./node_modules/.bin/firebase deploy --only hosting --token FIREBASE_TOKEN
         # run: firebase deploy --token FIREBASE_TOKEN --only hosting --non-interactive
         # with:
         #   args: deploy --only hosting
