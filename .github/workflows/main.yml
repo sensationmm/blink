@@ -25,11 +25,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@master      
+        uses: actions/checkout@master
+      - name: Install Firebase CLI
+        working-directory: ./app
+        run: npm install firebase-cli
       - name: Deploy to Firebase
         # uses: w9jds/firebase-action@master
         working-directory: ./app
-        run: npm install firebase-cli
         run: firebase deploy --token FIREBASE_TOKEN --only hosting --non-interactive
         # with:
         #   args: deploy --only hosting
