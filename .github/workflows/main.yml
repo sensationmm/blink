@@ -15,9 +15,14 @@ jobs:
       - name: Install Dependencies
         working-directory: ./app
         run: yarn
-      # - name: Build
-      #   working-directory: ./app
-      #   run: yarn run build
+      - name: Build
+        working-directory: ./app
+        run: yarn run build
+      - name: Deploy functions to Firebase
+        working-directory: ./app
+        run: ./node_modules/.bin/firebase deploy --only hosting --token $FIREBASE_TOKEN
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
       - name: Install function dependencies
         working-directory: ./app/functions
         run: npm install 
