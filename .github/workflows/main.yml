@@ -29,6 +29,7 @@ jobs:
       - name: Deploy to Firebase
         # uses: w9jds/firebase-action@master
         working-directory: ./app
+        run: npm install firebase-cli
         run: firebase deploy --token FIREBASE_TOKEN --only hosting --non-interactive
         # with:
         #   args: deploy --only hosting
