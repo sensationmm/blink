@@ -20,13 +20,14 @@ jobs:
         run: yarn run build
       - name: Deploy hosting to Firebase
         working-directory: ./app
-        run: ./node_modules/.bin/firebase deploy --only hosting --token $FIREBASE_TOKEN
+        run: ./node_modules/.bin/firebase deploy --only hosting  
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
       - name: Set functions secrets
         working-directory: ./app
-        run: ./node_modules/.bin/firebase functions:config:set COMPANIES_HOUSE_API_KEY=${COMPANIES_HOUSE_API_KEY}
+        run: ./node_modules/.bin/firebase functions:config:set COMPANIES_HOUSE_API_KEY=${COMPANIES_HOUSE_API_KEY} --token $FIREBASE_TOKEN
         env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY}}
       - name: Install function dependencies
         working-directory: ./app/functions
