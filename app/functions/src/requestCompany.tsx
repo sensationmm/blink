@@ -9,11 +9,9 @@ companyServer.use(companyCors());
 
 companyServer.get('/:companyId', function (req: any, res: any) {
 
-    console.log("----- request company XXX ------")
-
-    console.log(req.params)
-
     const { companyId } = req.params;
+
+    console.log("companyId", companyId);
 
     const headerOption = {
         "url": `https://api.companieshouse.gov.uk/company/${companyId}`,
