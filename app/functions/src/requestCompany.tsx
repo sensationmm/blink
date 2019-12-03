@@ -7,9 +7,13 @@ const companyServer = companyExpress();
 
 companyServer.use(companyCors());
 
-companyServer.get('/', function (req: any, res: any) {
+companyServer.get('*', function (req: any, res: any) {
 
     console.log("----- request company ------")
+
+    console.log(req.param)
+
+    console.log(process.env)
 
     const { companyId } = req.params;
 
