@@ -11,7 +11,7 @@ companyServer.get('*', function (req: any, res: any) {
 
     console.log("----- request company ------")
 
-    console.log(JSON.stringify(req.param))
+    console.log(JSON.stringify(req.params))
 
     console.log(process.env)
 
@@ -20,7 +20,7 @@ companyServer.get('*', function (req: any, res: any) {
     const headerOption = {
         "url": `https://api.companieshouse.gov.uk/company/${companyId}`,
         "headers": {
-            "Authorization": `${functions.config().companies_house_api.key}`
+            "Authorization": `${functions.config().companies_house_api.key || process.env.COMPANIES_HOUSE_API_KEY}`
         }
     };
 
