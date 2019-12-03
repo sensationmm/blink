@@ -1,6 +1,6 @@
 
 
-const domain = window.location.href.indexOf("locahost") > -1 ? "http://localhost:3001": "https://us-central1-blink-3b651.cloudfunctions.net"
+const domain = window.location.href.indexOf("localhost") > -1 ? "http://localhost:3001": "https://us-central1-blink-3b651.cloudfunctions.net"
 
 
 const requestCompany = async (companyId: string) => {
