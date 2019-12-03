@@ -9,6 +9,8 @@ companyServer.use(companyCors());
 
 companyServer.get('/company/:companyId/', function (req: any, res: any) {
 
+    console.log("----- request company ------")
+
     const { companyId } = req.params;
 
     const headerOption = {
