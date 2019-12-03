@@ -11,9 +11,9 @@ companyServer.get('*', function (req: any, res: any) {
 
     console.log("----- request company ------")
 
-    console.log(JSON.stringify(req.params))
+    console.log(JSON.stringify(req.app))
 
-    console.log(process.env)
+    // console.log(process.env)
 
     const { companyId } = req.params;
 
