@@ -1,13 +1,13 @@
 const functions = require('firebase-functions');
 const companyCors = require('cors');
-const companyEXpress = require('express');
+const companyExpress = require('express');
 const request = require('request');
 
-const companyServer = companyEXpress();
+const companyServer = companyExpress();
 
 companyServer.use(companyCors());
 
-companyServer.get('/company/:companyId/', function (req: any, res: any) {
+companyServer.get('/', function (req: any, res: any) {
 
     console.log("----- request company ------")
 
