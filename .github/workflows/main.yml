@@ -23,6 +23,10 @@ jobs:
         run: ./node_modules/.bin/firebase deploy --only hosting --token $FIREBASE_TOKEN
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+      - name: Set functions secrets
+        run: firebase functions:config:set COMPANIES_HOUSE_API_KEY=${COMPANIES_HOUSE_API_KEY}
+        env:
+          COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY}}
       - name: Install function dependencies
         working-directory: ./app/functions
         run: npm install 
