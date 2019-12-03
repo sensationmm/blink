@@ -1,4 +1,4 @@
-
+const functions = require('firebase-functions');
 const companyCors = require('cors');
 const companyEXpress = require('express');
 const request = require('request');
@@ -27,4 +27,7 @@ companyServer.get('/company/:companyId/', function (req: any, res: any) {
     );
 })
 
-module.exports = companyServer
+
+
+
+module.exports = functions.https.onRequest(companyServer)
