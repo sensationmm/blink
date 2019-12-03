@@ -9,11 +9,11 @@ companyServer.use(companyCors());
 
 companyServer.get('*', function (req: any, res: any) {
 
-    console.log("----- request company ------")
+    console.log("----- request company XXX ------")
 
-    console.log(JSON.stringify(req.app))
+    console.log(req)
 
-    // console.log(process.env)
+    console.log(req.params)
 
     const { companyId } = req.params;
 
