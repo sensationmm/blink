@@ -53,7 +53,7 @@ The functions are written in TypeScript so will need to be compiled to be run lo
 ```bash
 tsc
 ``` 
-and then restart your server
+and then restart your server. This isn't perfect and having to compile is easy to forget, but it's just for convinience. 
 
 ## CI
 
@@ -62,5 +62,5 @@ GitHub actions. There are two workflows in `.github/workflows` to deploy functio
 
 ## Hosting
 
-The app is urrently hosted on firebase although this is likely to change
+The app is currently hosted on firebase although this is likely to change
 

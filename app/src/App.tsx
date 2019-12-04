@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { HeaderSt, MainSt, InputSt, ButtonSt, Company, Errors } from './styles';
 import { requestCompany } from './utils/request';
+import ReactJson from 'react-json-view'
 
 function App() {
 
@@ -36,13 +37,15 @@ function App() {
 
       <MainSt>
         <label>Company Id:</label>
-        <InputSt onChange={(event:any) => setcompanyId(event.target.value)} type="text" value={companyId} />
+        <InputSt onChange={(event: any) => setcompanyId(event.target.value)} type="text" value={companyId} />
         <ButtonSt onClick={lookupCompany} type="button">Go!</ButtonSt>
         {company && <Company>
           {company.company_name}
         </Company>}
+
+        {company && <ReactJson src={company} />}
         {errors && <Errors>
-          {errors.map((error:any) => <li key={error.type}>{error.error}</li>)}  
+          {errors.map((error: any) => <li key={error.type}>{error.error}</li>)}
         </Errors>}
       </MainSt>
 
