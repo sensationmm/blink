@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - master
-  paths:
-      - 'app/functions/*'
+    paths:
+        - 'app/functions/*'
 
 jobs:
   build:
