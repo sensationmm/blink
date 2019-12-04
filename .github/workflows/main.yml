@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+  paths:
+      - 'app/functions/*'
 
 jobs:
   build:
@@ -12,17 +14,17 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@master
-      - name: Install Dependencies
-        working-directory: ./app
-        run: yarn
-      - name: Build
-        working-directory: ./app
-        run: yarn run build
-      - name: Deploy hosting to Firebase
-        working-directory: ./app
-        run: ./node_modules/.bin/firebase deploy --only hosting  
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+      # - name: Install Dependencies
+      #   working-directory: ./app
+      #   run: yarn
+      # - name: Build
+      #   working-directory: ./app
+      #   run: yarn run build
+      # - name: Deploy hosting to Firebase
+      #   working-directory: ./app
+      #   run: ./node_modules/.bin/firebase deploy --only hosting  
+      #   env:
+      #     FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
       - name: Set functions secrets
         working-directory: ./app
         run: ./node_modules/.bin/firebase functions:config:set companies_house_api.key=${COMPANIES_HOUSE_API_KEY} companies_house_api.id="Companies house" --token $FIREBASE_TOKEN
