@@ -19,7 +19,7 @@ jobs:
         run: yarn
       - name: Unit tests
         working-directory: ./app
-        run: yarn test
+        run: yarn test a
       - name: Build
         working-directory: ./app
         run: yarn run build
