@@ -6,7 +6,7 @@ const somethingServer = express();
 somethingServer.use(cors());
 
 somethingServer.get('/something', function (req: any, res: any) {
-    res.send("something!!!!")
+    res.send("something!!!")
 })
 
 module.exports = somethingServer

@@ -37,7 +37,7 @@ function App() {
       <MainSt>
         <label>Company Id:</label>
         <InputSt onChange={(event:any) => setcompanyId(event.target.value)} type="text" value={companyId} />
-        <ButtonSt onClick={lookupCompany} type="button">Go</ButtonSt>
+        <ButtonSt onClick={lookupCompany} type="button">Go!</ButtonSt>
         {company && <Company>
           {company.company_name}
         </Company>}
