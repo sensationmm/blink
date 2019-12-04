@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - app/**
+    paths-ignore:
+      - app/functions/**
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@master
+      - name: Install Dependencies
+        working-directory: ./app
+        run: yarn
+      - name: Build
+        working-directory: ./app
+        run: yarn run build
+      - name: Deploy hosting to Firebase
+        working-directory: ./app
+        run: ./node_modules/.bin/firebase deploy --only hosting  
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
