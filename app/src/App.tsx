@@ -1,56 +1,40 @@
-import React, { useState } from 'react';
-import { HeaderSt, MainSt, InputSt, ButtonSt, Company, Errors } from './styles';
-import { requestCompany } from './utils/request';
-import ReactJson from 'react-json-view'
+import React from 'react'
 
-function App() {
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  // Link
+} from "react-router-dom";
 
-  const [companyId, setcompanyId] = useState("");
-  const [company, setCompany] = useState();
-  const [status, setStatus] = useState();
-  const [errors, setErrors] = useState();
+import CompaniesHouse from "./components/companies-house"
 
+export default function App() {
 
-  const lookupCompany = async () => {
-    console.log("requesting", companyId)
-    setCompany(null);
-    setErrors(null);
-    setStatus("searching")
-    const res = await requestCompany(companyId);
-
-
-    if (res.errors) {
-      setStatus(null);
-      console.log(res.errors)
-      setErrors(res.errors);
-    } else {
-      setCompany(res);
-    }
-  }
-
-
-  return (
-    <>
-      <HeaderSt>
-        Companies house lookup
-      </HeaderSt>
-
-      <MainSt>
-        <label>Company Id:</label>
-        <InputSt onChange={(event: any) => setcompanyId(event.target.value)} type="text" value={companyId} />
-        <ButtonSt onClick={lookupCompany} type="button">Go!</ButtonSt>
-        {company && <Company>
-          {company.company_name}
-        </Company>}
-
-        {company && <ReactJson src={company} />}
-        {errors && <Errors>
-          {errors.map((error: any) => <li key={error.type}>{error.error}</li>)}
-        </Errors>}
-      </MainSt>
-
-    </>
-  );
+  return (<Router>
+    <div>
+      {/* <ul>
+        <li>
+          <Link to="/">Home</Link>
+        </li>
+        <li>
+          <Link to="/about">About</Link>
+        </li>
+        <li>
+          <Link to="/dashboard">Dashboard</Link>
+        </li>
+      </ul> */}
+      <Switch>
+        <Route exact path="/">
+          <CompaniesHouse />
+        </Route>
+        <Route path="/companies-house">
+          <CompaniesHouse />
+        </Route>
+        <Route path="*">
+          <div>Not found</div>
+        </Route>
+      </Switch>
+    </div>
+  </Router>);
 }
-
-export default App;
