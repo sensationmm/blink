@@ -14,6 +14,9 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@master
+      - name: Install Dependencies
+        working-directory: ./app
+        run: yarn add firebase-tools
       # - name: Install Dependencies
       #   working-directory: ./app
       #   run: yarn
