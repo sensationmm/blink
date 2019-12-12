@@ -1,20 +1,20 @@
 const functions = require('firebase-functions');
-const companyCors = require('cors');
-const companyExpress = require('express');
+const personsWithSignificantControlCors = require('cors');
+const personsWithSignificantControlExpress = require('express');
 const request = require('request');
 
-const companyServer = companyExpress();
+const companyServer = personsWithSignificantControlExpress();
 
-companyServer.use(companyCors());
+companyServer.use(personsWithSignificantControlCors());
 
-companyServer.get('*/persons-with-significant-control/:companyId', function (req: any, res: any) {
+companyServer.get('*/:companyId', function (req: any, res: any) {
 
     const { companyId } = req.params;
 
     console.log("companyId", companyId);
 
     const headerOption = {
-        "url": `https://api.companieshouse.gov.uk/company/${companyId}`,
+        "url": `https://api.companieshouse.gov.uk/${companyId}/persons-with-significant-control`,
         "headers": {
             "Authorization": `${process.env.COMPANIES_HOUSE_API_KEY || functions.config().companies_house_api.key}`
         }
