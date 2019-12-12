@@ -14,7 +14,7 @@ personsWithSignificantControlServer.get('*/:companyId', function (req: any, res:
     console.log("companyId", companyId);
 
     const headerOption = {
-        "url": `https://api.companieshouse.gov.uk/${companyId}/persons-with-significant-control`,
+        "url": `https://api.companieshouse.gov.uk/${companyId}/officers`,
         "headers": {
             "Authorization": `${process.env.COMPANIES_HOUSE_API_KEY || personsWithSignificantControlServerFunctions.config().companies_house_api.key}`
         }
