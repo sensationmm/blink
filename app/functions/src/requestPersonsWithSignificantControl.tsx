@@ -3,11 +3,11 @@ const personsWithSignificantControlCors = require('cors');
 const personsWithSignificantControlExpress = require('express');
 const request = require('request');
 
-const companyServer = personsWithSignificantControlExpress();
+const personsWithSignificantControlServer = personsWithSignificantControlExpress();
 
-companyServer.use(personsWithSignificantControlCors());
+personsWithSignificantControlServer.use(personsWithSignificantControlCors());
 
-companyServer.get('*/:companyId', function (req: any, res: any) {
+personsWithSignificantControlServer.get('*/:companyId', function (req: any, res: any) {
 
     const { companyId } = req.params;
 
@@ -27,4 +27,4 @@ companyServer.get('*/:companyId', function (req: any, res: any) {
     );
 })
 
-module.exports = functions.https.onRequest(companyServer)
+module.exports = functions.https.onRequest(personsWithSignificantControlServer)
