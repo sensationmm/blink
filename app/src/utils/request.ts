@@ -9,7 +9,7 @@ const requestCompany = async (companyId: string) => {
 }
 
 const requestSignificantPersons = async (companyId: string) => {
-    const response = await fetch(`${domain}/persons-with-significant-control/${companyId}`, { mode: 'cors' });
+    const response = await fetch(`${domain}/personsWithSignificantControl/${companyId}`, { mode: 'cors' });
     const body = await response.json();
     return body;
 }
