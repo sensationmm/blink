@@ -1,7 +1,7 @@
-const functions = require('firebase-functions');
+const personsWithSignificantControlServerFunctions = require('firebase-functions');
 const personsWithSignificantControlCors = require('cors');
 const personsWithSignificantControlExpress = require('express');
-const request = require('request');
+const personsWithSignificantControlServerRequest = require('request');
 
 const personsWithSignificantControlServer = personsWithSignificantControlExpress();
 
@@ -20,11 +20,11 @@ personsWithSignificantControlServer.get('*/:companyId', function (req: any, res:
         }
     };
 
-    request(headerOption, function (error: any, response: any, body: any) {
+    personsWithSignificantControlServerRequest(headerOption, function (error: any, response: any, body: any) {
         // console.log("Body:", body);
         res.send(JSON.parse(body))
     }
     );
 })
 
-module.exports = functions.https.onRequest(personsWithSignificantControlServer)
+module.exports = personsWithSignificantControlServerFunctions.https.onRequest(personsWithSignificantControlServer)
