@@ -13,7 +13,7 @@ export const MainSt = styled.main`
 
 export const InputSt = styled.input`
     padding: 10px;
-    margin: 0 0 0 10px;
+    margin: 0;
 `
 
 export const ButtonSt = styled.button`
@@ -26,4 +26,9 @@ export const Company = styled.div`
 
 export const Errors = styled.ul`
     
+`
+
+export const Label = styled.label`
+    display: block;
+    margin: 0 0 5px;
 `
