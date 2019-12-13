@@ -27,4 +27,4 @@ companyServer.get('*/:companyId', function (req: any, res: any) {
     );
 })
 
-module.exports = functions.https.onRequest(companyServer)
+module.exports = companyFunctions.https.onRequest(companyServer)
