@@ -7,7 +7,7 @@ const searchCompanyServer = searchCompanyExpress();
 
 searchCompanyServer.use(searchCompanyCors());
 
-searchCompanyServer.get('*/:companyId', function (req: any, res: any) {
+searchCompanyServer.get('*/:query', function (req: any, res: any) {
 
     const { query } = req.params;
 
