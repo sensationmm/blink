@@ -8,10 +8,16 @@ const requestCompany = async (companyId: string) => {
     return body;
 }
 
+const searchCompany = async (query: string) => {
+    const response = await fetch(`${domain}/searchCompany/${query}`, { mode: 'cors' });
+    const body = await response.json();
+    return body;
+}
+
 const requestSignificantPersons = async (companyId: string) => {
     const response = await fetch(`${domain}/personsWithSignificantControl/${companyId}`, { mode: 'cors' });
     const body = await response.json();
     return body;
 }
 
-export { requestCompany, requestSignificantPersons }
+export { requestCompany, requestSignificantPersons, searchCompany }
