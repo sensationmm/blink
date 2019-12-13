@@ -36,7 +36,7 @@ export default function SearchCompany() {
     }
 
     return <MainSt>
-        <Label>Company Lookup</Label>
+        <Label>Company Search</Label>
         <InputSt onKeyUp={keyUp} placeholder="Company Id" onChange={(event: any) => setQuery(event.target.value)} type="text" value={query} />
         <ButtonSt onClick={companySearch} type="button">Go!</ButtonSt>
         {companies && <Company>
