@@ -3,16 +3,19 @@ import { requestSignificantPersons } from '../../utils/request';
 import { MainSt, InputSt, ButtonSt, Company, Errors, Label } from './styles';
 import ReactJson from 'react-json-view'
 
-export default function SignificantPersons() {
+type Props = {
+    selectedCompany: any
+}
 
-    const [companyId, setcompanyId] = useState("");
+export default function SignificantPersons( { selectedCompany }: Props ) {
+
+    const [companyId, setcompanyId] = useState(selectedCompany.company_number);
     const [company, setCompany] = useState();
     const [status, setStatus] = useState();
     const [errors, setErrors] = useState();
 
 
     const lookupSignificantPersons = async () => {
-        console.log("requesting", companyId)
         setCompany(null);
         setErrors(null);
         setStatus("searching")
