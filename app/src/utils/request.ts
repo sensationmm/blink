@@ -20,4 +20,10 @@ const requestSignificantPersons = async (companyId: string) => {
     return body;
 }
 
-export { requestCompany, requestSignificantPersons, searchCompany }
+const requestSignificantCorporateEntity = async (companyId: string, pscId: string) => {
+    const response = await fetch(`${domain}/companiesWithSignificantControl/${companyId}/${pscId}`, { mode: 'cors' });
+    const body = await response.json();
+    return body;
+}
+
+export { requestCompany, requestSignificantPersons, searchCompany, requestSignificantCorporateEntity }

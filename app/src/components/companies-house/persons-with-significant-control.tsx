@@ -1,18 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { requestSignificantPersons } from '../../utils/request';
-import { MainSt, InputSt, ButtonSt, Company, Errors, Label } from './styles';
+import { MainSt, InputSt, ButtonSt, Company, Errors, Label, Items } from './styles';
+import CorporateEntityWithSignificantControl from "./corporate-entity-with-significant-control";
 import ReactJson from 'react-json-view'
 
 type Props = {
-    selectedCompany: any
+    selectedCompany: any,
+    setSelectedSignificantPersons: any
 }
 
-export default function SignificantPersons( { selectedCompany }: Props ) {
+export default function SignificantPersons({ selectedCompany, setSelectedSignificantPersons }: Props) {
 
-    const [companyId, setcompanyId] = useState(selectedCompany.company_number);
+    const [companyId, setcompanyId] = useState("");
     const [company, setCompany] = useState();
     const [status, setStatus] = useState();
     const [errors, setErrors] = useState();
+
+    useEffect(
+        () => {
+            setcompanyId(selectedCompany.company_number)
+            setSelectedSignificantPersons();
+        }
+    );
 
 
     const lookupSignificantPersons = async () => {
@@ -40,14 +49,16 @@ export default function SignificantPersons( { selectedCompany }: Props ) {
     }
 
     return <MainSt>
-        <Label>Persons with Signficant Control:</Label>
+        <Label>Persons with Signficant Control (List):</Label>
         <InputSt placeholder="Company Id" onKeyUp={keyUp} onChange={(event: any) => setcompanyId(event.target.value)} type="text" value={companyId} />
         <ButtonSt onClick={lookupSignificantPersons} type="button">Go!</ButtonSt>
-        {company && <Company>
-            {company.company_name}
-        </Company>}
+        {company && <Items>{company.items
+            .filter((item: any) => !item.ceased_on)
+            .map((item: any) => <li className={item.kind} key={item.etag}><span>{item.name}</span>
+                {item.kind === "corporate-entity-person-with-significant-control" && <CorporateEntityWithSignificantControl companyId={companyId} pscId={item.links.self.split("/").slice(-1)[0] } />}
+            </li>)}</Items>}
 
-        {company && <ReactJson src={company} />}
+        {company && <ReactJson collapsed src={company} />}
         {errors && <Errors>
             {errors.map((error: any) => <li key={error.type}>{error.error}</li>)}
         </Errors>}

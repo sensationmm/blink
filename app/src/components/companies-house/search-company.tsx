@@ -9,7 +9,7 @@ type SearchCompanyProps = {
     setSelectedCompany: Dispatch<any>
 }
 
-export default function SearchCompany( { setSelectedCompany }: SearchCompanyProps ) {
+export default function SearchCompany({ setSelectedCompany }: SearchCompanyProps) {
 
     const [query, setQuery] = useState("");
     const [companies, setCompanies] = useState();
@@ -50,10 +50,13 @@ export default function SearchCompany( { setSelectedCompany }: SearchCompanyProp
 
 
     const companySearch = async () => {
-        console.log("query", query)
+        // console.log("query", query)
         // setCompanies(null);
         setErrors(null);
         setStatus("searching")
+        if (query === "") {
+            return;
+        }
         const res = await searchCompany(query);
 
         if (res.errors) {
@@ -88,7 +91,7 @@ export default function SearchCompany( { setSelectedCompany }: SearchCompanyProp
                 {query && <Cancel onClick={clearCompany}>&times;</Cancel>}
             </InputWrapper>
             {companies && typeAheadListVisible && <ul>
-                {companies.items.splice(0, 10).map((company: any) => <li onClick={() => selectCompany(company)}>{company.title} <span>({company.company_number})</span></li>)}
+                {companies.items.splice(0, 10).map((company: any) => <li key={company.company_number} onClick={() => selectCompany(company)}>{company.title} <span>({company.company_number})</span></li>)}
             </ul>
             }
         </TypeAhead>

@@ -1,14 +1,16 @@
 
 import React, { useState } from "react";
 import { HeaderSt } from './styles';
-import CompanyLookup from './company';
+// import CompanyLookup from './company';
 import CompanySearch from './search-company'
 import SignificantPersons from "./persons-with-significant-control";
+// import SignificantCorporateEntity from "./corporate-entity-with-significant-control";
 
 
 export default function CompaniesHouse() {
 
     const [selectedCompany, setSelectedCompany] = useState()
+    const [selectedSignificantPersons, setSelectedSignificantPersons] = useState()
 
     return (
         <>
@@ -16,11 +18,11 @@ export default function CompaniesHouse() {
                 Companies house lookup
             </HeaderSt>
 
-            {/* <CompanyLookup /> */}
-
             <CompanySearch setSelectedCompany={setSelectedCompany} />
 
-            {selectedCompany && <SignificantPersons selectedCompany={selectedCompany} />}
+            {selectedCompany && <SignificantPersons setSelectedSignificantPersons={setSelectedSignificantPersons} selectedCompany={selectedCompany} />}
+
+            {/* {selectedCompany && <SignificantCorporateEntity selectedCompany={selectedCompany} />} */}
 
         </>
     )

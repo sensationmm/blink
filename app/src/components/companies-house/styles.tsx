@@ -100,3 +100,33 @@ export const TypeAhead = styled.div`
         }
     }
 `
+
+export const Items = styled.ul`
+    display: flex;
+    list-style-type: none;
+    justify-content: space-evenly;
+
+    li {
+        border: 1px solid #ccc;
+        padding: 0px;
+        max-width: 200px;
+        margin: 0 20px 0 0;
+        display: flex;
+        align-items: center;
+        text-align: center;
+        flex-direction: column
+
+        span {
+            display: block;
+            padding: 10px;
+        }
+
+        &.corporate-entity-person-with-significant-control span {
+            background-color: pink;
+        }
+        &.individual-person-with-significant-control span {
+            background-color: palegreen;
+        }
+    }
+
+`
