@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { requestSignificantPersons } from '../../utils/request';
+import { requestOfficers } from '../../utils/request';
 import { MainSt, InputSt, ButtonSt, Company, Errors, Label, Items } from './styles';
-import CorporateEntityWithSignificantControl from "./corporate-entity-with-significant-control";
+// import CorporateEntityWithSignificantControl from "./corporate-entity-with-significant-control";
 import ReactJson from 'react-json-view'
 
 type Props = {
     selectedCompany: any,
-    setSelectedSignificantPersons: any
+    setSelectedOfficer: any
 }
 
-export default function SignificantPersons({ selectedCompany, setSelectedSignificantPersons }: Props) {
+export default function SignificantPersons({ selectedCompany, setSelectedOfficer }: Props) {
 
     const [companyId, setcompanyId] = useState("");
     const [company, setCompany] = useState();
@@ -19,16 +19,16 @@ export default function SignificantPersons({ selectedCompany, setSelectedSignifi
     useEffect(
         () => {
             setcompanyId(selectedCompany.company_number)
-            setSelectedSignificantPersons();
+            setSelectedOfficer();
         }
     );
 
 
-    const lookupSignificantPersons = async () => {
+    const lookupOfficers = async () => {
         setCompany(null);
         setErrors(null);
         setStatus("searching")
-        const res = await requestSignificantPersons(companyId);
+        const res = await requestOfficers(companyId);
 
 
         if (res.errors) {
@@ -44,20 +44,20 @@ export default function SignificantPersons({ selectedCompany, setSelectedSignifi
         if (event.key === 'Enter') {
             event.preventDefault();
             event.stopPropagation();
-            lookupSignificantPersons();
+            lookupOfficers();
         }
     }
 
     return <MainSt>
-        <Label>Persons with Signficant Control (List):</Label>
+        <Label>Officers (List):</Label>
         <InputSt placeholder="Company Id" onKeyUp={keyUp} onChange={(event: any) => setcompanyId(event.target.value)} type="text" value={companyId} />
-        <ButtonSt onClick={lookupSignificantPersons} type="button">Go!</ButtonSt>
+        <ButtonSt onClick={lookupOfficers} type="button">Go!</ButtonSt>
         {company && <ReactJson collapsed src={company} />}
-        {company && <Items>{company.items
+        {/* {company && <Items>{company.items
             .filter((item: any) => !item.ceased_on)
             .map((item: any) => <li className={item.kind} key={item.etag}><span className="title">{item.name}</span>
                 {item.kind === "corporate-entity-person-with-significant-control" && <CorporateEntityWithSignificantControl companyId={companyId} pscId={item.links.self.split("/").slice(-1)[0] } />}
-            </li>)}</Items>}
+            </li>)}</Items>} */}
 
         {errors && <Errors>
             {errors.map((error: any) => <li key={error.type}>{error.error}</li>)}

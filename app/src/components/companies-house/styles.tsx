@@ -14,7 +14,7 @@ export const MainSt = styled.main`
 export const InputSt = styled.input`
     padding: 10px;
     margin: 0;
-    width: 100%;
+    // width: 100%;
 `
 
 export const ButtonSt = styled.button`
@@ -106,8 +106,8 @@ export const Items = styled.ul`
     list-style-type: none;
     justify-content: space-evenly;
 
-    li {
-        border: 1px solid #ccc;
+    > li {
+        // border: 1px solid #ccc;
         padding: 0px;
         max-width: 200px;
         margin: 0 20px 0 0;
@@ -116,15 +116,19 @@ export const Items = styled.ul`
         text-align: center;
         flex-direction: column
 
-        span {
+        span.title {
             display: block;
             padding: 10px;
         }
 
-        &.corporate-entity-person-with-significant-control span {
+        .react-json-view { 
+            text-align: initial;
+        }
+
+        &.corporate-entity-person-with-significant-control > span {
             background-color: pink;
         }
-        &.individual-person-with-significant-control span {
+        &.individual-person-with-significant-control > span {
             background-color: palegreen;
         }
     }
