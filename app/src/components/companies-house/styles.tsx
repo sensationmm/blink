@@ -9,6 +9,10 @@ export const HeaderSt = styled.header`
 
 export const MainSt = styled.main`
     padding: 10px;
+
+    .pretty-json-container {
+        margin-top: 20px;
+    }
 `
 
 export const InputSt = styled.input`
@@ -104,12 +108,12 @@ export const TypeAhead = styled.div`
 export const Items = styled.ul`
     display: flex;
     list-style-type: none;
-    justify-content: space-evenly;
+    // justify-content: space-evenly;
 
     > li {
         // border: 1px solid #ccc;
         padding: 0px;
-        max-width: 200px;
+        // max-width: 200px;
         margin: 0 20px 0 0;
         display: flex;
         align-items: center;
@@ -125,11 +129,25 @@ export const Items = styled.ul`
             text-align: initial;
         }
 
-        &.corporate-entity-person-with-significant-control > span {
+        &.corporate-entity-person-with-significant-control > span,
+        &.corporate-secretary > span {
             background-color: pink;
         }
-        &.individual-person-with-significant-control > span {
+        &.individual-person-with-significant-control > span,
+        &.director > span {
             background-color: palegreen;
+        }
+        &.secretary > span {
+            background-color: lightblue;
+        }
+        &.corporate-nominee-secretary > span {
+            background-color: gold;
+        }
+        &.corporate-nominee-director > span {
+            background-color: aliceblue
+        }
+        &.corporate-director > span {
+            background-color: #ccc;
         }
     }
 

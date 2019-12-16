@@ -9,10 +9,10 @@ type Props = {
     setSelectedOfficer: any
 }
 
-export default function SignificantPersons({ selectedCompany, setSelectedOfficer }: Props) {
+export default function Officers({ selectedCompany, setSelectedOfficer }: Props) {
 
     const [companyId, setcompanyId] = useState("");
-    const [company, setCompany] = useState();
+    const [officers, setOfficers] = useState();
     const [status, setStatus] = useState();
     const [errors, setErrors] = useState();
 
@@ -25,7 +25,7 @@ export default function SignificantPersons({ selectedCompany, setSelectedOfficer
 
 
     const lookupOfficers = async () => {
-        setCompany(null);
+        setOfficers(null);
         setErrors(null);
         setStatus("searching")
         const res = await requestOfficers(companyId);
@@ -36,7 +36,7 @@ export default function SignificantPersons({ selectedCompany, setSelectedOfficer
             console.log(res.errors)
             setErrors(res.errors);
         } else {
-            setCompany(res);
+            setOfficers(res);
         }
     }
 
@@ -52,12 +52,10 @@ export default function SignificantPersons({ selectedCompany, setSelectedOfficer
         <Label>Officers (List):</Label>
         <InputSt placeholder="Company Id" onKeyUp={keyUp} onChange={(event: any) => setcompanyId(event.target.value)} type="text" value={companyId} />
         <ButtonSt onClick={lookupOfficers} type="button">Go!</ButtonSt>
-        {company && <ReactJson collapsed src={company} />}
-        {/* {company && <Items>{company.items
-            .filter((item: any) => !item.ceased_on)
-            .map((item: any) => <li className={item.kind} key={item.etag}><span className="title">{item.name}</span>
-                {item.kind === "corporate-entity-person-with-significant-control" && <CorporateEntityWithSignificantControl companyId={companyId} pscId={item.links.self.split("/").slice(-1)[0] } />}
-            </li>)}</Items>} */}
+        {officers && <ReactJson collapsed src={officers} />}
+        {officers && <Items>{officers.items
+            .filter((item: any) => !item.resigned_on)
+            .map((item: any) => <li className={item.officer_role} key={item.name}><span className="title" title={item.officer_role}>{item.name}</span></li>)}</Items>}
 
         {errors && <Errors>
             {errors.map((error: any) => <li key={error.type}>{error.error}</li>)}

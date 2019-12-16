@@ -55,7 +55,7 @@ export default function SignificantPersons({ selectedCompany, setSelectedSignifi
         {company && <ReactJson collapsed src={company} />}
         {company && <Items>{company.items
             .filter((item: any) => !item.ceased_on)
-            .map((item: any) => <li className={item.kind} key={item.etag}><span className="title">{item.name}</span>
+            .map((item: any) => <li className={item.kind} key={item.etag}><span title={item.kind} className="title">{item.name}</span>
                 {item.kind === "corporate-entity-person-with-significant-control" && <CorporateEntityWithSignificantControl companyId={companyId} pscId={item.links.self.split("/").slice(-1)[0] } />}
             </li>)}</Items>}
 
