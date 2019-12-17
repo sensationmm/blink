@@ -19,6 +19,7 @@
     "firebase-admin": "^8.6.0",
     "firebase-functions": "^3.3.0",
     "request": "^2.88.0",
+    "soap": "^0.30.0",
     "src": "^1.1.2",
     "tslint": "^5.8.0"
   },
