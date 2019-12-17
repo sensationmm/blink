@@ -1,3 +1,4 @@
+const kyckrFunctions = require('firebase-functions');
 const kyckrCors = require('cors');
 const kyckrExpress = require('express');
 var soap = require('soap');
@@ -21,4 +22,4 @@ kyckrServer.get('/', function (req: any, res: any) {
     });
 })
 
-module.exports = kyckrServer
+module.exports = kyckrFunctions.https.onRequest(kyckrServer)
