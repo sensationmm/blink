@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 
 import CompaniesHouse from "./components/companies-house"
+import Kyckr from "./components/kyckr"
 
 export default function App() {
 
@@ -30,6 +31,9 @@ export default function App() {
         </Route>
         <Route path="/companies-house">
           <CompaniesHouse />
+        </Route>
+        <Route path="/kyckr">
+          <Kyckr />
         </Route>
         <Route path="*">
           <div>Not found</div>

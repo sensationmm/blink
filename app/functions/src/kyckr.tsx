@@ -11,13 +11,20 @@ kyckrServer.use(kyckrCors());
 kyckrServer.get('/', function (req: any, res: any) {
 
     const url = 'https://testws.kyckr.eu/gbronboarding.asmx?wsdl';
-    var args = { email: 'terry.cordeiro@11fs.com', password: '6c72fde3',  mode: 'cors' };
-    
-    soap.createClient(url, function(err:any, client:any) {
-        console.log("client", client)
-        client.CompanySearch(args, function(err:any, result:any) {
+    var args = { "companyName": "eleven fs", "termsAndConditions": "true" };
+
+
+    var auth = "Basic " + new Buffer("terry.cordeiro@11fs.com" + ":" + "6c72fde3").toString("base64");
+
+    // soap.createClient(url, { wsdl_headers: {Authorization: auth} }, function(err, client) {
+    // });
+
+    soap.createClient(url, { wsdl_headers: { Authorization: auth } }, function (err: any, client: any) {
+        // console.log("error", err)
+        // console.log("client", client)
+        client.CompanySearch(args, function (err: any, result: any) {
             console.log("client", client);
-            res.send("here")
+            res.send("here sd")
         });
     });
 })
