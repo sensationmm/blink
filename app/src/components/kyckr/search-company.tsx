@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Dispatch } from 'react';
-import { searchCompany } from '../../utils/companies-house/request';
+import { searchCompany } from '../../utils/kyckr/request';
 import { MainSt, InputSt, ButtonSt, Company, Errors, Label, TypeAhead, InputWrapper, Cancel } from '../styles';
 import ReactJson from 'react-json-view'
 
@@ -95,11 +95,6 @@ export default function SearchCompany({ setSelectedCompany }: SearchCompanyProps
             </ul>
             }
         </TypeAhead>
-        {/* <ButtonSt onClick={companySearch} type="button">Go!</ButtonSt> */}
-        {/* {companies && <Company>
-            {companies.items.length} companies found
-        </Company>} */}
-
 
     </MainSt>
 }

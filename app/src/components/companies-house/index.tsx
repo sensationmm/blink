@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { HeaderSt } from './styles';
+import { HeaderSt } from '../styles';
 // import CompanyLookup from './company';
 import CompanySearch from './search-company'
 import SignificantPersons from "./persons-with-significant-control";

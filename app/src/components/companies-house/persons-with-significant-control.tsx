@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { requestSignificantPersons } from '../../utils/companies-house/request';
-import { MainSt, InputSt, ButtonSt, Company, Errors, Label, Items } from './styles';
+import { MainSt, InputSt, ButtonSt, Company, Errors, Label, Items } from '../styles';
 import CorporateEntityWithSignificantControl from "./corporate-entity-with-significant-control";
 import ReactJson from 'react-json-view'
 
