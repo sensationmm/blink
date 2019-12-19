@@ -30,6 +30,13 @@ kyckrServer.get('*/:query/:countryISOCode', function (req: any, res: any) {
         // console.log("error", err)
         // console.log("client", client)
         client.CompanySearch(args, function (err: any, result: any) {
+
+
+            console.log(result);
+            if (err) {
+                console.log(err)
+            }
+
             res.send(JSON.parse(result));
         });
     });
