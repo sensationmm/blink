@@ -1,10 +1,39 @@
 import styled from 'styled-components';
 
-export const HeaderSt = styled.header`
+export const Tabs = styled.ul`
+
+    padding: 0;
+    margin: 0;
     width: 100%;
-    height: 50px;
-    background-color: pink;
-    padding: 10px;
+    background-color: #999;
+    overflow: hidden;
+
+    li {
+
+        margin: 0;
+        border: 1px solid #666;
+        border-top: none;
+        background-color: #999;
+        float: left;
+        list-style-type: none;
+
+        a {
+            color: #333;
+            text-decoration: none;
+            padding: 20px;
+            display: block;
+        }
+
+        &.active {
+            background-color: #fff;
+            border-bottom: 1px solid #fff;
+
+            a {
+                color: #000;
+            }
+        }
+    }
+
 `
 
 export const MainSt = styled.main`
@@ -51,6 +80,10 @@ export const Cancel = styled.span`
     font-size: 22px;
     user-select: none;
     cursor: pointer;
+
+    &.with-select {
+        right: 155px;
+    }
 `
 
 export const InputWrapper = styled.div`
@@ -69,6 +102,10 @@ export const TypeAhead = styled.div`
         padding: 20px;
         font-size: 24px;
         outline: none;
+
+        &.with-select {
+            width: calc(100% - 184px);
+        }
     }
 
     ul {
@@ -151,4 +188,10 @@ export const Items = styled.ul`
         }
     }
 
+`
+
+export const CountrySelect = styled.select`
+    width: 140px;
+    height: 72px;
+    float: right;
 `

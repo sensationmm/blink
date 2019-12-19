@@ -1,7 +1,9 @@
 import React, { useState, useEffect, Dispatch } from 'react';
+import styled from "styled-components";
 import { searchCompany } from '../../utils/kyckr/request';
-import { MainSt, InputSt, ButtonSt, Company, Errors, Label, TypeAhead, InputWrapper, Cancel } from '../styles';
+import { MainSt, InputSt, ButtonSt, Company, Errors, Label, TypeAhead, InputWrapper, Cancel, CountrySelect } from '../styles';
 import ReactJson from 'react-json-view'
+
 
 const delay = 400;
 
@@ -16,6 +18,7 @@ export default function SearchCompany({ setSelectedCompany }: SearchCompanyProps
     const [typeAheadListVisible, showTypeAheadList] = useState(true);
     const [status, setStatus] = useState();
     const [errors, setErrors] = useState();
+    const [selectedCountry, setSelectedCountry] = useState("GB");
 
     useEffect(
         () => {
@@ -23,7 +26,7 @@ export default function SearchCompany({ setSelectedCompany }: SearchCompanyProps
             const handler = setTimeout(() => {
                 companySearch();
             }, delay);
-
+            
             return () => {
                 clearTimeout(handler);
             };
@@ -31,13 +34,13 @@ export default function SearchCompany({ setSelectedCompany }: SearchCompanyProps
         // Only re-call effect if value changes
         // You could also add the "delay" var to inputs array if you ...
         // ... need to be able to change that dynamically.
-        [query]
+        [query, selectedCountry]
     );
 
 
     const selectCompany = (company: any) => {
         setCompanies(null)
-        setQuery(company.title)
+        setQuery(company.Name)
         setSelectedCompany(company)
         showTypeAheadList(false);
     }
@@ -57,14 +60,16 @@ export default function SearchCompany({ setSelectedCompany }: SearchCompanyProps
         if (query === "") {
             return;
         }
-        const res = await searchCompany(query);
+        const res = await searchCompany(query, selectedCountry);
+        const companies = res && res.CompanySearchResult && res.CompanySearchResult.Companies && res.CompanySearchResult.Companies.CompanyDTO
+
 
         if (res.errors) {
             setStatus(null);
             console.log(res.errors)
             setErrors(res.errors);
         } else {
-            setCompanies(res);
+            setCompanies(companies || []);
         }
     }
 
@@ -87,11 +92,20 @@ export default function SearchCompany({ setSelectedCompany }: SearchCompanyProps
         </Errors>}
         <TypeAhead>
             <InputWrapper>
-                <InputSt autoFocus onKeyUp={keyUp} placeholder="Company Search" onChange={(event: any) => setQuery(event.target.value)} type="text" value={query} />
-                {query && <Cancel onClick={clearCompany}>&times;</Cancel>}
+                <InputSt className="with-select" autoFocus onKeyUp={keyUp} placeholder="Company Search" onChange={(event: any) => setQuery(event.target.value)} type="text" value={query} />
+                {query && <Cancel className="with-select" onClick={clearCompany}>&times;</Cancel>}
+                <CountrySelect value={selectedCountry} onChange={e => setSelectedCountry(e.target.value)}>
+                    <option value="GB">🇬🇧 United Kingdom</option>
+                    <option value="IE">🇮🇪 Ireland</option>
+                    <option value="DE">🇩🇪 Germany</option>
+                    <option value="IT">🇮🇹 Italy</option>
+                    <option value="SE">🇸🇪 Sweden</option>
+                    <option value="FR">🇫🇷 France</option>
+                    <option value="RO">🇷🇴 Romania</option>
+                </CountrySelect>
             </InputWrapper>
             {companies && typeAheadListVisible && <ul>
-                {companies.items.splice(0, 10).map((company: any) => <li key={company.company_number} onClick={() => selectCompany(company)}>{company.title} <span>({company.company_number})</span></li>)}
+                {companies.splice(0, 10).map((company: any) => <li key={company.CompanyID} onClick={() => selectCompany(company)}>{company.Name} <span>({company.CompanyID})</span></li>)}
             </ul>
             }
         </TypeAhead>

@@ -9,36 +9,37 @@ import {
 
 import CompaniesHouse from "./components/companies-house"
 import Kyckr from "./components/kyckr"
+import { Tabs } from "./components/styles";
+import { Link, withRouter } from "react-router-dom";
 
-export default function App() {
+export default () => {
 
   return (<Router>
-    <div>
-      {/* <ul>
-        <li>
-          <Link to="/">Home</Link>
-        </li>
-        <li>
-          <Link to="/about">About</Link>
-        </li>
-        <li>
-          <Link to="/dashboard">Dashboard</Link>
-        </li>
-      </ul> */}
-      <Switch>
-        <Route exact path="/">
-          <CompaniesHouse />
-        </Route>
-        <Route path="/companies-house">
-          <CompaniesHouse />
-        </Route>
-        <Route path="/kyckr">
-          <Kyckr />
-        </Route>
-        <Route path="*">
-          <div>Not found</div>
-        </Route>
-      </Switch>
-    </div>
+    <App />
   </Router>);
 }
+
+const App = withRouter((props: any) => <div>
+  <Tabs>
+    <li className={props.location.pathname === "/companies-house" ? "active" : ""}>
+      <Link to="/companies-house">Companies House</Link>
+    </li>
+    <li className={props.location.pathname === "/kyckr" ? "active" : ""}>
+      <Link to="/kyckr">Kyckr</Link>
+    </li>
+  </Tabs>
+  <Switch>
+    <Route exact path="/">
+      <CompaniesHouse />
+    </Route>
+    <Route path="/companies-house">
+      <CompaniesHouse />
+    </Route>
+    <Route path="/kyckr">
+      <Kyckr />
+    </Route>
+    <Route path="*">
+      <div>Not found</div>
+    </Route>
+  </Switch>
+</div>)
