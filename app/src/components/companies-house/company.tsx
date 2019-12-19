@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { requestCompany } from '../../utils/request';
+import { requestCompany } from '../../utils/companies-house/request';
 import { MainSt, InputSt, ButtonSt, Company, Errors, Label } from './styles';
 import ReactJson from 'react-json-view'
 

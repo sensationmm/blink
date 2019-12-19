@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Dispatch } from 'react';
-import { searchCompany } from '../../utils/request';
+import { searchCompany } from '../../utils/companies-house/request';
 import { MainSt, InputSt, ButtonSt, Company, Errors, Label, TypeAhead, InputWrapper, Cancel } from './styles';
 import ReactJson from 'react-json-view'
 

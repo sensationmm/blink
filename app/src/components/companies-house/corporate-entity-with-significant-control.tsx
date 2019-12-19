@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { requestSignificantCorporateEntity } from '../../utils/request';
+import { requestSignificantCorporateEntity } from '../../utils/companies-house/request';
 import { MainSt, InputSt, ButtonSt, Company, Errors } from './styles';
 import ReactJson from 'react-json-view'
 

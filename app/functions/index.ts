@@ -6,12 +6,12 @@ admin.initializeApp();
 
 exports.kyckr = require("./src/kyckr");
 
-exports.company = require("./src/requestCompany");
+exports.companiesHouseCompany = require("./src/companies-house/requestCompany");
 
-exports.searchCompany = require("./src/searchCompany");
+exports.companiesHouseSearchCompany = require("./src/companies-house/searchCompany");
 
-exports.personsWithSignificantControl = require("./src/requestPersonsWithSignificantControl");
+exports.companiesHousePersonsWithSignificantControl = require("./src/companies-house/requestPersonsWithSignificantControl");
 
-exports.officers = require("./src/requestOfficers");
+exports.companiesHouseOfficers = require("./src/companies-house/requestOfficers");
 
-exports.companiesWithSignificantControl = require("./src/requestCompaniesWithSignificantControl");
+exports.companiesHouseCompaniesWithSignificantControl = require("./src/companies-house/requestCompaniesWithSignificantControl");
