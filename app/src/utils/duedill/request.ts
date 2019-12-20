@@ -12,12 +12,12 @@ const searchCompany = async (query: string, countryCodes: Array<string> = ["GB"]
     return body;
 }
 
-const requestCompanyProfile = async (companyNumber: string, countryISOCode: string = "GB") => {
-    const response = await fetch(`${domain}/duedillCompanyProfile/${companyNumber}/${countryISOCode}`, { mode: 'cors' });
+const requestCompanyShareholders = async (companyNumber: string, countryCode: string = "GB") => {
+    const response = await fetch(`${domain}/duedillCompanyShareholders/${countryCode}/${companyNumber}`, { mode: 'cors' });
     const body = await response.json();
     return body;
 }
 
 
 
-export { searchCompany, requestCompanyProfile }
+export { searchCompany, requestCompanyShareholders }

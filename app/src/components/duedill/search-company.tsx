@@ -61,15 +61,14 @@ export default function SearchCompany({ setSelectedCompany }: SearchCompanyProps
             return;
         }
         const res = await searchCompany(query, [selectedCountry]);
-        const companies = res && res.CompanySearchResult && res.CompanySearchResult.Companies && res.CompanySearchResult.Companies.CompanyDTO
-
 
         if (res.errors) {
             setStatus(null);
             console.log(res.errors)
             setErrors(res.errors);
         } else {
-            setCompanies(companies || []);
+            console.log("companiescompanies", res.companies)
+            setCompanies(res.companies);
         }
     }
 
@@ -81,7 +80,7 @@ export default function SearchCompany({ setSelectedCompany }: SearchCompanyProps
             companySearch();
         }
     }
-
+    // console.log("companies", companies)
     return <MainSt>
         {/* <Label>Company Search</Label> */}
         <div style={{ minHeight: 20 }}>
@@ -105,7 +104,7 @@ export default function SearchCompany({ setSelectedCompany }: SearchCompanyProps
                 </CountrySelect>
             </InputWrapper>
             {companies && typeAheadListVisible && <ul>
-                {companies.splice(0, 10).map((company: any) => <li key={company.CompanyID} onClick={() => selectCompany(company)}>{company.Name} <span>({company.CompanyID})</span></li>)}
+                {companies.splice(0, 10).map((company: any) => <li key={company.companyId} onClick={() => selectCompany(company)}>{company.name} <span>({company.companyId})</span></li>)}
             </ul>
             }
         </TypeAhead>

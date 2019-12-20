@@ -6,6 +6,8 @@ admin.initializeApp();
 
 exports.duedillSearchCompany = require("./src/duedill/searchCompany");
 
+exports.duedillCompanyShareholders = require("./src/duedill/requestCompanyShareholders");
+
 exports.kyckrSearchCompany = require("./src/kyckr/searchCompany");
 
 exports.kyckrCompanyProfile = require("./src/kyckr/requestCompanyProfile");
