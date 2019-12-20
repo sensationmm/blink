@@ -60,7 +60,7 @@ export default function SearchCompany({ setSelectedCompany }: SearchCompanyProps
         if (query === "") {
             return;
         }
-        const res = await searchCompany(query, selectedCountry);
+        const res = await searchCompany(query, [selectedCountry]);
         const companies = res && res.CompanySearchResult && res.CompanySearchResult.Companies && res.CompanySearchResult.Companies.CompanyDTO
 
 
