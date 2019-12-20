@@ -7,14 +7,14 @@ const duedillCompanyServer = duedillCompanyExpress();
 
 duedillCompanyServer.use(duedillCompanyCors());
 
-duedillCompanyServer.get('*/:query', function (req: any, res: any) {
+duedillCompanyServer.get('*/:query/:countryCodes', function (req: any, res: any) {
 
-    const { query } = req.params;
+    const { query, countryCodes } = req.params;
 
     const body = {
         criteria: {
             name: query,
-            countryCodes: { values: ["gb"], mode: "any" }
+            countryCodes: { values: countryCodes, mode: "any" }
         }
     }
 
