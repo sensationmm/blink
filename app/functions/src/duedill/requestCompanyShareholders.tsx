@@ -13,6 +13,8 @@ duedillCompanyShareholdersServer.get('*/:companyId/:countryCode', function (req:
 
     console.log("companyId", companyId);
 
+    console.log("DUE_DILL_API_KEY", process.env.DUE_DILL_API_KEY || duedillCompanyShareholdersFunctions.config().due_dill_api.key)
+
     const headerOption = {
         "url": `https://api.companieshouse.gov.uk/company/${countryCode}/${companyId}/shareholders.json`,
         "headers": {

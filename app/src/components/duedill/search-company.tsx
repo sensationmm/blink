@@ -31,16 +31,13 @@ export default function SearchCompany({ setSelectedCompany }: SearchCompanyProps
                 clearTimeout(handler);
             };
         },
-        // Only re-call effect if value changes
-        // You could also add the "delay" var to inputs array if you ...
-        // ... need to be able to change that dynamically.
         [query, selectedCountry]
     );
 
 
     const selectCompany = (company: any) => {
         setCompanies(null)
-        setQuery(company.Name)
+        setQuery(company.name)
         setSelectedCompany(company)
         showTypeAheadList(false);
     }
