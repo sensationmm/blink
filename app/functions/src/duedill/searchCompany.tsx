@@ -16,8 +16,11 @@ duedillCompanyServer.get('*/:query', function (req: any, res: any) {
         countryCodes: { values: ["gb"], mode: "any"}
     }
 
+
+    console.log("api key", duedillFunctions.config().due_dill_api.key);
+
     duedillCompanyRequest.post({
-        headers: { "X-AUTH-TOKEN": `${process.env.DUE_DILL_API_KEY || functions.config().due_dill_api.key}` },
+        headers: { "X-AUTH-TOKEN": `${process.env.DUE_DILL_API_KEY || duedillFunctions.config().due_dill_api.key}` },
         url: 'https://duedil.io/v4/search/companies.json',
         body: JSON.stringify(body)
     }, function (error: any, response: any, body: any) {
