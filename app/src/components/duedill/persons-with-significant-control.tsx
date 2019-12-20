@@ -28,7 +28,7 @@ export default function SignificantPersons({ selectedCompany, setSelectedSignifi
         setCompany(null);
         setErrors(null);
         setStatus("searching")
-        const res = await requestCompanyShareholders(selectedCompany.companyId, selectedCompany.countryCode);
+        const res = await requestCompanyShareholders(selectedCompany.companyId, selectedCompany.countryCode.toLowerCase());
 
 
         if (res.errors) {

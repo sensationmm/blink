@@ -18,7 +18,7 @@ export default function SearchCompany({ setSelectedCompany }: SearchCompanyProps
     const [typeAheadListVisible, showTypeAheadList] = useState(true);
     const [status, setStatus] = useState();
     const [errors, setErrors] = useState();
-    const [selectedCountry, setSelectedCountry] = useState("GB");
+    const [selectedCountry, setSelectedCountry] = useState("gb");
 
     useEffect(
         () => {
@@ -91,13 +91,13 @@ export default function SearchCompany({ setSelectedCompany }: SearchCompanyProps
                 <InputSt className="with-select" autoFocus onKeyUp={keyUp} placeholder="Company Search" onChange={(event: any) => setQuery(event.target.value)} type="text" value={query} />
                 {query && <Cancel className="with-select" onClick={clearCompany}>&times;</Cancel>}
                 <CountrySelect value={selectedCountry} onChange={e => setSelectedCountry(e.target.value)}>
-                    <option value="GB">🇬🇧 United Kingdom</option>
-                    <option value="IE">🇮🇪 Ireland</option>
-                    <option value="DE">🇩🇪 Germany</option>
-                    <option value="IT">🇮🇹 Italy</option>
-                    <option value="SE">🇸🇪 Sweden</option>
-                    <option value="FR">🇫🇷 France</option>
-                    <option value="RO">🇷🇴 Romania</option>
+                    <option value="gb">🇬🇧 United Kingdom</option>
+                    <option value="ie">🇮🇪 Ireland</option>
+                    <option value="de">🇩🇪 Germany</option>
+                    <option value="it">🇮🇹 Italy</option>
+                    <option value="se">🇸🇪 Sweden</option>
+                    <option value="fr">🇫🇷 France</option>
+                    <option value="no">🇷🇴 Romania</option>
                 </CountrySelect>
             </InputWrapper>
             {companies && typeAheadListVisible && <ul>
