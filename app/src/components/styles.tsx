@@ -22,6 +22,10 @@ export const Tabs = styled.ul`
             text-decoration: none;
             padding: 20px;
             display: block;
+
+            span {
+                line-height: 18px;
+            }
         }
 
         &.active {
