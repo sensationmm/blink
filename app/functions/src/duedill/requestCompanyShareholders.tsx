@@ -11,11 +11,11 @@ duedillCompanyShareholdersServer.get('*/:countryCode/:companyId', function (req:
 
     const { companyId, countryCode } = req.params;
 
-    console.log("companyId", companyId);
+    // console.log("companyId", companyId);
 
-    console.log("countryCode", countryCode)
+    // console.log("countryCode", countryCode)
 
-    console.log("DUE_DILL_API_KEY", process.env.DUE_DILL_API_KEY || duedillCompanyShareholdersFunctions.config().due_dill_api.key)
+    // console.log("DUE_DILL_API_KEY", process.env.DUE_DILL_API_KEY || duedillCompanyShareholdersFunctions.config().due_dill_api.key)
 
     // const headerOption = {
     //     "url": `https://api.companieshouse.gov.uk/company/${countryCode}/${companyId}/shareholders.json`,
@@ -26,6 +26,8 @@ duedillCompanyShareholdersServer.get('*/:countryCode/:companyId', function (req:
     //     }
     // };
 
+    console.log("res", res);
+    console.log("headers", res.headers);
 
     duedillCompanyShareholdersRequest.get({
         headers: { "X-AUTH-TOKEN": `${process.env.DUE_DILL_API_KEY || duedillCompanyShareholdersFunctions.config().due_dill_api.key}` },

@@ -18,8 +18,7 @@ duedillCompanyServer.get('*/:query/:countryCodes', function (req: any, res: any)
         }
     }
 
-
-    console.log("api key", duedillFunctions.config().due_dill_api.key);
+    // console.log("api key", duedillFunctions.config().due_dill_api.key);
 
     duedillCompanyRequest.post({
         headers: { "X-AUTH-TOKEN": `${process.env.DUE_DILL_API_KEY || duedillFunctions.config().due_dill_api.key}` },
