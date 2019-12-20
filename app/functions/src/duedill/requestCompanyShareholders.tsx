@@ -7,11 +7,13 @@ const duedillCompanyShareholdersServer = duedillCompanyShareholdersExpress();
 
 duedillCompanyShareholdersServer.use(duedillCompanyShareholdersCors());
 
-duedillCompanyShareholdersServer.get('*/:companyId/:countryCode', function (req: any, res: any) {
+duedillCompanyShareholdersServer.get('*/:countryCode/:companyId', function (req: any, res: any) {
 
     const { companyId, countryCode } = req.params;
 
     console.log("companyId", companyId);
+
+    console.log("countryCode", countryCode)
 
     console.log("DUE_DILL_API_KEY", process.env.DUE_DILL_API_KEY || duedillCompanyShareholdersFunctions.config().due_dill_api.key)
 
