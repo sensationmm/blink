@@ -12,8 +12,10 @@ duedillCompanyServer.get('*/:query', function (req: any, res: any) {
     const { query } = req.params;
 
     const body = {
-        name: query,
-        countryCodes: { values: ["gb"], mode: "any"}
+        criteria: {
+            name: query,
+            countryCodes: { values: ["gb"], mode: "any" }
+        }
     }
 
 
