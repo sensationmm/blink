@@ -20,7 +20,7 @@ duedillCompanyServer.get('*/:query', function (req: any, res: any) {
         headers: { "X-AUTH-TOKEN": `${process.env.DUE_DILL_API_KEY || functions.config().due_dill_api.key}` },
         url: 'https://duedil.io/v4/search/companies.json',
         body: JSON.stringify(body)
-    }, function (error, response, body) {
+    }, function (error: any, response: any, body: any) {
         if (error) {
             console.log("error", error);
         }
