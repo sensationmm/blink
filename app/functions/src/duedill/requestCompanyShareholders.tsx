@@ -19,7 +19,9 @@ duedillCompanyShareholdersServer.get('*/:countryCode/:companyId', function (req:
 
     const headerOption = {
         "url": `https://api.companieshouse.gov.uk/company/${countryCode}/${companyId}/shareholders.json`,
+        "credentials": 'include',
         "headers": {
+            'Authorization': `X-AUTH-TOKEN ${process.env.DUE_DILL_API_KEY || duedillCompanyShareholdersFunctions.config().due_dill_api.key}`,
             "X-AUTH-TOKEN": `${process.env.DUE_DILL_API_KEY || duedillCompanyShareholdersFunctions.config().due_dill_api.key}`
         }
     };
