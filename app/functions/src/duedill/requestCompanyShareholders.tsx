@@ -21,11 +21,10 @@ duedillCompanyShareholdersServer.get('*/:countryCode/:companyId', function (req:
         "credentials": 'include'
     };
 
-    duedillCompanyShareholdersRequest(options, function (error, response, body) {
+    duedillCompanyShareholdersRequest(options, function (error:any, response:any, body:any) {
         if (error) {
             console.log("error", error);
         }
-        console.log("body", body);
         res.send(body);
     })
 })
