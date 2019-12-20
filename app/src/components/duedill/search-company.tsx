@@ -78,7 +78,7 @@ export default function SearchCompany({ setSelectedCompany }: SearchCompanyProps
         }
     }
     // console.log("companies", companies)
-    return <MainSt>
+    return <div>
         {/* <Label>Company Search</Label> */}
         <div style={{ minHeight: 20 }}>
             {companies && <ReactJson collapsed src={companies} />}
@@ -101,10 +101,10 @@ export default function SearchCompany({ setSelectedCompany }: SearchCompanyProps
                 </CountrySelect>
             </InputWrapper>
             {companies && typeAheadListVisible && <ul>
-                {companies.splice(0, 10).map((company: any) => <li key={company.companyId} onClick={() => selectCompany(company)}>{company.name} <span>({company.companyId})</span></li>)}
+                {companies.splice(0, 15).map((company: any) => <li className={company.simplifiedStatus} key={company.companyId} onClick={() => selectCompany(company)}>{company.name} <span>({company.companyId})</span></li>)}
             </ul>
             }
         </TypeAhead>
 
-    </MainSt>
+    </div>
 }

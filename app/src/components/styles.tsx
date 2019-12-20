@@ -124,6 +124,11 @@ export const TypeAhead = styled.div`
             width: calc(100% - 20px);
             cursor: pointer;
 
+            &.Closed {
+                text-decoration: line-through;
+                color: #999;
+            }
+
             span {
                 font-size: 12px;
             }
@@ -160,6 +165,7 @@ export const Items = styled.ul`
         span.title {
             display: block;
             padding: 10px;
+            margin-bottom: 20px;
         }
 
         .react-json-view { 
