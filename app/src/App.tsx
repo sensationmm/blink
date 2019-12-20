@@ -9,6 +9,7 @@ import {
 
 import CompaniesHouse from "./components/companies-house"
 import Kyckr from "./components/kyckr"
+import DueDill from "./components/duedill"
 import { Tabs } from "./components/styles";
 import { Link, withRouter } from "react-router-dom";
 
@@ -21,11 +22,14 @@ export default () => {
 
 const App = withRouter((props: any) => <div>
   <Tabs>
-    <li className={props.location.pathname === "/companies-house" ? "active" : ""}>
+    <li className={props.location.pathname === "/companies-house" || props.location.pathname === "/" ? "active" : ""}>
       <Link to="/companies-house">Companies House</Link>
     </li>
     <li className={props.location.pathname === "/kyckr" ? "active" : ""}>
       <Link to="/kyckr">Kyckr</Link>
+    </li>
+    <li className={props.location.pathname === "/duedill" ? "active" : ""}>
+      <Link to="/duedill">Duedill</Link>
     </li>
   </Tabs>
   <Switch>
@@ -37,6 +41,9 @@ const App = withRouter((props: any) => <div>
     </Route>
     <Route path="/kyckr">
       <Kyckr />
+    </Route>
+    <Route path="/duedill">
+      <DueDill />
     </Route>
     <Route path="*">
       <div>Not found</div>

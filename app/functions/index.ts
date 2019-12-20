@@ -4,7 +4,11 @@ const admin = require('firebase-admin');
 
 admin.initializeApp();
 
+exports.duedillSearchCompany = require("./src/duedill/searchCompany");
+
 exports.kyckrSearchCompany = require("./src/kyckr/searchCompany");
+
+exports.kyckrCompanyProfile = require("./src/kyckr/requestCompanyProfile");
 
 exports.companiesHouseCompany = require("./src/companies-house/requestCompany");
 

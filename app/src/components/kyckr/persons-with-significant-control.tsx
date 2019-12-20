@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { requestSignificantPersons } from '../../utils/kyckr/request';
+import { requestCompanyProfile } from '../../utils/kyckr/request';
 import { MainSt, InputSt, ButtonSt, Company, Errors, Label, Items } from '../styles';
 // import CorporateEntityWithSignificantControl from "./corporate-entity-with-significant-control";
 import ReactJson from 'react-json-view'
@@ -28,7 +28,7 @@ export default function SignificantPersons({ selectedCompany, setSelectedSignifi
         setCompany(null);
         setErrors(null);
         setStatus("searching")
-        const res = await requestSignificantPersons(companyId);
+        const res = await requestCompanyProfile(companyId);
 
 
         if (res.errors) {
