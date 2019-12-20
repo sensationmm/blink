@@ -14,7 +14,7 @@ duedillCompanyServer.get('*/:query/:countryCodes', function (req: any, res: any)
     const body = {
         criteria: {
             name: query,
-            countryCodes: { values: countryCodes, mode: "any" }
+            countryCodes: { values: countryCodes.split(","), mode: "any" }
         }
     }
 

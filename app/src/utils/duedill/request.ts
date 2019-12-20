@@ -7,7 +7,7 @@ const domain = window.location.href.indexOf("localhost") > -1 ? "https://us-cent
 
 
 const searchCompany = async (query: string, countryCodes: Array<string> = ["GB"]) => {
-    const response = await fetch(`${domain}/duedillSearchCompany/${query}/${countryCodes}`, { mode: 'cors' });
+    const response = await fetch(`${domain}/duedillSearchCompany/${query}/${countryCodes.join(",")}`, { mode: 'cors' });
     const body = await response.json();
     return body;
 }
