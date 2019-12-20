@@ -64,7 +64,7 @@ export default function SearchCompany({ setSelectedCompany }: SearchCompanyProps
             console.log(res.errors)
             setErrors(res.errors);
         } else {
-            console.log("companiescompanies", res.companies)
+            // console.log("companiescompanies", res.companies)
             setCompanies(res.companies);
         }
     }

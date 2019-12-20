@@ -36,6 +36,7 @@ export default function SignificantPersons({ selectedCompany, setSelectedSignifi
             console.log(res.errors)
             setErrors(res.errors);
         } else {
+            console.log(res.shareholders)
             setCompany(res);
         }
     }
@@ -53,11 +54,22 @@ export default function SignificantPersons({ selectedCompany, setSelectedSignifi
         <InputSt placeholder="Company Id" onKeyUp={keyUp} onChange={(event: any) => setcompanyId(event.target.value)} type="text" value={companyId} />
         <ButtonSt onClick={lookupSignificantPersons} type="button">Go!</ButtonSt>
         {company && <ReactJson collapsed src={company} />}
-        {/* {company && <Items>{company.items
-            .filter((item: any) => !item.ceased_on)
-            .map((item: any) => <li className={item.kind} key={item.etag}><span title={item.kind} className="title">{item.name}</span>
-                {item.kind === "corporate-entity-person-with-significant-control" && <CorporateEntityWithSignificantControl companyId={companyId} pscId={item.links.self.split("/").slice(-1)[0] } />}
-            </li>)}</Items>} */}
+        {company && <Items>{company.shareholders
+            // .filter((item: any) => !item.ceased_on)
+            .map((shareholder: any) => {
+                let type = shareholder.exactMatches && shareholder.exactMatches[0] && shareholder.exactMatches[0].type;
+                if (!type) {
+                    type = shareholder.notMatched && shareholder.notMatched.suspectedType
+                }
+
+
+                let companyId = shareholder.exactMatches && shareholder.exactMatches[0] && shareholder.exactMatches[0].company && shareholder.exactMatches[0].company.companyId
+
+                return <li className={type} key={`${shareholder.sourceName}-${companyId}`}>
+            <span title={shareholder.sourceName} className="title">{shareholder.sourceName}<br />{shareholder.totalShareholdingPercentage.toFixed(2)}%</span>
+                    {/* {shareholder.kind === "corporate-entity-person-with-significant-control" && <CorporateEntityWithSignificantControl companyId={companyId} pscId={shareholder.links.self.split("/").slice(-1)[0] } />} */}
+                </li>
+            })}</Items>}
 
         {errors && <Errors>
             {errors.map((error: any) => <li key={error.type}>{error.error}</li>)}

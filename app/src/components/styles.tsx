@@ -167,10 +167,12 @@ export const Items = styled.ul`
         }
 
         &.corporate-entity-person-with-significant-control > span,
+        &.company > span,
         &.corporate-secretary > span {
             background-color: pink;
         }
         &.individual-person-with-significant-control > span,
+        &.person > span,
         &.director > span {
             background-color: palegreen;
         }

@@ -9,7 +9,7 @@ duedillCompanyShareholdersServer.use(duedillCompanyShareholdersCors());
 
 duedillCompanyShareholdersServer.get('*/:countryCode/:companyId', function (req: any, res: any) {
 
-    const { companyId, countryCode } = req.params;
+    const { companyId, countryCode, limit } = req.params;
 
     const options = {
         "headers": {
@@ -17,7 +17,7 @@ duedillCompanyShareholdersServer.get('*/:countryCode/:companyId', function (req:
             // 'Authorization': `${process.env.DUE_DILL_API_KEY || duedillCompanyShareholdersFunctions.config().due_dill_api.key}`,
             "X-AUTH-TOKEN": `${process.env.DUE_DILL_API_KEY || duedillCompanyShareholdersFunctions.config().due_dill_api.key}`
         },
-        "url": `https://duedil.io/v4/company/${countryCode}/${companyId}/shareholders.json`,
+        "url": `https://duedil.io/v4/company/${countryCode}/${companyId}/shareholders.json?limit=${limit || 1000}`,
         "credentials": 'include'
     };
 
