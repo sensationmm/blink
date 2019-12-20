@@ -34,7 +34,7 @@ duedillCompanyShareholdersServer.get('*/:countryCode/:companyId', function (req:
         if (error) {
             console.log("error", error);
         }
-        console.log("response", response);
+        console.log("body", body);
         res.send(body)
     });
 
