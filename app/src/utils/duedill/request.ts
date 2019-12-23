@@ -18,6 +18,12 @@ const requestCompanyShareholders = async (companyNumber: string, countryCode: st
     return body;
 }
 
+const requestCompanyPersonsOfSignificantControl = async (companyNumber: string, countryCode: string = "GB") => {
+    const response = await fetch(`${domain}/duedillCompanyPersonsOfSignificantControl/${countryCode}/${companyNumber}`, { mode: 'cors' });
+    const body = await response.json();
+    return body;
+}
 
 
-export { searchCompany, requestCompanyShareholders }
+
+export { searchCompany, requestCompanyShareholders, requestCompanyPersonsOfSignificantControl }

@@ -8,6 +8,8 @@ exports.duedillSearchCompany = require("./src/duedill/searchCompany");
 
 exports.duedillCompanyShareholders = require("./src/duedill/requestCompanyShareholders");
 
+exports.duedillCompanyPersonsOfSignificantControl = require("./src/duedill/requestCompanyPersonsOfSignificantControl");
+
 exports.kyckrSearchCompany = require("./src/kyckr/searchCompany");
 
 exports.kyckrCompanyProfile = require("./src/kyckr/requestCompanyProfile");
