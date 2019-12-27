@@ -9,11 +9,22 @@ const searchCompany = async (query: string, countryISOCode: string = "GB") => {
 }
 
 const requestCompanyProfile = async (companyNumber: string, countryISOCode: string = "GB") => {
-    const response = await fetch(`${domain}/kyckr/CompanyProfile/${companyNumber}/${countryISOCode}`, { mode: 'cors' });
+    const response = await fetch(`${domain}/kyckrCompanyProfile/${companyNumber}/${countryISOCode}`, { mode: 'cors' });
+    try {
+        const body = await response.json();
+        return body;
+    }
+    catch(e) {
+        return null
+    }
+}
+
+const requestCompanyOfficials = async (companyNumber: string, countryISOCode: string = "GB") => {
+    const response = await fetch(`${domain}/kyckrCompanyOfficials/${companyNumber}/${countryISOCode}`, { mode: 'cors' });
     const body = await response.json();
     return body;
 }
 
 
 
-export { searchCompany, requestCompanyProfile }
+export { searchCompany, requestCompanyProfile, requestCompanyOfficials }

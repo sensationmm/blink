@@ -160,11 +160,28 @@ export const Items = styled.ul`
         // border: 1px solid #ccc;
         padding: 0px;
         // max-width: 200px;
-        margin: 0 20px 0 0;
+        margin: 0 10px;
         display: flex;
         align-items: center;
         text-align: center;
         flex-direction: column
+
+
+        ul {
+            padding: 10px 0;
+            border: 1px solid #ccc;
+            position: relative;
+
+            &::before {
+                content: "";
+                height: 20px;
+                width: 1px;
+                background-color: #ccc;
+                position: absolute;
+                left: 50%;
+                top: -20px;
+            }
+        }   
 
         span.title {
             display: block;

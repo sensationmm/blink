@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { requestCompanyProfile } from '../../utils/kyckr/request';
+import { requestCompanyOfficials, requestCompanyProfile } from '../../utils/kyckr/request';
 import { MainSt, InputSt, ButtonSt, Company, Errors, Label, Items } from '../styles';
 // import CorporateEntityWithSignificantControl from "./corporate-entity-with-significant-control";
+import PersonsWithSignificantControl from "./persons-with-significant-control";
 import ReactJson from 'react-json-view'
 
 type Props = {
@@ -20,23 +21,29 @@ export default function SignificantPersons({ selectedCompany, setSelectedSignifi
         () => {
             setcompanyId(selectedCompany.CompanyID)
             setSelectedSignificantPersons();
-        }
+            lookupSignificantPersons()
+        },
+        [selectedCompany.CompanyID]
     );
+
 
 
     const lookupSignificantPersons = async () => {
         setCompany(null);
         setErrors(null);
         setStatus("searching")
-        const res = await requestCompanyProfile(companyId);
+        // const res = await requestCompanyOfficials(companyId);
+        console.log("selectedCompany", selectedCompany.CompanyID)
+        const res = await requestCompanyProfile(selectedCompany.CompanyID);
 
-
-        if (res.errors) {
-            setStatus(null);
-            console.log(res.errors)
-            setErrors(res.errors);
-        } else {
-            setCompany(res);
+        if (res) {
+            if (res.errors) {
+                setStatus(null);
+                console.log(res.errors)
+                setErrors(res.errors);
+            } else {
+                setCompany(res);
+            }
         }
     }
 
@@ -48,19 +55,74 @@ export default function SignificantPersons({ selectedCompany, setSelectedSignifi
         }
     }
 
-    return <MainSt>
-        <Label>Persons with Signficant Control (List):</Label>
+    return <>
+        {/* <Label>Persons with Signficant Control (List):</Label>
         <InputSt placeholder="Company Id" onKeyUp={keyUp} onChange={(event: any) => setcompanyId(event.target.value)} type="text" value={companyId} />
-        <ButtonSt onClick={lookupSignificantPersons} type="button">Go!</ButtonSt>
-        {company && <ReactJson collapsed src={company} />}
-        {/* {company && <Items>{company.items
-            .filter((item: any) => !item.ceased_on)
-            .map((item: any) => <li className={item.kind} key={item.etag}><span title={item.kind} className="title">{item.name}</span>
-                {item.kind === "corporate-entity-person-with-significant-control" && <CorporateEntityWithSignificantControl companyId={companyId} pscId={item.links.self.split("/").slice(-1)[0] } />}
-            </li>)}</Items>} */}
+        <ButtonSt onClick={lookupSignificantPersons} type="button">Go!</ButtonSt> */}
+        {/* {company && <ReactJson collapsed src={company} />} */}
+        {/* {company && 
+            company.CompanyOfficialsResult && 
+            company.CompanyOfficialsResult.CompanyOfficials && 
+            company.CompanyOfficialsResult.CompanyOfficials.Officials && 
+            company.CompanyOfficialsResult.CompanyOfficials.Officials.OfficialDTO && 
+            <Items>{company.CompanyOfficialsResult.CompanyOfficials.Officials.OfficialDTO 
+            // .filter((item: any) => !item.ceased_on)
+            .map((item: any) => <li className={item.Function} key={`${item.FirstName}-${item.LastName}-${item.DateOfBirth}`}><span title={item.Function} className="title">{`${item.FirstName} ${item.FamilyName}`}</span>
+                {/* {item.kind === "corporate-entity-person-with-significant-control" && <CorporateEntityWithSignificantControl companyId={companyId} pscId={item.links.self.split("/").slice(-1)[0] } />} */}
+        {/* </li>)}</Items>} */}
+        {company &&
+            company.CompanyProfileResult && <Items>
+                {
+                    company &&
+                    company.CompanyProfileResult &&
+                    company.CompanyProfileResult.CompanyProfile &&
+                    company.CompanyProfileResult.CompanyProfile.directorAndShareDetails &&
+                    company.CompanyProfileResult.CompanyProfile.directorAndShareDetails.shareHolders &&
+                    company.CompanyProfileResult.CompanyProfile.directorAndShareDetails.shareHolders.ShareholderDetails &&
+
+
+                    company.CompanyProfileResult.CompanyProfile.directorAndShareDetails.shareHolders.ShareholderDetails
+                        .filter((item: any) => !item.ceased_on)
+                        .map((item: any) =>
+                            <li className={item.title} key={`${item.name}-${item.birthdate}`}>
+                                <span title={item.title} className="title">{item.name}</span>
+                                {
+                                    item.directorNumber && <PersonsWithSignificantControl
+                                        selectedCompany={{ ...item, CompanyID: item.directorNumber }}
+                                        setSelectedSignificantPersons={setSelectedSignificantPersons}
+                                    />
+                                }
+                            </li>
+                        )}
+
+                {
+                    company &&
+                    company.CompanyProfileResult &&
+                    company.CompanyProfileResult.CompanyProfile &&
+                    company.CompanyProfileResult.CompanyProfile.directorAndShareDetails &&
+                    company.CompanyProfileResult.CompanyProfile.directorAndShareDetails.directors &&
+                    company.CompanyProfileResult.CompanyProfile.directorAndShareDetails.directors.Director &&
+
+
+                    company.CompanyProfileResult.CompanyProfile.directorAndShareDetails.directors.Director
+                        .filter((item: any) => !item.ceased_on)
+                        .map((item: any) =>
+                            <li className={item.title} key={item.name}>
+                                <span title={item.title} className="title">{item.name}</span>
+                                {
+                                    item.directorNumber && <PersonsWithSignificantControl
+                                        selectedCompany={{ ...item, CompanyID: item.directorNumber }}
+                                        setSelectedSignificantPersons={setSelectedSignificantPersons}
+                                    />
+                                }
+                            </li>
+                        )
+
+                }
+            </Items>}
 
         {errors && <Errors>
             {errors.map((error: any) => <li key={error.type}>{error.error}</li>)}
         </Errors>}
-    </MainSt>
+    </>
 }

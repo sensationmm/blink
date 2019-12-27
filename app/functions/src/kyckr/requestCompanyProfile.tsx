@@ -13,7 +13,8 @@ kyckrCompanyProfileServer.get('*/:companyCode/:countryISOCode', function (req: a
 
     console.log("companyCode", companyCode);
 
-    const url = 'https://testws.kyckr.eu/gbronboarding.asmx?wsdl';
+    // const url = 'https://testws.kyckr.eu/gbronboarding.asmx?wsdl';
+    const url = 'https://testws.kyckr.eu/GBRDServices.asmx?wsdl';
     var args = { email: "terry.cordeiro@11fs.com", password: "6c72fde3", countryISOCode, companyCode, termsAndConditions: true };
 
     const auth = "Basic " + JSON.stringify({"terry.cordeiro@11fs.com":"6c72fde3"})
@@ -29,7 +30,7 @@ kyckrCompanyProfileServer.get('*/:companyCode/:countryISOCode', function (req: a
                 console.log(err)
             }
 
-            res.send(JSON.parse(result));
+            res.send(result);
         });
     });
 })

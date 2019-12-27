@@ -37,7 +37,7 @@ kyckrServer.get('*/:query/:countryISOCode', function (req: any, res: any) {
                 console.log(err)
             }
 
-            res.send(JSON.parse(result));
+            res.send(result);
         });
     });
 })

@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { requestCompanyShareholders } from '../../utils/duedill/request';
+import { requestCompanyPersonsOfSignificantControl } from '../../utils/duedill/request';
 import { MainSt, InputSt, ButtonSt, Company, Errors, Label, Items } from '../styles';
-import ShareHolder from "./persons-with-significant-control";
-// import CorporateEntityWithSignificantControl from "./corporate-entity-with-significant-control";
+import PersonsWithSignificantControl from "./persons-with-significant-control";
 import ReactJson from 'react-json-view'
 
 type Props = {
@@ -10,7 +9,7 @@ type Props = {
     setSelectedSignificantPersons: any
 }
 
-export default function SignificantPersons({ selectedCompany, setSelectedSignificantPersons }: Props) {
+export default function CompamyPersonsWithSignificantControl({ selectedCompany, setSelectedSignificantPersons }: Props) {
 
     const [companyId, setcompanyId] = useState("");
     const [company, setCompany] = useState();
@@ -31,7 +30,8 @@ export default function SignificantPersons({ selectedCompany, setSelectedSignifi
         setCompany(null);
         setErrors(null);
         setStatus("searching")
-        const res = await requestCompanyShareholders(selectedCompany.companyId, selectedCompany.countryCode && selectedCompany.countryCode.toLowerCase());
+        console.log(`looking up persons with control for company Id ${selectedCompany.companyId}`)
+        const res = await requestCompanyPersonsOfSignificantControl(selectedCompany.companyId, selectedCompany.countryCode && selectedCompany.countryCode.toLowerCase());
 
 
         if (res.errors) {
@@ -52,30 +52,38 @@ export default function SignificantPersons({ selectedCompany, setSelectedSignifi
         }
     }
 
-    return <div>
-        {/* <Label>Persons with Signficant Control (List):</Label>
+    return <>
+        {company && company.personsOfSignificantControl &&  company.personsOfSignificantControl.length > 0 && <Items>
+            {/* <Label>Persons with Signficant Control (List):</Label>
         <InputSt placeholder="Company Id" onKeyUp={keyUp} onChange={(event: any) => setcompanyId(event.target.value)} type="text" value={companyId} />
         <ButtonSt onClick={lookupSignificantPersons} type="button">Go!</ButtonSt> */}
-        {/* {company && <ReactJson collapsed src={company} />} */}
-        {company && company.shareholders && <Items>{company.shareholders
-            // .filter((item: any) => !item.ceased_on)
-            .filter((shareholder: any ) => shareholder.totalShareholdingPercentage && parseInt(shareholder.totalShareholdingPercentage) >= 3)
-            .map((shareholder: any) => {
-                let type = shareholder.exactMatches && shareholder.exactMatches[0] && shareholder.exactMatches[0].type;
-                if (!type) {    
-                    type = shareholder.notMatched && shareholder.notMatched.suspectedType
-                }
+            {/* {company && <ReactJson collapsed src={company} />} */}
+            {company && company.personsOfSignificantControl
+                // .filter((item: any) => !item.ceased_on)
+                // .filter((shareholder: any ) => shareholder.totalShareholdingPercentage && parseInt(shareholder.totalShareholdingPercentage) >= 3)
+                .map((shareholder: any) => {
+                    let type = shareholder.exactMatches && shareholder.exactMatches[0] && shareholder.exactMatches[0].type;
+                    if (!type) {
+                        type = shareholder.notMatched && shareholder.notMatched.suspectedType
+                    }
 
-                let companyId = shareholder.exactMatches && shareholder.exactMatches[0] && shareholder.exactMatches[0].company && shareholder.exactMatches[0].company.companyId
+                    let companyId = shareholder && shareholder.exactMatches && shareholder.exactMatches[0] && shareholder.exactMatches[0].company && shareholder.exactMatches[0].company.companyId
+                    const sourceName = shareholder && shareholder.company && shareholder.company.sourceName;
 
-                return <li className={type} key={`${shareholder.sourceName}-${companyId}`}>
-            <span title={shareholder.sourceName} className="title">{shareholder.sourceName}<br />{shareholder.totalShareholdingPercentage.toFixed(2)}%</span>
-                    {type === "company" && companyId && <ShareHolder setSelectedSignificantPersons={setSelectedSignificantPersons} selectedCompany={{...shareholder, companyId, countryCode:selectedCompany.countryCode}} />}
-                </li>
-            })}</Items>}
 
-        {errors && <Errors>
-            {errors.map((error: any) => <li key={error.type}>{error.error}</li>)}
-        </Errors>}
-    </div>
+
+                    return <li className={type} key={`${sourceName}-${companyId}`}>
+                        <span title={sourceName} className="title">{sourceName}{companyId && <span style={{ fontSize: 9 }}><br />{companyId}</span>}<br />{shareholder.totalShareholdingPercentage && shareholder.totalShareholdingPercentage.toFixed(2)}%</span>
+                        {
+                            // type === "company" && companyId && 
+                            <PersonsWithSignificantControl setSelectedSignificantPersons={setSelectedSignificantPersons} selectedCompany={{ ...shareholder, companyId, countryCode: selectedCompany.countryCode }} />}
+                    </li>
+                })}
+
+            {errors && <Errors>
+                {errors.map((error: any) => <li key={error.type}>{error.error}</li>)}
+            </Errors>}
+        </Items>
+        }
+    </>
 }

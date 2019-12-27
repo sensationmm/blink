@@ -82,7 +82,7 @@ export default function SearchCompany({ setSelectedCompany }: SearchCompanyProps
         }
     }
 
-    return <MainSt>
+    return <>
         {/* <Label>Company Search</Label> */}
         <div style={{ minHeight: 20 }}>
             {companies && <ReactJson collapsed src={companies} />}
@@ -110,5 +110,5 @@ export default function SearchCompany({ setSelectedCompany }: SearchCompanyProps
             }
         </TypeAhead>
 
-    </MainSt>
+    </>
 }

@@ -14,6 +14,8 @@ exports.kyckrSearchCompany = require("./src/kyckr/searchCompany");
 
 exports.kyckrCompanyProfile = require("./src/kyckr/requestCompanyProfile");
 
+exports.kyckrCompanyOfficials = require("./src/kyckr/requestCompanyOfficials");
+
 exports.companiesHouseCompany = require("./src/companies-house/requestCompany");
 
 exports.companiesHouseSearchCompany = require("./src/companies-house/searchCompany");
