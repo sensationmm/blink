@@ -86,7 +86,7 @@ export const Cancel = styled.span`
     cursor: pointer;
 
     &.with-select {
-        right: 155px;
+        right: 275px;
     }
 `
 
@@ -108,7 +108,7 @@ export const TypeAhead = styled.div`
         outline: none;
 
         &.with-select {
-            width: calc(100% - 184px);
+            width: calc(100% - 304px);
         }
     }
 
@@ -116,7 +116,7 @@ export const TypeAhead = styled.div`
         margin: 0 0 20px;
         padding: 0;
         position: absolute;
-        width: 100%;
+        width: calc(100% - 282px);
         background-color: #fff;
         z-index: 1;
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect, Dispatch } from 'react';
 import styled from "styled-components";
 import { searchCompany } from '../../utils/kyckr/request';
 import { MainSt, InputSt, ButtonSt, Company, Errors, Label, TypeAhead, InputWrapper, Cancel, CountrySelect } from '../styles';
+import CountrySelector from "../countrySelector";
 import ReactJson from 'react-json-view'
 
 
@@ -18,7 +19,7 @@ export default function SearchCompany({ setSelectedCompany }: SearchCompanyProps
     const [typeAheadListVisible, showTypeAheadList] = useState(true);
     const [status, setStatus] = useState();
     const [errors, setErrors] = useState();
-    const [selectedCountry, setSelectedCountry] = useState("GB");
+    const [selectedCountry, setSelectedCountry] = useState({value: "GB", label: "United Kingdom 🇬🇧" });
 
     useEffect(
         () => {
@@ -60,7 +61,7 @@ export default function SearchCompany({ setSelectedCompany }: SearchCompanyProps
         if (query === "") {
             return;
         }
-        const res = await searchCompany(query, selectedCountry);
+        const res = await searchCompany(query, selectedCountry.value);
         const companies = res && res.CompanySearchResult && res.CompanySearchResult.Companies && res.CompanySearchResult.Companies.CompanyDTO
 
 
@@ -94,15 +95,8 @@ export default function SearchCompany({ setSelectedCompany }: SearchCompanyProps
             <InputWrapper>
                 <InputSt className="with-select" autoFocus onKeyUp={keyUp} placeholder="Company Search" onChange={(event: any) => setQuery(event.target.value)} type="text" value={query} />
                 {query && <Cancel className="with-select" onClick={clearCompany}>&times;</Cancel>}
-                <CountrySelect value={selectedCountry} onChange={e => setSelectedCountry(e.target.value)}>
-                    <option value="GB">🇬🇧 United Kingdom</option>
-                    <option value="IE">🇮🇪 Ireland</option>
-                    <option value="DE">🇩🇪 Germany</option>
-                    <option value="IT">🇮🇹 Italy</option>
-                    <option value="SE">🇸🇪 Sweden</option>
-                    <option value="FR">🇫🇷 France</option>
-                    <option value="RO">🇷🇴 Romania</option>
-                </CountrySelect>
+                <CountrySelector isMulti={false} value={selectedCountry} onChange={setSelectedCountry} />
+                
             </InputWrapper>
             {companies && typeAheadListVisible && <ul>
                 {companies.splice(0, 10).map((company: any) => <li key={company.CompanyID} onClick={() => selectCompany(company)}>{company.Name} <span>({company.CompanyID})</span></li>)}

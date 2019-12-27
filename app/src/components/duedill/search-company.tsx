@@ -1,7 +1,8 @@
 import React, { useState, useEffect, Dispatch } from 'react';
 import styled from "styled-components";
 import { searchCompany } from '../../utils/duedill/request';
-import { MainSt, InputSt, ButtonSt, Company, Errors, Label, TypeAhead, InputWrapper, Cancel, CountrySelect } from '../styles';
+import { MainSt, InputSt, ButtonSt, Company, Errors, Label, TypeAhead, InputWrapper, Cancel } from '../styles';
+import CountrySelector from "../countrySelector";
 import ReactJson from 'react-json-view'
 
 
@@ -18,7 +19,7 @@ export default function SearchCompany({ setSelectedCompany }: SearchCompanyProps
     const [typeAheadListVisible, showTypeAheadList] = useState(true);
     const [status, setStatus] = useState();
     const [errors, setErrors] = useState();
-    const [selectedCountry, setSelectedCountry] = useState("gb");
+    const [selectedCountry, setSelectedCountry] = useState([{value: "GB", label: "United Kingdom 🇬🇧" }]);
 
     useEffect(
         () => {
@@ -57,7 +58,7 @@ export default function SearchCompany({ setSelectedCompany }: SearchCompanyProps
         if (query === "") {
             return;
         }
-        const res = await searchCompany(query, [selectedCountry]);
+        const res = await searchCompany(query, selectedCountry.map((country: any) => country.value));
 
         if (res.errors) {
             setStatus(null);
@@ -88,17 +89,9 @@ export default function SearchCompany({ setSelectedCompany }: SearchCompanyProps
         </Errors>}
         <TypeAhead>
             <InputWrapper>
+                <CountrySelector isMulti value={selectedCountry} onChange={setSelectedCountry} />
                 <InputSt className="with-select" autoFocus onKeyUp={keyUp} placeholder="Company Search" onChange={(event: any) => setQuery(event.target.value)} type="text" value={query} />
                 {query && <Cancel className="with-select" onClick={clearCompany}>&times;</Cancel>}
-                <CountrySelect value={selectedCountry} onChange={e => setSelectedCountry(e.target.value)}>
-                    <option value="gb">🇬🇧 United Kingdom</option>
-                    <option value="ie">🇮🇪 Ireland</option>
-                    <option value="de">🇩🇪 Germany</option>
-                    <option value="it">🇮🇹 Italy</option>
-                    <option value="se">🇸🇪 Sweden</option>
-                    <option value="fr">🇫🇷 France</option>
-                    <option value="no">🇷🇴 Romania</option>
-                </CountrySelect>
             </InputWrapper>
             {companies && typeAheadListVisible && <ul>
                 {companies.splice(0, 15).map((company: any) => <li className={company.simplifiedStatus} key={company.companyId} onClick={() => selectCompany(company)}>{company.name} <span>({company.companyId})</span></li>)}
