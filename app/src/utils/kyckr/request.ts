@@ -19,6 +19,25 @@ const requestCompanyProfile = async (companyNumber: string, countryISOCode: stri
     }
 }
 
+const getCompanyIdFromSearch = async (query: string, countryISOCode: string = "GB") => {
+    const response = await searchCompany(query, countryISOCode);
+    const body = await response;
+    console.log(query)
+    let company;
+    if (response && response.CompanySearchResult && 
+        response.CompanySearchResult.Companies && 
+        response.CompanySearchResult.Companies.CompanyDTO) {
+        company = response.CompanySearchResult.Companies.CompanyDTO.find((c: any) => c.Name.toLowerCase() === query.toLowerCase())
+        // console.log("getCompanyIdFromSearch", company.CompanyID);
+    }
+    if (company && company.CompanyID) {
+        return company.CompanyID;
+    } else {
+        return "none";
+    }
+    
+}
+
 const requestCompanyOfficials = async (companyNumber: string, countryISOCode: string = "GB") => {
     const response = await fetch(`${domain}/kyckrCompanyOfficials/${companyNumber}/${countryISOCode}`, { mode: 'cors' });
     const body = await response.json();
@@ -27,4 +46,4 @@ const requestCompanyOfficials = async (companyNumber: string, countryISOCode: st
 
 
 
-export { searchCompany, requestCompanyProfile, requestCompanyOfficials }
+export { searchCompany, requestCompanyProfile, requestCompanyOfficials, getCompanyIdFromSearch }

@@ -9,17 +9,18 @@ import ReactJson from 'react-json-view'
 const delay = 400;
 
 type SearchCompanyProps = {
-    setSelectedCompany: Dispatch<any>
+    setSelectedCompany: Dispatch<any>,
+    selectedCountry: any,
+    setSelectedCountry: any
 }
-
-export default function SearchCompany({ setSelectedCompany }: SearchCompanyProps) {
+export default function SearchCompany(props: SearchCompanyProps) {
 
     const [query, setQuery] = useState("");
     const [companies, setCompanies] = useState();
     const [typeAheadListVisible, showTypeAheadList] = useState(true);
     const [status, setStatus] = useState();
     const [errors, setErrors] = useState();
-    const [selectedCountry, setSelectedCountry] = useState({value: "GB", label: "United Kingdom 🇬🇧" });
+    const [selectedCountry, setSelectedCountry] = useState(props.selectedCountry);
 
     useEffect(
         () => {
@@ -27,7 +28,7 @@ export default function SearchCompany({ setSelectedCompany }: SearchCompanyProps
             const handler = setTimeout(() => {
                 companySearch();
             }, delay);
-            
+
             return () => {
                 clearTimeout(handler);
             };
@@ -42,13 +43,13 @@ export default function SearchCompany({ setSelectedCompany }: SearchCompanyProps
     const selectCompany = (company: any) => {
         setCompanies(null)
         setQuery(company.Name)
-        setSelectedCompany(company)
+        props.setSelectedCompany(company)
         showTypeAheadList(false);
     }
 
     const clearCompany = () => {
         setQuery("");
-        setSelectedCompany("");
+        props.setSelectedCompany("");
     }
 
 
@@ -95,8 +96,12 @@ export default function SearchCompany({ setSelectedCompany }: SearchCompanyProps
             <InputWrapper>
                 <InputSt className="with-select" autoFocus onKeyUp={keyUp} placeholder="Company Search" onChange={(event: any) => setQuery(event.target.value)} type="text" value={query} />
                 {query && <Cancel className="with-select" onClick={clearCompany}>&times;</Cancel>}
-                <CountrySelector isMulti={false} value={selectedCountry} onChange={setSelectedCountry} />
-                
+                <CountrySelector isMulti={false} value={selectedCountry} onChange={(country: any) => {
+                    setSelectedCountry(country)
+                    props.setSelectedCountry(country)
+                }}
+                />
+
             </InputWrapper>
             {companies && typeAheadListVisible && <ul>
                 {companies.splice(0, 10).map((company: any) => <li key={company.CompanyID} onClick={() => selectCompany(company)}>{company.Name} <span>({company.CompanyID})</span></li>)}

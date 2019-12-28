@@ -11,15 +11,20 @@ import { MainSt } from "../styles";
 export default function Kyckr() {
 
     const [selectedCompany, setSelectedCompany] = useState()
+    const [selectedCountry, setSelectedCountry] = useState({value: "GB", label: "United Kingdom 🇬🇧" })
     const [selectedOfficer, setSelectedOfficer] = useState()
     const [selectedSignificantPersons, setSelectedSignificantPersons] = useState()
-
     return (
         <MainSt>
 
-            <CompanySearch setSelectedCompany={setSelectedCompany} />
+            <CompanySearch setSelectedCompany={setSelectedCompany} selectedCountry={selectedCountry} setSelectedCountry={setSelectedCountry} />
 
-            {selectedCompany && <SignificantPersons setSelectedSignificantPersons={setSelectedSignificantPersons} selectedCompany={selectedCompany} />}
+            {selectedCompany && 
+                <SignificantPersons 
+                    knownPWSC={[]} 
+                    setSelectedSignificantPersons={setSelectedSignificantPersons} 
+                    selectedCountry={selectedCountry.value} 
+                    selectedCompany={selectedCompany} />}
 
             {/* selectedCompany && <Officers setSelectedOfficer={setSelectedOfficer} selectedCompany={selectedCompany} />} */}
 

@@ -195,6 +195,7 @@ export const Items = styled.ul`
 
         &.corporate-entity-person-with-significant-control > span,
         &.company > span,
+        &.limited-company > span,
         &.corporate-secretary > span {
             background-color: pink;
         }

@@ -23,7 +23,8 @@ export default function CountrySelector({ isMulti, onChange, value }: Props) {
         { value: "IT", label: "Italy 🇮🇹" },
         { value: "SE", label: "Sweden 🇸🇪" },
         { value: "FR", label: "France 🇫🇷" },
-        { value: "RO", label: "Romania 🇷🇴" }
+        { value: "RO", label: "Romania 🇷🇴" },
+        { value: "KY", label: "Cayman Islands 🇰🇾" },
     ]
     
 
