@@ -32,4 +32,27 @@ const requestOfficers = async (companyId: string) => {
     return body;
 }
 
-export { requestCompany, requestSignificantPersons, searchCompany, requestSignificantCorporateEntity, requestOfficers }
+const getCompanyIdFromSearch = async (query: string) => {
+    const response = await searchCompany(query);
+    const body = await response;
+    // console.log(response)
+    let company;
+    if (response && response.items) {
+        company = response.items.find((c: any) => {
+            console.log(`${c.title.toLowerCase().replace(/\s/g, "")}-${query.toLowerCase().replace(/\s/g, "")}`)
+
+            return c.title.toLowerCase().replace(/\s/g, "") === query.toLowerCase().replace(/\s/g, "")
+        })
+    }
+    if (company && company.company_number) {
+        return company.company_number;
+    } else if (company && company.identification && company.identification.registration_number) {
+
+        console.log(company.identification.registration_number)
+        return company.identification.registration_number;
+    } else {
+        return "none";
+    }
+}
+
+export { requestCompany, requestSignificantPersons, searchCompany, requestSignificantCorporateEntity, requestOfficers, getCompanyIdFromSearch }

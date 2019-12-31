@@ -216,8 +216,24 @@ export const Items = styled.ul`
         &.corporate-director > span {
             background-color: #ccc;
         }
+        &.llp-member > span {
+            background-color: #eee;
+        }
+        &.llp-designated-member  > span {
+            background-color: #ddd;
+        }
     }
 
+`
+
+export const SignificantPersonsSt = styled.div` 
+    // background-color: magenta;
+    padding: 10px 20px;
+`
+
+export const OfficersSt  = styled.div` 
+    // background-color: lime;
+    padding: 10px 20px;
 `
 
 export const CountrySelect = styled.select`

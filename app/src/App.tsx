@@ -7,7 +7,7 @@ import {
   // Link
 } from "react-router-dom";
 
-import CompaniesHouse from "./components/companies-house"
+import CompaniesHouse from "./components/companies-house-2"
 import Kyckr from "./components/kyckr"
 import DueDill from "./components/duedill"
 import { Tabs } from "./components/styles";
