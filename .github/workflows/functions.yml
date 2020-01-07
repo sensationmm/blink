@@ -24,6 +24,7 @@ jobs:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY}}
           DUE_DILL_API_KEY: ${{ secrets.DUE_DILL_API_KEY}}
+          TRULIOO_API_KEY: ${{ secrets.TRULIOO_API_KEY}}
       - name: Install function dependencies
         working-directory: ./app/functions
         run: npm install 
