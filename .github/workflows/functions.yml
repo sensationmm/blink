@@ -19,7 +19,7 @@ jobs:
         run: yarn add firebase-tools
       - name: Set functions secrets
         working-directory: ./app
-        run: ./node_modules/.bin/firebase functions:config:set due_dill_api.key=${DUE_DILL_API_KEY} companies_house_api.key=${COMPANIES_HOUSE_API_KEY} companies_house_api.id="Companies house" --token $FIREBASE_TOKEN
+        run: ./node_modules/.bin/firebase functions:config:set due_dill_api.key=${DUE_DILL_API_KEY} trulioo_api.key=${TRULIOO_API_KEY} companies_house_api.key=${COMPANIES_HOUSE_API_KEY} companies_house_api.id="Companies house" --token $FIREBASE_TOKEN
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY}}
