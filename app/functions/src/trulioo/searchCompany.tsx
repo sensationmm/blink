@@ -5,12 +5,12 @@ const truliooSearchCompanyRequest = require('request');
 
 const truliooSearchCompanyServer = truliooSearchCompanyExpress();
 
-truliooSearchCompanyServer.use(truliooSearchCompanyRequest());
+truliooSearchCompanyServer.use(truliooSearchCompanyCors());
 
 truliooSearchCompanyServer.get('*/:query', function (req: any, res: any) {
 
     const { query } = req.params;
-    
+
 
     const headerOption = {
         "url": `https://api.globaldatacompany.com/connection/v1/sayhello/${query}`,
