@@ -26,6 +26,8 @@ exports.companiesHouseOfficers = require("./src/companies-house/requestOfficers"
 
 exports.companiesHouseCompaniesWithSignificantControl = require("./src/companies-house/requestCompaniesWithSignificantControl");
 
-exports.truliooSearchCompany = require("./src/trulioo/searchCompany");
+exports.truliooIdentityVerification = require("./src/trulioo/indentityVerification");
 
-exports.truliooCountryCodes = require("./src/trulioo/countryCodes");
+exports.truliooIdentityVerificationCountryCodes = require("./src/trulioo/identityVerificationCountryCodes");
+
+exports.truliooDocumentVerificationCountryCodes = require("./src/trulioo/documentVerificationCountryCodes");
