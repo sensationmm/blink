@@ -15,8 +15,7 @@ truliooSearchCompanyServer.get('*/:query', function (req: any, res: any) {
         // "url": `https://api.globaldatacompany.com/connection/v1/sayhello/${query}`,
         "url": "https://gateway.trulioo.com/trial/connection/v1/testauthentication",
         "headers": {
-            "x-trulioo-api-key": `${process.env.TRULIOO_API_KEY || truliooFunctions.config().trulioo_api.key}`,
-            // "Authorization": `${process.env.TRULIOO_API_KEY || truliooFunctions.config().trulioo_api.key}`
+            "x-trulioo-api-key": `${process.env.TRULIOO_API_KEY || truliooFunctions.config().trulioo_api.key}`
         }
     };
 
