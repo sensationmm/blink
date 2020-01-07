@@ -3,11 +3,11 @@ const truliooDocVCountryCodesCors = require('cors');
 const truliooDocVCountryCodesExpress = require('express');
 const truliooDocVCountryCodesRequest = require('request');
 
-const truliooCountryCodesServer = truliooDocVCountryCodesExpress();
+const truliooDocVCountryCodesServer = truliooDocVCountryCodesExpress();
 
-truliooCountryCodesServer.use(truliooDocVCountryCodesCors());
+truliooDocVCountryCodesServer.use(truliooDocVCountryCodesCors());
 
-truliooCountryCodesServer.get('*/', function (req: any, res: any) {
+truliooDocVCountryCodesServer.get('*/', function (req: any, res: any) {
 
     const headerOption = {
         "url": "https://gateway.trulioo.com/trial/configuration/v1/countrycodes/Document Verification",
@@ -26,4 +26,4 @@ truliooCountryCodesServer.get('*/', function (req: any, res: any) {
     );
 })
 
-module.exports = truliooDocVCountryCodesFunctions.https.onRequest(truliooCountryCodesServer)
+module.exports = truliooDocVCountryCodesFunctions.https.onRequest(truliooDocVCountryCodesServer)

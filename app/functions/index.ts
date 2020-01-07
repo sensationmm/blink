@@ -31,3 +31,5 @@ exports.truliooIdentityVerification = require("./src/trulioo/indentityVerificati
 exports.truliooIdentityVerificationCountryCodes = require("./src/trulioo/identityVerificationCountryCodes");
 
 exports.truliooDocumentVerificationCountryCodes = require("./src/trulioo/documentVerificationCountryCodes");
+
+exports.truliooDocumentVerificationTypes = require("./src/trulioo/documentVerificationTypes");
