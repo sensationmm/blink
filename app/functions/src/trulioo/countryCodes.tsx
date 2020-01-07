@@ -7,19 +7,14 @@ const truliooCountryCodesServer = truliooCountryCodesExpress();
 
 truliooCountryCodesServer.use(truliooCountryCodesCors());
 
-truliooCountryCodesServer.get('*/:query', function (req: any, res: any) {
+truliooCountryCodesServer.get('*/', function (req: any, res: any) {
 
-    // const { query } = req.params;
-    
     const headerOption = {
-        // "url": `https://api.globaldatacompany.com/connection/v1/sayhello/${query}`,
         "url": "https://gateway.trulioo.com/trial/configuration/v1/countrycodes/Identity Verification",
         "headers": {
             "x-trulioo-api-key": `${process.env.TRULIOO_API_KEY || truliooCountryCodesFunctions.config().trulioo_api.key}`
         }
     };
-
-    console.log("api key", truliooCountryCodesFunctions.config().trulioo_api.key)
 
     truliooCountryCodesRequest(headerOption, function (error: any, response: any, body: any) {
         if (error) {
