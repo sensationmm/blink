@@ -16,12 +16,15 @@ truliooSearchCompanyServer.get('*/:query', function (req: any, res: any) {
         // "url": `https://api.globaldatacompany.com/connection/v1/sayhello/${query}`,
         "url": "https://api.globaldatacompany.com/connection/v1/testauthentication",
         "headers": {
-            "Authorization": `${process.env.TRULIOO_API_KEY || truliooFunctions.config().trulioo_api.key}`
+            "x-trulioo-api-key": `${process.env.TRULIOO_API_KEY || truliooFunctions.config().trulioo_api.key}`
         }
     };
 
     truliooSearchCompanyRequest(headerOption, function (error: any, response: any, body: any) {
-        // console.log("Body:", body);
+        if (error) {
+            console.log(error)
+        }
+        console.log("Body:", body);
         res.send(JSON.parse(body))
     }
     );
