@@ -9,11 +9,12 @@ truliooSearchCompanyServer.use(truliooSearchCompanyCors());
 
 truliooSearchCompanyServer.get('*/:query', function (req: any, res: any) {
 
-    const { query } = req.params;
+    // const { query } = req.params;
 
 
     const headerOption = {
-        "url": `https://api.globaldatacompany.com/connection/v1/sayhello/${query}`,
+        // "url": `https://api.globaldatacompany.com/connection/v1/sayhello/${query}`,
+        "url": "https://api.globaldatacompany.com/connection/v1/testauthentication",
         "headers": {
             "Authorization": `${process.env.TRULIOO_API_KEY || truliooFunctions.config().trulioo_api.key}`
         }
