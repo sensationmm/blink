@@ -3,7 +3,7 @@
 const admin = require('firebase-admin');
 
 admin.initializeApp({
-    credential: admin.credential.cert(process.env.FIREBASE_SERVICE_ACCOUNT.key ||  ""),
+    credential: admin.credential.cert(JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT.key) ||  ""),
     databaseURL: "https://blink-3b651.firebaseio.com"
 });
 
@@ -36,3 +36,7 @@ exports.truliooIdentityVerificationCountryCodes = require("./src/trulioo/identit
 exports.truliooDocumentVerificationCountryCodes = require("./src/trulioo/documentVerificationCountryCodes");
 
 exports.truliooDocumentVerificationTypes = require("./src/trulioo/documentVerificationTypes");
+
+exports.truliooDocumentVerification = require("./src/trulioo/documentVerification");
+
+exports.truliooBusinessSearch = require("./src/trulioo/businessSearch");
