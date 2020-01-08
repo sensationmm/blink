@@ -8,7 +8,7 @@ admin.initializeApp({
         "type": "service_account",
         "project_id": "blink-3b651",
         "private_key_id": process.env.FIREBASE_SERVICE_ACCOUNT_PRIVATE_KEY_ID || functions.config().firebase_service_account_private_key_id.key,
-        "private_key":  process.env.FIREBASE_SERVICE_ACCOUNT_PRIVATE_KEY || functions.config().firebase_service_account_private_key.key,
+        "private_key":  `-----BEGIN PRIVATE KEY-----\n${process.env.FIREBASE_SERVICE_ACCOUNT_PRIVATE_KEY || functions.config().firebase_service_account_private_key.key}\n-----END PRIVATE KEY-----\n`,
         "client_email":  process.env.FIREBASE_SERVICE_ACCOUNT_CLIENT_EMAIL_ID || functions.config().firebase_service_account_client_email_id.key,
         "client_id":  process.env.FIREBASE_SERVICE_ACCOUNT_CLIENT_ID || functions.config().firebase_service_account_client_email.key,
         "auth_uri": "https://accounts.google.com/o/oauth2/auth",
