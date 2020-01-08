@@ -2,7 +2,10 @@
 
 const admin = require('firebase-admin');
 
-admin.initializeApp();
+admin.initializeApp({
+    credential: admin.credential.cert(process.env.FIREBASE_SERVICE_ACCOUNT.key || ""),
+    databaseURL: "https://blink-3b651.firebaseio.com"
+});
 
 exports.duedillSearchCompany = require("./src/duedill/searchCompany");
 
