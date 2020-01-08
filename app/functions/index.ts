@@ -27,14 +27,14 @@ exports.companiesHouseOfficers = require("./src/companies-house/requestOfficers"
 
 exports.companiesHouseCompaniesWithSignificantControl = require("./src/companies-house/requestCompaniesWithSignificantControl");
 
-exports.truliooIdentityVerification = require("./src/trulioo/indentityVerification");
+// exports.truliooIdentityVerification = require("./src/trulioo/indentityVerification");
 
-exports.truliooIdentityVerificationCountryCodes = require("./src/trulioo/identityVerificationCountryCodes");
+// exports.truliooIdentityVerificationCountryCodes = require("./src/trulioo/identityVerificationCountryCodes");
 
-exports.truliooDocumentVerificationCountryCodes = require("./src/trulioo/documentVerificationCountryCodes");
+// exports.truliooDocumentVerificationCountryCodes = require("./src/trulioo/documentVerificationCountryCodes");
 
-exports.truliooDocumentVerificationTypes = require("./src/trulioo/documentVerificationTypes");
+// exports.truliooDocumentVerificationTypes = require("./src/trulioo/documentVerificationTypes");
 
-exports.truliooDocumentVerification = require("./src/trulioo/documentVerification");
+// exports.truliooDocumentVerification = require("./src/trulioo/documentVerification");
 
-exports.truliooBusinessSearch = require("./src/trulioo/businessSearch");
+// exports.truliooBusinessSearch = require("./src/trulioo/businessSearch");
