@@ -1,13 +1,14 @@
+export {};
 const functions = require('firebase-functions');
-const searchCompanyCors = require('cors');
-const searchCompanyExpress = require('express');
-const searchCompanyRequest = require('request');
+const cors = require('cors');
+const express = require('express');
+const request = require('request');
 
-const searchCompanyServer = searchCompanyExpress();
+const server = express();
 
-searchCompanyServer.use(searchCompanyCors());
+server.use(cors());
 
-searchCompanyServer.get('*/:query', function (req: any, res: any) {
+server.get('*/:query', function (req: any, res: any) {
 
     const { query } = req.params;
 
@@ -20,11 +21,11 @@ searchCompanyServer.get('*/:query', function (req: any, res: any) {
         }
     };
 
-    searchCompanyRequest(headerOption, function (error: any, response: any, body: any) {
+    request(headerOption, function (error: any, response: any, body: any) {
         // console.log("Body:", body);
         res.send(JSON.parse(body))
     }
     );
 })
 
-module.exports = functions.https.onRequest(searchCompanyServer)
+module.exports = functions.https.onRequest(server)
