@@ -4,7 +4,7 @@ const admin = require('firebase-admin');
 const functions = require("firebase-functions");
 
 admin.initializeApp({
-    credential: {
+    credential: admin.credential.cert({
         "type": "service_account",
         "project_id": "blink-3b651",
         "private_key_id": process.env.FIREBASE_SERVICE_ACCOUNT_PRIVATE_KEY_ID,
@@ -15,7 +15,7 @@ admin.initializeApp({
         "token_uri": "https://oauth2.googleapis.com/token",
         "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
         "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-7ep8r%40blink-3b651.iam.gserviceaccount.com"
-    },
+    }),
     databaseURL: "https://blink-3b651.firebaseio.com"
 });
 
