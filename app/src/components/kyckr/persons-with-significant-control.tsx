@@ -17,7 +17,7 @@ export default function SignificantPersons(props: Props) {
     const { selectedCompany, setSelectedSignificantPersons } = props;
 
     const [companyId, setcompanyId] = useState("");
-    const [companyDirectors, setCompanyDirectors] = useState();
+    const [companyOfficers, setCompanyOfficers] = useState();
     const [companyShareholders, setCompanyShareholders] = useState();
     const [status, setStatus] = useState();
     const [errors, setErrors] = useState();
@@ -36,34 +36,22 @@ export default function SignificantPersons(props: Props) {
 
 
     const lookupSignificantPersons = async () => {
-        setCompanyDirectors(null);
+        setCompanyOfficers(null);
         setCompanyShareholders(null)
         setErrors(null);
         setStatus("searching")
         // const res = await requestCompanyOfficials(companyId);
         console.log("selectedCompany", selectedCompany.CompanyID)
         const res = await requestCompanyProfile(selectedCompany.CompanyID, props.selectedCountry);
-
+        console.log("res", res)
         if (res) {
             if (res.errors) {
                 setStatus(null);
                 console.log(res.errors)
                 setErrors(res.errors);
-            } else if (res &&
-                res.CompanyProfileResult &&
-                res.CompanyProfileResult.CompanyProfile &&
-                res.CompanyProfileResult.CompanyProfile.directorAndShareDetails) {
-
-
-                const profile = {
-                    shareHolders: undefined,
-                    directors: undefined
-                }
-                const { directorAndShareDetails } = res.CompanyProfileResult.CompanyProfile;
-
-                if (directorAndShareDetails.shareHolders &&
-                    directorAndShareDetails.shareHolders.ShareholderDetails) {
-                    const shareHolders = await Promise.all(directorAndShareDetails.shareHolders.ShareholderDetails.map(async (shareHolder: any, index: any, array: any) => {
+            } else if (res) {
+                if (res.shareHolders && res.shareHolders.items) {
+                    const shareHolders = await Promise.all(res.shareHolders.items.map(async (shareHolder: any, index: any, array: any) => {
                         // console.log(shareHolder)
                         if (!shareHolder.CompanyID) {
                             const CompanyID = await getCompanyIdFromSearch(shareHolder.name, props.selectedCountry);
@@ -80,19 +68,19 @@ export default function SignificantPersons(props: Props) {
 
                 }
 
-                if (directorAndShareDetails.directors &&
-                    directorAndShareDetails.directors.Director) {
-                    const directors = await Promise.all(directorAndShareDetails.directors.Director.map(async (director: any, index: any, array: any) => {
-                        if (!director.CompanyID && !director.birthdate) {
+                if (res.officers && res.officers.items) {
+                    const officers = await Promise.all(res.officers.items.map(async (officer: any, index: any, array: any) => {
+                        if (!officer.CompanyID && !officer.birthdate) {
                             // console.log(director)
-                            const CompanyID = await getCompanyIdFromSearch(director.name, props.selectedCountry);
+                            const CompanyID = await getCompanyIdFromSearch(officer.name, props.selectedCountry);
                             if (CompanyID !== "none") {
-                                director.CompanyID = CompanyID;
+                                officer.CompanyID = CompanyID;
                             }
                         }
-                        return director;
+                        return officer;
                     }))
-                    setCompanyDirectors(directors)
+                    console.log("officer", officers)
+                    setCompanyOfficers(officers)
 
                 }
 
@@ -115,6 +103,10 @@ export default function SignificantPersons(props: Props) {
 
     // console.log(knownPWSC)
 
+    // console.log("kyckr companyOfficers", companyOfficers)
+
+    // console.log("kyckr companyShareholders", companyShareholders)
+
     return <>
         {/* <Label>Persons with Signficant Control (List):</Label>
         <InputSt placeholder="Company Id" onKeyUp={keyUp} onChange={(event: any) => setcompanyId(event.target.value)} type="text" value={companyId} />
@@ -130,7 +122,8 @@ export default function SignificantPersons(props: Props) {
             .map((item: any) => <li className={item.Function} key={`${item.FirstName}-${item.LastName}-${item.DateOfBirth}`}><span title={item.Function} className="title">{`${item.FirstName} ${item.FamilyName}`}</span>
                 {/* {item.kind === "corporate-entity-person-with-significant-control" && <CorporateEntityWithSignificantControl companyId={companyId} pscId={item.links.self.split("/").slice(-1)[0] } />} */}
         {/* </li>)}</Items>} */}
-        {(companyDirectors || companyShareholders) && <Items>
+
+        {(companyOfficers || companyShareholders) && <Items>
             {
                 companyShareholders &&
                 companyShareholders
@@ -145,8 +138,10 @@ export default function SignificantPersons(props: Props) {
 
                         return <li className={title} key={`${item.name}-${item.birthdate}`}>
                             <span title={title} className="title">{item.name}
-                                {item.CompanyID && <span style={{ fontSize: 10 }}> ({item.CompanyID})</span>}
+                    {item.CompanyID && <span style={{ fontSize: 10 }}> ({item.CompanyID}) </span>}
+                    {item.percentage && <><br /><span style={{ fontSize: 10 }}> {`${item.percentage}%`} </span></>}
                             </span>
+
                             {
                                 item.CompanyID && !isKnownPWSC && <PersonsWithSignificantControl
                                     selectedCountry={props.selectedCountry}
@@ -160,8 +155,8 @@ export default function SignificantPersons(props: Props) {
 
             {
 
-                companyDirectors &&
-                companyDirectors
+                companyOfficers &&
+                companyOfficers
                     .filter((item: any) => !item.ceased_on)
                     // .filter((item: any) => !item.birthdate)
                     .map((item: any) => {

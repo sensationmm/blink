@@ -18,10 +18,10 @@ kyckrServer.get('*/:query/:countryISOCode', function (req: any, res: any) {
     var args = { email: "terry.cordeiro@11fs.com", password: "6c72fde3", countryISOCode, companyName: query, termsAndConditions: true };
 
 
-    ipRequest({url: "http://httpbin.org/ip"}, function (error: any, response: any, body: any) {
-        console.log("Body:", body);
-        console.log("Response", response)
-    });
+    // ipRequest({url: "http://httpbin.org/ip"}, function (error: any, response: any, body: any) {
+    //     console.log("Body:", body);
+    //     console.log("Response", response)
+    // });
 
 
     const auth = "Basic " + JSON.stringify({"terry.cordeiro@11fs.com":"6c72fde3"})

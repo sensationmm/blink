@@ -49,7 +49,7 @@ personsWithSignificantControlServer.get('*/:companyId', function (req: any, res:
 
     return admin.firestore().collection('officers').doc(companyId).get()
         .then((doc: any) => {
-            if (!doc.exists) {
+            if (!doc.exists || (doc.exists && !doc.data()["companies-house"])) {
                 const headerOption = {
                     "url": `https://api.companieshouse.gov.uk/company/${companyId}/officers`,
                     "headers": {
@@ -63,28 +63,27 @@ personsWithSignificantControlServer.get('*/:companyId', function (req: any, res:
                     if (items && items.map) {
                         const returnItems = items.map((item: any) => {
                             return {
-                                countryOfResidence: item.country_of_residence ? item.country_of_residence: null,
-                                dateOfBirth: item.date_of_birth ? `${item.date_of_birth.year}-${item.date_of_birth.month}`: null,
+                                countryOfResidence: item.country_of_residence ? item.country_of_residence : null,
+                                dateOfBirth: item.date_of_birth ? `${item.date_of_birth.year}-${item.date_of_birth.month}` : null,
                                 appointedOn: item.appointed_on ? item.appointed_on : null,
-                                nationality: item.nationality ? item.nationality: null,
-                                officerRole: item.officer_role ? item.officer_role: null,
-                                identification: item.identification ? item.identification: null,
-                                companyNumber: item.company_number ? item.company_number: null,
-                                resignedOn: item.resigned_on ? item.resigned_on: null,
-                                ceasedOn: item.ceased_on ? item.ceased_on: null,
-                                occupation: item.occupation ? item.occupation: null,
+                                nationality: item.nationality ? item.nationality : null,
+                                officerRole: item.officer_role ? item.officer_role : null,
+                                identification: item.identification ? item.identification : null,
+                                companyNumber: item.company_number ? item.company_number : null,
+                                resignedOn: item.resigned_on ? item.resigned_on : null,
+                                ceasedOn: item.ceased_on ? item.ceased_on : null,
+                                occupation: item.occupation ? item.occupation : null,
                                 name: item.name,
-                                source: "companies-house",
                                 lastUpdate: now
                             }
                         })
-                        admin.firestore().collection('officers').doc(companyId).set({ items: returnItems }).then(() => res.send({ items: returnItems }))
+                        admin.firestore().collection('officers').doc(companyId).set({ "companies-house": {items: returnItems }}).then(() => res.send({ items: returnItems }))
                     } else {
                         res.send(JSON.parse(body))
                     }
                 });
             } else {
-                res.send(doc.data());
+                res.send(doc.data()["companies-house"]);
             }
         })
         .catch((err: any) => {

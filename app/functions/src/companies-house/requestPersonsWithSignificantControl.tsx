@@ -5,17 +5,17 @@ const cors = require('cors');
 const express = require('express');
 const request = require('request');
 
-const personsWithSignificantControlServer = express();
+const server = express();
 
-personsWithSignificantControlServer.use(cors());
+server.use(cors());
 
-personsWithSignificantControlServer.get('*/:companyId', function (req: any, res: any) {
+server.get('*/:companyId', function (req: any, res: any) {
 
     const { companyId } = req.params;
 
     return admin.firestore().collection('shareholders').doc(companyId).get()
         .then((doc: any) => {
-            if (!doc.exists) {
+            if (!doc.exists || (doc.exists && !doc.data()["companies-house"])) {
                 const headerOption = {
                     "url": `https://api.companieshouse.gov.uk/company/${companyId}/persons-with-significant-control`,
                     "headers": {
@@ -36,23 +36,22 @@ personsWithSignificantControlServer.get('*/:companyId', function (req: any, res:
                                     percentage: '',
                                     naturesOfControl: item.natures_of_control,
                                     notifiedOn: item.notified_on,
-                                    companyNumber: item.company_number ? item.company_number: null,
+                                    companyNumber: item.company_number ? item.company_number : null,
                                     nationality: item.nationality ? item.nationality : null,
-                                    identification: item.identification ? item.identification: null,
-                                    resignedOn: item.resigned_on ? item.resigned_on: null,
-                                    ceasedOn: item.ceased_on ? item.ceased_on: null,
+                                    identification: item.identification ? item.identification : null,
+                                    resignedOn: item.resigned_on ? item.resigned_on : null,
+                                    ceasedOn: item.ceased_on ? item.ceased_on : null,
                                     name: item.name,
-                                    source: "companies-house",
                                     lastUpdate: now
                                 }
                             })
-                        admin.firestore().collection('shareholders').doc(companyId).set({ items: returnItems }).then(() => res.send({ items: returnItems }));
+                        admin.firestore().collection('shareholders').doc(companyId).set({ "companies-house": {items: returnItems }}).then(() => res.send({ items: returnItems }));
                     } else {
                         res.send(JSON.parse(body))
                     }
                 });
             } else {
-                res.send(doc.data());
+                res.send(doc.data()["companies-house"]);
             }
         })
         .catch((err: any) => {
@@ -60,4 +59,4 @@ personsWithSignificantControlServer.get('*/:companyId', function (req: any, res:
         });
 })
 
-module.exports = functions.https.onRequest(personsWithSignificantControlServer)
+module.exports = functions.https.onRequest(server)
