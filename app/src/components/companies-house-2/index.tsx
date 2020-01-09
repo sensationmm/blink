@@ -22,7 +22,7 @@ export default function CompaniesHouse() {
                 <SignificantPersons 
                     knownPWSC={[]} 
                     // setSelectedSignificantPersons={setSelectedSignificantPersons} 
-                    selectedCompany={selectedCompany} />}
+                    selectedCompany={{...selectedCompany, companyNumber: selectedCompany.company_number}} />}
 
             {/* selectedCompany && <Officers setSelectedOfficer={setSelectedOfficer} selectedCompany={selectedCompany} />} */}
 

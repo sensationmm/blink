@@ -31,7 +31,7 @@ export default function SignificantPersons(props: Props) {
             // setSelectedSignificantPersons();
             lookupSignificantPersonsAndDirectors();
         },
-        [selectedCompany.company_number]
+        [selectedCompany.companyNumber]
     );
 
 
@@ -41,7 +41,7 @@ export default function SignificantPersons(props: Props) {
         setSignificantPersons(null)
         setErrors(null);
         setStatus("searching")
-        const significantPersonsRes = await requestSignificantPersons(selectedCompany.company_number);
+        const significantPersonsRes = await requestSignificantPersons(selectedCompany.companyNumber);
         if (significantPersonsRes) {
             if (significantPersonsRes.errors) {
                 setStatus(null);
@@ -50,25 +50,23 @@ export default function SignificantPersons(props: Props) {
             } else if (significantPersonsRes &&
                 significantPersonsRes.items) {
                 const significantPersons = await Promise.all(significantPersonsRes.items.map(async (significantPerson: any) => {
-                    if (!significantPerson.company_number && !significantPerson.date_of_birth) {
+                    if (!significantPerson.companyNumber && !significantPerson.dateOfBirth) {
                         if (significantPerson.indentification && significantPerson.indentification.registration_number) {
-                            significantPerson.company_number = significantPerson.indentification.registration_number
+                            significantPerson.companyNumber = significantPerson.indentification.registration_number
                         } else {
-                            const company_number = await getCompanyIdFromSearch(significantPerson.name);
-                            if (company_number !== "none") {
-                                significantPerson.company_number = company_number;
+                            const companyNumber = await getCompanyIdFromSearch(significantPerson.name);
+                            if (companyNumber !== "none") {
+                                significantPerson.companyNumber = companyNumber;
                             }
                         }
                     }
                     return significantPerson;
                 }))
-                console.log("significantPersons", significantPersons)
-                setSignificantPersons(significantPersons.filter((item: any) => !item.ceased_on)
-                .filter((item: any) => !item.resigned_on));
+                setSignificantPersons(significantPersons.filter((item: any) => item.ceasedOn === null)
+                .filter((item: any) => item.resignedOn === null));
             }
         }
-
-        const res = await requestOfficers(selectedCompany.company_number);
+        const res = await requestOfficers(selectedCompany.companyNumber);
         if (res) {
             if (res.errors) {
                 setStatus(null);
@@ -77,53 +75,51 @@ export default function SignificantPersons(props: Props) {
             } else if (res &&
                 res.items) {
                 const officers = await Promise.all(res.items.map(async (officer: any) => {
-                    if (!officer.company_number && !officer.date_of_birth) {
+                    if (!officer.companyNumber && !officer.dateOfBirth) {
                         if (officer.indentification && officer.indentification.registration_number) {
-                            officer.company_number = officer.indentification.registration_number
+                            officer.companyNumber = officer.indentification.registration_number
                         } else {
-                            const company_number = await getCompanyIdFromSearch(officer.name);
-                            if (company_number !== "none") {
-                                officer.company_number = company_number;
+                            const companyNumber = await getCompanyIdFromSearch(officer.name);
+                            if (companyNumber !== "none") {
+                                officer.companyNumber = companyNumber;
                             }
                         }
                     }
                     return officer;
                 }))
-                // console.log("officers", officers)
-                setCompanyOfficers(officers.filter((item: any) => !item.ceased_on)
-                    .filter((item: any) => !item.resigned_on));
+                setCompanyOfficers(officers.filter((item: any) => item.ceasedOn === null)
+                    .filter((item: any) => item.resignedOn === null));
             }
         }
     }
 
     const renderList = (list: Array<string>, type: string) => <Items>{
         list
-            // .filter((item: any) => !item.date_of_birth)
+            // .filter((item: any) => !item.dateOfBirth)
             .map((item: any) => {
-                let title = `${item.occupation && item.occupation.toLowerCase()} ${item.kind && item.kind.toLowerCase()} ${item.officer_role && item.officer_role.toLowerCase()}`;
+                let title = `${item.occupation && item.occupation.toLowerCase()} ${item.type && item.type.toLowerCase()} ${item.officerRole && item.officerRole.toLowerCase()}`;
                 if (item.name) {
                     title = `${title || ""} ${(item.name.toLowerCase().includes("ltd") || item.name.toLowerCase().includes("limited") ? "limited-company" : "")}`;
                 }
                 title = title.toString().replace(/undefined/g, "")
 
-                const isKnownPWSC = props.knownPWSC.indexOf(`${type}-${item.company_number}-${item.name}`) > -1;
+                const isKnownPWSC = props.knownPWSC.indexOf(`${type}-${item.companyNumber}-${item.name}`) > -1;
 
-                return <li className={title} key={`${item.name}-${item.date_of_birth}`}>
+                return <li className={title} key={`${item.name}-${item.dateOfBirth}`}>
                     <span title={title} className="title">{item.name}
-                        {item.company_number && <span style={{ fontSize: 10 }}> ({item.company_number})</span>}
+                        {item.companyNumber && <span style={{ fontSize: 10 }}> ({item.companyNumber})</span>}
                     </span>
                     {
-                        item.company_number
-                        && !isKnownPWSC
+                        item.companyNumber && 
+                        !isKnownPWSC
                         && <PersonsWithSignificantControl
-                            knownPWSC={[...props.knownPWSC, `${type}-${item.company_number}-${item.name}`]}
+                            knownPWSC={[...props.knownPWSC, `${type}-${item.companyNumber}-${item.name}`]}
                             selectedCompany={item}
                         // setSelectedSignificantPersons={setSelectedSignificantPersons}
                         />
                     }
                 </li>
             })}</Items>
-
 
     return <>
         {(companyOfficers || significantPersons) && <Items>

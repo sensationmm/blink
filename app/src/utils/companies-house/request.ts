@@ -38,11 +38,7 @@ const getCompanyIdFromSearch = async (query: string) => {
     // console.log(response)
     let company;
     if (response && response.items) {
-        company = response.items.find((c: any) => {
-            console.log(`${c.title.toLowerCase().replace(/\s/g, "")}-${query.toLowerCase().replace(/\s/g, "")}`)
-
-            return c.title.toLowerCase().replace(/\s/g, "") === query.toLowerCase().replace(/\s/g, "")
-        })
+        company = response.items.find((c: any) => c.title.toLowerCase().replace(/\s/g, "") === query.toLowerCase().replace(/\s/g, ""))
     }
     if (company && company.company_number) {
         return company.company_number;
