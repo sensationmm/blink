@@ -51,19 +51,65 @@ export default function SignificantPersons(props: Props) {
                 setErrors(res.errors);
             } else if (res) {
                 if (res.shareHolders && res.shareHolders.items) {
-                    const shareHolders = await Promise.all(res.shareHolders.items.map(async (shareHolder: any, index: any, array: any) => {
-                        // console.log(shareHolder)
-                        if (!shareHolder.CompanyID) {
-                            const CompanyID = await getCompanyIdFromSearch(shareHolder.name, props.selectedCountry);
-                            if (CompanyID !== "none") {
-                                shareHolder.CompanyID = CompanyID;
-                            }
-                            // console.log("CompanyID", CompanyID)
 
+                    // combine same / similar entities
+
+                    // console.log(res.shareHolders.items)
+
+                    const shareHoldersCombined: Array<any> = [];
+                    const shareHoldersBeforeCombining = res.shareHolders.items;
+                    shareHoldersBeforeCombining.forEach((item: any, itemIndex: number) => {
+
+                        if (!shareHoldersBeforeCombining[itemIndex].combined) {
+                            const name = item.name;
+                            let combinedPercentage = parseFloat(shareHoldersBeforeCombining[itemIndex].percentage);
+
+                            res.shareHolders.items.forEach((sh: any, shIndex: number) => {
+                                if (shIndex !== itemIndex && sh.name === name) {
+                                    if (sh.percentage) {
+                                        combinedPercentage += parseFloat(sh.percentage);
+                                    }
+                                    shareHoldersBeforeCombining[shIndex].combined = true;
+                                }
+                            });
+
+                            shareHoldersBeforeCombining[itemIndex].combined = true;
+
+                            shareHoldersCombined.push({ ...shareHoldersBeforeCombining[itemIndex], percentage: combinedPercentage });
                         }
-                        return shareHolder;
-                    }))
-                    // console.log(shareHolders)
+
+                    });
+
+                    console.log("shareHoldersBeforeCombining", shareHoldersBeforeCombining);
+                    console.log("shareHoldersCombined", shareHoldersCombined);
+
+
+                    setCompanyShareholders(shareHoldersBeforeCombining);
+
+
+
+
+                    // console.log("res.shareHolders.items", res.shareHolders.items)
+                    const shareHolders = await Promise.all(shareHoldersBeforeCombining
+                        .filter((sh:any) => {
+                            if (!sh.percentage) {
+                                return sh
+                            } else if (sh.percentage > 5) {
+                                return sh
+                            }
+                        })
+                        .map(async (shareHolder: any, index: any, array: any) => {
+                            if (!shareHolder.CompanyID && (!shareHolder.shareholderType || shareHolder.shareholderType === "C")) {
+                                const CompanyID = await getCompanyIdFromSearch(shareHolder.name, props.selectedCountry);
+                                if (CompanyID !== "none") {
+                                    shareHolder.CompanyID = CompanyID;
+                                }
+                                console.log("CompanyID", CompanyID)
+
+                            }
+                            return shareHolder;
+                        }))
+                    // console.log(shareHolders.map((sh: any) => { return { shareholderType: sh.shareholderType, name: sh.name } }))
                     setCompanyShareholders(shareHolders);
 
                 }
@@ -71,7 +117,6 @@ export default function SignificantPersons(props: Props) {
                 if (res.officers && res.officers.items) {
                     const officers = await Promise.all(res.officers.items.map(async (officer: any, index: any, array: any) => {
                         if (!officer.CompanyID && !officer.birthdate) {
-                            // console.log(director)
                             const CompanyID = await getCompanyIdFromSearch(officer.name, props.selectedCountry);
                             if (CompanyID !== "none") {
                                 officer.CompanyID = CompanyID;
@@ -79,7 +124,7 @@ export default function SignificantPersons(props: Props) {
                         }
                         return officer;
                     }))
-                    console.log("officer", officers)
+                    // console.log("officer", officers)
                     setCompanyOfficers(officers)
 
                 }
@@ -100,28 +145,7 @@ export default function SignificantPersons(props: Props) {
             lookupSignificantPersons();
         }
     }
-
-    // console.log(knownPWSC)
-
-    // console.log("kyckr companyOfficers", companyOfficers)
-
-    // console.log("kyckr companyShareholders", companyShareholders)
-
     return <>
-        {/* <Label>Persons with Signficant Control (List):</Label>
-        <InputSt placeholder="Company Id" onKeyUp={keyUp} onChange={(event: any) => setcompanyId(event.target.value)} type="text" value={companyId} />
-        <ButtonSt onClick={lookupSignificantPersons} type="button">Go!</ButtonSt> */}
-        {/* {company && <ReactJson collapsed src={company} />} */}
-        {/* {company && 
-            company.CompanyOfficialsResult && 
-            company.CompanyOfficialsResult.CompanyOfficials && 
-            company.CompanyOfficialsResult.CompanyOfficials.Officials && 
-            company.CompanyOfficialsResult.CompanyOfficials.Officials.OfficialDTO && 
-            <Items>{company.CompanyOfficialsResult.CompanyOfficials.Officials.OfficialDTO 
-            // .filter((item: any) => !item.ceased_on)
-            .map((item: any) => <li className={item.Function} key={`${item.FirstName}-${item.LastName}-${item.DateOfBirth}`}><span title={item.Function} className="title">{`${item.FirstName} ${item.FamilyName}`}</span>
-                {/* {item.kind === "corporate-entity-person-with-significant-control" && <CorporateEntityWithSignificantControl companyId={companyId} pscId={item.links.self.split("/").slice(-1)[0] } />} */}
-        {/* </li>)}</Items>} */}
 
         {(companyOfficers || companyShareholders) && <Items>
             {
@@ -131,15 +155,15 @@ export default function SignificantPersons(props: Props) {
                     .map((item: any) => {
                         let title = item.title;
                         if (item.name) {
-                            title = `${item.title} ${(item.name.toLowerCase().includes("ltd") || item.name.toLowerCase().includes("limited") ? "limited-company" : "")}`;
+                            title = `${item.title} ${(item.name.toLowerCase().includes("ltd") || item.name.toLowerCase().includes("limited") || item.shareholderType === "C" ? "limited-company" : "")} ${item.shareholderType === "P" ? "person" : ""}`;
                         }
 
                         const isKnownPWSC = knownPWSC.indexOf(`share-${JSON.stringify(item)}`) > -1;
 
-                        return <li className={title} key={`${item.name}-${item.birthdate}`}>
+                        return <li className={title} key={`${item.name}-${item.birthdate}-${Math.random()}`}>
                             <span title={title} className="title">{item.name}
-                    {item.CompanyID && <span style={{ fontSize: 10 }}> ({item.CompanyID}) </span>}
-                    {item.percentage && <><br /><span style={{ fontSize: 10 }}> {`${item.percentage}%`} </span></>}
+                                {item.CompanyID && <span style={{ fontSize: 10 }}> ({item.CompanyID}) </span>}
+                                {item.percentage && <><br /><span style={{ fontSize: 10 }}> {`${item.percentage}%`} </span></>}
                             </span>
 
                             {
@@ -162,7 +186,7 @@ export default function SignificantPersons(props: Props) {
                     .map((item: any) => {
                         let title = item.title;
                         if (item.name) {
-                            title = `${item.title} ${(item.name.toLowerCase().includes("ltd") || item.name.toLowerCase().includes("limited") ? "limited-company" : "")}`;
+                            title = `${item.title} ${(item.name.toLowerCase().includes("ltd") || item.name.toLowerCase().includes("limited") || item.shareholderType === "P" ? "person" : "")}`;
                         }
 
                         const isKnownPWSC = knownPWSC.indexOf(`dir-${JSON.stringify(item)}`) > -1;
@@ -171,7 +195,7 @@ export default function SignificantPersons(props: Props) {
                             setKnownPWSC(knownPWSC.concat(`dir-${JSON.stringify(item)}`));
                         }
 
-                        return <li className={title} key={`${item.name}-${item.birthdate}`}>
+                        return <li className={title} key={`${item.name}-${item.birthdate}-${Math.random()}`}>
                             <span title={title} className="title">{item.name}
                                 {item.CompanyID && <span style={{ fontSize: 10 }}> ({item.CompanyID})</span>}
                             </span>
