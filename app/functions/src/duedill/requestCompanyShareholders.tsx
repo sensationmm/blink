@@ -1,32 +1,52 @@
-const duedillCompanyShareholdersFunctions = require('firebase-functions');
-const duedillCompanyShareholdersCors = require('cors');
-const duedillCompanyShareholdersExpress = require('express');
-const duedillCompanyShareholdersRequest = require('request');
+export { }
 
-const duedillCompanyShareholdersServer = duedillCompanyShareholdersExpress();
+const functions = require('firebase-functions');
+const admin = require("firebase-admin");
+const cors = require('cors');
+const express = require('express');
+const request = require('request');
 
-duedillCompanyShareholdersServer.use(duedillCompanyShareholdersCors());
+const server = express();
 
-duedillCompanyShareholdersServer.get('*/:countryCode/:companyId', function (req: any, res: any) {
+server.use(cors());
+
+server.get('*/:countryCode/:companyId', function (req: any, res: any) {
 
     const { companyId, countryCode, limit } = req.params;
 
-    const options = {
-        "headers": {
-            "Accept": "application/json",
-            // 'Authorization': `${process.env.DUE_DILL_API_KEY || duedillCompanyShareholdersFunctions.config().due_dill_api.key}`,
-            "X-AUTH-TOKEN": `${process.env.DUE_DILL_API_KEY || duedillCompanyShareholdersFunctions.config().due_dill_api.key}`
-        },
-        "url": `https://duedil.io/v4/company/${countryCode}/${companyId}/shareholders.json?limit=${limit || 50}`,
-        "credentials": 'include'
-    };
+    return admin.firestore().collection('shareholders').doc(companyId).get()
+        .then((doc: any) => {
+            if (req.query.ignoreDB === "true" || !doc.exists || (doc.exists && !doc.data()["duedill"])) {
 
-    duedillCompanyShareholdersRequest(options, function (error:any, response:any, body:any) {
-        if (error) {
-            console.log("error", error);
-        }
-        res.send(body);
-    })
+                const options = {
+                    "headers": {
+                        "Accept": "application/json",
+                        "X-AUTH-TOKEN": `${process.env.DUE_DILL_API_KEY || functions.config().due_dill_api.key}`
+                    },
+                    "url": `https://duedil.io/v4/company/${countryCode}/${companyId}/shareholders.json?limit=${limit || 50}`,
+                    "credentials": 'include'
+                };
+
+                request(options, function (error: any, response: any, body: any) {
+                    if (error) {
+                        console.log("error", error);
+                    }
+                    const items = JSON.parse(body).shareholders;
+                    if (items) {
+                        return admin.firestore().collection('shareholders').doc(companyId).set({ "duedill": { items } }).then(() => res.send({ items }));
+                    } 
+                    // res.send({ items })
+                })
+
+
+            } else {
+                console.log("found in firestore")
+                res.send(doc.data()["duedill"]);
+            }
+        })
+        .catch((err: any) => {
+            console.log('Error getting document', err);
+        });
 })
 
-module.exports = duedillCompanyShareholdersFunctions.https.onRequest(duedillCompanyShareholdersServer)
+module.exports = functions.https.onRequest(server)

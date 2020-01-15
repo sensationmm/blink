@@ -94,7 +94,7 @@ export default function SignificantPersons(props: Props) {
                         .filter((sh:any) => {
                             if (!sh.percentage) {
                                 return sh
-                            } else if (sh.percentage > 5) {
+                            } else if (sh.percentage > 1) {
                                 return sh
                             }
                         })

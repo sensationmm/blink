@@ -9,17 +9,21 @@ import ReactJson from 'react-json-view'
 const delay = 400;
 
 type SearchCompanyProps = {
-    setSelectedCompany: Dispatch<any>
+    setSelectedCompany: Dispatch<any>,
+    setIgnoreDB: Function,
+    ignoreDB: boolean
 }
 
-export default function SearchCompany({ setSelectedCompany }: SearchCompanyProps) {
+export default function SearchCompany({ setSelectedCompany, setIgnoreDB, ignoreDB }: SearchCompanyProps) {
 
     const [query, setQuery] = useState("");
     const [companies, setCompanies] = useState();
     const [typeAheadListVisible, showTypeAheadList] = useState(true);
     const [status, setStatus] = useState();
     const [errors, setErrors] = useState();
-    const [selectedCountry, setSelectedCountry] = useState([{value: "GB", label: "United Kingdom 🇬🇧" }]);
+    const [selectedCountry, setSelectedCountry] = useState([{ value: "GB", label: "United Kingdom 🇬🇧" }]);
+
+    // console.log("ignoreDB", ignoreDB)
 
     useEffect(
         () => {
@@ -27,7 +31,7 @@ export default function SearchCompany({ setSelectedCompany }: SearchCompanyProps
             const handler = setTimeout(() => {
                 companySearch();
             }, delay);
-            
+
             return () => {
                 clearTimeout(handler);
             };
@@ -58,7 +62,7 @@ export default function SearchCompany({ setSelectedCompany }: SearchCompanyProps
         if (query === "") {
             return;
         }
-        const res = await searchCompany(query, selectedCountry.map((country: any) => country.value));
+        const res = await searchCompany(query, selectedCountry && selectedCountry.map((country: any) => country.value));
 
         if (res.errors) {
             setStatus(null);
@@ -88,6 +92,7 @@ export default function SearchCompany({ setSelectedCompany }: SearchCompanyProps
             {errors.map((error: any) => <li key={error.type}>{error.error}</li>)}
         </Errors>}
         <TypeAhead>
+            <label style={{width: "100%", float: "left", zIndex: 1, position: "relative" }} htmlFor="ignoreDB"><span>Ignore DB?</span> <input style={{float: "left", width: 20, marginBottom: 20 }} id="ignoreDB" type="checkbox" checked={ignoreDB} onChange={(e:any) => setIgnoreDB(e.target.checked)} /> </label>
             <InputWrapper>
                 <CountrySelector isMulti value={selectedCountry} onChange={setSelectedCountry} />
                 <InputSt className="with-select" autoFocus onKeyUp={keyUp} placeholder="Company Search" onChange={(event: any) => setQuery(event.target.value)} type="text" value={query} />

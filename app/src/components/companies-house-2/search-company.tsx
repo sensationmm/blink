@@ -9,6 +9,7 @@ const delay = 400;
 
 type SearchCompanyProps = {
     setSelectedCompany: Dispatch<any>,
+    // setIgnoreDB: Function
 }
 export default function SearchCompany(props: SearchCompanyProps) {
 
@@ -84,6 +85,9 @@ export default function SearchCompany(props: SearchCompanyProps) {
             {errors.map((error: any) => <li key={error.type}>{error.error}</li>)}
         </Errors>}
         <TypeAhead>
+            <label htmlFor="ignoreDB"></label><input id="ignoreDB "type="checkbox" 
+            // onClick={(e:any) => props.setIgnoreDB(e.target.checked)} 
+            />
             <InputWrapper>
                 <InputSt autoFocus onKeyUp={keyUp} placeholder="Company Search" onChange={(event: any) => setQuery(event.target.value)} type="text" value={query} />
                 {query && <Cancel onClick={clearCompany}>&times;</Cancel>}

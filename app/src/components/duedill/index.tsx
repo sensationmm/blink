@@ -13,17 +13,17 @@ export default function Kyckr() {
 
     const [selectedCompany, setSelectedCompany] = useState()
     const [selectedOfficer, setSelectedOfficer] = useState()
+    const [ignoreDB, setIgnoreDB] = useState(false)
     const [selectedSignificantPersons, setSelectedSignificantPersons] = useState()
 
     return (
         <MainSt>
 
-            <CompanySearch setSelectedCompany={setSelectedCompany} />
+            <CompanySearch setIgnoreDB={setIgnoreDB} ignoreDB={ignoreDB} setSelectedCompany={setSelectedCompany} />
 
-            {selectedCompany && <Shareholders setSelectedSignificantPersons={setSelectedSignificantPersons} selectedCompany={selectedCompany} />}
-
-
-            {/* {selectedCompany && <PersonsWithSignificantControl setSelectedSignificantPersons={setSelectedSignificantPersons} selectedCompany={selectedCompany} />} */}
+            {/* {selectedCompany && <Shareholders setSelectedSignificantPersons={setSelectedSignificantPersons} selectedCompany={selectedCompany} />} */}
+        
+            {selectedCompany && <PersonsWithSignificantControl ignoreDB={ignoreDB} knownPWSC={[]} selectedCompany={selectedCompany} />}
 
             {/* selectedCompany && <Officers setSelectedOfficer={setSelectedOfficer} selectedCompany={selectedCompany} />} */}
 

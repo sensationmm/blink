@@ -76,7 +76,7 @@ export const Cancel = styled.span`
     height: 30px;
     position: absolute;
     right: -5px;
-    top: calc(50% - 15px);
+    top: calc(50% - 0px);
     border: 1px solid #999;
     color: #999;
     border-radius: 50%;
@@ -162,14 +162,16 @@ export const Items = styled.ul`
         // max-width: 200px;
         margin: 0 10px;
         display: flex;
-        align-items: center;
+        // align-items: center;
+        align-items: normal;
         text-align: center;
         flex-direction: column
-
+        
+     
 
         ul {
             padding: 10px 0;
-            border: 1px solid #ccc;
+            // border: 1px solid #ccc;
             position: relative;
 
             &::before {
@@ -192,6 +194,18 @@ export const Items = styled.ul`
         .react-json-view { 
             text-align: initial;
         }
+
+        // > span {
+        //     &::after {
+        //         content: "";
+        //         height: 1px;
+        //         width: 20px;
+        //         background-color: red;
+        //         position: absolute;
+        //         left: 50%;
+        //      top: -20px;
+        //     }
+        // }
 
         &.corporate-entity-person-with-significant-control > span,
         &.company > span,
