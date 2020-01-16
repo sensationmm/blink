@@ -157,7 +157,7 @@ export const Items = styled.ul`
     // justify-content: space-evenly;
 
     > li {
-        // border: 1px solid #ccc;
+        // border-bottom: 1px solid #ccc;
         padding: 0px;
         // max-width: 200px;
         margin: 0 10px;
@@ -165,14 +165,13 @@ export const Items = styled.ul`
         // align-items: center;
         align-items: normal;
         text-align: center;
-        flex-direction: column
-        
-     
+        flex-direction: column;
 
         ul {
             padding: 10px 0;
             // border: 1px solid #ccc;
             position: relative;
+            border-top: 1px solid #ccc;
 
             &::before {
                 content: "";

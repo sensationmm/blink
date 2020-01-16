@@ -11,8 +11,11 @@ const delay = 400;
 type SearchCompanyProps = {
     setSelectedCompany: Dispatch<any>,
     selectedCountry: any,
-    setSelectedCountry: any
+    setSelectedCountry: any,
+    setIgnoreDB: Function,
+    ignoreDB: boolean
 }
+
 export default function SearchCompany(props: SearchCompanyProps) {
 
     const [query, setQuery] = useState("");
@@ -93,6 +96,7 @@ export default function SearchCompany(props: SearchCompanyProps) {
             {errors.map((error: any) => <li key={error.type}>{error.error}</li>)}
         </Errors>}
         <TypeAhead>
+            <label style={{ width: "100%", float: "left", zIndex: 1, position: "relative" }} htmlFor="ignoreDB"><span>Ignore DB?</span> <input style={{ float: "left", width: 20, marginBottom: 20 }} id="ignoreDB" type="checkbox" checked={props.ignoreDB} onChange={(e: any) => props.setIgnoreDB(e.target.checked)} /> </label>
             <InputWrapper>
                 <InputSt className="with-select" autoFocus onKeyUp={keyUp} placeholder="Company Search" onChange={(event: any) => setQuery(event.target.value)} type="text" value={query} />
                 {query && <Cancel className="with-select" onClick={clearCompany}>&times;</Cancel>}

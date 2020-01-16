@@ -137,14 +137,7 @@ export default function SignificantPersons(props: Props) {
             }
         }
     }
-
-    const keyUp = (event: React.KeyboardEvent<HTMLDivElement>): void => {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            event.stopPropagation();
-            lookupSignificantPersons();
-        }
-    }
+    
     return <>
 
         {(companyOfficers || companyShareholders) && <Items>

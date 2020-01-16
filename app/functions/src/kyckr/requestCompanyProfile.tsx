@@ -18,7 +18,7 @@ server.get('*/:companyCode/:countryISOCode', function (req: any, res: any) {
     const shareHoldersRef = admin.firestore().collection('shareholders');
 
     return shareHoldersRef.doc(companyCode).get().then((doc: any) => {
-        if (!doc.exists || (doc.exists && !doc.data()["kyckr"])) {
+        if (req.query.ignoreDB === "true" || !doc.exists || (doc.exists && !doc.data()["kyckr"])) {
             return officersRef.doc(companyCode).get().then((doc: any) => {
                 if (!doc.exists || (doc.exists && !doc.data()["kyckr"])) {
                     // const url = 'https://testws.kyckr.eu/gbronboarding.asmx?wsdl';

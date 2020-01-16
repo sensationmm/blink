@@ -9,8 +9,8 @@ const searchCompany = async (query: string, countryISOCode: string = "GB") => {
     return body;
 }
 
-const requestCompanyProfile = async (companyNumber: string, countryISOCode: string = "GB") => {
-    const response = await fetch(`${domain}/kyckrCompanyProfile/${companyNumber}/${countryISOCode}`, { mode: 'cors' });
+const requestCompanyProfile = async (companyNumber: string, countryISOCode: string = "GB", ignoreDB: boolean = false) => {
+    const response = await fetch(`${domain}/kyckrCompanyProfile/${companyNumber}/${countryISOCode}${ignoreDB ? '?ignoreDB=true': ''}`, { mode: 'cors' });
     try {
         const body = await response.json();
         return body;
