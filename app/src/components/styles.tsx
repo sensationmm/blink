@@ -206,6 +206,10 @@ export const Items = styled.ul`
         //     }
         // }
 
+        > span {
+            white-space: nowrap;
+        }
+
         &.corporate-entity-person-with-significant-control > span,
         &.company > span,
         &.limited-company > span,

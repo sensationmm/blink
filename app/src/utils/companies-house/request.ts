@@ -41,7 +41,7 @@ const getCompanyIdFromSearch = async (query: string) => {
     if (response && response.items) {
         const matches = stringSimilarity.findBestMatch(query, response.items.map(((c: any) => c.title.toLowerCase())));
         company = matches && matches.bestMatchIndex && response.items[matches.bestMatchIndex];
-        console.log(query, company);
+        // console.log(query, company);
     }
     if (company && company.company_number) {
         return company.company_number;

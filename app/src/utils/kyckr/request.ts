@@ -38,7 +38,7 @@ const getCompanyIdFromSearch = async (query: string, countryISOCode: string = "G
         const bestMatchIndex = matches && matches.bestMatchIndex;
         if (matches.bestMatch && matches.bestMatch.rating > 0.8) {
             company = CompanyDTO[matches.bestMatchIndex];
-            console.log(query, matches, company);
+            // console.log(query, matches, company);
         }
 
     }
