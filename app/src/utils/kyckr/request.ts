@@ -10,7 +10,7 @@ const searchCompany = async (query: string, countryISOCode: string = "GB") => {
 }
 
 const requestCompanyProfile = async (companyNumber: string, countryISOCode: string = "GB", ignoreDB: boolean = false) => {
-    const response = await fetch(`${domain}/kyckrCompanyProfile/${companyNumber}/${countryISOCode}${ignoreDB ? '?ignoreDB=true': ''}`, { mode: 'cors' });
+    const response = await fetch(`${domain}/kyckrCompanyProfile/${companyNumber}/${countryISOCode}${ignoreDB ? '?ignoreDB=true' : ''}`, { mode: 'cors' });
     try {
         const body = await response.json();
         return body;
@@ -55,6 +55,20 @@ const requestCompanyOfficials = async (companyNumber: string, countryISOCode: st
     return body;
 }
 
+const saveCompanyStructure = async (companyNumber: string, countryISOCode: string = "GB", companyStructure: any) => {
+    const data = {
+            companyNumber,
+            countryISOCode,
+            companyStructure
+        }
+
+        console.log(data);
+    // fetch(`${domain}/kyckrsaveCompanyStructure`, {
+    //     method: 'post',
+        // body: JSON.stringify(data)
+    // })
+}
 
 
-export { searchCompany, requestCompanyProfile, requestCompanyOfficials, getCompanyIdFromSearch }
+
+export { searchCompany, requestCompanyProfile, requestCompanyOfficials, getCompanyIdFromSearch, saveCompanyStructure }

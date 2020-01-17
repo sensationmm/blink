@@ -207,7 +207,7 @@ export const Items = styled.ul`
         // }
 
         > span {
-            white-space: nowrap;
+            // white-space: nowrap;
         }
 
         &.corporate-entity-person-with-significant-control > span,
