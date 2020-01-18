@@ -57,16 +57,15 @@ const requestCompanyOfficials = async (companyNumber: string, countryISOCode: st
 
 const saveCompanyStructure = async (companyNumber: string, countryISOCode: string = "GB", companyStructure: any) => {
     const data = {
-            companyNumber,
-            countryISOCode,
-            companyStructure
-        }
+        companyNumber,
+        countryISOCode,
+        companyStructure
+    }
 
-        console.log(data);
-    // fetch(`${domain}/kyckrsaveCompanyStructure`, {
-    //     method: 'post',
-        // body: JSON.stringify(data)
-    // })
+    fetch(`${domain}/kyckrSaveCompanyStructure`, {
+        method: 'post',
+        body: JSON.stringify(data)
+    })
 }
 
 

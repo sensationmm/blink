@@ -17,9 +17,10 @@ export default function Kyckr() {
     const [ignoreDB, setIgnoreDB] = useState(false);
     const [selectedSignificantPersons, setSelectedSignificantPersons] = useState();
     const [companyStructure, setCompanyStructure] = useState();
+    const [showDirectors, toggleShowDirectors] = useState(true);
     const [hackValue, setHackValue] = useState(Math.random());
 
-    const knownPWSC:Array<string>= [];
+    const knownPWSC: Array<string> = [];
 
     useEffect(
         () => {
@@ -43,7 +44,7 @@ export default function Kyckr() {
         obj.shareholders = structure?.shareholders
         obj.officers = structure?.officers
         setCompanyStructure(selectedCompany);
-        setHackValue(Math.random()) 
+        setHackValue(Math.random())
         // saveCompanyStructure(selectedCompany.CompanyID, selectedCountry.value, selectedCompany);
 
         if (obj.shareholders && obj.shareholders.length > 0) {
@@ -51,27 +52,13 @@ export default function Kyckr() {
                 await doit(sh)
                 knownPWSC.push(sh.CompanyID);
                 setCompanyStructure(selectedCompany);
-                setHackValue(Math.random())
-                // saveCompanyStructure(selectedCompany.CompanyID, selectedCountry.value, selectedCompany);
-                // console.log("selectedCompany", selectedCompany)
+                setHackValue(Math.random()) // for react to re-render
             });
-        } 
-        // else {
-        //     console.log("selectedCompany", selectedCompany)
-        // }
+        }
     }
 
 
     const lookupSignificantPersons = async (companyID: any, selectedCountry: string) => {
-
-        // console.log("lookupSignificantPersons", companyID, selectedCountry, objectPosition)
-
-        // setCompanyOfficers(null);
-        // setCompanyShareholders(null)
-        // setErrors(null);
-        // setStatus("searching")
-        // const res = await requestCompanyOfficials(companyId);
-        // company.shareholders: Array<any> = [];
 
         let shareholders: Array<any> = [];
         let officers: Array<any> = [];
@@ -169,21 +156,22 @@ export default function Kyckr() {
     return (
         <MainSt>
 
-            <CompanySearch setIgnoreDB={setIgnoreDB} ignoreDB={ignoreDB} setSelectedCompany={setSelectedCompany} selectedCountry={selectedCountry} setSelectedCountry={setSelectedCountry} />
+            <CompanySearch 
+                toggleShowDirectors={toggleShowDirectors} 
+                showDirectors={showDirectors} 
+                setIgnoreDB={setIgnoreDB} 
+                ignoreDB={ignoreDB} 
+                setSelectedCompany={setSelectedCompany} 
+                selectedCountry={selectedCountry} 
+                setSelectedCountry={setSelectedCountry} 
+            />
 
             {companyStructure &&
                 <SignificantPersons
                     companyStructure={companyStructure}
-                // knownPWSC={[]} 
-                // setSelectedSignificantPersons={setSelectedSignificantPersons} 
-                // selectedCountry={selectedCountry.value} 
-                // selectedCompany={selectedCompany} />}
+                    showDirectors={showDirectors}
                 />
             }
-
-            {/* selectedCompany && <Officers setSelectedOfficer={setSelectedOfficer} selectedCompany={selectedCompany} />} */}
-
-            {/* {selectedCompany && <SignificantCorporateEntity selectedCompany={selectedCompany} />} */}
 
         </MainSt>
     )

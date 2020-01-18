@@ -13,7 +13,9 @@ type SearchCompanyProps = {
     selectedCountry: any,
     setSelectedCountry: any,
     setIgnoreDB: Function,
-    ignoreDB: boolean
+    ignoreDB: boolean,
+    toggleShowDirectors: Function,
+    showDirectors: boolean,
 }
 
 export default function SearchCompany(props: SearchCompanyProps) {
@@ -97,6 +99,7 @@ export default function SearchCompany(props: SearchCompanyProps) {
         </Errors>}
         <TypeAhead>
             <label style={{ width: "100%", float: "left", zIndex: 1, position: "relative" }} htmlFor="ignoreDB"><span>Ignore DB?</span> <input style={{ float: "left", width: 20, marginBottom: 20 }} id="ignoreDB" type="checkbox" checked={props.ignoreDB} onChange={(e: any) => props.setIgnoreDB(e.target.checked)} /> </label>
+            <label style={{ width: "100%", float: "left", zIndex: 1, position: "relative" }} htmlFor="shiwDirectors"><span>Show Directors?</span> <input style={{ float: "left", width: 20, marginBottom: 20 }} id="showDirectors" type="checkbox" checked={props.showDirectors} onChange={(e: any) => props.toggleShowDirectors(e.target.checked)} /> </label>
             <InputWrapper>
                 <InputSt className="with-select" autoFocus onKeyUp={keyUp} placeholder="Company Search" onChange={(event: any) => setQuery(event.target.value)} type="text" value={query} />
                 {query && <Cancel className="with-select" onClick={clearCompany}>&times;</Cancel>}
