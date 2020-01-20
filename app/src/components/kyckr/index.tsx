@@ -19,6 +19,7 @@ export default function Kyckr() {
     const [companyStructure, setCompanyStructure] = useState();
     const [showDirectors, toggleShowDirectors] = useState(true);
     const [hackValue, setHackValue] = useState(Math.random());
+    const [shareholderRange, changeShareholderRange] = useState(10);
 
     const knownPWSC: Array<string> = [];
 
@@ -106,13 +107,6 @@ export default function Kyckr() {
                     });
 
                     shareholders = await Promise.all(shareHoldersCombined
-                        .filter((sh: any) => {
-                            if (!sh.percentage) {
-                                return sh
-                            } else if (sh.percentage > 1) {
-                                return sh
-                            }
-                        })
                         .map(async (shareHolder: any, index: any, array: any) => {
                             if (!shareHolder.CompanyID && (!shareHolder.shareholderType || shareHolder.shareholderType === "C")) {
                                 const CompanyID = await getCompanyIdFromSearch(shareHolder.name, selectedCountry);
@@ -156,18 +150,21 @@ export default function Kyckr() {
     return (
         <MainSt>
 
-            <CompanySearch 
-                toggleShowDirectors={toggleShowDirectors} 
-                showDirectors={showDirectors} 
-                setIgnoreDB={setIgnoreDB} 
-                ignoreDB={ignoreDB} 
-                setSelectedCompany={setSelectedCompany} 
-                selectedCountry={selectedCountry} 
-                setSelectedCountry={setSelectedCountry} 
+            <CompanySearch
+                shareholderRange={shareholderRange} 
+                changeShareholderRange={changeShareholderRange}
+                toggleShowDirectors={toggleShowDirectors}
+                showDirectors={showDirectors}
+                setIgnoreDB={setIgnoreDB}
+                ignoreDB={ignoreDB}
+                setSelectedCompany={setSelectedCompany}
+                selectedCountry={selectedCountry}
+                setSelectedCountry={setSelectedCountry}
             />
 
             {companyStructure &&
                 <SignificantPersons
+                    shareholderRange={shareholderRange}
                     companyStructure={companyStructure}
                     showDirectors={showDirectors}
                 />

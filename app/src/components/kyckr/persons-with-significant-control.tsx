@@ -4,15 +4,19 @@ import PersonsWithSignificantControl from "./persons-with-significant-control";
 
 type Props = {
     companyStructure: any,
-    showDirectors: boolean
+    showDirectors: boolean,
+    shareholderRange: number
 }
 
 export default function SignificantPersons(props: Props) {
 
     const {
         showDirectors,
-        companyStructure
+        companyStructure,
+        shareholderRange,
     } = props;
+
+    console.log("shareholderRange", typeof shareholderRange)
 
     return <>
 
@@ -21,6 +25,13 @@ export default function SignificantPersons(props: Props) {
                 companyStructure.shareholders &&
                 companyStructure.shareholders
                     .filter((item: any) => !item.ceased_on)
+                    .filter((item: any) => {
+                        if (!item.percentage) {
+                            return item
+                        } else if (item.percentage > shareholderRange) {
+                            return item
+                        }
+                    })
                     .map((item: any) => {
                         let title = item.title;
                         if (item.name) {
@@ -39,6 +50,7 @@ export default function SignificantPersons(props: Props) {
                                 && <PersonsWithSignificantControl
                                     showDirectors={showDirectors}
                                     companyStructure={item}
+                                    shareholderRange={shareholderRange}
                                 />
                             }
                         </li>

@@ -76,7 +76,7 @@ export const Cancel = styled.span`
     height: 30px;
     position: absolute;
     right: -5px;
-    top: calc(50% - 0px);
+    top: calc(50% - 16px);
     border: 1px solid #999;
     color: #999;
     border-radius: 50%;
