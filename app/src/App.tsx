@@ -23,10 +23,10 @@ export default () => {
 
 const App = withRouter((props: any) => <div>
   <Tabs>
-    <li className={props.location.pathname === "/companies-house" || props.location.pathname === "/" ? "active" : ""}>
+    {/* <li className={props.location.pathname === "/companies-house" || props.location.pathname === "/" ? "active" : ""}>
       <Link to="/companies-house">Companies House</Link>
-    </li>
-    <li className={props.location.pathname === "/kyckr" ? "active" : ""}>
+    </li> */}
+    <li className={props.location.pathname === "/kyckr" || props.location.pathname === "/" ? "active" : ""}>
       <Link title="Problems" to="/kyckr">Kyckr</Link>
     </li>
     <li className={props.location.pathname === "/duedill" ? "active" : ""}>
@@ -38,11 +38,11 @@ const App = withRouter((props: any) => <div>
   </Tabs>
   <Switch>
     <Route exact path="/">
-      <CompaniesHouse />
+      <Kyckr />
     </Route>
-    <Route path="/companies-house">
+    {/* <Route path="/companies-house">
       <CompaniesHouse />
-    </Route>
+    </Route> */}
     <Route path="/kyckr">
       <Kyckr />
     </Route>
