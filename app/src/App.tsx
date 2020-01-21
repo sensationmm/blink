@@ -27,7 +27,7 @@ const App = withRouter((props: any) => <div>
       <Link to="/companies-house">Companies House</Link>
     </li>
     <li className={props.location.pathname === "/kyckr" ? "active" : ""}>
-      <Link title="Problems" to="/kyckr">Kyckr <span>⚠️</span></Link>
+      <Link title="Problems" to="/kyckr">Kyckr</Link>
     </li>
     <li className={props.location.pathname === "/duedill" ? "active" : ""}>
       <Link to="/duedill">Duedill</Link>

@@ -16,7 +16,7 @@ export default function SignificantPersons(props: Props) {
         shareholderRange,
     } = props;
 
-    console.log("shareholderRange", typeof shareholderRange)
+    // console.log("shareholderRange", typeof shareholderRange)
 
     return <>
 
