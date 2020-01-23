@@ -14,6 +14,7 @@ server.post('*/', function (req: any, res: any) {
         companyNumber,
         countryISOCode,
         companyStructure,
+        source,
         ignoreCache
     } = JSON.parse(req.body);
 
@@ -26,24 +27,22 @@ server.post('*/', function (req: any, res: any) {
 
     companyDoc.get().then((doc: any) => {
         if (!doc.exists) {
-            return companyDoc.set({ [countryISOCode]: { ["kyckr"]: {...companyStructure, lastUpdated: new Date()} } }     ).then(() => res.send("ok"));
+            return companyDoc.set({ [countryISOCode]: { [source]: {...companyStructure, lastUpdated: new Date()} } }     ).then(() => res.send("ok"));
         } else {
             const companyDocData = doc.data();
 
             if (companyDocData[countryISOCode]) {
-                if (companyDocData[countryISOCode]["kyckr"]) {
+                if (companyDocData[countryISOCode][source]) {
                     if (ignoreCache) {
-                        companyDoc.update({ ...companyDocData[countryISOCode], ["kyckr"]: {...companyStructure, lastUpdated: new Date()} }).then(() => res.send("ok"));
+                        companyDoc.update({ ...companyDocData[countryISOCode], [source]: {...companyStructure, lastUpdated: new Date()} }).then(() => res.send("ok"));
                     }
-                    return res.send(companyDocData[countryISOCode]["kyckr"])
+                    return res.send(companyDocData[countryISOCode][source])
                 } else {
-                    return companyDoc.update({ ...companyDocData[countryISOCode], ["kyckr"]: {...companyStructure, lastUpdated: new Date()} }).then(() => res.send("ok"));
+                    return companyDoc.update({ ...companyDocData[countryISOCode], [source]: {...companyStructure, lastUpdated: new Date()} }).then(() => res.send("ok"));
                 }
             } else {
-                return companyDoc.update({ ...companyDocData, [countryISOCode]: { ["kyckr"]: {...companyStructure, lastUpdated: new Date()} } }).then(() => res.send("ok"));
+                return companyDoc.update({ ...companyDocData, [countryISOCode]: { [source]: {...companyStructure, lastUpdated: new Date()} } }).then(() => res.send("ok"));
             }
-
-            // return companyDoc.set({ "kyckr": { ...companyStructure } }).then(() => res.send("ok"));
         }
     })
 

@@ -31,7 +31,7 @@ exports.kyckrCompanyProfile = require("./src/kyckr/requestCompanyProfile");
 
 exports.kyckrCompanyOfficials = require("./src/kyckr/requestCompanyOfficials");
 
-exports.kyckrSaveCompanyStructure = require("./src/kyckr/saveCompanyStructure");
+// exports.kyckrSaveCompanyStructure = require("./src/kyckr/saveCompanyStructure");
 
 exports.companiesHouseCompany = require("./src/companies-house/requestCompany");
 
@@ -54,3 +54,9 @@ exports.truliooDocumentVerificationTypes = require("./src/trulioo/documentVerifi
 exports.truliooDocumentVerification = require("./src/trulioo/documentVerification");
 
 exports.truliooBusinessSearch = require("./src/trulioo/businessSearch");
+
+// generic 
+
+exports.requestCompanyUBOStructure = require("./src/generic/requestCompanyUBOStructure");
+
+exports.saveCompanyUBOStructure = require("./src/generic/saveCompanyUBOStructure");
