@@ -55,19 +55,4 @@ const requestCompanyOfficials = async (companyNumber: string, countryISOCode: st
     return body;
 }
 
-const saveCompanyStructure = async (companyNumber: string, countryISOCode: string = "GB", companyStructure: any) => {
-    const data = {
-        companyNumber,
-        countryISOCode,
-        companyStructure
-    }
-
-    fetch(`${domain}/kyckrSaveCompanyStructure`, {
-        method: 'post',
-        body: JSON.stringify(data)
-    })
-}
-
-
-
-export { searchCompany, requestCompanyProfile, requestCompanyOfficials, getCompanyIdFromSearch, saveCompanyStructure }
+export { searchCompany, requestCompanyProfile, requestCompanyOfficials, getCompanyIdFromSearch }

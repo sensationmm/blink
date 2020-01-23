@@ -3,7 +3,8 @@ import React, { useState, useEffect } from "react";
 // import CompanyLookup from './company';
 import CompanySearch from './search-company'
 import SignificantPersons from "./persons-with-significant-control";
-import { requestCompanyOfficials, requestCompanyProfile, getCompanyIdFromSearch, saveCompanyStructure } from '../../utils/kyckr/request';
+import { requestCompanyOfficials, requestCompanyProfile, getCompanyIdFromSearch } from '../../utils/kyckr/request';
+import { saveCompanyStructure} from '../../utils/generic/request';
 import { MainSt } from "../styles";
 // import Officers from "./officers";
 // import SignificantCorporateEntity from "./corporate-entity-with-significant-control";

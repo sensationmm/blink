@@ -5,8 +5,12 @@ import CompanySearch from './search-company'
 import SignificantPersons from "./persons-with-significant-control";
 import {
     // requestCompanyOfficials, 
-    requestCompanyProfile, getCompanyIdFromSearch, saveCompanyStructure
+    requestCompanyProfile
 } from '../../utils/kyckr/request';
+import {
+    getCompanyIdFromSearch,
+    saveCompanyStructure
+} from '../../utils/generic/request';
 import { requestCompanyUBOStructure } from '../../utils/generic/request';
 import { MainSt } from "../styles";
 // import Officers from "./officers";
@@ -47,7 +51,7 @@ export default function Kyckr() {
             await doit(selectedCompany);
             setCompanyStructure(selectedCompany);
             setHackValue(Math.random())
-            saveCompanyStructure(selectedCompany.companyId, selectedCompany.countryCode, selectedCompany, ignoreDB);
+            saveCompanyStructure(selectedCompany.companyId, selectedCompany.countryCode, selectedCompany, ignoreDB, "kyckr");
         } else {
             console.log("company structure found");
             setCompanyStructure(companyStructure);
@@ -71,7 +75,7 @@ export default function Kyckr() {
                     knownPWSC.push(sh.CompanyID);
                     // setCompanyStructure(selectedCompany);
                     setHackValue(Math.random()) // for react to re-render
-                    saveCompanyStructure(selectedCompany.companyId, selectedCompany.countryCode, selectedCompany, ignoreDB);
+                    saveCompanyStructure(selectedCompany.companyId, selectedCompany.countryCode, selectedCompany, ignoreDB, "kyckr");
                 });
         }
     }

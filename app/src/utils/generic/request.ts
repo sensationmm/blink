@@ -4,6 +4,9 @@
 import { searchCompany as dueDillSearchCompany } from "../duedill/request";
 
 const stringSimilarity = require('string-similarity');
+
+const debounce = require('lodash.debounce');
+
 const domain = window.location.href.indexOf("localhost") > -1 ? "http://localhost:5001/blink-3b651/us-central1" : "https://us-central1-blink-3b651.cloudfunctions.net";
 
 const requestCompanyUBOStructure = async (source: string, companyNumber: string, countryISOCode: string = "GB") => {
@@ -42,4 +45,19 @@ const getCompanyIdFromSearch = async (query: string, countryISOCode: Array<strin
     }
 }
 
-export { requestCompanyUBOStructure, getCompanyIdFromSearch}
+const saveCompanyStructure = debounce(async (companyNumber: string, countryISOCode: string = "GB", companyStructure: any, ignoreDB: boolean = false, source: string) => {
+    const data = {
+        companyNumber,
+        countryISOCode,
+        companyStructure,
+        ignoreDB,
+        source
+    }
+
+    fetch(`${domain}/saveCompanyUBOStructure`, {
+        method: 'post',
+        body: JSON.stringify(data)
+    })
+}, 1000);
+
+export { requestCompanyUBOStructure, getCompanyIdFromSearch, saveCompanyStructure}
