@@ -7,10 +7,11 @@ import {
   // Link
 } from "react-router-dom";
 
-import CompaniesHouse from "./components/companies-house-2"
+// import CompaniesHouse from "./components/companies-house-2"
 import Kyckr from "./components/kyckr"
 import DueDill from "./components/duedill"
 import Trulioo from "./components/trulioo"
+import Generic from "./components/generic"
 import { Tabs } from "./components/styles";
 import { Link, withRouter } from "react-router-dom";
 
@@ -26,11 +27,14 @@ const App = withRouter((props: any) => <div>
     {/* <li className={props.location.pathname === "/companies-house" || props.location.pathname === "/" ? "active" : ""}>
       <Link to="/companies-house">Companies House</Link>
     </li> */}
-    <li className={props.location.pathname === "/kyckr" || props.location.pathname === "/" ? "active" : ""}>
+    <li className={props.location.pathname === "/kyckr" ? "active" : ""}>
       <Link title="Problems" to="/kyckr">Kyckr</Link>
     </li>
     <li className={props.location.pathname === "/duedill" ? "active" : ""}>
       <Link to="/duedill">Duedill</Link>
+    </li>
+    <li className={props.location.pathname === "/combined" || props.location.pathname === "/" ? "active" : ""}>
+      <Link to="/combined">Combined</Link>
     </li>
     {/* <li className={props.location.pathname === "/trulioo" ? "active" : ""}>
       <Link to="/trulioo">Trulioo</Link>
@@ -38,7 +42,7 @@ const App = withRouter((props: any) => <div>
   </Tabs>
   <Switch>
     <Route exact path="/">
-      <Kyckr />
+      <Generic />
     </Route>
     {/* <Route path="/companies-house">
       <CompaniesHouse />
@@ -51,6 +55,9 @@ const App = withRouter((props: any) => <div>
     </Route>
     <Route path="/trulioo">
       <Trulioo />
+    </Route>
+    <Route path="/combined">
+      <Generic />
     </Route>
     <Route path="*">
       <div>Not found</div>
