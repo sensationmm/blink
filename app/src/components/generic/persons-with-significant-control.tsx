@@ -34,19 +34,22 @@ export default function SignificantPersons(props: Props) {
                     })
                     .map((item: any) => {
                         let title = item.title;
-                        if (item.name) {
-                            title = `${item.title} ${(item.name.toLowerCase().includes("ltd") || item.name.toLowerCase().includes("limited") || item.shareholderType === "C" ? "limited-company" : "")} ${item.shareholderType === "P" ? "person" : ""}`;
+                        const { name, shareholderType, CompanyID, percentage, birthdate, shareholders } = item;
+
+
+                        if (name) {
+                            title = `${title} ${(name.toLowerCase().includes("ltd") || name.toLowerCase().includes("limited") || shareholderType === "C" ? "limited-company" : "")} ${shareholderType === "P" ? "person" : ""}`;
                         }
 
-                        return <li className={title} key={`${item.name}-${item.birthdate}-${Math.random()}`}>
-                            <span title={title} className="title">{item.name}
-                                {item.CompanyID && <span style={{ fontSize: 10 }}> ({item.CompanyID}) </span>}
-                                {item.percentage && <><br /><span style={{ fontSize: 10 }}> {`${item.percentage}%`} </span></>}
+                        return <li className={title} key={`${name}-${birthdate}-${Math.random()}`}>
+                            <span title={title} className="title">{name}
+                                {CompanyID && <span style={{ fontSize: 10 }}> ({CompanyID}) </span>}
+                                {percentage && <><br /><span style={{ fontSize: 10 }}> {`${percentage}%`} </span></>}
                             </span>
 
                             {
-                                item.CompanyID &&
-                                (item.shareholders)
+                                CompanyID &&
+                                shareholders
                                 && <PersonsWithSignificantControl
                                     showDirectors={showDirectors}
                                     companyStructure={item}
@@ -64,13 +67,17 @@ export default function SignificantPersons(props: Props) {
                     // .filter((item: any) => !item.birthdate)
                     .map((item: any) => {
                         let title = item.title;
-                        if (item.name) {
-                            title = `${item.title} ${(item.name.toLowerCase().includes("ltd") || item.name.toLowerCase().includes("limited") || item.shareholderType === "P" ? "person" : "")}`;
+
+                        const { CompanyID, shareholderType, birthdate, name } = item;
+
+
+                        if (name) {
+                            title = `${title} ${(name.toLowerCase().includes("ltd") || name.toLowerCase().includes("limited") || shareholderType === "P" ? "person" : "")}`;
                         }
 
-                        return <li className={title} key={`${item.name}-${item.birthdate}-${Math.random()}`}>
-                            <span title={title} className="title">{item.name}
-                                {item.CompanyID && <span style={{ fontSize: 10 }}> ({item.CompanyID})</span>}
+                        return <li className={title} key={`${name}-${birthdate}-${Math.random()}`}>
+                            <span title={title} className="title">{name}
+                                {CompanyID && <span style={{ fontSize: 10 }}> ({CompanyID})</span>}
                             </span>
                         </li>
                     })}
