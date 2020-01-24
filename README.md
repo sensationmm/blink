@@ -43,17 +43,36 @@ e2e tests to come once we have some proper flows to test - using cypress, which 
 
 ## Running backend server locally
 
-The backend currently consists of node/express apps (likely to change) which are hosted as firebsse cloud functions. You can also run these locally. The functions live in `app/functions` and can be served locally by running 
+The backend currently consists of node/express apps (likely to change) which are hosted as firebsse cloud functions. You can also run these locally. 
+
+You'll need typescript and firebase-tools installed globally to be able to run them: 
+
+
 ```bash
-server.js
+npm install -g firebase-tools
+```
+
+```bash
+npm install -g typescript
+```
+
+The functions live in `app/functions` and can be served locally by running 
+```bash
+firebase serve
 ``` 
-in the root of the project. 
+in the functions dir. 
+
+
+You'll need to be logged in to the firebase project first. Talk to Nick P or another owner to get you added. 
+
+
+You'll need some env vars to run these functions locally. Talk to Nick P or anyone else already set up to give them to you. 
 
 The functions are written in TypeScript so will need to be compiled to be run locally. In `app/functions` run 
 ```bash
 tsc
 ``` 
-and then restart your server. This isn't perfect and having to compile is easy to forget, but it's just for convinience. 
+and then run firebase serve again. This isn't perfect and having to compile is easy to forget, but it's just for convinience. 
 
 ## CI
 
