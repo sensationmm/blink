@@ -8,14 +8,14 @@ const kyckrServer = kyckrExpress();
 
 kyckrServer.use(kyckrCors());
 
-kyckrServer.get('*/:query/:countryISOCode', function (req: any, res: any) {
+kyckrServer.get('*/:query/:countryISOCode/:orderReference', function (req: any, res: any) {
 
-    const { query, countryISOCode } = req.params;
+    const { query, countryISOCode, orderReference } = req.params;
 
     console.log("query", query);
 
     const url = 'https://testws.kyckr.eu/gbronboarding.asmx?wsdl';
-    var args = { email: "terry.cordeiro@11fs.com", password: "6c72fde3", countryISOCode, companyName: query, termsAndConditions: true };
+    var args = { email: "terry.cordeiro@11fs.com", password: "6c72fde3", countryISOCode, companyName: query, orderReference, termsAndConditions: true };
 
 
     // ipRequest({url: "http://httpbin.org/ip"}, function (error: any, response: any, body: any) {
@@ -29,8 +29,9 @@ kyckrServer.get('*/:query/:countryISOCode', function (req: any, res: any) {
     soap.createClient(url, { wsdl_headers: { Authorization: auth } }, function (err: any, client: any) {
         // console.log("error", err)
         // console.log("client", client)
-        client.CompanySearch(args, function (err: any, result: any) {
+        console.log("order reference: ", orderReference);
 
+        client.CompanySearch(args, function (err: any, result: any) {
 
             console.log(result);
             if (err) {

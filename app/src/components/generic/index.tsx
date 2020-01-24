@@ -80,6 +80,7 @@ export default function Kyckr() {
         }
     }
 
+    const orderReference = () => `11fs-${selectedCompany.countryCode}-${selectedCompany.companyId}`
 
     const lookupSignificantPersons = async (companyId: any, country: string) => {
 
@@ -87,7 +88,7 @@ export default function Kyckr() {
         let officers: Array<any> = [];
 
         // console.log("selectedCompany", companyId)
-        const res = await requestCompanyProfile(companyId, country);
+        const res = await requestCompanyProfile(companyId, country, orderReference(), ignoreDB);
         // console.log("res", res)
 
         if (res) {

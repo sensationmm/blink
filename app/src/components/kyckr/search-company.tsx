@@ -59,8 +59,6 @@ export default function SearchCompany(props: SearchCompanyProps) {
         props.setSelectedCompany("");
     }
 
-
-
     const companySearch = async () => {
         // console.log("query", query)
         // setCompanies(null);
@@ -69,7 +67,7 @@ export default function SearchCompany(props: SearchCompanyProps) {
         if (query === "") {
             return;
         }
-        const res = await searchCompany(query, selectedCountry.value);
+        const res = await searchCompany(query, selectedCountry.value, "11fs-company-search");
         const companies = res && res.CompanySearchResult && res.CompanySearchResult.Companies && res.CompanySearchResult.Companies.CompanyDTO
 
 

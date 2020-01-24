@@ -59,6 +59,8 @@ export default function Kyckr() {
         }
     }
 
+    const orderReference = () => `11fs-${selectedCompany.countryCode}-${selectedCompany.companyId}`
+
 
     const lookupSignificantPersons = async (companyID: any, selectedCountry: string) => {
 
@@ -66,7 +68,7 @@ export default function Kyckr() {
         let officers: Array<any> = [];
 
         // console.log("selectedCompany", companyID)
-        const res = await requestCompanyProfile(companyID, selectedCountry);
+        const res = await requestCompanyProfile(companyID, selectedCountry, orderReference());
         // console.log("res", res)
 
         if (res) {
@@ -110,7 +112,7 @@ export default function Kyckr() {
                     shareholders = await Promise.all(shareHoldersCombined
                         .map(async (shareHolder: any, index: any, array: any) => {
                             if (!shareHolder.CompanyID && (!shareHolder.shareholderType || shareHolder.shareholderType === "C")) {
-                                const CompanyID = await getCompanyIdFromSearch(shareHolder.name, selectedCountry);
+                                const CompanyID = await getCompanyIdFromSearch(shareHolder.name, selectedCountry, orderReference());
                                 if (CompanyID !== "none") {
                                     shareHolder.CompanyID = CompanyID;
                                 }
@@ -125,7 +127,7 @@ export default function Kyckr() {
                 if (res.officers && res.officers.items) {
                     officers = await Promise.all(res.officers.items.map(async (officer: any, index: any, array: any) => {
                         if (!officer.CompanyID && !officer.birthdate) {
-                            const CompanyID = await getCompanyIdFromSearch(officer.name, selectedCountry);
+                            const CompanyID = await getCompanyIdFromSearch(officer.name, selectedCountry, orderReference());
                             if (CompanyID !== "none") {
                                 officer.CompanyID = CompanyID;
                             }
