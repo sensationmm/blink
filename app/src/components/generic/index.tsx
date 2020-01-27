@@ -31,6 +31,8 @@ export default function Kyckr() {
 
     const knownPWSC: Array<string> = [];
 
+    // requestCompanyProfile("08430008", "GB", "11fs-test", true)
+
     useEffect(
         () => {
             if (selectedCompany && selectedCountry) {

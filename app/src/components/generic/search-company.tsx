@@ -2,7 +2,7 @@ import React, { useState, useEffect, Dispatch } from 'react';
 // import { searchCompany } from '../../utils/kyckr/request';
 import { searchCompany } from '../../utils/duedill/request';
 import { Errors, InputSt, TypeAhead, InputWrapper, Cancel } from '../styles';
-import CountrySelector from "../countrySelector";
+import CountrySelector, { countries } from "../countrySelector";
 import ReactJson from 'react-json-view'
 
 
@@ -119,7 +119,7 @@ export default function SearchCompany(props: SearchCompanyProps) {
 
             </InputWrapper>
             {companies && typeAheadListVisible && <ul>
-                {companies.splice(0, 10).map((company: any) => <li key={company.companyId} onClick={() => selectCompany(company)}>{company.name} <span>({company.companyId})</span></li>)}
+                {companies.filter((company: any) => company.simplifiedStatus !== "Closed").splice(0, 10).map((company: any) => <li key={company.companyId} onClick={() => selectCompany(company)}>{company.name} {countries[company.countryCode] && countries[company.countryCode].icon} <span>({company.companyId})</span></li>)}
             </ul>
             }
         </TypeAhead>

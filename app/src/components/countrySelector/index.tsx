@@ -14,19 +14,20 @@ type Props = {
     value: any
 }
 
+export const countries: any = {
+    "GB": { label: "United Kingdom", icon: "🇬🇧" },
+    "IE": { label: "Ireland", icon: "🇮🇪" },
+    "DE": { label: "Germany", icon: "🇩🇪" },
+    "IT": { label: "Italy", icon: "🇮🇹" },
+    "SE": { label: "Sweden", icon: "🇸🇪" },
+    "FE": { label: "France", icon: "🇫🇷" },
+    "RO": { label: "Romania", icon: "🇷🇴" }
+}
+
 export default function CountrySelector({ isMulti, onChange, value }: Props) {
 
-    const countries = [
-        { value: "GB", label: "United Kingdom 🇬🇧" },
-        { value: "IE", label: "Ireland 🇮🇪" },
-        { value: "DE", label: "Germany 🇩🇪" },
-        { value: "IT", label: "Italy 🇮🇹" },
-        { value: "SE", label: "Sweden 🇸🇪" },
-        { value: "FR", label: "France 🇫🇷" },
-        { value: "RO", label: "Romania 🇷🇴" },
-        { value: "KY", label: "Cayman Islands 🇰🇾" },
-    ]
-    
 
-    return <CountrySelect options={countries} value={value} isMulti={isMulti} onChange={onChange} />
+
+
+    return <CountrySelect options={Object.keys(countries).map((countryCode: string) => { return { label: `${countries[countryCode].label} ${countries[countryCode].icon}`, value: countryCode } })} value={value} isMulti={isMulti} onChange={onChange} />
 }
