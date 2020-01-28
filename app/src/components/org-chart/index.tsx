@@ -25,7 +25,7 @@ const OrgChart = ({ companyName, filter, shareholders }: IOrgChartProps) => {
     return (
         <Styled.OrgChart>
             <Styled.OrgChartInner>
-                <Tree label={<Shareholder name={companyName} />} lineWidth={'2px'} lineBorderRadius={'5px'}>
+                <Tree label={<Shareholder name={companyName} />} lineWidth={'2px'} lineBorderRadius={'5px'} lineHeight="20px" lineColor="#000" nodePadding="5px">
                     {filter(shareholders).reverse().map((shareholder: any) => {
                         return renderShareholder(shareholder);
                     })}
