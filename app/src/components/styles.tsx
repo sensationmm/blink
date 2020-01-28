@@ -248,7 +248,7 @@ export const SignificantPersonsSt = styled.div`
     padding: 10px 20px;
 `
 
-export const OfficersSt  = styled.div` 
+export const OfficersSt = styled.div` 
     // background-color: lime;
     padding: 10px 20px;
 `

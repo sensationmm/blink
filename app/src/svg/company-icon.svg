@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="23px" height="33px" viewBox="0 0 23 33" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 62 (91390) - https://sketch.com -->
+    <title>Group</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M0,0 L30.5840708,0 L29.711417,36.2260863 C27.417157,38.0604707 25.7086906,39.1153497 24.5860176,39.3907233 C15.5839033,41.5987974 9.45746225,40.5427021 6.71736082,39.759292 C3.4646735,38.8293308 2.05640786,37.3390009 2.4925639,35.2883023 L0,0 Z" id="path-1"></path>
+    </defs>
+    <g id="-" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Ownership-structure" transform="translate(-918.000000, -309.000000)">
+            <g id="Group" transform="translate(914.097345, 301.000000)">
+                <g id="Rectangle-Copy-6">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <g id="Mask"></g>
+                    <rect stroke="#002D36" stroke-width="1.6" mask="url(#mask-2)" x="5.09734513" y="9.17522124" width="20.3893805" height="32.6230088" rx="2.88"></rect>
+                </g>
+                <rect id="Rectangle-Copy" stroke="#002D36" stroke-width="2.88" x="18.3504425" y="15.2920354" width="2.03893805" height="2.03893805"></rect>
+                <rect id="Rectangle-Copy-8" stroke="#002D36" stroke-width="2.88" x="18.3504425" y="21.4088496" width="2.03893805" height="2.03893805"></rect>
+                <rect id="Rectangle-Copy-10" stroke="#002D36" stroke-width="2.88" x="18.3504425" y="27.5256637" width="2.03893805" height="2.03893805"></rect>
+                <rect id="Rectangle-Copy-7" stroke="#002D36" stroke-width="2.88" x="10.1946903" y="15.2920354" width="2.03893805" height="2.03893805"></rect>
+                <rect id="Rectangle-Copy-9" stroke="#002D36" stroke-width="2.88" x="10.1946903" y="21.4088496" width="2.03893805" height="2.03893805"></rect>
+                <rect id="Rectangle-Copy-11" stroke="#002D36" stroke-width="2.88" x="10.1946903" y="27.5256637" width="2.03893805" height="2.03893805"></rect>
+            </g>
+        </g>
+    </g>
+</svg>
