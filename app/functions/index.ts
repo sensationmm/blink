@@ -21,6 +21,8 @@ admin.initializeApp({
 
 exports.duedillSearchCompany = require("./src/duedill/searchCompany");
 
+exports.opencorporatesSearchCompany = require("./src/opencorporates/searchCompany");
+
 exports.duedillCompanyShareholders = require("./src/duedill/requestCompanyShareholders");
 
 exports.duedillCompanyPersonsOfSignificantControl = require("./src/duedill/requestCompanyPersonsOfSignificantControl");
