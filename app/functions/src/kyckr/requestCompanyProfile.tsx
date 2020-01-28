@@ -22,7 +22,9 @@ server.get('*/:companyCode/:countryISOCode/:orderReference', function (req: any,
             return officersRef.doc(companyCode).get().then((doc: any) => {
                 if (req.query.ignoreDB === "true" || !doc.exists || (doc.exists && !doc.data()["kyckr"])) {
                     // const url = 'https://testws.kyckr.eu/gbronboarding.asmx?wsdl';
-                    const url = 'https://testws.kyckr.eu/GBRDServices.asmx?wsdl';
+                    // const url = 'https://testws.kyckr.eu/GBRDServices.asmx?wsdl';    
+                    const url = 'https://prodws.kyckr.co.uk/GBRDServices.asmx?wsdl';
+
                     var args = { email: "terry.cordeiro@11fs.com", password: "6c72fde3", countryISOCode, companyCode, orderReference, termsAndConditions: true };
 
                     const auth = "Basic " + JSON.stringify({ "terry.cordeiro@11fs.com": "6c72fde3" })
@@ -39,12 +41,14 @@ server.get('*/:companyCode/:countryISOCode/:orderReference', function (req: any,
                                 console.log("profile error", err);
                                 // console.log(err)
                             }
-                            console.log("result", result)
+                            // console.log("result", result)
 
                             const returnItems = {
                                 shareHolders: null,
                                 officers: null
-                            };
+                            }
+                            
+                            console.log("result.CompanyProfileResult", JSON.stringify(result.CompanyProfileResult))
 
                             if (
                                 result.CompanyProfileResult &&
@@ -87,13 +91,27 @@ server.get('*/:companyCode/:countryISOCode/:orderReference', function (req: any,
 
                             }
 
-                            admin.firestore().collection('shareholders').doc(companyCode).set({ "kyckr": { items: returnItems.shareHolders } }).then(
+                            let shareholdersExistingData: any;
+                            let officersExistingData: any;
 
-                                admin.firestore().collection('officers').doc(companyCode).set({ "kyckr": { items: returnItems.officers } }).then(
+                            admin.firestore().collection('shareholders').doc(companyCode).get().then((doc: any) => {
+                                if (doc.exists) {
+                                    shareholdersExistingData = doc.data();
+                                }
+                                admin.firestore().collection('officers').doc(companyCode).get().then((doc: any) => {
+                                    if (doc.exists) {
+                                        officersExistingData = doc.data();
+                                    }
 
-                                    () => res.send({ shareHolders: { items: returnItems.shareHolders }, officers: { items: returnItems.shareHolders } })
-                                ));
+                                    admin.firestore().collection('shareholders').doc(companyCode).set({ ...(shareholdersExistingData || {}), "kyckr": { items: returnItems.shareHolders } }).then(
 
+                                        admin.firestore().collection('officers').doc(companyCode).set({ ...(officersExistingData || {}), "kyckr": { items: returnItems.officers } }).then(
+
+                                            () => res.send({ shareHolders: { items: returnItems.shareHolders }, officers: { items: returnItems.officers } })
+                                        ));
+
+                                })
+                            })
                         });
                     });
                 } else {

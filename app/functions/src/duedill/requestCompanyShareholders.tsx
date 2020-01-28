@@ -32,7 +32,12 @@ server.get('*/:countryCode/:companyId', function (req: any, res: any) {
                         console.log("error", error);
                     }
                     const items = JSON.parse(body).shareholders;
+                    const data = doc.exists && doc.data();
+
                     if (items) {
+                        if (data) {
+                            return admin.firestore().collection('shareholders').doc(companyId).set({...data, "duedill": items }).then(() => res.send({ items }));
+                        }
                         return admin.firestore().collection('shareholders').doc(companyId).set({ "duedill": { items } }).then(() => res.send({ items }));
                     } 
                     // res.send({ items })

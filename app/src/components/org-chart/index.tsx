@@ -14,7 +14,7 @@ interface IOrgChartProps {
 const OrgChart = ({ companyName, filter, shareholders }: IOrgChartProps) => {
     const renderShareholder = (shareholder: any) => {
         return (
-            <TreeNode label={<Shareholder name={shareholder.name} shares={shareholder.percentage} type={shareholder.shareholderType} />}>
+            <TreeNode label={<Shareholder name={shareholder.name} shareType={shareholder.shareType} shares={shareholder.percentage} type={shareholder.shareholderType} />}>
                 {shareholder.shareholders && filter(shareholder.shareholders).reverse().map((shareholder2: any) => {
                     return renderShareholder(shareholder2);
                 })}
