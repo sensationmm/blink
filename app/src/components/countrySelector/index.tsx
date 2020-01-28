@@ -20,7 +20,7 @@ export const countries: any = {
     "DE": { label: "Germany", icon: "🇩🇪" },
     "IT": { label: "Italy", icon: "🇮🇹" },
     "SE": { label: "Sweden", icon: "🇸🇪" },
-    "FE": { label: "France", icon: "🇫🇷" },
+    "FR": { label: "France", icon: "🇫🇷" },
     "RO": { label: "Romania", icon: "🇷🇴" }
 }
 
