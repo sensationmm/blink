@@ -31,7 +31,7 @@ export default function Kyckr() {
     const [hackValue, setHackValue] = useState(Math.random());
     const [shareholderRange, changeShareholderRange] = useState(10);
 
-    const knownPWSC: Array<string> = [];
+    // const knownPWSC: Array<string> = [];
 
     // requestCompanyProfile("08430008", "GB", "11fs-test", true)
 
@@ -48,14 +48,19 @@ export default function Kyckr() {
     );
 
     const getCompanyVitalsAndSetSelectedCompany = async (company: any) => {
-        const companyVitals = await requestCompanyVitals(company.companyId, company.countryCode);
-        setSelectedCompany({ ...company, ...companyVitals });
+        if (ignoreDB) {
+            const companyVitals = await requestCompanyVitals(company.companyId, company.countryCode);
+            setSelectedCompany({ ...company, ...companyVitals });
+        } else {
+            setSelectedCompany(company);
+        }
+
     }
 
     const startDoinIt = async () => {
 
         const companyStructure = await requestCompanyUBOStructure("kyckr", selectedCompany.companyId, selectedCompany.countryCode);
-
+        
         if (ignoreDB || companyStructure === "not found") {
             console.log("company structure not found - begin build");
             await doit(selectedCompany);
@@ -79,10 +84,12 @@ export default function Kyckr() {
 
         if (obj.shareholders && obj.shareholders.length > 0) {
             obj.shareholders
-                .filter((sh: any) => sh.shareholderType === "C" && sh.CompanyID && knownPWSC.indexOf(sh.CompanyID) === -1)
+                .filter((sh: any) => sh.shareholderType === "C" && sh.CompanyID 
+                // && knownPWSC.indexOf(sh.CompanyID) === -1
+                )
                 .forEach(async (sh: any) => {
                     await doit(sh)
-                    knownPWSC.push(sh.CompanyID);
+                    // knownPWSC.push(sh.CompanyID);
                     // setCompanyStructure(selectedCompany);
                     setHackValue(Math.random()) // for react to re-render
                     saveCompanyStructure(selectedCompany.companyId, selectedCompany.countryCode, selectedCompany, ignoreDB, "kyckr");

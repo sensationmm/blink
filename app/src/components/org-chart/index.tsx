@@ -23,11 +23,14 @@ const OrgChart = ({ companyName, filter, shareholders }: IOrgChartProps) => {
     const [detail, showDetail] = useState(false);
     const [detailContent, setDetailContent] = useState(<></>);
 
-    const renderShareholder = (shareholder: any, shareholderCount: string) => {
+    const renderShareholder = (shareholder: any, shareholderCount: string, parentShares: number = 100) => {
+
+        const childPercentage = parseFloat(shareholder.percentage) * (parentShares / 100);
+
         return (
-            <TreeNode key={`shareholder-${shareholderCount}`} label={<Shareholder name={shareholder.name} shares={shareholder.percentage} type={shareholder.shareholderType} showDetail={showDetailModal} />}>
+            <TreeNode key={`shareholder-${shareholderCount}`} label={<Shareholder name={shareholder.name} shares={childPercentage} type={shareholder.shareholderType} showDetail={showDetailModal} />}>
                 {shareholder.shareholders && filter(shareholder.shareholders).reverse().map((shareholder2: any, count2: number) => {
-                    return renderShareholder(shareholder2, `${shareholderCount}-${count2}`);
+                    return renderShareholder(shareholder2, `${shareholderCount}-${count2}`, childPercentage);
                 })}
             </TreeNode>
         )

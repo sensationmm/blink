@@ -24,7 +24,7 @@ const Shareholder = ({ name, shares, showDetail, type }: IShareholderProps) => {
     return (
         <Styled.Shareholder className={!type ? 'heading' : ''} onClick={() => showDetail ? showDetail(details) : null}>
             <ShareholderImage style={{ backgroundImage: `url(${ShareholderIcon})` }} />
-            {shares && <Styled.Shares>{shares}%</Styled.Shares>}
+            {shares && <Styled.Shares>{shares.toFixed(2)}%</Styled.Shares>}
             <ShareholderLabel>{name}</ShareholderLabel>
         </Styled.Shareholder>
     )
