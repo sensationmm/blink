@@ -11,6 +11,8 @@ export const Shareholder = styled.div`
     box-shadow: 0px 0px 10px #ccc;
     background: #fff;
     margin: 0 20px;
+    z-index: 1;
+    cursor: pointer;
 
     &.heading {
         box-shadow: none;

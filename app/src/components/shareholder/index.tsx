@@ -9,15 +9,20 @@ interface IShareholderProps {
     name: string;
     shares?: number;
     type?: string;
+    showDetail?: (content: JSX.Element) => void;
 }
 
-const Shareholder = ({ name, shares, type }: IShareholderProps) => {
+const Shareholder = ({ name, shares, showDetail, type }: IShareholderProps) => {
     const ShareholderImage = type ? (type === 'C' ? Styled.ImageCompany : Styled.ImagePerson) : Styled.ImageRoot;
     const ShareholderLabel = type ? Styled.Label : Styled.Heading;
     const ShareholderIcon = type === 'P' ? PersonIcon : CompanyIcon;
 
+    const details = <>
+        <ShareholderImage style={{ backgroundImage: `url(${ShareholderIcon})` }} />
+    </>;
+
     return (
-        <Styled.Shareholder className={!type ? 'heading' : ''}>
+        <Styled.Shareholder className={!type ? 'heading' : ''} onClick={() => showDetail ? showDetail(details) : null}>
             <ShareholderImage style={{ backgroundImage: `url(${ShareholderIcon})` }} />
             {shares && <Styled.Shares>{shares}%</Styled.Shares>}
             <ShareholderLabel>{name}</ShareholderLabel>
