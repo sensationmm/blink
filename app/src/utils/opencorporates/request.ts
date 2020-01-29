@@ -10,7 +10,7 @@ const searchCompany = async (query: string) => {
     return body;
 }
 
-const getCompanyIdFromSearch = async (query: string) => {
+const getCompanyIdFromSearch = async (query: string, countryISOCode: Array<string> = ["GB"]) => {
     const response = await searchCompany(query);
     const body = await response;
     // console.log(response)

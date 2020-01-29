@@ -8,6 +8,7 @@ import { Items } from '../styles';
 type Props = {
     companyStructure: any,
     showDirectors: boolean,
+    showOnlyOrdinaryShareTypes: boolean,
     shareholderRange: number
 }
 
@@ -17,10 +18,19 @@ export default function SignificantPersons(props: Props) {
         showDirectors,
         companyStructure,
         shareholderRange,
+        showOnlyOrdinaryShareTypes,
     } = props;
 
     const filterList = (list: any) => {
-        return list.filter((item: any) => !item.ceased_on).filter((item: any) => {
+        return list
+            .filter((item: any) => !item.ceased_on)
+            .filter((item: any) => {
+                if (showOnlyOrdinaryShareTypes) {
+                    return item?.shareType?.toLowerCase().indexOf("ordinary") > -1
+                } 
+                return item
+            })
+            .filter((item: any) => {
             if (!item.percentage) {
                 return item
             } else if (item.percentage > shareholderRange) {

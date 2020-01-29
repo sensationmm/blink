@@ -3,7 +3,7 @@ import React, { useState, useEffect, Dispatch } from 'react';
 import { searchCompany } from '../../utils/duedill/request';
 import { Errors, InputSt, TypeAhead, InputWrapper, Cancel } from '../styles';
 import CountrySelector, { countries } from "../countrySelector";
-import ReactJson from 'react-json-view'
+// import ReactJson from 'react-json-view'
 
 
 const delay = 400;
@@ -18,6 +18,8 @@ type SearchCompanyProps = {
     changeShareholderRange: Function,
     shareholderRange: number,
     showDirectors: boolean,
+    toggleShowOnlyOrdinaryShareTypes: Function,
+    showOnlyOrdinaryShareTypes: boolean,
 }
 
 export default function SearchCompany(props: SearchCompanyProps) {
@@ -96,15 +98,16 @@ export default function SearchCompany(props: SearchCompanyProps) {
 
     return <>
         {/* <Label>Company Search</Label> */}
-        <div style={{ minHeight: 20 }}>
+        {/* <div style={{ minHeight: 20 }}>
             {companies && <ReactJson collapsed src={companies} />}
-        </div>
+        </div> */}
         {errors && <Errors>
             {errors.map((error: any) => <li key={error.type}>{error.error}</li>)}
         </Errors>}
         <TypeAhead>
             <label style={{ width: "100%", float: "left", zIndex: 1, position: "relative" }} htmlFor="ignoreDB"><span>Ignore DB?</span> <input style={{ float: "left", width: 20, marginBottom: 20 }} id="ignoreDB" type="checkbox" checked={props.ignoreDB} onChange={(e: any) => props.setIgnoreDB(e.target.checked)} /> </label>
-            <label style={{ width: "100%", float: "left", zIndex: 1, position: "relative" }} htmlFor="shiwDirectors"><span>Show Directors?</span> <input style={{ float: "left", width: 20, marginBottom: 20 }} id="showDirectors" type="checkbox" checked={props.showDirectors} onChange={(e: any) => props.toggleShowDirectors(e.target.checked)} /> </label>
+            <label style={{ width: "100%", float: "left", zIndex: 1, position: "relative" }} htmlFor="showDirectors"><span>Show Directors?</span> <input style={{ float: "left", width: 20, marginBottom: 20 }} id="showDirectors" type="checkbox" checked={props.showDirectors} onChange={(e: any) => props.toggleShowDirectors(e.target.checked)} /> </label>
+            <label style={{ width: "100%", float: "left", zIndex: 1, position: "relative" }} htmlFor="showOnlyOrdinaryShareTypes"><span>Show only ordinary share types?</span> <input style={{ float: "left", width: 20, marginBottom: 20 }} id="showOnlyOrdinaryShareTypes" type="checkbox" checked={props.showOnlyOrdinaryShareTypes} onChange={(e: any) => props.toggleShowOnlyOrdinaryShareTypes(e.target.checked)} /> </label>
 
             <label htmlFor="shareholderRange">Shareholder percentage</label><input style={{ width: 100, padding: 0, margin: "0px 20px 30px" }} type="range" id="shareholderRange" value={props.shareholderRange} onChange={e => props.changeShareholderRange(parseInt(e.target.value))} name="shareholderRange" min="0" max="100" /><span>greater than: {props.shareholderRange} %</span>
 

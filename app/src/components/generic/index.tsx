@@ -11,6 +11,7 @@ import {
     getCompanyIdFromSearch,
     saveCompanyStructure
 } from '../../utils/generic/request';
+import { requestCompanyVitals } from '../../utils/duedill/request';
 import { requestCompanyUBOStructure } from '../../utils/generic/request';
 import { MainSt } from "../styles";
 // import Officers from "./officers";
@@ -21,11 +22,12 @@ export default function Kyckr() {
 
     const [selectedCompany, setSelectedCompany] = useState();
     const [selectedCountry, setSelectedCountry] = useState([{ value: "GB", label: "United Kingdom 🇬🇧" }, { value: "IE", label: "Ireland 🇮🇪" }]);
-    const [selectedOfficer, setSelectedOfficer] = useState();
+    // const [selectedOfficer, setSelectedOfficer] = useState();
     const [ignoreDB, setIgnoreDB] = useState(false);
-    const [selectedSignificantPersons, setSelectedSignificantPersons] = useState();
+    // const [selectedSignificantPersons, setSelectedSignificantPersons] = useState();
     const [companyStructure, setCompanyStructure] = useState();
     const [showDirectors, toggleShowDirectors] = useState(true);
+    const [showOnlyOrdinaryShareTypes, toggleShowOnlyOrdinaryShareTypes] = useState(false)
     const [hackValue, setHackValue] = useState(Math.random());
     const [shareholderRange, changeShareholderRange] = useState(10);
 
@@ -45,7 +47,13 @@ export default function Kyckr() {
         [selectedCompany, selectedCountry]
     );
 
+    const getCompanyVitalsAndSetSelectedCompany = async (company: any) => {
+        const companyVitals = await requestCompanyVitals(company.companyId, company.countryCode);
+        setSelectedCompany({ ...company, ...companyVitals });
+    }
+
     const startDoinIt = async () => {
+
         const companyStructure = await requestCompanyUBOStructure("kyckr", selectedCompany.companyId, selectedCompany.countryCode);
 
         if (ignoreDB || companyStructure === "not found") {
@@ -183,15 +191,18 @@ export default function Kyckr() {
                 changeShareholderRange={changeShareholderRange}
                 toggleShowDirectors={toggleShowDirectors}
                 showDirectors={showDirectors}
+                toggleShowOnlyOrdinaryShareTypes={toggleShowOnlyOrdinaryShareTypes}
+                showOnlyOrdinaryShareTypes={showOnlyOrdinaryShareTypes}
                 setIgnoreDB={setIgnoreDB}
                 ignoreDB={ignoreDB}
-                setSelectedCompany={setSelectedCompany}
+                setSelectedCompany={getCompanyVitalsAndSetSelectedCompany}
                 selectedCountry={selectedCountry}
                 setSelectedCountry={setSelectedCountry}
             />
 
             {companyStructure &&
                 <SignificantPersons
+                    showOnlyOrdinaryShareTypes={showOnlyOrdinaryShareTypes}
                     shareholderRange={shareholderRange}
                     companyStructure={companyStructure}
                     showDirectors={showDirectors}

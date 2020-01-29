@@ -1,4 +1,4 @@
-export {} 
+export { }
 const functions = require('firebase-functions');
 const admin = require("firebase-admin");
 const cors = require('cors');
@@ -31,9 +31,14 @@ server.get('*/:countryCode/:companyId', function (req: any, res: any) {
                         console.log("error", error);
                     }
                     const items = JSON.parse(body).personsOfSignificantControl;
+                    const data = doc.exists && doc.data();
+
                     if (items) {
+                        if (data) {
+                            return admin.firestore().collection('officers').doc(companyId).set({ ...data, "duedill": items }).then(() => res.send({ items }));
+                        }
                         return admin.firestore().collection('officers').doc(companyId).set({ "duedill": { items } }).then(() => res.send({ items }));
-                    } 
+                    }
                     // res.send({ items })
                 })
 

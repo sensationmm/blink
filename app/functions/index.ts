@@ -25,6 +25,8 @@ exports.opencorporatesSearchCompany = require("./src/opencorporates/searchCompan
 
 exports.duedillCompanyShareholders = require("./src/duedill/requestCompanyShareholders");
 
+exports.duedillCompanyVitals = require("./src/duedill/requestCompanyVitals");
+
 exports.duedillCompanyPersonsOfSignificantControl = require("./src/duedill/requestCompanyPersonsOfSignificantControl");
 
 exports.kyckrSearchCompany = require("./src/kyckr/searchCompany");

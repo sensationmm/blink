@@ -14,7 +14,9 @@ kyckrServer.get('*/:query/:countryISOCode/:orderReference', function (req: any, 
 
     console.log("query", query);
 
-    const url = 'https://testws.kyckr.eu/gbronboarding.asmx?wsdl';
+    // const url = 'https://prodws.kyckr.co.uk/gbronboarding.asmx?wsdl';
+    const url = 'https://prodws.kyckr.co.uk/GBRDServices.asmx?wsdl';
+
     var args = { email: "terry.cordeiro@11fs.com", password: "6c72fde3", countryISOCode, companyName: query, orderReference, termsAndConditions: true };
 
 
