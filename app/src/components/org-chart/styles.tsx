@@ -21,7 +21,7 @@ export const OrgChart = styled.div`
 
     &.fullscreen {
         position: fixed;
-        width: 80vw;
+        width: 100vw;
         height: 100vh;
         top: 0px;
         left: 0px;
