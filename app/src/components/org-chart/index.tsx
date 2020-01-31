@@ -31,6 +31,9 @@ interface IOptions {
 const OrgChart = ({ companyName, filter, shareholders }: IOrgChartProps) => {
     let chartContainer = useRef(null);
     let chartCanvas = useRef(null);
+    let resizeTimeout: ReturnType<typeof setTimeout>;
+    let modalTimeout: ReturnType<typeof setTimeout>;
+    let rerenderTimeout: ReturnType<typeof setTimeout>;
 
     const [detail, showDetail] = useState(false);
     const [detailContent, setDetailContent] = useState(<></>);
@@ -59,7 +62,7 @@ const OrgChart = ({ companyName, filter, shareholders }: IOrgChartProps) => {
 
     const clearDetailModal = () => {
         showDetail(false);
-        setTimeout(() => setDetailContent(<></>), 300);
+        modalTimeout = setTimeout(() => setDetailContent(<></>), 300);
     }
 
     const onFullScreen = (set: boolean) => {
@@ -67,7 +70,16 @@ const OrgChart = ({ companyName, filter, shareholders }: IOrgChartProps) => {
         setFullScreen(set);
     }
 
-    useEffect(() => {
+    const onResize = () => {
+        clearTimeout(resizeTimeout);
+
+        resizeTimeout = setTimeout(() => {
+            setAdjustScale(true);
+            calculateSize();
+        }, 50);
+    }
+
+    const calculateSize = () => {
         const canvas = (chartCanvas?.current || { offsetWidth: 0, offsetHeight: 0 });
         const canvasSize = { width: canvas.offsetWidth, height: canvas.offsetHeight };
         const container = (chartContainer?.current || { offsetWidth: 0, offsetHeight: 0 });
@@ -84,13 +96,31 @@ const OrgChart = ({ companyName, filter, shareholders }: IOrgChartProps) => {
             }
         }
 
-        const newRatio = Math.round((ratio + Number.EPSILON) * 10) / 10;
+        if (ratio < 0.2) {
+            ratio = 0.2;
+        }
+        let newRatio = Math.round((ratio + Number.EPSILON) * 10) / 10;
+
         const defaultLeft = ((containerSize.width - (canvasSize.width * newRatio)) / 2) + (ratio !== 1 ? 0 : 50);
         const defaultTop = ((containerSize.height - (canvasSize.height * newRatio)) / 2) + (ratio !== 1 ? 0 : 50);
 
         setDefaultScale(ratio);
         setDefaultPos({ top: defaultTop, left: defaultLeft });
+    }
+
+    useEffect(() => {
+        calculateSize();
+
+        window.addEventListener('resize', onResize);
     }, [isFullScreen]);
+
+    useEffect(() => {
+        return () => {
+            clearTimeout(resizeTimeout);
+            clearTimeout(modalTimeout);
+            clearTimeout(rerenderTimeout);
+        }
+    }, []);
 
     return (
         <Styled.OrgChart className={cx({ fullscreen: isFullScreen })} ref={chartContainer}>
@@ -102,7 +132,7 @@ const OrgChart = ({ companyName, filter, shareholders }: IOrgChartProps) => {
                 {({ zoomIn, zoomOut, setTransform }: ITransformWrapperProps) => {
                     if (defaultScale && adjustScale === true) {
                         setTransform(defaultPos.left, defaultPos.top, defaultScale);
-                        setTimeout(() => setAdjustScale(false), 500);
+                        rerenderTimeout = setTimeout(() => setAdjustScale(false), 500);
                     }
 
                     return (
