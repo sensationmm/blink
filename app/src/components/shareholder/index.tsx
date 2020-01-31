@@ -1,4 +1,5 @@
 import React from 'react';
+import cx from 'classnames';
 
 import CompanyIcon from '../../svg/company-icon.svg';
 import PersonIcon from '../../svg/individual-icon.svg';
@@ -13,20 +14,21 @@ interface IShareholderProps {
 }
 
 const Shareholder = ({ name, shares, showDetail, type }: IShareholderProps) => {
-    const ShareholderImage = type ? (type === 'C' ? Styled.ImageCompany : Styled.ImagePerson) : Styled.ImageRoot;
+    const ShareholderImage = type === 'P' ? Styled.ImagePerson : Styled.ImageCompany;
     const ShareholderLabel = type ? Styled.Label : Styled.Heading;
     const ShareholderIcon = type === 'P' ? PersonIcon : CompanyIcon;
 
     const details = <>
-        <ShareholderImage style={{ backgroundImage: `url(${ShareholderIcon})` }} />
+        <ShareholderImage className={'large'} style={{ backgroundImage: `url(${ShareholderIcon})` }} />
+        <ShareholderLabel>{name}</ShareholderLabel>
     </>;
 
     return (
-        <Styled.Shareholder className={!type ? 'heading' : ''} onClick={() => showDetail ? showDetail(details) : null}>
-            <ShareholderImage style={{ backgroundImage: `url(${ShareholderIcon})` }} />
+        <Styled.Shareholder className={cx({ 'heading': !type }, { 'isCompany': type === 'C' }, { 'isPerson': type === 'P' })} onClick={() => showDetail ? showDetail(details) : null}>
+            <ShareholderImage className={!type ? 'large' : ''} style={{ backgroundImage: `url(${ShareholderIcon})` }} />
             {shares && <Styled.Shares>{shares.toFixed(2)}%</Styled.Shares>}
             <ShareholderLabel>{name}</ShareholderLabel>
-        </Styled.Shareholder>
+        </Styled.Shareholder >
     )
 }
 

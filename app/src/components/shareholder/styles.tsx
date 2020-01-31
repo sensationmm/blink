@@ -8,17 +8,29 @@ export const Shareholder = styled.div`
     transform: rotate(180deg);
     left: 3px;
     border-radius: 3px;
-    box-shadow: 0px 0px 10px #ccc;
+    box-shadow: 0px 0px 10px var(--basic-shadow);
     background: #fff;
     margin: 0 20px;
     z-index: 1;
     cursor: pointer;
+    transition: background 0.1s linear;
 
     &.heading {
         box-shadow: none;
         padding: 0;
         width: auto;
         background: none;
+        cursor: default;
+    }
+
+    &.isCompany:hover {
+        background-color: var(--brand-primary-alt);
+        transform: rotate(180deg) scale(1.1);
+    }
+
+    &.isPerson:hover {
+        background-color: var(--brand-secondary-alt);
+        transform: rotate(180deg) scale(1.1);
     }
 `
 
@@ -28,26 +40,23 @@ export const Image = styled.div`
     border-radius: 26px;
     border: 2px solid #000;
     position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-    margin-bottom: 10px;
+    margin: 0 auto 10px auto;
     background: center top 10px no-repeat;
     background-size: contain;
-`
 
-export const ImageRoot = styled(Image)`
-    width: 100px;
-    height: 100px;
-    border-radius: 50px;
-    background-color: #D9FFF9;
+    &.large {
+        width: 100px;
+        height: 100px;
+        border-radius: 50px;
+    }
 `
 
 export const ImageCompany = styled(Image)`
-    background-color: #D9FFF9;
+    background-color: var(--brand-primary);
 `
 
 export const ImagePerson = styled(Image)`
-    background-color: #EEEAFF;
+    background-color: var(--brand-secondary);
 `
 
 export const Heading = styled.div`

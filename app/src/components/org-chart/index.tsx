@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+import cx from 'classnames';
+import React, { useEffect, useRef, useState } from 'react';
 import { Tree, TreeNode } from 'react-organizational-chart';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 
 import Shareholder from '../shareholder/index';
+import FullScreen from '../../svg/fullscreen.svg';
+import FullScreenExit from '../../svg/fullscreen-exit.svg';
+import Reset from '../../svg/reset.svg';
 import ZoomIn from '../../svg/zoom-in.svg';
 import ZoomOut from '../../svg/zoom-out.svg';
 
@@ -17,11 +21,23 @@ interface IOrgChartProps {
 interface ITransformWrapperProps {
     zoomIn: () => void;
     zoomOut: () => void;
+    setTransform: (posX: number, posY: number, scale: number) => void;
+}
+
+interface IOptions {
+    defaultScale?: number;
 }
 
 const OrgChart = ({ companyName, filter, shareholders }: IOrgChartProps) => {
+    let chartContainer = useRef(null);
+    let chartCanvas = useRef(null);
+
     const [detail, showDetail] = useState(false);
     const [detailContent, setDetailContent] = useState(<></>);
+    const [isFullScreen, setFullScreen] = useState(false);
+    const [defaultScale, setDefaultScale] = useState();
+    const [adjustScale, setAdjustScale] = useState(true);
+    const [defaultPos, setDefaultPos] = useState({ top: 0, left: 0 });
 
     const renderShareholder = (shareholder: any, shareholderCount: string, parentShares: number = 100) => {
 
@@ -43,33 +59,77 @@ const OrgChart = ({ companyName, filter, shareholders }: IOrgChartProps) => {
 
     const clearDetailModal = () => {
         showDetail(false);
-        setDetailContent(<></>);
+        setTimeout(() => setDetailContent(<></>), 300);
     }
 
-    return (
-        <Styled.OrgChart>
-            <TransformWrapper options={{ maxScale: 2, minScale: 0.5 }}>
-                {({ zoomIn, zoomOut, ...rest }: ITransformWrapperProps) => (
-                    <div>
-                        <TransformComponent>
-                            <Styled.OrgChartInner>
-                                <Tree label={<Shareholder name={companyName} />} lineWidth={'2px'} lineBorderRadius={'5px'} lineHeight={'20px'} lineColor={'black'} nodePadding={'5px'}>
-                                    {filter(shareholders).reverse().map((shareholder: any, count: number) => {
-                                        return renderShareholder(shareholder, `${count}`);
-                                    })}
-                                </Tree>
-                            </Styled.OrgChartInner>
-                        </TransformComponent>
+    const onFullScreen = (set: boolean) => {
+        setAdjustScale(true)
+        setFullScreen(set);
+    }
 
-                        <Styled.Controls>
-                            <img src={ZoomIn} onClick={zoomIn} alt="Zoom In" />
-                            <img src={ZoomOut} onClick={zoomOut} alt="Zoom Out" />
-                        </Styled.Controls>
-                    </div>
-                )}
+    useEffect(() => {
+        const canvas = (chartCanvas?.current || { offsetWidth: 0, offsetHeight: 0 });
+        const canvasSize = { width: canvas.offsetWidth, height: canvas.offsetHeight };
+        const container = (chartContainer?.current || { offsetWidth: 0, offsetHeight: 0 });
+        const containerSize = { width: container.offsetWidth - 100, height: container.offsetHeight - 100 };
+
+        let ratio = 1;
+        if (canvasSize.width > canvasSize.height) {
+            if (canvasSize.width > containerSize.width) {
+                ratio = (containerSize.width) / canvasSize.width;
+            }
+        } else {
+            if (canvasSize.height > containerSize.height) {
+                ratio = (containerSize.height) / canvasSize.height;
+            }
+        }
+
+        const newRatio = Math.round((ratio + Number.EPSILON) * 10) / 10;
+
+        setDefaultScale(ratio);
+        setDefaultPos({ top: (containerSize.height - (canvasSize.height * newRatio)) / 2, left: (containerSize.width - (canvasSize.width * newRatio)) / 2 });
+    }, [isFullScreen]);
+
+    return (
+        <Styled.OrgChart className={cx({ fullscreen: isFullScreen })} ref={chartContainer}>
+            <TransformWrapper
+                defaultScale={defaultScale}
+                options={{ maxScale: 3, minScale: 0.2, centerContent: true }}
+            // pan={{ disableOnTarget: ['div'] }} @TODO: pending TS change from package
+            >
+                {({ zoomIn, zoomOut, setTransform }: ITransformWrapperProps) => {
+                    if (defaultScale && adjustScale === true) {
+                        setTransform(defaultPos.left, defaultPos.top, defaultScale);
+                        setTimeout(() => setAdjustScale(false), 500);
+                    }
+
+                    return (
+                        <div>
+                            <TransformComponent>
+                                <Styled.OrgChartInner ref={chartCanvas}>
+                                    <Tree label={<Shareholder name={companyName} />} lineWidth={'2px'} lineBorderRadius={'5px'} lineHeight={'20px'} lineColor={'black'} nodePadding={'5px'}>
+                                        {filter(shareholders).reverse().map((shareholder: any, count: number) => {
+                                            return renderShareholder(shareholder, `${count}`);
+                                        })}
+                                    </Tree>
+                                </Styled.OrgChartInner>
+                            </TransformComponent>
+
+                            <Styled.Controls>
+                                {!isFullScreen && <img src={FullScreen} onClick={() => onFullScreen(true)} alt="Fullscreen" />}
+                                {isFullScreen && <img src={FullScreenExit} onClick={() => onFullScreen(false)} alt="Exit fullscreen" />}
+                                <img src={ZoomIn} onClick={zoomIn} alt="Zoom In" />
+                                <img src={ZoomOut} onClick={zoomOut} alt="Zoom Out" />
+                                <img src={Reset} onClick={() => setTransform(defaultPos.left, defaultPos.top, defaultScale)} alt="Reset" />
+                            </Styled.Controls>
+                        </div>
+                    )
+                }
+                }
             </TransformWrapper>
 
-            <Styled.Detail className={detail ? 'open' : ''} onClick={clearDetailModal}>{detailContent}</Styled.Detail>
+            <Styled.Detail className={detail ? 'open' : ''}>{detailContent}</Styled.Detail>
+            <Styled.DetailMask className={detail ? 'open' : ''} onClick={clearDetailModal} />
         </Styled.OrgChart>
     )
 };
