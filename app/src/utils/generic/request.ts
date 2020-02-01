@@ -21,7 +21,7 @@ const requestCompanyUBOStructure = async (source: string, companyNumber: string,
 }
 
 
-const getCompanyIdFromSearch = async (query: string, countryISOCode: Array<string> = ["GB"]) => {
+const getCompanyIdFromSearch = async (query: string, countryISOCode: string = "GB") => {
     const response = await dueDillSearchCompany(query, countryISOCode);
     let company;
 
@@ -60,4 +60,47 @@ const saveCompanyStructure = debounce(async (companyNumber: string, countryISOCo
     })
 }, 1000);
 
-export { requestCompanyUBOStructure, getCompanyIdFromSearch, saveCompanyStructure}
+const toCamel = (obj: any) => {
+    let newO: any, origKey, newKey, value
+    if (obj instanceof Array) {
+      return obj.map(function(value) {
+          if (typeof value === "object") {
+            value = toCamel(value)
+          }
+          return value
+      })
+    } else {
+      newO = {}
+      for (origKey in obj) {
+        if (obj.hasOwnProperty(origKey)) {
+          newKey = (origKey.charAt(0).toLowerCase() + origKey.slice(1) || origKey).toString()
+          value = obj[origKey]
+          if (value instanceof Array || (value !== null && value.constructor === Object)) {
+            value = toCamel(value)
+          }
+          newO[newKey] = value
+        }
+      }
+    }
+    return newO
+  }
+
+
+const normalisePropertyNames = (obj: any) => {
+    if (obj instanceof Array) {
+        return obj.map(function(value) {
+            if (typeof value === "object") {
+                value = normalisePropertyNames(value)
+            }
+            return value
+        })
+    } else {
+        if (obj["companyID"]) {
+            obj.companyId = obj["companyID"];
+            delete obj["companyID"]
+        }
+        return obj;
+    }
+}
+
+export { requestCompanyUBOStructure, getCompanyIdFromSearch, saveCompanyStructure, toCamel, normalisePropertyNames }

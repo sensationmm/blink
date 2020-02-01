@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import Select from "react-select";
 
 export const Tabs = styled.ul`
 
@@ -88,6 +89,11 @@ export const Cancel = styled.span`
     &.with-select {
         right: 275px;
     }
+`
+
+export const CountrySelector = styled(Select)`
+    width: 250px;
+    float: ${props => props.float || "right"};
 `
 
 export const InputWrapper = styled.div`

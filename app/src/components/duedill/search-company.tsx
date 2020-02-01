@@ -1,7 +1,6 @@
 import React, { useState, useEffect, Dispatch } from 'react';
-import styled from "styled-components";
 import { searchCompany } from '../../utils/duedill/request';
-import { MainSt, InputSt, ButtonSt, Company, Errors, Label, TypeAhead, InputWrapper, Cancel } from '../styles';
+import { InputSt, Errors, TypeAhead, InputWrapper, Cancel } from '../styles';
 import CountrySelector from "../countrySelector";
 import ReactJson from 'react-json-view'
 
@@ -21,7 +20,7 @@ export default function SearchCompany({ setSelectedCompany, setIgnoreDB, ignoreD
     const [typeAheadListVisible, showTypeAheadList] = useState(true);
     const [status, setStatus] = useState();
     const [errors, setErrors] = useState();
-    const [selectedCountry, setSelectedCountry] = useState([{ value: "GB", label: "United Kingdom 🇬🇧" }]);
+    const [selectedCountry, setSelectedCountry] = useState({ value: "GB", label: "United Kingdom 🇬🇧" });
 
     // console.log("ignoreDB", ignoreDB)
 
@@ -62,7 +61,7 @@ export default function SearchCompany({ setSelectedCompany, setIgnoreDB, ignoreD
         if (query === "") {
             return;
         }
-        const res = await searchCompany(query, selectedCountry && selectedCountry.map((country: any) => country.value));
+        const res = await searchCompany(query, selectedCountry.value);
 
         if (res.errors) {
             setStatus(null);

@@ -9,9 +9,9 @@ const server = express();
 
 server.use(cors());
 
-server.get('*/:companyCode/:countryISOCode/:orderReference', function (req: any, res: any) {
+server.get('*/:companyCode/:countryISOCode/:orderReference/:registrationAuthority?', function (req: any, res: any) {
 
-    const { companyCode, countryISOCode, orderReference } = req.params;
+    const { companyCode, countryISOCode, orderReference, registrationAuthority} = req.params;
 
     console.log("companyCode", companyCode);
     const officersRef = admin.firestore().collection('officers');
@@ -25,7 +25,7 @@ server.get('*/:companyCode/:countryISOCode/:orderReference', function (req: any,
                     // const url = 'https://testws.kyckr.eu/GBRDServices.asmx?wsdl';    
                     const url = 'https://prodws.kyckr.co.uk/GBRDServices.asmx?wsdl';
 
-                    var args = { email: "terry.cordeiro@11fs.com", password: "6c72fde3", countryISOCode, companyCode, orderReference, termsAndConditions: true };
+                    var args = { email: "terry.cordeiro@11fs.com", password: "6c72fde3", countryISOCode, companyCode, orderReference, registrationAuthority, termsAndConditions: true };
 
                     const auth = "Basic " + JSON.stringify({ "terry.cordeiro@11fs.com": "6c72fde3" })
 

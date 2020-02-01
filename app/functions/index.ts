@@ -33,6 +33,12 @@ exports.kyckrSearchCompany = require("./src/kyckr/searchCompany");
 
 exports.kyckrCompanyProfile = require("./src/kyckr/requestCompanyProfile");
 
+exports.kyckrFilingSearch = require("./src/kyckr/requestFilingSearch");
+
+exports.kyckrProductOrder = require("./src/kyckr/requestProductOrder");
+
+exports.kyckrProductList = require("./src/kyckr/requestProductList");
+
 exports.kyckrCompanyOfficials = require("./src/kyckr/requestCompanyOfficials");
 
 // exports.kyckrSaveCompanyStructure = require("./src/kyckr/saveCompanyStructure");
