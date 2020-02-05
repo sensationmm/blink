@@ -6,6 +6,7 @@ const express = require('express');
 var soap = require('soap');
 const server = express();
 const dueDilCompanySearch = require('../duedill/searchCompany').searchCompany;
+const dueDilCompanyVitals = require('../duedill/requestCompanyVitals').requestCompanyVitals;
 
 server.use(cors());
 
@@ -63,16 +64,17 @@ server.get('*/:companyCode/:countryISOCode/:orderReference/:registrationAuthorit
 
                         console.log("requesting company profile", companyCode);
                         if (err) {
-                            console.log("profile error");
+                            // console.log("profile error");
                         }
 
-                        console.log("doesnt exist")
+                        // console.log("doesnt exist")
 
                         // console.log(JSON.stringify(result?.CompanyProfileResult?.CompanyProfile?.directorAndShareDetails))
 
                         if (result?.CompanyProfileResult?.CompanyProfile?.directorAndShareDetails?.shareHolders?.ShareholderDetails) {
 
-                            const shareholderDetails = result?.CompanyProfileResult?.CompanyProfile?.directorAndShareDetails?.shareHolders?.ShareholderDetails;
+                            const shareholderDetails =
+                                result?.CompanyProfileResult?.CompanyProfile?.directorAndShareDetails?.shareHolders?.ShareholderDetails;
 
                             const shareholders: any = await Promise.all(
                                 shareholderDetails
@@ -95,15 +97,16 @@ server.get('*/:companyCode/:countryISOCode/:orderReference/:registrationAuthorit
 
                                         let docId: any;
 
-                                        const name = sourceShareholder.name.toLowerCase();
+                                        const searchName = sourceShareholder?.name?.toLowerCase();
+                                        const name = sourceShareholder?.name;
 
                                         if (sourceShareholder.shareholderType === "P") {
 
                                             const newShareholder = await buildShareholderPerson(sourceShareholder);
 
-                                            // its a person - see if we already have them in our DB and if not, add
+                                            // it's a person - see if we already have them in our DB and if not, add
 
-                                            let personsQuery = personsRef.where('fullName', '==', name);
+                                            let personsQuery = personsRef.where('fullName', '==', searchName);
                                             await personsQuery.get().then(async (persons: any) => {
 
                                                 if (persons.empty) {
@@ -118,25 +121,32 @@ server.get('*/:companyCode/:countryISOCode/:orderReference/:registrationAuthorit
                                         }
 
                                         if (shareholder.shareholderType === "C") {
-
-                                            let companiesQuery = companiesRef.where('name', '==', name);
+                                            // console.log("name", name)
+                                            let companiesQuery = companiesRef.where('searchName', '==', searchName);
                                             await companiesQuery.get().then(async (companies: any) => {
 
-                                                const response = await dueDilCompanySearch(name, "gb,ie");
-                                                const results = await JSON.parse(response)
-                                                const company = results?.companies?.find((c: any) => c.name.toLowerCase() === name);
-
-                                                const obj: any = {
+                                                const searchResponse = await dueDilCompanySearch(searchName, "gb,ie,de,fr,ro,se"); // not 'es' or 'it'
+                                                console.log(searchResponse);
+                                                const results = await JSON.parse(searchResponse)
+                                                const company = results?.companies?.find((c: any) => c.name?.toLowerCase() === searchName);
+                                                let obj: any = {
+                                                    searchName,
                                                     name
                                                 }
 
                                                 if (company && company.companyId) {
                                                     obj.companyId = company.companyId;
+
+                                                    // get the vitals too.. 
+                                                    // preserve the original name so the where 'name' == name still works
+
+                                                    const vitalsResponse = await dueDilCompanyVitals(company.companyId, company?.countryCode.toLowerCase());
+                                                    obj = { ...obj, ...JSON.parse(vitalsResponse)}
+
                                                 }
 
-                                                // console.log("obj", obj)
-
                                                 if (companies.empty) {
+                                                    // console.log("companies", companies)
                                                     const doc = await companiesRef.add(obj, { merge: true });
                                                     docId = doc.id;
                                                 } else {
@@ -150,37 +160,45 @@ server.get('*/:companyCode/:countryISOCode/:orderReference/:registrationAuthorit
                                         return { ...shareholder, docId }
 
                                     }));
-                            console.log("shareholders", shareholders)
-                            companyShareholdingsDocRef.set({ updateAt: new Date(), shareholders }).then(() => {
+ 
 
-                                companyShareholdingsDocRef
-                                    .get().then(async (companyShareholdingsDoc: any) => {
-                                        console.log("companyShareholdingsDoc", companyShareholdingsDoc)
-                                        const data = companyShareholdingsDoc.data();
-                                        if (data) {
-                                            const shareholders = await Promise.all(data?.shareholders?.map(async (shareholding: any) => {
-                                                let shareholder: any = {};
-                                                if (shareholding.shareholderType === "P") {
-                                                    const personDoc = await personsRef.doc(shareholding.docId).get();
-                                                    if (personDoc.exists) {
-                                                        shareholder = personDoc.data();
-                                                    }
-                                                }
-                                                if (shareholding.shareholderType === "C") {
-                                                    const companyDoc = await companiesRef.doc(shareholding.docId).get();
-                                                    if (companyDoc.exists) {
-                                                        shareholder = companyDoc.data();
-                                                    }
-                                                }
-                                                return { ...shareholding, ...shareholder }
-                                            }));
-                                            return res.send({ shareholders })
-                                        } else {
-                                            res.send("missing data")
-                                        }
-                                    });
+                            // do the same for officers
 
-                            })
+                            if (shareholders) {
+
+                                // console.log("shareholders", shareholders)
+
+                                companyShareholdingsDocRef.set({ updateAt: new Date(), shareholders }).then(() => {
+
+                                    companyShareholdingsDocRef
+                                        .get().then(async (companyShareholdingsDoc: any) => {
+                                            // console.log("companyShareholdingsDoc", companyShareholdingsDoc)
+                                            const data = companyShareholdingsDoc.data();
+                                            if (data) {
+                                                const shareholders = await Promise.all(data?.shareholders?.map(async (shareholding: any) => {
+                                                    let shareholder: any = {};
+                                                    if (shareholding.shareholderType === "P") {
+                                                        const personDoc = await personsRef.doc(shareholding.docId).get();
+                                                        if (personDoc.exists) {
+                                                            shareholder = personDoc.data();
+                                                        }
+                                                    }
+                                                    if (shareholding.shareholderType === "C") {
+                                                        const companyDoc = await companiesRef.doc(shareholding.docId).get();
+                                                        if (companyDoc.exists) {
+                                                            shareholder = companyDoc.data();
+                                                        }
+                                                    }
+                                                    return { ...shareholding, ...shareholder }
+                                                }));
+                                                return res.send({ shareholders })
+                                            } else {
+                                                res.send("missing data")
+                                            }
+                                        });
+
+                                })
+                            }
                             // .then(() => res.send(shareholders));
                         }
                     })

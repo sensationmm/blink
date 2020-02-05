@@ -59,9 +59,11 @@ export default function Kyckr() {
 
     const getCompanyVitalsAndSetSelectedCompany = async (company: any) => {
         const countryCode = company.countryCode || selectedCountry.value;
-        const companyVitals = await requestCompanyVitals(company.companyId, countryCode);
+        const companyVitals = await requestCompanyVitals(company.companyId, countryCode.toLowerCase());
         setSelectedCompany({ ...company, ...companyVitals });
     }
+
+    const requestedProfiles: any = [];
 
     const startDoinIt = async () => {
 
@@ -74,7 +76,7 @@ export default function Kyckr() {
 
             const { companyId, registrationAuthorityCode } = selectedCompany;
 
-            await saveCompanyStructure(selectedCompany);
+            await saveCompanyStructure({ ...selectedCompany, searchName: selectedCompany?.name?.toLowerCase()}, ignoreDB);
             console.log("saveCompanyStructure complete")
             await getCompanyProfile(companyId, countryCode, registrationAuthorityCode);
             UBOStructure = await requestCompanyUBOStructure("kyckr", selectedCompany.companyId, countryCode);
@@ -97,28 +99,36 @@ export default function Kyckr() {
     }
 
     const getCompanyProfile = async (companyId: any, countryCode: any, registrationAuthorityCode: any) => {
-        console.log("getCompanyProfile", companyId)
-        const companyProfile = await requestCompanyProfile(companyId, countryCode, orderReference(), ignoreDB, registrationAuthorityCode);
-        // await doit(selectedCompany);
-        console.log(companyProfile)
-        if (companyProfile && companyProfile.shareholders) {
-            await Promise.all(companyProfile.shareholders.map(async (shareholder: any) => {
+        const alreadyHaveCompanyProfile = requestedProfiles.indexOf(`${companyId}-${countryCode}`) > -1;
+        if (!alreadyHaveCompanyProfile) {
+            requestedProfiles.push(`${companyId}-${countryCode}`);
+            const companyProfile = await requestCompanyProfile(companyId, countryCode, orderReference(), ignoreDB, registrationAuthorityCode);
+            // await doit(selectedCompany);
+            // console.log(companyProfile)
+            if (companyProfile && companyProfile.shareholders) {
+                await Promise.all(companyProfile.shareholders.map(async (shareholder: any) => {
 
-                if (shareholder.shareholderType === "C" && shareholder.companyId) {
-                    // console.log("shareholder", shareholder.name)
-                    // console.log("companyid", shareholder.companyid);
-                    const nextCompanyId = shareholder.companyId;
-                    console.log("request getCompanyProfile", nextCompanyId, shareholder.shareholderType)
-                    await getCompanyProfile(nextCompanyId, countryCode, registrationAuthorityCode);
-                }
-            }));
-            const UBOStructure = await requestCompanyUBOStructure("kyckr", selectedCompany.companyId, countryCode);
-            setCompanyStructure(UBOStructure);
-            setHackValue(Math.random())
+                    if (shareholder.shareholderType === "C" && shareholder.companyId) {
+                        // console.log("shareholder", shareholder.name)
+                        // console.log("companyid", shareholder.companyid);
+                        const nextCompanyId = shareholder.companyId;
+                        // console.log("request getCompanyProfile", nextCompanyId, shareholder.shareholderType)
+                        await getCompanyProfile(nextCompanyId, countryCode, registrationAuthorityCode);
+                    }
+                }));
+                const UBOStructure = await requestCompanyUBOStructure("kyckr", selectedCompany.companyId, countryCode);
+                setCompanyStructure(UBOStructure);
+                setHackValue(Math.random())
+
+            }
+            else {
+                const UBOStructure = await requestCompanyUBOStructure("kyckr", selectedCompany.companyId, countryCode);
+                setCompanyStructure(UBOStructure);
+                setHackValue(Math.random())
+            }
         }
 
     }
-
 
     // else {
     //         console.log("company structure found");

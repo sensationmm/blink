@@ -14,6 +14,7 @@ export const Shareholder = styled.div`
     z-index: 1;
     cursor: pointer;
     transition: background 0.1s linear;
+    min-height: 166px;
 
     &.heading {
         box-shadow: none;
@@ -74,6 +75,9 @@ export const Label = styled.div`
     border-radius: 20px;
     font-size: 14px;
     font-weight: bold;
+    &.P {
+        text-transform: capitalize;
+    }
 `
 
 export const Shares = styled.div`

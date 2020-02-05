@@ -13,7 +13,7 @@ const searchCompany = async (query: string, countryCode: string) => {
 }
 
 const requestCompanyVitals = async (companyNumber: string, countryCode: string = "GB", ignoreDB: boolean = false) => {
-    const response = await fetch(`${domain}/duedillCompanyVitals/${countryCode && countryCode.toLowerCase()}/${companyNumber}${ignoreDB ? '?ignoreDB=true': ''}`, { mode: 'cors' });
+    const response = await fetch(`${domain}/duedillCompanyVitals/${companyNumber}/${countryCode && countryCode.toLowerCase()}${ignoreDB ? '?ignoreDB=true': ''}`, { mode: 'cors' });
     const body = await response.json();
     return body;
 }

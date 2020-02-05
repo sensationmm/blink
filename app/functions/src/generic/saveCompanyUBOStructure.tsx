@@ -11,12 +11,26 @@ server.use(cors());
 server.post('*/', function (req: any, res: any) {
 
     const {
-        companyStructure
+        companyStructure,
+        ignoreDB
     } = JSON.parse(req.body);
 
     const companyRef = admin.firestore().collection('companies');
 
-    companyRef.add({ ...companyStructure }).then((doc: any) => res.send(doc.ref));
+    if (ignoreDB) {
+        // find and update
+        const companyQuery = companyRef.where('searchName', '==', companyStructure.searchName);
+        companyQuery.get().then(async (companies: any) => {
+            if (companies.empty) {
+                companyQuery.add({ ...companyStructure }, { merge: true });
+            } else {
+                const companyDoc = companies.docs[0];
+                await companyDoc.ref.update({ ...companyStructure }, { merge: true });
+            }
+        });
+    } else {
+        companyRef.add({ ...companyStructure }).then((doc: any) => res.send(doc.ref));
+    }
 
 })
 

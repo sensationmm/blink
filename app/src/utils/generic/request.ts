@@ -45,9 +45,10 @@ const getCompanyIdFromSearch = async (query: string, countryISOCode: string = "G
     }
 }
 
-const saveCompanyStructure = debounce(async (companyStructure: any) => {
+const saveCompanyStructure = debounce(async (companyStructure: any, ignoreDB: boolean) => {
     const data = {
-        companyStructure
+        companyStructure,
+        ignoreDB
     }
 
     fetch(`${domain}/saveCompanyUBOStructure`, {
