@@ -22,7 +22,7 @@ server.post('*/', function (req: any, res: any) {
         const companyQuery = companyRef.where('searchName', '==', companyStructure.searchName);
         companyQuery.get().then(async (companies: any) => {
             if (companies.empty) {
-                companyQuery.add({ ...companyStructure }, { merge: true });
+                companyRef.add({ ...companyStructure }, { merge: true });
             } else {
                 const companyDoc = companies.docs[0];
                 await companyDoc.ref.update({ ...companyStructure }, { merge: true });
