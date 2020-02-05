@@ -70,3 +70,5 @@ exports.truliooBusinessSearch = require("./src/trulioo/businessSearch");
 exports.requestCompanyUBOStructure = require("./src/generic/requestCompanyUBOStructure");
 
 exports.saveCompanyUBOStructure = require("./src/generic/saveCompanyUBOStructure");
+
+exports.getIP = require("./src/generic/getIP");
