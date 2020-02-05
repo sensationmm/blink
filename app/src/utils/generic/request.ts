@@ -12,7 +12,7 @@ const domain = window.location.href.indexOf("localhost") > -1 ? "http://localhos
 const requestCompanyUBOStructure = async (source: string, companyNumber: string, countryISOCode: string = "GB") => {
     const response = await fetch(`${domain}/requestCompanyUBOStructure/${source}/${companyNumber}/${countryISOCode}`, { mode: 'cors' });
     if (response.status === 404) {
-        console.log("response", response)
+        // console.log("response", response)
         return "not found"
     } else {
         const body = await response.json();
@@ -45,13 +45,9 @@ const getCompanyIdFromSearch = async (query: string, countryISOCode: string = "G
     }
 }
 
-const saveCompanyStructure = debounce(async (companyNumber: string, countryISOCode: string = "GB", companyStructure: any, ignoreDB: boolean = false, source: string) => {
+const saveCompanyStructure = debounce(async (companyStructure: any) => {
     const data = {
-        companyNumber,
-        countryISOCode,
-        companyStructure,
-        ignoreDB,
-        source
+        companyStructure
     }
 
     fetch(`${domain}/saveCompanyUBOStructure`, {

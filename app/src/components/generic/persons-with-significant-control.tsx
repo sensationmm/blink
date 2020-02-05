@@ -22,7 +22,7 @@ export default function SignificantPersons(props: Props) {
     } = props;
 
     const filterList = (list: any) => {
-        return list
+        return list && list
             .filter((item: any) => !item.ceased_on)
             .filter((item: any) => {
                 if (showOnlyOrdinaryShareTypes) {

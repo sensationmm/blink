@@ -4,171 +4,197 @@ const admin = require("firebase-admin");
 const cors = require('cors');
 const express = require('express');
 var soap = require('soap');
-
 const server = express();
+const dueDilCompanySearch = require('../duedill/searchCompany').searchCompany;
 
 server.use(cors());
 
-server.get('*/:companyCode/:countryISOCode/:orderReference/:registrationAuthority?', function (req: any, res: any) {
+const buildShareholderPerson = (shareholder: any) => {
+    const firstName = shareholder?.name?.split(' ').slice(0, -1).join(' ');
+    const lastName = shareholder?.name?.split(' ').slice(-1).join(' ');
 
-    const { companyCode, countryISOCode, orderReference, registrationAuthority} = req.params;
+    let newShareholder: any = {};
 
-    console.log("companyCode", companyCode);
-    const officersRef = admin.firestore().collection('officers');
-    const shareHoldersRef = admin.firestore().collection('shareholders');
+    if (shareholder.name) {
+        newShareholder.fullName = shareholder?.name?.toLowerCase()
+    }
+    if (firstName) {
+        newShareholder.firstName = firstName;
+    }
+    if (lastName) {
+        newShareholder.lastName = lastName;
+    }
+    if (shareholder?.dateOfBirth) {
+        newShareholder.dateOfBirth = shareholder?.dateOfBirth;
+    }
+    return newShareholder;
+}
 
-    return shareHoldersRef.doc(companyCode).get().then((doc: any) => {
-        if (req.query.ignoreDB === "true" || !doc.exists || (doc.exists && !doc.data()["kyckr"])) {
-            return officersRef.doc(companyCode).get().then((doc: any) => {
-                if (req.query.ignoreDB === "true" || !doc.exists || (doc.exists && !doc.data()["kyckr"])) {
-                    // const url = 'https://testws.kyckr.eu/gbronboarding.asmx?wsdl';
-                    // const url = 'https://testws.kyckr.eu/GBRDServices.asmx?wsdl';    
-                    const url = 'https://prodws.kyckr.co.uk/GBRDServices.asmx?wsdl';
+// -------------------------------------
+// -------------- START ----------------
+// -------------------------------------
 
-                    var args = { email: "terry.cordeiro@11fs.com", password: "6c72fde3", countryISOCode, companyCode, orderReference, registrationAuthority, termsAndConditions: true };
+const db = admin.firestore();
+let personsRef = db.collection('persons');
+let shareholdingsRef = db.collection('shareholdings');
+let companiesRef = db.collection('companies');
 
-                    const auth = "Basic " + JSON.stringify({ "terry.cordeiro@11fs.com": "6c72fde3" })
+server.get('*/:companyCode/:countryISOCode/:orderReference/:registrationAuthority', async function (req: any, res: any) {
 
-                    soap.createClient(url, { wsdl_headers: { Authorization: auth } }, function (err: any, client: any) {
-                        // console.log("error", err)
-                        // console.log("client", client)
-                        console.log("order reference: ", orderReference);
-                        client.CompanyProfile(args, function (err: any, result: any) {
+    const {
+        companyCode,
+        countryISOCode,
+        orderReference,
+        registrationAuthority
+    } = req.params;
 
-                            console.log("requesting company profile", companyCode);
-                            // console.log("profile result", result);
-                            if (err) {
-                                console.log("profile error", err);
-                                // console.log(err)
-                            }
-                            // console.log("result", result)
+    const url = 'https://prodws.kyckr.co.uk/GBRDServices.asmx?wsdl';
 
-                            const returnItems = {
-                                shareHolders: null,
-                                officers: null
-                            }
-                            
-                            console.log("result.CompanyProfileResult", JSON.stringify(result.CompanyProfileResult))
+    var args = { email: "terry.cordeiro@11fs.com", password: "6c72fde3", countryISOCode, companyCode, orderReference, registrationAuthority, termsAndConditions: true };
 
-                            if (
-                                result.CompanyProfileResult &&
-                                result.CompanyProfileResult.CompanyProfile &&
-                                result.CompanyProfileResult.CompanyProfile.directorAndShareDetails &&
-                                result.CompanyProfileResult.CompanyProfile.directorAndShareDetails.shareHolders &&
-                                result.CompanyProfileResult.CompanyProfile.directorAndShareDetails.shareHolders.ShareholderDetails) {
+    const auth = "Basic " + JSON.stringify({ "terry.cordeiro@11fs.com": "6c72fde3" })
+    const companyShareholdingsDocRef = shareholdingsRef.doc(companyCode)
+    await companyShareholdingsDocRef
+        .get().then(async (companyShareholdingsDoc: any) => {
+            if (req.query.ignoreDB === "true" || !companyShareholdingsDoc.exists) {
 
+                soap.createClient(url, { wsdl_headers: { Authorization: auth } }, function (err: any, client: any) {
+                    client.CompanyProfile(args, async function (err: any, result: any) {
 
-                                const returnShareHolderItems = result.CompanyProfileResult.CompanyProfile.directorAndShareDetails.shareHolders.ShareholderDetails.map((shareholder: any) => {
+                        console.log("requesting company profile", companyCode);
+                        if (err) {
+                            console.log("profile error");
+                        }
 
-                                    return shareholder;
-                                })
+                        console.log("doesnt exist")
 
-                                if (returnShareHolderItems && returnShareHolderItems.length > 0) {
-                                    returnItems.shareHolders = returnShareHolderItems
-                                } else {
-                                    delete returnItems.shareHolders;
-                                }
+                        // console.log(JSON.stringify(result?.CompanyProfileResult?.CompanyProfile?.directorAndShareDetails))
 
-                            }
+                        if (result?.CompanyProfileResult?.CompanyProfile?.directorAndShareDetails?.shareHolders?.ShareholderDetails) {
 
-                            if (
-                                result.CompanyProfileResult &&
-                                result.CompanyProfileResult.CompanyProfile &&
-                                result.CompanyProfileResult.CompanyProfile.directorAndShareDetails &&
-                                result.CompanyProfileResult.CompanyProfile.directorAndShareDetails.directors &&
-                                result.CompanyProfileResult.CompanyProfile.directorAndShareDetails.directors.Director) {
+                            const shareholderDetails = result?.CompanyProfileResult?.CompanyProfile?.directorAndShareDetails?.shareHolders?.ShareholderDetails;
 
+                            const shareholders: any = await Promise.all(
+                                shareholderDetails
+                                    // what is shareholderType: 'O' ??
+                                    .filter((sh: any) => sh.shareholderType === "P" || sh.shareholderType === "C")
+                                    .map(async (sourceShareholder: any) => {
 
-                                const returnDirectorsItems = result.CompanyProfileResult.CompanyProfile.directorAndShareDetails.directors.Director.map((director: any) => {
-                                    return director;
-                                })
+                                        const shareholder = {
+                                            "percentage": sourceShareholder.percentage,
+                                            "allInfo": sourceShareholder.allInfo,
+                                            "currency": sourceShareholder.currency,
+                                            "nominalValue": sourceShareholder.nominalValue,
+                                            "shareCount": sourceShareholder.shareCount,
+                                            "shareType": sourceShareholder.shareType,
+                                            "shareholderType": sourceShareholder.shareholderType,
+                                            "totalShareCount": sourceShareholder.totalShareCount,
+                                            "totalShareValue": sourceShareholder.totalShareValue,
+                                            "totalShares": sourceShareholder.totalShares
+                                        };
 
-                                if (returnDirectorsItems && returnDirectorsItems.length > 0) {
-                                    returnItems.officers = returnDirectorsItems
-                                } else {
-                                    delete returnItems.officers;
-                                }
+                                        let docId: any;
 
-                            }
+                                        const name = sourceShareholder.name.toLowerCase();
 
-                            let shareholdersExistingData: any;
-                            let officersExistingData: any;
+                                        if (sourceShareholder.shareholderType === "P") {
 
-                            admin.firestore().collection('shareholders').doc(companyCode).get().then((doc: any) => {
-                                if (doc.exists) {
-                                    shareholdersExistingData = doc.data();
-                                }
-                                admin.firestore().collection('officers').doc(companyCode).get().then((doc: any) => {
-                                    if (doc.exists) {
-                                        officersExistingData = doc.data();
-                                    }
+                                            const newShareholder = await buildShareholderPerson(sourceShareholder);
 
-                                    admin.firestore().collection('shareholders').doc(companyCode).set({ ...(shareholdersExistingData || {}), "kyckr": { items: returnItems.shareHolders } }).then(
+                                            // its a person - see if we already have them in our DB and if not, add
 
-                                        admin.firestore().collection('officers').doc(companyCode).set({ ...(officersExistingData || {}), "kyckr": { items: returnItems.officers } }).then(
+                                            let personsQuery = personsRef.where('fullName', '==', name);
+                                            await personsQuery.get().then(async (persons: any) => {
 
-                                            () => res.send({ shareHolders: { items: returnItems.shareHolders }, officers: { items: returnItems.officers } })
-                                        ));
+                                                if (persons.empty) {
+                                                    const doc = await personsRef.add(newShareholder, { merge: true });
+                                                    docId = doc.id;
+                                                } else {
+                                                    const personDoc = persons.docs[0];
+                                                    docId = personDoc.id;
+                                                    await personDoc.ref.update(newShareholder, { merge: true });
+                                                }
+                                            });
+                                        }
 
-                                })
+                                        if (shareholder.shareholderType === "C") {
+
+                                            let companiesQuery = companiesRef.where('name', '==', name);
+                                            await companiesQuery.get().then(async (companies: any) => {
+
+                                                const response = await dueDilCompanySearch(name, "gb,ie");
+                                                const results = await JSON.parse(response)
+                                                const company = results?.companies?.find((c: any) => c.name.toLowerCase() === name);
+
+                                                const obj: any = {
+                                                    name
+                                                }
+
+                                                if (company && company.companyId) {
+                                                    obj.companyId = company.companyId;
+                                                }
+
+                                                // console.log("obj", obj)
+
+                                                if (companies.empty) {
+                                                    const doc = await companiesRef.add(obj, { merge: true });
+                                                    docId = doc.id;
+                                                } else {
+                                                    const companiesDoc = companies.docs[0];
+                                                    docId = companiesDoc.id;
+                                                    await companiesDoc.ref.update(obj, { merge: true });
+                                                }
+                                            });
+                                        }
+
+                                        return { ...shareholder, docId }
+
+                                    }));
+                            console.log("shareholders", shareholders)
+                            companyShareholdingsDocRef.set({ updateAt: new Date(), shareholders }).then(() => {
+
+                                companyShareholdingsDocRef
+                                    .get().then(async (companyShareholdingsDoc: any) => {
+                                        console.log("companyShareholdingsDoc", companyShareholdingsDoc)
+                                        const data = companyShareholdingsDoc.data();
+                                        if (data) {
+                                            const shareholders = await Promise.all(data?.shareholders?.map(async (shareholding: any) => {
+                                                let shareholder: any = {};
+                                                if (shareholding.shareholderType === "P") {
+                                                    const personDoc = await personsRef.doc(shareholding.docId).get();
+                                                    if (personDoc.exists) {
+                                                        shareholder = personDoc.data();
+                                                    }
+                                                }
+                                                if (shareholding.shareholderType === "C") {
+                                                    const companyDoc = await companiesRef.doc(shareholding.docId).get();
+                                                    if (companyDoc.exists) {
+                                                        shareholder = companyDoc.data();
+                                                    }
+                                                }
+                                                return { ...shareholding, ...shareholder }
+                                            }));
+                                            return res.send({ shareholders })
+                                        } else {
+                                            res.send("missing data")
+                                        }
+                                    });
+
                             })
-                        });
-                    });
-                } else {
-                    // return what we have
-
-                    const returnItems = {
-                        shareHolders: null,
-                        officers: null
-                    }
-                    const returnOfficers = officersRef.doc(companyCode).get().data()["kyckr"];
-                    const returnShareholders = shareHoldersRef.doc(companyCode).get().data()["kyckr"];
-
-                    if (!returnOfficers) {
-                        delete returnItems.officers
-                    }
-                    if (!returnShareholders) {
-                        delete returnItems.shareHolders
-                    }
-
-                    console.log("returnItems", returnItems);
-                    res.send(returnItems)
-                }
-            })
-        } else {
-            console.log("we have data")
-            // return what we have
-
-            const returnItems = {
-                shareHolders: null,
-                officers: null
-            }
-
-            const returnShareholders = doc.data()["kyckr"];
-
-            if (!returnShareholders) {
-                delete returnItems.shareHolders
+                            // .then(() => res.send(shareholders));
+                        }
+                    })
+                })
             } else {
-                returnItems.shareHolders = returnShareholders
+                // await 
+
+
             }
+        });
 
-            admin.firestore().collection('officers').doc(companyCode).get().then((officersDoc: any) => {
 
-                const returnOfficers = officersDoc.data()["kyckr"];
-
-                if (!returnOfficers) {
-                    delete returnItems.officers
-                } else {
-                    returnItems.officers = returnOfficers
-                }
-
-                res.send(returnItems);
-
-            });
-
-        }
-    })
-
-})
+    console.log("finished");
+    // return res.send("finished")
+});
 
 module.exports = functions.https.onRequest(server)

@@ -93,7 +93,7 @@ export default function SearchCompany({ setSelectedCompany, setIgnoreDB, ignoreD
         <TypeAhead>
             <label style={{width: "100%", float: "left", zIndex: 1, position: "relative" }} htmlFor="ignoreDB"><span>Ignore DB?</span> <input style={{float: "left", width: 20, marginBottom: 20 }} id="ignoreDB" type="checkbox" checked={ignoreDB} onChange={(e:any) => setIgnoreDB(e.target.checked)} /> </label>
             <InputWrapper>
-                <CountrySelector isMulti value={selectedCountry} onChange={setSelectedCountry} />
+                <CountrySelector isMulti={false} value={selectedCountry} onChange={setSelectedCountry} />
                 <InputSt className="with-select" autoFocus onKeyUp={keyUp} placeholder="Company Search" onChange={(event: any) => setQuery(event.target.value)} type="text" value={query} />
                 {query && <Cancel className="with-select" onClick={clearCompany}>&times;</Cancel>}
             </InputWrapper>
