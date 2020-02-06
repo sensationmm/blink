@@ -21,6 +21,8 @@ server.get('*/:source/:companyId/:countryISOCode', async function (req: any, res
     const personsRef = db.collection('persons');
 
     const getShareholdersAndOfficers = async (companyId: any) => {
+        
+
         let shareholdingsQuery = shareholdingsRef.doc(companyId);
         const shareholdings = await shareholdingsQuery.get();
 
@@ -39,30 +41,12 @@ server.get('*/:source/:companyId/:countryISOCode', async function (req: any, res
             const companyOfficers = officers?.data()?.officers;
             if (companyOfficers) {
                 returnCompany.officers = await Promise.all(companyOfficers.map(async (officer: any) => {
-                    // if (shareholder.shareholderType === "C") {
-                    //     const companyRef = await companiesRef.doc(shareholder.docId).get();
-                    //     const company = companyRef.data();
-                    //     if (company.companyId) {
-                    //         // console.log(company.companyId)
-                    //         const companyShareholders = await getShareholdersAndOfficers(company.companyId);
-                    //         // console.log("company shareholders", shareholders)
-                    //         if (companyShareholders) {
-                    //             company.shareholders = companyShareholders;
-                    //         }
-                    //     }
-                    //     return { ...company, ...shareholder }
-                    // } else 
-                    // if (officer.shareholderType === "P") {
                     const personRef = await personsRef.doc(officer.docId).get();
                     const person = personRef.data();
                     return { ...person, ...officer }
-                    // }
-                    // else {
-                    //     return officer;
-                    // }
                 }))
             } else {
-                delete returnCompany.shareholders
+                delete returnCompany.officers
             }
         }
 
@@ -82,7 +66,8 @@ server.get('*/:source/:companyId/:countryISOCode', async function (req: any, res
                             const companyShareholders = await getShareholdersAndOfficers(company.companyId);
                             // console.log("company shareholders", shareholders)
                             if (companyShareholders) {
-                                company.shareholders = companyShareholders;
+                                company.shareholders = companyShareholders.shareholders;
+                                company.officers = companyShareholders.officers;
                             }
                         }
                         return { ...company, ...shareholder }
@@ -99,7 +84,9 @@ server.get('*/:source/:companyId/:countryISOCode', async function (req: any, res
                 delete returnCompany.shareholders
             }
         }
-
+        if (Object.keys(returnCompany).length === 0) {
+            return null
+        }
         return returnCompany;
     }
 
@@ -120,7 +107,8 @@ server.get('*/:source/:companyId/:countryISOCode', async function (req: any, res
             const shareholdersAndOfficers = await getShareholdersAndOfficers(companyId);
             // console.log(shareholders)
             if (shareholdersAndOfficers) {
-                returnCompany = { ...shareholdersAndOfficers }
+                // console.log("shareholdersAndOfficers", shareholdersAndOfficers)
+                returnCompany = { ...returnCompany, ...shareholdersAndOfficers }
             }
 
             res.send(returnCompany)
@@ -131,3 +119,23 @@ server.get('*/:source/:companyId/:countryISOCode', async function (req: any, res
 })
 
 module.exports = functions.https.onRequest(server);
+
+
+// if (shareholder.shareholderType === "C") {
+//     const companyRef = await companiesRef.doc(shareholder.docId).get();
+//     const company = companyRef.data();
+//     if (company.companyId) {
+//         // console.log(company.companyId)
+//         const companyShareholders = await getShareholdersAndOfficers(company.companyId);
+//         // console.log("company shareholders", shareholders)
+//         if (companyShareholders) {
+//             company.shareholders = companyShareholders;
+//         }
+//     }
+//     return { ...company, ...shareholder }
+// } else {
+// if (officer.shareholderType === "P") {
+// }
+// else {
+//     return officer;
+// }

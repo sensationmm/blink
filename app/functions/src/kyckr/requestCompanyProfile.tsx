@@ -159,7 +159,7 @@ const requestCompanyProfile = async (companyCode: any,
                                             await companiesQuery.get().then(async (companies: any) => {
 
                                                 const searchResponse = await dueDilCompanySearch(searchName, "gb,ie,de,fr,ro,se"); // not 'es' or 'it'
-                                                console.log(searchResponse);
+                                                // console.log(searchResponse);
                                                 const results = await JSON.parse(searchResponse)
                                                 const company = results?.companies?.find((c: any) => c.name?.toLowerCase() === searchName);
                                                 let obj: any = {
@@ -266,10 +266,13 @@ const requestCompanyProfile = async (companyCode: any,
 
                             if (shareholders || officers) {
 
+                                console.log(shareholders)
+                                console.log(officers)
+
                                 // console.log("shareholders", shareholders)
 
                                 if (officers) {
-                                    await companyOfficersDocRef.set({ updateAt: new Date(), officers: officers.map((officer: any) => { return { docId: officer.docId }}) });
+                                    await companyOfficersDocRef.set({ updateAt: new Date(), officers: officers.map((officer: any) => { return { docId: officer.docId } }) });
                                 }
 
                                 if (shareholders) {
@@ -296,7 +299,7 @@ const requestCompanyProfile = async (companyCode: any,
                                                         }
                                                         return { ...shareholding, ...shareholder }
                                                     }));
-                                                    resolve(shareholders);
+                                                    resolve({ shareholders: shareholders });
                                                 } else {
                                                     resolve("missing data");
                                                 }

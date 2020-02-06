@@ -100,6 +100,7 @@ export default function Kyckr() {
 
     const getCompanyProfile = async (companyId: any, countryCode: any, registrationAuthorityCode: any) => {
         const alreadyHaveCompanyProfile = requestedProfiles.indexOf(`${companyId}-${countryCode}`) > -1;
+        // console.log(requestedProfiles)
         if (!alreadyHaveCompanyProfile) {
             requestedProfiles.push(`${companyId}-${countryCode}`);
             const companyProfile = await requestCompanyProfile(companyId, countryCode, orderReference(), ignoreDB, registrationAuthorityCode);
