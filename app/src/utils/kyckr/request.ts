@@ -38,8 +38,22 @@ const productList = async (orderedWithin: string = "30") => {
     return body;
 }
 
-const requestCompanyProfile = async (companyNumber: string, countryISOCode: string = "GB", orderReference: string, ignoreDB: boolean = false, registrationAuthorityCode?: string) => {
-    const response = await fetch(`${domain}/kyckrCompanyProfile/${companyNumber}/${countryISOCode}/${orderReference}/${registrationAuthorityCode}/${ignoreDB ? '?ignoreDB=true' : ''}`, { mode: 'cors' });
+const requestCompanyProfile = async (companyId: string, searchCode: string, countryISOCode: string = "GB", orderReference: string, ignoreDB: boolean = false, registrationAuthorityCode?: string) => {
+
+    const data = {
+        companyId,
+        searchCode,
+        countryISOCode,
+        orderReference,
+        ignoreDB,
+        registrationAuthorityCode
+    }
+
+    const response = await fetch(`${domain}/kyckrCompanyProfile/${ignoreDB ? '?ignoreDB=true' : ''}`,  {
+        method: 'post',
+        body: JSON.stringify(data)
+    });
+    
     try {
         const body = await response.json();
         return body;

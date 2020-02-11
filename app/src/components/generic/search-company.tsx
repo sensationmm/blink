@@ -4,7 +4,7 @@ import { searchCompany as dueDilSearchCompany } from '../../utils/duedill/reques
 import { searchCompany as kyckrSearchCompany } from '../../utils/kyckr/request';
 import { toCamel, normalisePropertyNames } from '../../utils/generic/request';
 // import { searchCompany } from '../../utils/opencorporates/request';
-import { Errors, InputSt, TypeAhead, InputWrapper, Cancel } from '../styles';
+import { Errors, InputSt, TypeAhead, InputWrapper, Cancel, FilterLabel } from '../styles';
 import CountrySelector, { countries } from "../countrySelector";
 // import ReactJson from 'react-json-view'
 
@@ -83,7 +83,7 @@ export default function SearchCompany(props: SearchCompanyProps) {
 
         let res;
 
-        if (selectedCountry.value === "IT" || selectedCountry.value === "DE") {
+        if (selectedCountry.value === "IT" || selectedCountry.value === "DE" || selectedCountry.value === "ES") {
             // duedil don't do IT
             res = await kyckrSearchCompany(query, selectedCountry.value, "11fs-company-search");
 
@@ -98,7 +98,7 @@ export default function SearchCompany(props: SearchCompanyProps) {
         } else {
             let companies;
 
-            if (selectedCountry.value === "IT" || selectedCountry.value === "DE") {
+            if (selectedCountry.value === "IT" || selectedCountry.value === "DE" || selectedCountry.value === "ES") {
                 companies = res?.CompanySearchResult?.Companies?.CompanyDTO
             } else {
                 companies = res.companies
@@ -130,9 +130,9 @@ export default function SearchCompany(props: SearchCompanyProps) {
         </Errors>}
         <TypeAhead>
             {props.showControls && <>
-                <label style={{ width: "100%", float: "left", zIndex: 1, position: "relative" }} htmlFor="ignoreDB"><span>Ignore DB?</span> <input style={{ float: "left", width: 20, marginBottom: 20 }} id="ignoreDB" type="checkbox" checked={props.ignoreDB} onChange={(e: any) => props.setIgnoreDB(e.target.checked)} /> </label>
-                <label style={{ width: "100%", float: "left", zIndex: 1, position: "relative" }} htmlFor="showDirectors"><span>Show Directors?</span> <input style={{ float: "left", width: 20, marginBottom: 20 }} id="showDirectors" type="checkbox" checked={props.showDirectors} onChange={(e: any) => props.toggleShowDirectors(e.target.checked)} /> </label>
-                <label style={{ width: "100%", float: "left", zIndex: 1, position: "relative" }} htmlFor="showOnlyOrdinaryShareTypes"><span>Show only ordinary share types?</span> <input style={{ float: "left", width: 20, marginBottom: 20 }} id="showOnlyOrdinaryShareTypes" type="checkbox" checked={props.showOnlyOrdinaryShareTypes} onChange={(e: any) => props.toggleShowOnlyOrdinaryShareTypes(e.target.checked)} /> </label>
+                <FilterLabel htmlFor="ignoreDB"><span>Ignore DB?</span> <input style={{ float: "left", width: 20, marginBottom: 20 }} id="ignoreDB" type="checkbox" checked={props.ignoreDB} onChange={(e: any) => props.setIgnoreDB(e.target.checked)} /> </FilterLabel>
+                <FilterLabel htmlFor="showDirectors"><span>Show Directors?</span> <input style={{ float: "left", width: 20, marginBottom: 20 }} id="showDirectors" type="checkbox" checked={props.showDirectors} onChange={(e: any) => props.toggleShowDirectors(e.target.checked)} /> </FilterLabel>
+                <FilterLabel htmlFor="showOnlyOrdinaryShareTypes"><span>Show only ordinary share types?</span> <input style={{ float: "left", width: 20, marginBottom: 20 }} id="showOnlyOrdinaryShareTypes" type="checkbox" checked={props.showOnlyOrdinaryShareTypes} onChange={(e: any) => props.toggleShowOnlyOrdinaryShareTypes(e.target.checked)} /> </FilterLabel>
 
                 <label htmlFor="shareholderRange">Shareholder percentage</label><input style={{ width: 100, padding: 0, margin: "0px 20px 30px" }} type="range" id="shareholderRange" value={props.shareholderRange} onChange={e => props.changeShareholderRange(parseInt(e.target.value))} name="shareholderRange" min="0" max="100" /><span>greater than: {props.shareholderRange} %</span>
             </>

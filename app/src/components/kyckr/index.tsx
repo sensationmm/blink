@@ -38,7 +38,7 @@ export default function Kyckr() {
         await doit(selectedCompany);
         setCompanyStructure(selectedCompany);
         setHackValue(Math.random())
-        saveCompanyStructure(selectedCompany.CompanyID, selectedCountry.value, selectedCompany);
+        // saveCompanyStructure(selectedCompany.CompanyID, selectedCountry.value, selectedCompany);
     }
 
     const doit = async (obj: any) => {
@@ -68,7 +68,7 @@ export default function Kyckr() {
         let officers: Array<any> = [];
 
         // console.log("selectedCompany", companyID)
-        const res = await requestCompanyProfile(companyID, selectedCountry, orderReference(), ignoreDB, RegistrationAuthorityCode);
+        const res = await requestCompanyProfile(companyID, companyID, selectedCountry, orderReference(), ignoreDB, RegistrationAuthorityCode);
         // console.log("res", res)
 
         if (res) {

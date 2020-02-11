@@ -26,7 +26,10 @@ import { MainSt } from "../styles";
 export default function Kyckr() {
 
     const [selectedCompany, setSelectedCompany] = useState();
-    const [selectedCountry, setSelectedCountry] = useState({ value: "GB", label: "United Kingdom 🇬🇧" });
+    const [selectedCountry, setSelectedCountry] = useState(
+        { value: "GB", label: "United Kingdom 🇬🇧" }
+    );
+    
     // const [selectedOfficer, setSelectedOfficer] = useState();
     const [ignoreDB, setIgnoreDB] = useState(false);
     // const [selectedSignificantPersons, setSelectedSignificantPersons] = useState();
@@ -59,8 +62,15 @@ export default function Kyckr() {
 
     const getCompanyVitalsAndSetSelectedCompany = async (company: any) => {
         const countryCode = company.countryCode || selectedCountry.value;
-        const companyVitals = await requestCompanyVitals(company.companyId, countryCode.toLowerCase());
-        setSelectedCompany({ ...company, ...companyVitals });
+        // need to figure out how to get vitals for DE
+        if (company.companyId) {
+            const companyVitals = await requestCompanyVitals(company.companyId, countryCode.toLowerCase());
+            if (companyVitals.httpCode !== 404) {
+                setSelectedCompany({ ...company, ...companyVitals });
+            } else {
+                setSelectedCompany({ ...company })
+            }
+        }
     }
 
     const requestedProfiles: any = [];
@@ -69,61 +79,53 @@ export default function Kyckr() {
 
         const countryCode = selectedCompany.countryCode || selectedCountry.value;
 
-        let UBOStructure = await requestCompanyUBOStructure("kyckr", selectedCompany.companyId, countryCode);
+        const { companyId, code, registrationAuthorityCode } = selectedCompany;
+
+        const searchCode = code || companyId // for DE it's a proprietary code
+
+
+        let UBOStructure = await requestCompanyUBOStructure(companyId, countryCode); // we always save with companyId, not a proprietary code
+        setCompanyStructure(UBOStructure);
+            setHackValue(Math.random())
 
         if (ignoreDB || UBOStructure === "not found") {
             console.log("company structure not found - begin build");
 
-            const { companyId, registrationAuthorityCode } = selectedCompany;
+            // console.log(selectedCountry)
 
             await saveCompanyStructure({ ...selectedCompany, searchName: selectedCompany?.name?.toLowerCase()}, ignoreDB);
             console.log("saveCompanyStructure complete")
-            await getCompanyProfile(companyId, countryCode, registrationAuthorityCode);
-            UBOStructure = await requestCompanyUBOStructure("kyckr", selectedCompany.companyId, countryCode);
-            console.log("UBOStructure complete", UBOStructure)
+            await getCompanyProfile(companyId, searchCode, countryCode, registrationAuthorityCode, true);
+            UBOStructure = await requestCompanyUBOStructure(companyId, countryCode);
             // console.log("UBOStructure", UBOStructure)
-            setCompanyStructure(UBOStructure);
-            setHackValue(Math.random())
-            // saveCompanyStructure(selectedCompany.companyId, countryCode, selectedCompany, ignoreDB, "kyckr");
-
-        }
-        else {
-            // const { companyId, registrationAuthorityCode } = selectedCompany;
-            // getCompanyProfile(companyId, countryCode, registrationAuthorityCode);
-            // const companyProfile = await requestCompanyProfile(companyId, countryCode, orderReference(), ignoreDB, registrationAuthorityCode);
-            console.log("here")
-            console.log(UBOStructure)
             setCompanyStructure(UBOStructure);
             setHackValue(Math.random())
         }
     }
 
-    const getCompanyProfile = async (companyId: any, countryCode: any, registrationAuthorityCode: any) => {
+    const getCompanyProfile = async (companyId: any, searchCode: any, countryCode: any, registrationAuthorityCode: any, isNewSearch: boolean) => {
+
         const alreadyHaveCompanyProfile = requestedProfiles.indexOf(`${companyId}-${countryCode}`) > -1;
-        // console.log(requestedProfiles)
         if (!alreadyHaveCompanyProfile) {
             requestedProfiles.push(`${companyId}-${countryCode}`);
-            const companyProfile = await requestCompanyProfile(companyId, countryCode, orderReference(), ignoreDB, registrationAuthorityCode);
-            // await doit(selectedCompany);
-            // console.log(companyProfile)
+            const companyProfile = await requestCompanyProfile(companyId, searchCode, countryCode, orderReference(), (isNewSearch || ignoreDB), registrationAuthorityCode);
             if (companyProfile && companyProfile.shareholders) {
                 await Promise.all(companyProfile.shareholders.map(async (shareholder: any) => {
-
+                    console.log(shareholder.shareholderType, shareholder.companyId)
                     if (shareholder.shareholderType === "C" && shareholder.companyId) {
-                        // console.log("shareholder", shareholder.name)
-                        // console.log("companyid", shareholder.companyid);
+
                         const nextCompanyId = shareholder.companyId;
-                        // console.log("request getCompanyProfile", nextCompanyId, shareholder.shareholderType)
-                        await getCompanyProfile(nextCompanyId, countryCode, registrationAuthorityCode);
+                        const nextCompanySearchCode = shareholder.code || shareholder.companyId
+                        await getCompanyProfile(nextCompanyId, nextCompanySearchCode, countryCode, registrationAuthorityCode, isNewSearch);
                     }
                 }));
-                const UBOStructure = await requestCompanyUBOStructure("kyckr", selectedCompany.companyId, countryCode);
+                const UBOStructure = await requestCompanyUBOStructure(companyId, countryCode);
                 setCompanyStructure(UBOStructure);
                 setHackValue(Math.random())
 
             }
             else {
-                const UBOStructure = await requestCompanyUBOStructure("kyckr", selectedCompany.companyId, countryCode);
+                const UBOStructure = await requestCompanyUBOStructure(companyId, countryCode);
                 setCompanyStructure(UBOStructure);
                 setHackValue(Math.random())
             }
