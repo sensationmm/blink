@@ -1,6 +1,6 @@
-import moment from 'moment';
-import validateJS from 'validate.js';
-import { fetchGoogleSheet } from '../google';
+const moment = require('moment');
+const validateJS = require('validate.js');
+const { fetchGoogleSheet } = require('../google');
 
 /*
 PLEASE NOTE
@@ -8,7 +8,7 @@ All functions MUST take the same four props as they are validateJS custom valida
 (value, options, key, attributes)
 */
 
-const ageLessThanThree = (value: string | null, options: object, key: string, attributes: { [key: string]: any }): string | null => {
+const ageLessThanThree = (value, options, key, attributes) => {
     const undefinedYear = attributes.incorporationDate === undefined || attributes.incorporationDate === null || attributes.incorporationDate === '';
     const younger = moment(attributes.incorporationDate) > moment.utc().subtract(3, 'years');
 
@@ -19,14 +19,14 @@ const ageLessThanThree = (value: string | null, options: object, key: string, at
     }
 }
 
-const bearerSharesChecks = async (value: string | null, options: object, key: string, attributes: { [key: string]: any }): Promise<string | null> => {
+const bearerSharesChecks = async (value, options, key, attributes) => {
     const bearerInfo = await fetchGoogleSheet('1jg0qSvZLQQPHfL572BQKiHgolS91uyHFtznzX94OCrw');
-    const bearerConfig = bearerInfo.map((row: any) => {
+    const bearerConfig = bearerInfo.map((row) => {
         return { code: row['Alpha-2 code'], allowed: row['AllowBearerShares'], exception: row['CompanyTypeException'] }
     });
 
-    const bearerSharesAllowed = (countryCode: string, type: string | Array<string>) => {
-        const data = bearerConfig.filter((item: any) => item.code === countryCode);
+    const bearerSharesAllowed = (countryCode, type) => {
+        const data = bearerConfig.filter((item) => item.code === countryCode);
         const allowed = data[0]
             ? data[0].allowed === 'Y' || (type === data[0].exception || (Array.isArray(data[0].exception) && data[0].exception.indexOf(type) > -1))
             : false;
@@ -70,7 +70,7 @@ const bearerSharesChecks = async (value: string | null, options: object, key: st
     return null;
 };
 
-const requiredIfValueEquals = (value: string | null, { search, match }: { [key: string]: any }, key: string, attributes: { [key: string]: any }): string | null => {
+const requiredIfValueEquals = (value, { search, match }, key, attributes) => {
     if (!search) {
         return ': ERROR requiredIfValueEquals.options.search not defined';
     }
@@ -99,4 +99,4 @@ const validationFunctions = {
     requiredIfValueEquals,
 };
 
-export default validationFunctions;
+module.exports = validationFunctions;
