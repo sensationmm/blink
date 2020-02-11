@@ -8,9 +8,9 @@ admin.initializeApp({
         "type": "service_account",
         "project_id": "blink-3b651",
         "private_key_id": process.env.FIREBASE_SERVICE_ACCOUNT_PRIVATE_KEY_ID || functions.config().service_account_private_key_id.key,
-        "private_key":  (`-----BEGIN PRIVATE KEY-----\n${process.env.FIREBASE_SERVICE_ACCOUNT_PRIVATE_KEY || functions.config().service_account_private_key.key}\n-----END PRIVATE KEY-----\n`).replace(/\\n/g, '\n'),
-        "client_email":  process.env.FIREBASE_SERVICE_ACCOUNT_CLIENT_EMAIL || functions.config().service_account_client_email.key,
-        "client_id":  process.env.FIREBASE_SERVICE_ACCOUNT_CLIENT_ID || functions.config().service_account_client_id.key,
+        "private_key": (`-----BEGIN PRIVATE KEY-----\n${process.env.FIREBASE_SERVICE_ACCOUNT_PRIVATE_KEY || functions.config().service_account_private_key.key}\n-----END PRIVATE KEY-----\n`).replace(/\\n/g, '\n'),
+        "client_email": process.env.FIREBASE_SERVICE_ACCOUNT_CLIENT_EMAIL || functions.config().service_account_client_email.key,
+        "client_id": process.env.FIREBASE_SERVICE_ACCOUNT_CLIENT_ID || functions.config().service_account_client_id.key,
         "auth_uri": "https://accounts.google.com/o/oauth2/auth",
         "token_uri": "https://oauth2.googleapis.com/token",
         "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
@@ -64,3 +64,8 @@ exports.truliooBusinessSearch = require("./src/trulioo/businessSearch");
 exports.requestCompanyUBOStructure = require("./src/generic/requestCompanyUBOStructure");
 
 exports.saveCompanyUBOStructure = require("./src/generic/saveCompanyUBOStructure");
+
+// validation
+exports.validateCompany = require("./src/validation/validateCompany");
+exports.addRule = require("./src/validation/addRule");
+

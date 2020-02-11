@@ -23,7 +23,8 @@
     "request": "^2.88.0",
     "soap": "^0.30.0",
     "src": "^1.1.2",
-    "tslint": "^5.8.0"
+    "tslint": "^5.8.0",
+    "validate.js": "^0.13.1"
   },
   "devDependencies": {
     "typescript": "^3.3.1",

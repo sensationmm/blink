@@ -12,6 +12,7 @@ import Kyckr from "./components/kyckr"
 import DueDill from "./components/duedill"
 import Trulioo from "./components/trulioo"
 import Generic from "./components/generic"
+import SetupProgress from "./components/setup-progress";
 import { Tabs } from "./components/styles";
 import { Link, withRouter } from "react-router-dom";
 
@@ -58,6 +59,9 @@ const App = withRouter((props: any) => <div>
     </Route>
     <Route path="/combined">
       <Generic />
+    </Route>
+    <Route path="/progress">
+      <SetupProgress />
     </Route>
     <Route path="*">
       <div>Not found</div>
