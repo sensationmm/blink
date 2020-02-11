@@ -130,11 +130,12 @@ export default function SearchCompany(props: SearchCompanyProps) {
         </Errors>}
         <TypeAhead>
             {props.showControls && <>
-                <FilterLabel htmlFor="ignoreDB"><span>Ignore DB?</span> <input style={{ float: "left", width: 20, marginBottom: 20 }} id="ignoreDB" type="checkbox" checked={props.ignoreDB} onChange={(e: any) => props.setIgnoreDB(e.target.checked)} /> </FilterLabel>
-                <FilterLabel htmlFor="showDirectors"><span>Show Directors?</span> <input style={{ float: "left", width: 20, marginBottom: 20 }} id="showDirectors" type="checkbox" checked={props.showDirectors} onChange={(e: any) => props.toggleShowDirectors(e.target.checked)} /> </FilterLabel>
-                <FilterLabel htmlFor="showOnlyOrdinaryShareTypes"><span>Show only ordinary share types?</span> <input style={{ float: "left", width: 20, marginBottom: 20 }} id="showOnlyOrdinaryShareTypes" type="checkbox" checked={props.showOnlyOrdinaryShareTypes} onChange={(e: any) => props.toggleShowOnlyOrdinaryShareTypes(e.target.checked)} /> </FilterLabel>
+                <FilterLabel htmlFor="ignoreDB"><span>Ignore DB?</span> <input id="ignoreDB" type="checkbox" checked={props.ignoreDB} onChange={(e: any) => props.setIgnoreDB(e.target.checked)} /> </FilterLabel>
+                <FilterLabel htmlFor="showDirectors"><span>Show Directors?</span> <input id="showDirectors" type="checkbox" checked={props.showDirectors} onChange={(e: any) => props.toggleShowDirectors(e.target.checked)} /> </FilterLabel>
+                <FilterLabel htmlFor="showOnlyOrdinaryShareTypes"><span>Show only ordinary share types?</span> <input id="showOnlyOrdinaryShareTypes" type="checkbox" checked={props.showOnlyOrdinaryShareTypes} onChange={(e: any) => props.toggleShowOnlyOrdinaryShareTypes(e.target.checked)} /> </FilterLabel>
 
-                <label htmlFor="shareholderRange">Shareholder percentage</label><input style={{ width: 100, padding: 0, margin: "0px 20px 30px" }} type="range" id="shareholderRange" value={props.shareholderRange} onChange={e => props.changeShareholderRange(parseInt(e.target.value))} name="shareholderRange" min="0" max="100" /><span>greater than: {props.shareholderRange} %</span>
+                <label htmlFor="shareholderRange">Shareholder percentage</label>
+                <input style={{ width: 100, padding: 0, margin: "0px 20px 30px" }} type="range" id="shareholderRange" value={props.shareholderRange} onChange={e => props.changeShareholderRange(parseInt(e.target.value))} name="shareholderRange" min="0" max="100" /><span>greater than: {props.shareholderRange} %</span>
             </>
             }
             <InputWrapper>
