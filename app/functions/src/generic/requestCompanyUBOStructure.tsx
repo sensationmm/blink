@@ -16,74 +16,82 @@ server.get('*/:source/:companyId/:countryISOCode', async function (req: any, res
 
     const db = admin.firestore();
     const companiesRef = db.collection('companies');
-    const shareholdingsRef = db.collection('shareholdings');
-    const officersRef = db.collection('officers');
-    const personsRef = db.collection('persons');
+    const relationshipsCollection = db.collection('relationships');
 
-    const getShareholdersAndOfficers = async (companyId: any) => {
-        
+    const getShareholdersAndOfficers = async (companyId: any, companyRef: string) => {
 
-        let shareholdingsQuery = shareholdingsRef.doc(companyId);
-        const shareholdings = await shareholdingsQuery.get();
-
-        let officersQuery = officersRef.doc(companyId);
-        const officers = await officersQuery.get();
+        console.log("getShareholdersAndOfficers", companyId);
 
         const returnCompany: any = {
             shareholders: null,
             officers: null
         }
 
-        if (officers.empty) {
+        const officerRelationships =
+            await relationshipsCollection
+                .where("target", "==", companyRef)
+                .where("type", "==", "officer").get()
+
+        if (officerRelationships.empty) {
             console.log("officers empty")
             delete returnCompany.officers
         } else {
-            const companyOfficers = officers?.data()?.officers;
-            if (companyOfficers) {
-                returnCompany.officers = await Promise.all(companyOfficers.map(async (officer: any) => {
-                    const personRef = await personsRef.doc(officer.docId).get();
-                    const person = personRef.data();
-                    return { ...person, ...officer }
-                }))
-            } else {
-                delete returnCompany.officers
-            }
+            returnCompany.officers = await Promise.all(officerRelationships.docs.map(async (officerRelationship: any) => {
+                const officerRelationshipDoc = await officerRelationship.data()
+                const officerDoc = await officerRelationshipDoc.source.get()
+                let officer = { ...officerDoc.data() };
+
+                officer = { ...officer, ...officerRelationshipDoc };
+
+                delete officer.source;
+                delete officer.target;
+
+                return officer
+            }))
         }
 
-        if (shareholdings.empty) {
-            console.log("shareholdings empty")
+
+        const shareholderRelationships =
+            await relationshipsCollection
+                .where("target", "==", companyRef)
+                .where("type", "==", "shareholder").get()
+
+        if (shareholderRelationships.empty) {
+            console.log("shareholders empty")
             delete returnCompany.shareholders
         } else {
-            const companyShareholders = shareholdings?.data()?.shareholders;
+            returnCompany.shareholders = await Promise.all(shareholderRelationships.docs.map(async (shareholderRelationship: any) => {
+                const shareholderRelationshipDoc = await shareholderRelationship.data()
+                const shareholderDoc = await shareholderRelationshipDoc.source.get()
+                let shareholder = { ...shareholderDoc.data() };
+                shareholder = { ...shareholder, ...shareholderRelationshipDoc };
+           
+                if (shareholder.shareholderType === "C") {
+                    if (shareholder.companyId) {
+             
+                        console.log("shareholder.shareholderType", shareholder.shareholderType, shareholder.companyId)
 
-            if (companyShareholders) {
-                returnCompany.shareholders = await Promise.all(companyShareholders.map(async (shareholder: any) => {
-                    if (shareholder.shareholderType === "C") {
-                        const companyRef = await companiesRef.doc(shareholder.docId).get();
-                        const company = companyRef.data();
-                        if (company.companyId) {
-                            // console.log(company.companyId)
-                            const companyShareholders = await getShareholdersAndOfficers(company.companyId);
-                            // console.log("company shareholders", shareholders)
-                            if (companyShareholders) {
-                                company.shareholders = companyShareholders.shareholders;
-                                company.officers = companyShareholders.officers;
-                            }
+                        const companyShareholders = await getShareholdersAndOfficers(shareholder.companyId, shareholder.source);
+
+                        if (companyShareholders) {
+                            shareholder.shareholders = companyShareholders.shareholders;
+                            shareholder.officers = companyShareholders.officers;
                         }
-                        return { ...company, ...shareholder }
-                    } else if (shareholder.shareholderType === "P") {
-                        const personRef = await personsRef.doc(shareholder.docId).get();
-                        const person = personRef.data();
-                        return { ...person, ...shareholder }
+
                     }
-                    else {
-                        return shareholder;
-                    }
-                }))
-            } else {
-                delete returnCompany.shareholders
-            }
+                    delete shareholder.source;
+                    delete shareholder.target;
+                    
+                    return { ...shareholder }
+                }
+
+                delete shareholder.source;
+                delete shareholder.target;
+
+                return shareholder
+            }))
         }
+
         if (Object.keys(returnCompany).length === 0) {
             return null
         }
@@ -104,10 +112,8 @@ server.get('*/:source/:companyId/:countryISOCode', async function (req: any, res
             const companiesDoc = companies.docs[0];
             returnCompany = companiesDoc.data();
 
-            const shareholdersAndOfficers = await getShareholdersAndOfficers(companyId);
-            // console.log(shareholders)
+            const shareholdersAndOfficers = await getShareholdersAndOfficers(companyId, companiesDoc.ref);
             if (shareholdersAndOfficers) {
-                // console.log("shareholdersAndOfficers", shareholdersAndOfficers)
                 returnCompany = { ...returnCompany, ...shareholdersAndOfficers }
             }
 
@@ -119,23 +125,3 @@ server.get('*/:source/:companyId/:countryISOCode', async function (req: any, res
 })
 
 module.exports = functions.https.onRequest(server);
-
-
-// if (shareholder.shareholderType === "C") {
-//     const companyRef = await companiesRef.doc(shareholder.docId).get();
-//     const company = companyRef.data();
-//     if (company.companyId) {
-//         // console.log(company.companyId)
-//         const companyShareholders = await getShareholdersAndOfficers(company.companyId);
-//         // console.log("company shareholders", shareholders)
-//         if (companyShareholders) {
-//             company.shareholders = companyShareholders;
-//         }
-//     }
-//     return { ...company, ...shareholder }
-// } else {
-// if (officer.shareholderType === "P") {
-// }
-// else {
-//     return officer;
-// }

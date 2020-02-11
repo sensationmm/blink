@@ -29,8 +29,10 @@ server.get('*/:companyId/:countryCode', async function (req: any, res: any) {
 
     const { companyId, countryCode } = req.params;
     console.log("countryCode", countryCode)
-    const body = await requestCompanyVitals(companyId, countryCode);
-    res.send(body)
+    const body: any = await requestCompanyVitals(companyId, countryCode);
+    if (body?.httpCode !== 404) {
+        res.send(body)
+    }
 })
 
 module.exports = functions.https.onRequest(server);

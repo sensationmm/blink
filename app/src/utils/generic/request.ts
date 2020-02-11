@@ -5,12 +5,12 @@ import { searchCompany as dueDillSearchCompany } from "../duedill/request";
 
 const stringSimilarity = require('string-similarity');
 
-const debounce = require('lodash.debounce');
+// const debounce = require('lodash.debounce');
 
 const domain = window.location.href.indexOf("localhost") > -1 ? "http://localhost:5001/blink-3b651/us-central1" : "https://us-central1-blink-3b651.cloudfunctions.net";
 
-const requestCompanyUBOStructure = async (source: string, companyNumber: string, countryISOCode: string = "GB") => {
-    const response = await fetch(`${domain}/requestCompanyUBOStructure/${source}/${companyNumber}/${countryISOCode}`, { mode: 'cors' });
+const requestCompanyUBOStructure = async (companyNumber: string, countryISOCode: string = "GB") => {
+    const response = await fetch(`${domain}/requestCompanyUBOStructure/any/${companyNumber}/${countryISOCode}`, { mode: 'cors' });
     if (response.status === 404) {
         // console.log("response", response)
         return "not found"
@@ -19,7 +19,6 @@ const requestCompanyUBOStructure = async (source: string, companyNumber: string,
         return body;
     }
 }
-
 
 const getCompanyIdFromSearch = async (query: string, countryISOCode: string = "GB") => {
     const response = await dueDillSearchCompany(query, countryISOCode);
@@ -45,17 +44,18 @@ const getCompanyIdFromSearch = async (query: string, countryISOCode: string = "G
     }
 }
 
-const saveCompanyStructure = debounce(async (companyStructure: any, ignoreDB: boolean) => {
+const saveCompanyStructure = async (companyStructure: any, ignoreDB: boolean) => {
     const data = {
         companyStructure,
         ignoreDB
     }
 
-    fetch(`${domain}/saveCompanyUBOStructure`, {
+    return await fetch(`${domain}/saveCompanyUBOStructure`, {
         method: 'post',
         body: JSON.stringify(data)
     })
-}, 1000);
+};
+
 
 const toCamel = (obj: any) => {
     let newO: any, origKey, newKey, value

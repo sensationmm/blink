@@ -18,6 +18,7 @@ export const countries: any = {
     "IE": { label: "Ireland", icon: "🇮🇪" },
     "DE": { label: "Germany", icon: "🇩🇪" },
     "IT": { label: "Italy", icon: "🇮🇹" },
+    "ES": { label: "Spain", icon: "🇪🇸" },
     "SE": { label: "Sweden", icon: "🇸🇪" },
     "FR": { label: "France", icon: "🇫🇷" },
     "RO": { label: "Romania", icon: "🇷🇴" },

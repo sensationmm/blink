@@ -72,6 +72,19 @@ export const Label = styled.label`
     margin: 0 0 5px;
 `
 
+export const FilterLabel = styled.label`
+    width: 100%;
+    float: left;
+    z-index: 1;
+    position: relative;
+
+    input {
+        float: left;
+        width: 20px;
+        margin-bottom: 20px;
+    }
+`
+
 export const Cancel = styled.span`
     width: 30px;
     height: 30px;
@@ -122,16 +135,16 @@ export const TypeAhead = styled.div`
         margin: 0 0 20px;
         padding: 0;
         position: absolute;
-        width: calc(100% - 282px);
+        width: calc(100% - 260px);
         background-color: #fff;
-        z-index: 1;
+        z-index: 4;
 
         li {
             list-style-type: none;
             padding: 15px 20px;
             border: 1px solid #ddd;
             border-bottom: none;
-            width: calc(100% - 20px);
+            width: calc(100% - 42px);
             cursor: pointer;
 
             &.Closed {
