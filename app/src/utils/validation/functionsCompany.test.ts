@@ -44,6 +44,7 @@ describe('ageLessThanThree()', () => {
 
     it('passes if older and not provided', () => {
         const company = {
+            fundingSources: null,
             incorporationDate: '2015-01-01',
         };
 
@@ -54,6 +55,7 @@ describe('ageLessThanThree()', () => {
 
     it('fails if younger and not provided', () => {
         const company = {
+            fundingSources: null,
             incorporationDate: '2018-01-01',
         };
 
@@ -74,6 +76,7 @@ describe('ageLessThanThree()', () => {
 
     it('fails if not provided and incorporation date not given', () => {
         const company = {
+            fundingSources: null,
         };
 
         const valid = validationFunctions.ageLessThanThree(company.fundingSources, {}, 'fundingSources', company);
@@ -83,7 +86,8 @@ describe('ageLessThanThree()', () => {
 
     it('fails if not provided and incorporation date given null', () => {
         const company = {
-            incorporationDate: null
+            incorporationDate: null,
+            fundingSources: null,
         };
 
         const valid = validationFunctions.ageLessThanThree(company.fundingSources, {}, 'fundingSources', company);
@@ -93,7 +97,8 @@ describe('ageLessThanThree()', () => {
 
     it('fails if not provided and incorporation date not valid', () => {
         const company = {
-            incorporationDate: ''
+            incorporationDate: '',
+            fundingSources: null,
         };
 
         const valid = validationFunctions.ageLessThanThree(company.fundingSources, {}, 'fundingSources', company);
@@ -110,9 +115,9 @@ describe('bearerSharesChecks()', () => {
                 type: 'A',
             };
 
-            const validate1 = await validationFunctions.bearerSharesChecks(null, {}, 'bearerShareRiskMitigationMethod', company);
-            const validate2 = await validationFunctions.bearerSharesChecks(null, {}, 'bearerShareClientAttestation', company);
-            const validate3 = await validationFunctions.bearerSharesChecks(null, {}, 'bearerShareEvidenceLink', company);
+            const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
+            const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
+            const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
 
             expect(validate1).toEqual(null);
             expect(validate2).toEqual(null);
@@ -128,9 +133,9 @@ describe('bearerSharesChecks()', () => {
                 bearerShareRiskMitigationMethod: 'aasd',
             };
 
-            const validate1 = await validationFunctions.bearerSharesChecks(null, {}, 'bearerShareRiskMitigationMethod', company);
-            const validate2 = await validationFunctions.bearerSharesChecks(null, {}, 'bearerShareClientAttestation', company);
-            const validate3 = await validationFunctions.bearerSharesChecks(null, {}, 'bearerShareEvidenceLink', company);
+            const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
+            const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
+            const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
 
             expect(validate1).toEqual(null);
             expect(validate2).toEqual(null);
@@ -146,9 +151,9 @@ describe('bearerSharesChecks()', () => {
                 bearerShareClientAttestation: 'aasd',
             };
 
-            const validate1 = await validationFunctions.bearerSharesChecks(null, {}, 'bearerShareRiskMitigationMethod', company);
-            const validate2 = await validationFunctions.bearerSharesChecks(null, {}, 'bearerShareClientAttestation', company);
-            const validate3 = await validationFunctions.bearerSharesChecks(null, {}, 'bearerShareEvidenceLink', company);
+            const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
+            const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
+            const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
 
             expect(validate2).toEqual(null);
             expect(validate1).toEqual(null);
@@ -164,9 +169,9 @@ describe('bearerSharesChecks()', () => {
                 bearerShareEvidenceLink: 'aasd',
             };
 
-            const validate1 = await validationFunctions.bearerSharesChecks(null, {}, 'bearerShareRiskMitigationMethod', company);
-            const validate2 = await validationFunctions.bearerSharesChecks(null, {}, 'bearerShareClientAttestation', company);
-            const validate3 = await validationFunctions.bearerSharesChecks(null, {}, 'bearerShareEvidenceLink', company);
+            const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
+            const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
+            const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
 
             expect(validate3).toEqual(null);
             expect(validate1).toEqual(null);
@@ -181,9 +186,9 @@ describe('bearerSharesChecks()', () => {
                 type: 'B',
             };
 
-            const validate1 = await validationFunctions.bearerSharesChecks(null, {}, 'bearerShareRiskMitigationMethod', company);
-            const validate2 = await validationFunctions.bearerSharesChecks(null, {}, 'bearerShareClientAttestation', company);
-            const validate3 = await validationFunctions.bearerSharesChecks(null, {}, 'bearerShareEvidenceLink', company);
+            const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
+            const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
+            const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
 
             expect(validate1).toEqual(null);
             expect(validate2).toEqual(null);
@@ -196,9 +201,9 @@ describe('bearerSharesChecks()', () => {
                 type: 'B',
             };
 
-            const validate1 = await validationFunctions.bearerSharesChecks(null, {}, 'bearerShareRiskMitigationMethod', company);
-            const validate2 = await validationFunctions.bearerSharesChecks(null, {}, 'bearerShareClientAttestation', company);
-            const validate3 = await validationFunctions.bearerSharesChecks(null, {}, 'bearerShareEvidenceLink', company);
+            const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
+            const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
+            const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
 
             expect(validate1).toEqual(null);
             expect(validate2).toEqual(null);
@@ -211,9 +216,9 @@ describe('bearerSharesChecks()', () => {
                 type: 'B',
             };
 
-            const validate1 = await validationFunctions.bearerSharesChecks(null, {}, 'bearerShareRiskMitigationMethod', company);
-            const validate2 = await validationFunctions.bearerSharesChecks(null, {}, 'bearerShareClientAttestation', company);
-            const validate3 = await validationFunctions.bearerSharesChecks(null, {}, 'bearerShareEvidenceLink', company);
+            const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
+            const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
+            const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
 
             expect(validate1).toEqual(null);
             expect(validate2).toEqual(null);
@@ -228,9 +233,9 @@ describe('bearerSharesChecks()', () => {
                 bearerSharesOutstanding: 15,
             };
 
-            const validate1 = await validationFunctions.bearerSharesChecks(null, {}, 'bearerShareRiskMitigationMethod', company);
-            const validate2 = await validationFunctions.bearerSharesChecks(null, {}, 'bearerShareClientAttestation', company);
-            const validate3 = await validationFunctions.bearerSharesChecks(null, {}, 'bearerShareEvidenceLink', company);
+            const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
+            const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
+            const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
 
             expect(validate1).toEqual('is required');
             expect(validate2).toEqual(null);
@@ -245,9 +250,9 @@ describe('bearerSharesChecks()', () => {
                 bearerSharesOutstanding: 7,
             };
 
-            const validate1 = await validationFunctions.bearerSharesChecks(null, {}, 'bearerShareRiskMitigationMethod', company);
-            const validate2 = await validationFunctions.bearerSharesChecks(null, {}, 'bearerShareClientAttestation', company);
-            const validate3 = await validationFunctions.bearerSharesChecks(null, {}, 'bearerShareEvidenceLink', company);
+            const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
+            const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
+            const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
 
             expect(validate2).toEqual('is required');
             expect(validate1).toEqual(null);
@@ -262,9 +267,9 @@ describe('bearerSharesChecks()', () => {
                 bearerSharesOutstanding: 7,
             };
 
-            const validate1 = await validationFunctions.bearerSharesChecks(null, {}, 'bearerShareRiskMitigationMethod', company);
-            const validate2 = await validationFunctions.bearerSharesChecks(null, {}, 'bearerShareClientAttestation', company);
-            const validate3 = await validationFunctions.bearerSharesChecks(null, {}, 'bearerShareEvidenceLink', company);
+            const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
+            const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
+            const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
 
             expect(validate3).toEqual('is required');
             expect(validate1).toEqual(null);
@@ -305,6 +310,7 @@ describe('requiredIfValueEquals()', () => {
     it('fail if not given and value matches', () => {
         const company = {
             materialMergers: true,
+            materialMergerDetails: null,
         };
 
         const valid = validationFunctions.requiredIfValueEquals(company.materialMergerDetails, options, 'materialMergerDetails', company);
@@ -315,6 +321,7 @@ describe('requiredIfValueEquals()', () => {
     it('pass if not given and value does not match', () => {
         const company = {
             materialMergers: false,
+            materialMergerDetails: null,
         };
 
         const valid = validationFunctions.requiredIfValueEquals(company.materialMergerDetails, options, 'materialMergerDetails', company);
