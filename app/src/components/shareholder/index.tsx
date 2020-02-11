@@ -20,14 +20,14 @@ const Shareholder = ({ name, shares, showDetail, type }: IShareholderProps) => {
 
     const details = <>
         <ShareholderImage className={'large'} style={{ backgroundImage: `url(${ShareholderIcon})` }} />
-        <ShareholderLabel>{name}</ShareholderLabel>
+        <ShareholderLabel className={type}>{name}</ShareholderLabel>
     </>;
 
     return (
         <Styled.Shareholder className={cx({ 'heading': !type }, { 'isCompany': type === 'C' }, { 'isPerson': type === 'P' })} onClick={() => showDetail ? showDetail(details) : null}>
             <ShareholderImage className={!type ? 'large' : ''} style={{ backgroundImage: `url(${ShareholderIcon})` }} />
             {shares && <Styled.Shares>{shares.toFixed(2)}%</Styled.Shares>}
-            <ShareholderLabel>{name}</ShareholderLabel>
+            <ShareholderLabel className={type}>{name}</ShareholderLabel>
         </Styled.Shareholder >
     )
 }

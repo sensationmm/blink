@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 // import CompanyLookup from './company';
 import CompanySearch from './search-company'
 import SignificantPersons from "./persons-with-significant-control";
-import { requestCompanyOfficials, requestCompanyProfile, getCompanyIdFromSearch } from '../../utils/kyckr/request';
+import { requestCompanyProfile, getCompanyIdFromSearch } from '../../utils/kyckr/request';
 import { saveCompanyStructure} from '../../utils/generic/request';
 import { MainSt } from "../styles";
 // import Officers from "./officers";
@@ -42,7 +42,7 @@ export default function Kyckr() {
     }
 
     const doit = async (obj: any) => {
-        const structure = await lookupSignificantPersons(obj.CompanyID, selectedCountry.value);
+        const structure = await lookupSignificantPersons(obj.CompanyID, selectedCountry.value, obj.registrationAuthorityCode);
         obj.shareholders = structure?.shareholders
         obj.officers = structure?.officers
         setCompanyStructure(selectedCompany);
@@ -62,13 +62,13 @@ export default function Kyckr() {
     const orderReference = () => `11fs-${selectedCompany.countryCode}-${selectedCompany.companyId}`
 
 
-    const lookupSignificantPersons = async (companyID: any, selectedCountry: string) => {
+    const lookupSignificantPersons = async (companyID: any, selectedCountry: string, RegistrationAuthorityCode: string) => {
 
         let shareholders: Array<any> = [];
         let officers: Array<any> = [];
 
         // console.log("selectedCompany", companyID)
-        const res = await requestCompanyProfile(companyID, selectedCountry, orderReference());
+        const res = await requestCompanyProfile(companyID, selectedCountry, orderReference(), ignoreDB, RegistrationAuthorityCode);
         // console.log("res", res)
 
         if (res) {

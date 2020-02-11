@@ -8,18 +8,18 @@ const server = express();
 
 server.use(cors());
 
-server.get('*/:query', function (req: any, res: any) {
+server.get('*/:query/:jurisdictionCode', function (req: any, res: any) {
 
-    const { query } = req.params;
+    const { query, jurisdictionCode } = req.params;
 
     console.log("query", query);
 
     const headerOption = {
-        "url": `https://api.opencorporates.com/v0.4/companies/search?q=${query.replace(/ /g, "+")}*&inactive=false&order=score`,
+        "url": `https://api.opencorporates.com/v0.4/companies/search?q=${query.replace(/ /g, "+")}*&inactive=false&order=score${jurisdictionCode !== "any" ? '&jurisdiction_code=' + jurisdictionCode.toLowerCase(): ''}`,
     };
 
     request(headerOption, function (error: any, response: any, body: any) {
-        console.log("request body", body)
+        // console.log("request body", body)
         // console.log("Body:", body);
         res.send(JSON.parse(body))
     }

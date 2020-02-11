@@ -33,6 +33,12 @@ exports.kyckrSearchCompany = require("./src/kyckr/searchCompany");
 
 exports.kyckrCompanyProfile = require("./src/kyckr/requestCompanyProfile");
 
+exports.kyckrFilingSearch = require("./src/kyckr/requestFilingSearch");
+
+exports.kyckrProductOrder = require("./src/kyckr/requestProductOrder");
+
+exports.kyckrProductList = require("./src/kyckr/requestProductList");
+
 exports.kyckrCompanyOfficials = require("./src/kyckr/requestCompanyOfficials");
 
 // exports.kyckrSaveCompanyStructure = require("./src/kyckr/saveCompanyStructure");
@@ -69,3 +75,4 @@ exports.saveCompanyUBOStructure = require("./src/generic/saveCompanyUBOStructure
 exports.validateCompany = require("./src/validation/validateCompany");
 exports.addRule = require("./src/validation/addRule");
 
+exports.getIP = require("./src/generic/getIP");

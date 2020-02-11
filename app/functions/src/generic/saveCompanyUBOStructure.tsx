@@ -11,40 +11,26 @@ server.use(cors());
 server.post('*/', function (req: any, res: any) {
 
     const {
-        companyNumber,
-        countryISOCode,
         companyStructure,
-        source,
-        // ignoreCache
+        ignoreDB
     } = JSON.parse(req.body);
 
+    const companyRef = admin.firestore().collection('companies');
 
-    console.log(companyNumber);
-    console.log(countryISOCode);
-    console.log(companyStructure);
-
-    const companyDoc = admin.firestore().collection('companies').doc(companyNumber);
-
-    companyDoc.get().then((doc: any) => {
-        // if (!doc.exists) {
-            return companyDoc.set({ [countryISOCode]: { [source]: {...companyStructure, lastUpdated: new Date()} } }     ).then(() => res.send("ok"));
-        // } else {
-        //     const companyDocData = doc.data();
-
-        //     if (companyDocData[countryISOCode]) {
-        //         if (companyDocData[countryISOCode][source]) {
-        //             if (ignoreCache) {
-        //                 companyDoc.update({ ...companyDocData[countryISOCode], [source]: {...companyStructure, lastUpdated: new Date()} }).then(() => res.send("ok"));
-        //             }
-        //             return res.send(companyDocData[countryISOCode][source])
-        //         } else {
-        //             return companyDoc.update({ ...companyDocData[countryISOCode], [source]: {...companyStructure, lastUpdated: new Date()} }).then(() => res.send("ok"));
-        //         }
-        //     } else {
-        //         return companyDoc.update({ ...companyDocData, [countryISOCode]: { [source]: {...companyStructure, lastUpdated: new Date()} } }).then(() => res.send("ok"));
-        //     }
-        // }
-    })
+    if (ignoreDB) {
+        // find and update
+        const companyQuery = companyRef.where('searchName', '==', companyStructure.searchName);
+        companyQuery.get().then(async (companies: any) => {
+            if (companies.empty) {
+                companyRef.add({ ...companyStructure }, { merge: true });
+            } else {
+                const companyDoc = companies.docs[0];
+                await companyDoc.ref.update({ ...companyStructure }, { merge: true });
+            }
+        });
+    } else {
+        companyRef.add({ ...companyStructure }).then((doc: any) => res.send(doc.ref));
+    }
 
 })
 

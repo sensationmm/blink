@@ -3,8 +3,10 @@ const stringSimilarity = require('string-similarity');
 
 const domain = window.location.href.indexOf("localhost") > -1 ? "http://localhost:5001/blink-3b651/us-central1" : "https://us-central1-blink-3b651.cloudfunctions.net"
 
-const searchCompany = async (query: string) => {
-    const response = await fetch(`${domain}/opencorporatesSearchCompany/${query}`, { mode: 'cors' });
+const searchCompany = async (query: string, jurisdictionCode?: any) => {
+    const url = `${domain}/opencorporatesSearchCompany/${query}${jurisdictionCode ? '/' + jurisdictionCode: ''}`;
+    console.log("url", url);
+    const response = await fetch(url, { mode: 'cors' });
     const body = await response.json();
     console.log("body", body);
     return body;

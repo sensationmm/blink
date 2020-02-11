@@ -1,7 +1,6 @@
 import React, { useState, useEffect, Dispatch } from 'react';
-import styled from "styled-components";
 import { searchCompany } from '../../utils/kyckr/request';
-import { MainSt, InputSt, ButtonSt, Company, Errors, Label, TypeAhead, InputWrapper, Cancel, CountrySelect } from '../styles';
+import { InputSt, Errors, TypeAhead, InputWrapper, Cancel } from '../styles';
 import CountrySelector from "../countrySelector";
 import ReactJson from 'react-json-view'
 

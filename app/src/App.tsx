@@ -9,6 +9,7 @@ import {
 
 // import CompaniesHouse from "./components/companies-house-2"
 import Kyckr from "./components/kyckr"
+import KyckrFilingSearch from "./components/kyckr/filing-search";
 import DueDill from "./components/duedill"
 import Trulioo from "./components/trulioo"
 import Generic from "./components/generic"
@@ -31,6 +32,9 @@ const App = withRouter((props: any) => <div>
     <li className={props.location.pathname === "/kyckr" ? "active" : ""}>
       <Link to="/kyckr">Kyckr</Link>
     </li>
+    <li className={props.location.pathname === "/kyckr-filing-search" ? "active" : ""}>
+      <Link to="/kyckr-filing-search">Kyckr Filing Search</Link>
+    </li>
     <li className={props.location.pathname === "/duedill" ? "active" : ""}>
       <Link to="/duedill">Duedill</Link>
     </li>
@@ -50,6 +54,9 @@ const App = withRouter((props: any) => <div>
     </Route> */}
     <Route path="/kyckr">
       <Kyckr />
+    </Route>
+    <Route path="/kyckr-filing-search">
+      <KyckrFilingSearch />
     </Route>
     <Route path="/duedill">
       <DueDill />
