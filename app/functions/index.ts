@@ -19,6 +19,8 @@ admin.initializeApp({
     databaseURL: "https://blink-3b651.firebaseio.com"
 });
 
+exports.knowYourCustomerSearchCompany = require("./src/know-your-customer/searchCompany");
+
 exports.duedillSearchCompany = require("./src/duedill/searchCompany");
 
 exports.opencorporatesSearchCompany = require("./src/opencorporates/searchCompany");
