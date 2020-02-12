@@ -73,13 +73,13 @@ exports.requestCompanyUBOStructure = require("./src/generic/requestCompanyUBOStr
 
 exports.saveCompanyUBOStructure = require("./src/generic/saveCompanyUBOStructure");
 
-// validation
-exports.validateCompany = require("./src/validation/validateCompany");
-exports.addRule = require("./src/validation/addRule");
-exports.deleteAllRules = require("./src/validation/deleteAllRules");
+// // validation
+// exports.validateCompany = require("./src/validation/validateCompany");
+// exports.addRule = require("./src/validation/addRule");
+// exports.deleteAllRules = require("./src/validation/deleteAllRules");
 
-// google
-exports.googleFetchSheet = require("./src/google/fetchSheet");
+// // google
+// exports.googleFetchSheet = require("./src/google/fetchSheet");
 
 
 exports.getIP = require("./src/generic/getIP");
