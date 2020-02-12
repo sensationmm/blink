@@ -14,7 +14,7 @@ server.post('*/', function (req: any, res: any) {
         list.forEach((doc: any) => {
             rules.doc(doc.id).delete().then(() => {
                 console.log(`Deleted rule: ${doc.id}`);
-            }).catch(function (error) {
+            }).catch(function (error: any) {
                 console.error("Error removing document: ", error);
             });
         });

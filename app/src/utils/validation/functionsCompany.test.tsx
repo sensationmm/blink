@@ -107,177 +107,177 @@ describe('ageLessThanThree()', () => {
     });
 });
 
-describe('bearerSharesChecks()', () => {
-    describe('passes validation', () => {
-        it('bearer shares not allowed by country or company', async () => {
-            const company = {
-                countryCode: 'UK',
-                type: 'A',
-            };
+// describe('bearerSharesChecks()', () => {
+//     describe('passes validation', () => {
+//         it('bearer shares not allowed by country or company', async () => {
+//             const company = {
+//                 countryCode: 'UK',
+//                 type: 'A',
+//             };
 
-            const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
-            const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
-            const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
+//             const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
+//             const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
+//             const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
 
-            expect(validate1).toEqual(null);
-            expect(validate2).toEqual(null);
-            expect(validate3).toEqual(null);
-        });
+//             expect(validate1).toEqual(null);
+//             expect(validate2).toEqual(null);
+//             expect(validate3).toEqual(null);
+//         });
 
-        it('risk mitigation method required', async () => {
-            const company = {
-                countryCode: 'DE',
-                type: 'A',
-                companyAllowsBearerShares: true,
-                bearerSharesOutstanding: 15,
-                bearerShareRiskMitigationMethod: 'aasd',
-            };
+//         it('risk mitigation method required', async () => {
+//             const company = {
+//                 countryCode: 'DE',
+//                 type: 'A',
+//                 companyAllowsBearerShares: true,
+//                 bearerSharesOutstanding: 15,
+//                 bearerShareRiskMitigationMethod: 'aasd',
+//             };
 
-            const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
-            const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
-            const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
+//             const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
+//             const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
+//             const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
 
-            expect(validate1).toEqual(null);
-            expect(validate2).toEqual(null);
-            expect(validate3).toEqual(null);
-        });
+//             expect(validate1).toEqual(null);
+//             expect(validate2).toEqual(null);
+//             expect(validate3).toEqual(null);
+//         });
 
-        it('client attestation required', async () => {
-            const company = {
-                countryCode: 'DE',
-                type: 'A',
-                companyAllowsBearerShares: true,
-                bearerSharesOutstanding: 7,
-                bearerShareClientAttestation: 'aasd',
-            };
+//         it('client attestation required', async () => {
+//             const company = {
+//                 countryCode: 'DE',
+//                 type: 'A',
+//                 companyAllowsBearerShares: true,
+//                 bearerSharesOutstanding: 7,
+//                 bearerShareClientAttestation: 'aasd',
+//             };
 
-            const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
-            const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
-            const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
+//             const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
+//             const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
+//             const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
 
-            expect(validate2).toEqual(null);
-            expect(validate1).toEqual(null);
-            expect(validate3).toEqual(null);
-        });
+//             expect(validate2).toEqual(null);
+//             expect(validate1).toEqual(null);
+//             expect(validate3).toEqual(null);
+//         });
 
-        it('evidence required', async () => {
-            const company = {
-                countryCode: 'DE',
-                type: 'A',
-                companyAllowsBearerShares: false,
-                bearerSharesOutstanding: 7,
-                bearerShareEvidenceLink: 'aasd',
-            };
+//         it('evidence required', async () => {
+//             const company = {
+//                 countryCode: 'DE',
+//                 type: 'A',
+//                 companyAllowsBearerShares: false,
+//                 bearerSharesOutstanding: 7,
+//                 bearerShareEvidenceLink: 'aasd',
+//             };
 
-            const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
-            const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
-            const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
+//             const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
+//             const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
+//             const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
 
-            expect(validate3).toEqual(null);
-            expect(validate1).toEqual(null);
-            expect(validate2).toEqual(null);
-        });
-    });
+//             expect(validate3).toEqual(null);
+//             expect(validate1).toEqual(null);
+//             expect(validate2).toEqual(null);
+//         });
+//     });
 
-    describe('fails validation', () => {
-        it('bearer shares country not found', async () => {
-            const company = {
-                countryCode: 'XY',
-                type: 'B',
-            };
+//     describe('fails validation', () => {
+//         it('bearer shares country not found', async () => {
+//             const company = {
+//                 countryCode: 'XY',
+//                 type: 'B',
+//             };
 
-            const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
-            const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
-            const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
+//             const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
+//             const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
+//             const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
 
-            expect(validate1).toEqual(null);
-            expect(validate2).toEqual(null);
-            expect(validate3).toEqual(null);
-        });
+//             expect(validate1).toEqual(null);
+//             expect(validate2).toEqual(null);
+//             expect(validate3).toEqual(null);
+//         });
 
-        it('bearer shares not allowed by country but allowed by company', async () => {
-            const company = {
-                countryCode: 'IT',
-                type: 'B',
-            };
+//         it('bearer shares not allowed by country but allowed by company', async () => {
+//             const company = {
+//                 countryCode: 'IT',
+//                 type: 'B',
+//             };
 
-            const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
-            const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
-            const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
+//             const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
+//             const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
+//             const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
 
-            expect(validate1).toEqual(null);
-            expect(validate2).toEqual(null);
-            expect(validate3).toEqual('is required');
-        });
+//             expect(validate1).toEqual(null);
+//             expect(validate2).toEqual(null);
+//             expect(validate3).toEqual('is required');
+//         });
 
-        it('bearer shares not allowed by country but allowed by company (array)', async () => {
-            const company = {
-                countryCode: 'FR',
-                type: 'B',
-            };
+//         it('bearer shares not allowed by country but allowed by company (array)', async () => {
+//             const company = {
+//                 countryCode: 'FR',
+//                 type: 'B',
+//             };
 
-            const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
-            const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
-            const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
+//             const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
+//             const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
+//             const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
 
-            expect(validate1).toEqual(null);
-            expect(validate2).toEqual(null);
-            expect(validate3).toEqual('is required');
-        });
+//             expect(validate1).toEqual(null);
+//             expect(validate2).toEqual(null);
+//             expect(validate3).toEqual('is required');
+//         });
 
-        it('risk mitigation method required', async () => {
-            const company = {
-                countryCode: 'DE',
-                type: 'A',
-                companyAllowsBearerShares: true,
-                bearerSharesOutstanding: 15,
-            };
+//         it('risk mitigation method required', async () => {
+//             const company = {
+//                 countryCode: 'DE',
+//                 type: 'A',
+//                 companyAllowsBearerShares: true,
+//                 bearerSharesOutstanding: 15,
+//             };
 
-            const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
-            const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
-            const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
+//             const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
+//             const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
+//             const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
 
-            expect(validate1).toEqual('is required');
-            expect(validate2).toEqual(null);
-            expect(validate3).toEqual(null);
-        });
+//             expect(validate1).toEqual('is required');
+//             expect(validate2).toEqual(null);
+//             expect(validate3).toEqual(null);
+//         });
 
-        it('client attestation required', async () => {
-            const company = {
-                countryCode: 'DE',
-                type: 'A',
-                companyAllowsBearerShares: true,
-                bearerSharesOutstanding: 7,
-            };
+//         it('client attestation required', async () => {
+//             const company = {
+//                 countryCode: 'DE',
+//                 type: 'A',
+//                 companyAllowsBearerShares: true,
+//                 bearerSharesOutstanding: 7,
+//             };
 
-            const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
-            const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
-            const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
+//             const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
+//             const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
+//             const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
 
-            expect(validate2).toEqual('is required');
-            expect(validate1).toEqual(null);
-            expect(validate3).toEqual(null);
-        });
+//             expect(validate2).toEqual('is required');
+//             expect(validate1).toEqual(null);
+//             expect(validate3).toEqual(null);
+//         });
 
-        it('evidence required', async () => {
-            const company = {
-                countryCode: 'DE',
-                type: 'A',
-                companyAllowsBearerShares: false,
-                bearerSharesOutstanding: 7,
-            };
+//         it('evidence required', async () => {
+//             const company = {
+//                 countryCode: 'DE',
+//                 type: 'A',
+//                 companyAllowsBearerShares: false,
+//                 bearerSharesOutstanding: 7,
+//             };
 
-            const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
-            const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
-            const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
+//             const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
+//             const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
+//             const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
 
-            expect(validate3).toEqual('is required');
-            expect(validate1).toEqual(null);
-            expect(validate2).toEqual(null);
-        });
-    });
+//             expect(validate3).toEqual('is required');
+//             expect(validate1).toEqual(null);
+//             expect(validate2).toEqual(null);
+//         });
+//     });
 
-});
+// });
 
 describe('requiredIfValueEquals()', () => {
     const options = {
