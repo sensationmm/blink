@@ -21,4 +21,3 @@ server.post('*/', function (req: any, res: any) {
     return res.send(rule);
 });
 module.exports = functions.https.onRequest(server);
-//# sourceMappingURL=validateCompany.js.map

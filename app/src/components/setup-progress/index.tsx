@@ -114,53 +114,8 @@ const SetupProgress = () => {
         }
     }
 
-
-    const processFile = () => {
-        let file;
-        const fileInput = document.querySelector('#myFile') as newFile;
-        if (fileInput) {
-            file = fileInput.files[0];
-        }
-
-        if (file) {
-            const reader = new FileReader();
-            reader.readAsText(file);
-
-            reader.onload = async function (event) {
-                const rulesList = [] as any;
-                const csv = event?.target?.result || '';
-
-                const rows = (csv as string).split('\n');
-                let cols;
-
-                for (let i = 1; i < rows.length; i++) {
-
-                    // rows.map((row, i) => {
-                    cols = rows[i].split('\t');
-
-                    if (cols[2] !== '{}') {
-                        const rule = {
-                            [cols[1]]: JSON.parse(cols[2])
-                        };
-                        console.log(rule)
-                        rulesList.push(rule);
-                        rulesList.push();
-                    }
-                }
-
-                rulesList.map(async (rule: any, count: number) => {
-                    const ruleAddFunc = await addRule(rule);
-                    return ruleAddFunc;
-                });
-            }
-        }
-    }
-
     return (
         <MainSt>
-            <input type="file" id="myFile" />
-            <button onClick={processFile}>Process</button>
-
             <div style={{ display: 'flex', flexGrow: 1, width: '100%', justifyContent: 'space-around' }}>
                 <div style={{ border: '1px solid #000', padding: '10px 30px 30px 30px' }}>
                     <ReactJson

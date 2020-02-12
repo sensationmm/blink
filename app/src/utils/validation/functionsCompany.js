@@ -1,6 +1,6 @@
 const moment = require('moment');
 const validateJS = require('validate.js');
-const { fetchGoogleSheet } = require('../google');
+// const { fetchGoogleSheet } = require('../google/request.ts');
 
 /*
 PLEASE NOTE
@@ -20,7 +20,7 @@ const ageLessThanThree = (value, options, key, attributes) => {
 }
 
 const bearerSharesChecks = async (value, options, key, attributes) => {
-    const bearerInfo = await fetchGoogleSheet('1jg0qSvZLQQPHfL572BQKiHgolS91uyHFtznzX94OCrw');
+    const bearerInfo = [];//await fetchGoogleSheet('1jg0qSvZLQQPHfL572BQKiHgolS91uyHFtznzX94OCrw');
     const bearerConfig = bearerInfo.map((row) => {
         return { code: row['Alpha-2 code'], allowed: row['AllowBearerShares'], exception: row['CompanyTypeException'] }
     });

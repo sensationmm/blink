@@ -14,6 +14,7 @@ import DueDill from "./components/duedill"
 import Trulioo from "./components/trulioo"
 import Generic from "./components/generic"
 import SetupProgress from "./components/setup-progress";
+import Import from "./components/google-import";
 import { Tabs } from "./components/styles";
 import { Link, withRouter } from "react-router-dom";
 
@@ -69,6 +70,9 @@ const App = withRouter((props: any) => <div>
     </Route>
     <Route path="/progress">
       <SetupProgress />
+    </Route>
+    <Route path="/import">
+      <Import />
     </Route>
     <Route path="*">
       <div>Not found</div>

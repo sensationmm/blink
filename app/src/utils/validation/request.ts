@@ -40,4 +40,16 @@ const addRule = async (rule: any) => {
     return body;
 }
 
-export { validateCompany, addRule };
+const deleteAllRules = async () => {
+    const response = await fetch(`${domain}/deleteAllRules`, {
+        method: "POST",
+        mode: "cors",
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    const body = await response.json();
+    return body.msg;
+}
+
+export { validateCompany, addRule, deleteAllRules };
