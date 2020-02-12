@@ -23,10 +23,13 @@ import { MainSt } from "../styles";
 // import SignificantCorporateEntity from "./corporate-entity-with-significant-control";
 
 
+// const testCDEompany: any = { code: "DE001/0/DE16416642", companyId: "HRB 149890 B"};
+
 export default function Kyckr() {
 
     const [selectedCompany, setSelectedCompany] = useState();
     const [selectedCountry, setSelectedCountry] = useState(
+        // { value: "DE", label: "Germany 🇩🇪" }
         { value: "GB", label: "United Kingdom 🇬🇧" }
     );
     
@@ -110,15 +113,30 @@ export default function Kyckr() {
             requestedProfiles.push(`${companyId}-${countryCode}`);
             const companyProfile = await requestCompanyProfile(companyId, searchCode, countryCode, orderReference(), (isNewSearch || ignoreDB), registrationAuthorityCode);
             if (companyProfile && companyProfile.shareholders) {
-                await Promise.all(companyProfile.shareholders.map(async (shareholder: any) => {
-                    console.log(shareholder.shareholderType, shareholder.companyId)
-                    if (shareholder.shareholderType === "C" && shareholder.companyId) {
 
-                        const nextCompanyId = shareholder.companyId;
-                        const nextCompanySearchCode = shareholder.code || shareholder.companyId
-                        await getCompanyProfile(nextCompanyId, nextCompanySearchCode, countryCode, registrationAuthorityCode, isNewSearch);
+                for (let i = 0; i < companyProfile.shareholders.length; i++) { 
+                    if (companyProfile.shareholders[i].shareholderType === "C" && companyProfile.shareholders[i].companyId) {
+
+                        const nextCompanyId = companyProfile.shareholders[i].companyId;
+                        const nextCompanySearchCode = companyProfile.shareholders[i].code || companyProfile.shareholders[i].companyId;
+
+                        await new Promise(async (next) => {
+                            await getCompanyProfile(nextCompanyId, nextCompanySearchCode, countryCode, registrationAuthorityCode, isNewSearch);
+                            next()
+                        })    
                     }
-                }));
+                        
+                }
+
+                // await Promise.all(companyProfile.shareholders.map(async (shareholder: any) => {
+                //     console.log(shareholder.shareholderType, shareholder.companyId)
+                //     if (shareholder.shareholderType === "C" && shareholder.companyId) {
+
+                //         const nextCompanyId = shareholder.companyId;
+                //         const nextCompanySearchCode = shareholder.code || shareholder.companyId
+                //         await getCompanyProfile(nextCompanyId, nextCompanySearchCode, countryCode, registrationAuthorityCode, isNewSearch, companyProfile.entitiesAdded);
+                //     }
+                // }));
                 const UBOStructure = await requestCompanyUBOStructure(companyId, countryCode);
                 setCompanyStructure(UBOStructure);
                 setHackValue(Math.random())
@@ -133,132 +151,6 @@ export default function Kyckr() {
 
     }
 
-    // else {
-    //         console.log("company structure found");
-    //         setCompanyStructure(companyStructure);
-    //         setHackValue(Math.random())
-    //     }
-    // }
-
-    // const doit = async (obj: any) => {
-    //     const countryCode = selectedCompany.countryCode || selectedCountry.value;
-    //     const structure = await lookupSignificantPersons(obj.companyId, countryCode, selectedCompany.registrationAuthorityCode);
-    //     obj.shareholders = structure?.shareholders
-    //     obj.officers = structure?.officers
-    //     setCompanyStructure(selectedCompany);
-    //     setHackValue(Math.random())
-    //     // saveCompanyStructure(selectedCompany.companyId, selectedCountry.value, selectedCompany, ignoreDB);
-
-    //     if (obj.shareholders && obj.shareholders.length > 0) {
-    //         obj.shareholders
-    //             .filter((sh: any) => sh.shareholderType === "C" && sh.companyID 
-    //             // && knownPWSC.indexOf(sh.CompanyID) === -1
-    //             )
-    //             .forEach(async (sh: any) => {
-    //                 await doit(sh)
-    //                 // knownPWSC.push(sh.CompanyID);
-    //                 // setCompanyStructure(selectedCompany);
-    //                 setHackValue(Math.random()) // for react to re-render
-    //                 saveCompanyStructure(selectedCompany.companyId, countryCode, selectedCompany, ignoreDB, "kyckr");
-    //             });
-    //     } else {
-    //         saveCompanyStructure(selectedCompany.companyId, countryCode, selectedCompany, ignoreDB, "kyckr");   
-    //     }
-    // }
-
-    // const lookupSignificantPersons = async (companyId: any, country: string, registrationAuthorityCode: any = null) => {
-
-    //     let shareholders: Array<any> = [];
-    //     let officers: Array<any> = [];
-
-    //     // console.log("selectedCompany", companyId)
-    //     const res = await requestCompanyProfile(companyId, country, orderReference(), ignoreDB, registrationAuthorityCode);
-    //     // console.log("res", res)
-
-    //     if (res) {
-    //         if (res.errors) {
-    //             // setStatus(null);
-    //             // console.log(res.errors)
-    //             // setErrors(res.errors);
-    //         } else if (res) {
-    //             if (res.shareHolders && res.shareHolders.items) {
-
-    //                 // combine same / similar entities
-
-    //                 // console.log(res.shareHolders.items)
-
-
-    //                 const shareHoldersCombined: Array<any> = res.shareHolders.items;
-    //                 const shareHoldersBeforeCombining: Array<any> = [];
-
-    //                 shareHoldersBeforeCombining.forEach((item: any, itemIndex: number) => {
-
-    //                     if (!shareHoldersBeforeCombining[itemIndex].combined) {
-    //                         const name = item.name;
-    //                         let combinedPercentage = parseFloat(shareHoldersBeforeCombining[itemIndex].percentage);
-
-    //                         res.shareHolders.items.forEach((sh: any, shIndex: number) => {
-    //                             if (shIndex !== itemIndex && sh.name === name) {
-    //                                 if (sh.percentage) {
-    //                                     combinedPercentage += parseFloat(sh.percentage);
-    //                                 }
-    //                                 shareHoldersBeforeCombining[shIndex].combined = true;
-    //                             }
-    //                         });
-
-    //                         shareHoldersBeforeCombining[itemIndex].combined = true;
-
-    //                         shareHoldersCombined.push({ ...shareHoldersBeforeCombining[itemIndex], percentage: combinedPercentage });
-    //                     }
-
-    //                 });
-
-    //                 shareholders = await Promise.all(shareHoldersCombined
-    //                     .map(async (shareHolder: any, index: any, array: any) => {
-    //                         if (!shareHolder.CompanyID && (!shareHolder.shareholderType || shareHolder.shareholderType === "C")) {
-    //                             const CompanyID = await getCompanyIdFromSearch(shareHolder.name, selectedCountry.value
-    //                                 // .map((s: any) => s.value)
-    //                                 );
-    //                             console.log("CompanyID", CompanyID)
-    //                             if (CompanyID !== "none") {
-    //                                 shareHolder.CompanyID = CompanyID;
-    //                             }
-    //                             // console.log("CompanyID", CompanyID)
-
-    //                         }
-    //                         return shareHolder;
-    //                     }))
-
-    //             }
-
-    //             if (res.officers && res.officers.items) {
-    //                 officers = await Promise.all(res.officers.items.map(async (officer: any, index: any, array: any) => {
-    //                     if (!officer.CompanyID && !officer.birthdate) {
-    //                         const CompanyID = await getCompanyIdFromSearch(officer.name, selectedCountry.value);
-    //                         if (CompanyID !== "none") {
-    //                             officer.CompanyID = CompanyID;
-    //                         }
-    //                     }
-    //                     return officer;
-    //                 }))
-    //                 // console.log("officer", officers)
-    //                 // setCompanyOfficers(officers)
-    //                 // company.officers = officers
-
-    //             }
-
-    //             const company = {
-    //                 shareholders, //shareHoldersCombined,
-    //                 officers,
-    //             }
-
-    //             console.log("company", company)
-
-    //             return company
-    //         }
-    //     }
-    // }
-    // console.log(companyStructure)
     return (
         <MainSt>
 
