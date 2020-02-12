@@ -178,7 +178,6 @@ const requestCompanyProfile = async (
                             let shareholders: any;
                             if (shareholderDetails) {
 
-                                // console.log("shareholderDetails", shareholderDetails)
                                 shareholders = await Promise.all(
                                     shareholderDetails
                                         .map(async (sourceShareholder: any) => {
@@ -321,12 +320,13 @@ const requestCompanyProfile = async (
 
                                         const newOfficer = officer;
                                         newOfficer.searchName = searchName;
+                                        newOfficer.fullName = searchName;
 
                                         // it's a person - see if we already have them in our DB and if not, add
 
                                         if (!newOfficer.companyId) {
 
-                                            let personsQuery = personsCollection.where('searchName', '==', searchName);
+                                            let personsQuery = personsCollection.where('fullName', '==', searchName);
                                             await personsQuery.get().then(async (persons: any) => {
 
                                                 if (persons.empty) {
@@ -367,7 +367,7 @@ const requestCompanyProfile = async (
 
                                 // resolve({ shareholders, officers })
 
-                                // console.log("shareholders", shareholders)
+                                console.log("shareholders", shareholders)
 
                                 const writeRelationship = async (type: string, entity: any) => {
 
@@ -386,7 +386,9 @@ const requestCompanyProfile = async (
                                     // check if we already have the relationship
                                     const relationshipQuery = await relationshipsCollection
                                         .where('source', '==', relationship.source)
-                                        .where('target', '==', targetCompanyRef).get()
+                                        .where('target', '==', targetCompanyRef)
+                                        .where('type', '==', type).get()
+                                        
 
                                         // console.log("relationshipQuery", relationship.source, targetCompanyRef)
 
@@ -408,7 +410,7 @@ const requestCompanyProfile = async (
                                         // console.log(relationship)
 
                                     if (relationshipQuery?.docs && relationshipQuery?.docs.length === 0) {
-                                        return relationshipsCollection.add({
+                                        await relationshipsCollection.add({
                                             ...relationship
                                         });
                                     } else {
@@ -418,9 +420,12 @@ const requestCompanyProfile = async (
                                     }
                                 }
 
+                                   
 
                                 await Promise.all(
-                                    shareholders.map(async (shareholder: any) => writeRelationship("shareholder", shareholder))
+                                    shareholders.map(async (shareholder: any) => {
+                                        return await writeRelationship("shareholder", shareholder)
+                                    })
                                 );
 
                                 await Promise.all(
@@ -428,6 +433,8 @@ const requestCompanyProfile = async (
                                         return await writeRelationship("officer", officer)
                                     })
                                 );
+
+                          
 
                                 // console.log(shareholders)
                                 resolve({shareholders, officers});
@@ -447,7 +454,7 @@ const requestCompanyProfile = async (
 
         go();
 
-        console.log("finished");
+        // console.log("finished");
     })
 }
 
