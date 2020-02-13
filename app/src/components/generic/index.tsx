@@ -1,9 +1,10 @@
 
 import React, { useState, useEffect } from "react";
 // import CompanyLookup from './company';
-import CompanySearch from './search-company'
 // import CompanySearch from '../opencorporates/search-company';
 // import CompanySearch from '../duedill/search-company';
+import CompanySearch from './search-company'
+// import CompanySearch from '../know-your-customer/search-company';
 import SignificantPersons from "./persons-with-significant-control";
 import {
     // requestCompanyOfficials, 
@@ -65,10 +66,10 @@ export default function Kyckr() {
 
     const getCompanyVitalsAndSetSelectedCompany = async (company: any) => {
         const countryCode = company.countryCode || selectedCountry.value;
-        // need to figure out how to get vitals for DE
+
         if (company.companyId) {
             const companyVitals = await requestCompanyVitals(company.companyId, countryCode.toLowerCase());
-            if (companyVitals.httpCode !== 404) {
+            if (companyVitals.httpCode !== 404 && companyVitals.httpCode !== 400) {
                 setSelectedCompany({ ...company, ...companyVitals });
             } else {
                 setSelectedCompany({ ...company })
@@ -84,7 +85,11 @@ export default function Kyckr() {
 
         const { companyId, code, registrationAuthorityCode } = selectedCompany;
 
-        const searchCode = code || companyId // for DE it's a proprietary code
+        let searchCode =  companyId
+
+        if ((countryCode === "DE" || countryCode === "IT" || countryCode === "RO") && code) {
+            searchCode = code; // for DE it's a proprietary code;
+        }
 
 
         let UBOStructure = await requestCompanyUBOStructure(companyId, countryCode); // we always save with companyId, not a proprietary code

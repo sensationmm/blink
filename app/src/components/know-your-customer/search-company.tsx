@@ -1,9 +1,6 @@
 import React, { useState, useEffect, Dispatch } from 'react';
-// import { searchCompany } from '../../utils/kyckr/request';
-import { searchCompany as dueDilSearchCompany } from '../../utils/duedill/request';
-import { searchCompany as kyckrSearchCompany } from '../../utils/kyckr/request';
+import { searchCompany as knowYourCustomerSearchCompany } from '../../utils/know-your-customer/request';
 import { toCamel, normalisePropertyNames } from '../../utils/generic/request';
-// import { searchCompany } from '../../utils/opencorporates/request';
 import { Errors, InputSt, TypeAhead, InputWrapper, Cancel, FilterLabel } from '../styles';
 import CountrySelector, { countries } from "../countrySelector";
 // import ReactJson from 'react-json-view'
@@ -82,26 +79,18 @@ export default function SearchCompany(props: SearchCompanyProps) {
         // console.log(selectedCountry)
 
         let res;
-        if (selectedCountry.value === "IT" || selectedCountry.value === "DE" || selectedCountry.value === "ES" || selectedCountry.value === "RO" ) {
-            // duedil don't do IT
-            res = await kyckrSearchCompany(query, selectedCountry.value, "11fs-company-search");
 
-        } else {
-            res = await dueDilSearchCompany(query, selectedCountry.value);
-        }
+        res = await knowYourCustomerSearchCompany(query, selectedCountry.value);
 
         if (res.errors) {
             setStatus(null);
             console.log(res.errors)
             setErrors(res.errors);
         } else {
-            let companies;
+            let companies = res?.companySearch.results;;
 
-            if (selectedCountry.value === "IT" || selectedCountry.value === "DE" || selectedCountry.value === "ES" || selectedCountry.value === "RO" ) {
-                companies = res?.CompanySearchResult?.Companies?.CompanyDTO
-            } else {
-                companies = res.companies
-            }
+            console.log("know your customer search results", res)
+
             // console.log(normalisePropertyNames(toCamel(companies)))
             companies = companies || []
             companies = toCamel(companies);
@@ -128,7 +117,9 @@ export default function SearchCompany(props: SearchCompanyProps) {
             {errors.map((error: any) => <li key={error.type}>{error.error}</li>)}
         </Errors>}
         <TypeAhead>
-            {props.showControls && <>
+            {/* {props.showControls && <>
+                 */}
+            {false && <>
                 <FilterLabel htmlFor="ignoreDB"><span>Ignore DB?</span> <input id="ignoreDB" type="checkbox" checked={props.ignoreDB} onChange={(e: any) => props.setIgnoreDB(e.target.checked)} /> </FilterLabel>
                 <FilterLabel htmlFor="showDirectors"><span>Show Directors?</span> <input id="showDirectors" type="checkbox" checked={props.showDirectors} onChange={(e: any) => props.toggleShowDirectors(e.target.checked)} /> </FilterLabel>
                 <FilterLabel htmlFor="showOnlyOrdinaryShareTypes"><span>Show only ordinary share types?</span> <input id="showOnlyOrdinaryShareTypes" type="checkbox" checked={props.showOnlyOrdinaryShareTypes} onChange={(e: any) => props.toggleShowOnlyOrdinaryShareTypes(e.target.checked)} /> </FilterLabel>
@@ -148,7 +139,7 @@ export default function SearchCompany(props: SearchCompanyProps) {
 
             </InputWrapper>
             {companies && typeAheadListVisible && <ul>
-                {companies.filter((company: any) => company.simplifiedStatus !== "Closed").splice(0, 10).map((company: any) => <li key={company.companyId} onClick={() => selectCompany(company)}>{company.name} {countries[company.countryCode] && countries[company.countryCode].icon} <span>({company.companyId})</span></li>)}
+                {companies.filter((company: any) => company.companyStatus === "Active").splice(0, 10).map((company: any) => <li key={company.companyId} onClick={() => selectCompany(company)}>{company.rawname} {countries[company.companyId] && countries[company.countryCode].icon} <span>({company.companyId})</span></li>)}
             </ul>
             }
         </TypeAhead>

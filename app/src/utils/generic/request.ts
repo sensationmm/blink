@@ -92,6 +92,10 @@ const normalisePropertyNames = (obj: any) => {
             return value
         })
     } else {
+        if (obj["externalCode"]) {
+            obj.companyId = obj["externalCode"];
+            delete obj["externalCode"]
+        }
         if (obj["companyID"]) {
             obj.companyId = obj["companyID"];
             delete obj["companyID"]

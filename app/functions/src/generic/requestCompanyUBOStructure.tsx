@@ -74,7 +74,7 @@ server.get('*/:source/:companyId/:countryISOCode', async function (req: any, res
                         const companyShareholders = await getShareholdersAndOfficers(shareholder.companyId, shareholder.source);
 
                         if (companyShareholders) {
-                            shareholder.shareholders = companyShareholders.shareholders;
+                            shareholder.shareholders = companyShareholders.shareholders.sort((shareholderA: any, shareholderB: any) => parseFloat(shareholderB.percentage) - parseFloat(shareholderA.percentage) );
                             shareholder.officers = companyShareholders.officers;
                         }
 
@@ -90,6 +90,10 @@ server.get('*/:source/:companyId/:countryISOCode', async function (req: any, res
 
                 return shareholder
             }))
+
+            if (returnCompany.shareholders) {
+                returnCompany.shareholders = returnCompany.shareholders.sort((shareholderA: any, shareholderB: any) => parseFloat(shareholderB.percentage) - parseFloat(shareholderA.percentage) );
+            }
         }
 
         if (Object.keys(returnCompany).length === 0) {

@@ -191,12 +191,12 @@ const requestCompanyProfile = async (
                                             if (!shareholder.shareholderType) {
                                                 const shareholderName = shareholder.name;
                                                 if (
-                                                    // DE specific
-                                                    // weak logic right now - will need to be better
+                                                    // weak logic right now - will need to catch all of the company types
                                                     // german ltd
                                                     shareholderName?.toLowerCase().indexOf("gmbh") > -1 ||
                                                     shareholderName?.indexOf("HRB") > -1 ||
-                                                    shareholderName?.indexOf("limited") > -1
+                                                    shareholderName?.indexOf("limited") > -1 ||
+                                                    shareholderName?.toLowerCase().indexOf("s.r.l") > -1
                                                 ) {
                                                     shareholder.shareholderType = "C";
                                                 } else {
@@ -221,12 +221,12 @@ const requestCompanyProfile = async (
                                                     if (persons.empty) {
                                                         console.log("empty")
                                                         ref = await personsCollection.add({ ...newShareholder, updatedAt: new Date() }, { merge: true });
-                                                        
+
                                                     } else {
                                                         const personDoc = persons.docs[0];
                                                         ref = personDoc.ref;
                                                         // console.log("personDoc", personDoc?.ref.path)
-                                                        await ref.update({...newShareholder, updatedAt: new Date()}, { merge: true });
+                                                        await ref.update({ ...newShareholder, updatedAt: new Date() }, { merge: true });
                                                     }
                                                 });
 
@@ -276,7 +276,7 @@ const requestCompanyProfile = async (
                                                         const companiesDoc = companies.docs[0];
                                                         ref = companiesDoc.ref
                                                         // console.log("ref 2", ref)
-                                                        await ref.update({...obj, updatedAt: new Date()}, { merge: true });
+                                                        await ref.update({ ...obj, updatedAt: new Date() }, { merge: true });
                                                     }
                                                 });
                                             }
@@ -334,7 +334,7 @@ const requestCompanyProfile = async (
                                                 } else {
                                                     const personDoc = persons.docs[0];
                                                     ref = personDoc.ref;
-                                                    await personDoc.ref.update({...newOfficer, updatedAt: new Date()}, { merge: true });
+                                                    await personDoc.ref.update({ ...newOfficer, updatedAt: new Date() }, { merge: true });
                                                 }
                                             });
                                         }
@@ -388,26 +388,30 @@ const requestCompanyProfile = async (
                                         .where('source', '==', relationship.source)
                                         .where('target', '==', targetCompanyRef)
                                         .where('type', '==', type).get()
-                                        
 
-                                        // console.log("relationshipQuery", relationship.source, targetCompanyRef)
 
-                                        delete relationship.ref;
-                                        delete relationship.companyId;
-                                        delete relationship.address1;
-                                        delete relationship.address2;
-                                        delete relationship.address3;
-                                        delete relationship.address4;
-                                        delete relationship.address5;
-                                        delete relationship.address6;
-                                        delete relationship.birthdate;
-                                        delete relationship.directorships;
-                                        delete relationship.name;
-                                        delete relationship.searchName;
-                                        delete relationship.nationality;
-                                        delete relationship.postcode;
+                                    // console.log("relationshipQuery", relationship.source, targetCompanyRef)
 
-                                        // console.log(relationship)
+                                    delete relationship.ref;
+                                    delete relationship.companyId;
+
+                                    delete relationship.address;
+                                    delete relationship.address1;
+                                    delete relationship.address2;
+                                    delete relationship.address3;
+                                    delete relationship.address4;
+                                    delete relationship.address5;
+                                    delete relationship.address6;
+                                    delete relationship.birthdate;
+                                    delete relationship.directorships;
+                                    delete relationship.name;
+                                    delete relationship.searchName;
+                                    delete relationship.fullName;
+
+                                    delete relationship.nationality;
+                                    delete relationship.postcode;
+
+                                    // console.log(relationship)
 
                                     if (relationshipQuery?.docs && relationshipQuery?.docs.length === 0) {
                                         await relationshipsCollection.add({
@@ -420,24 +424,25 @@ const requestCompanyProfile = async (
                                     }
                                 }
 
-                                   
 
-                                await Promise.all(
-                                    shareholders.map(async (shareholder: any) => {
-                                        return await writeRelationship("shareholder", shareholder)
-                                    })
-                                );
+                                if (shareholders) {
+                                    await Promise.all(
+                                        shareholders.map(async (shareholder: any) => {
+                                            return await writeRelationship("shareholder", shareholder)
+                                        })
+                                    );
+                                }
 
-                                await Promise.all(
-                                    officers.map(async (officer: any) => {
-                                        return await writeRelationship("officer", officer)
-                                    })
-                                );
-
-                          
+                                if (officers) {
+                                    await Promise.all(
+                                        officers.map(async (officer: any) => {
+                                            return await writeRelationship("officer", officer)
+                                        })
+                                    );
+                                }
 
                                 // console.log(shareholders)
-                                resolve({shareholders, officers});
+                                resolve({ shareholders, officers });
 
                             }
 

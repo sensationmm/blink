@@ -19,6 +19,8 @@ admin.initializeApp({
     databaseURL: "https://blink-3b651.firebaseio.com"
 });
 
+exports.knowYourCustomerSearchCompany = require("./src/know-your-customer/searchCompany");
+
 exports.duedillSearchCompany = require("./src/duedill/searchCompany");
 
 exports.opencorporatesSearchCompany = require("./src/opencorporates/searchCompany");
@@ -71,13 +73,13 @@ exports.requestCompanyUBOStructure = require("./src/generic/requestCompanyUBOStr
 
 exports.saveCompanyUBOStructure = require("./src/generic/saveCompanyUBOStructure");
 
-// validation
-exports.validateCompany = require("./src/validation/validateCompany");
-exports.addRule = require("./src/validation/addRule");
-exports.deleteAllRules = require("./src/validation/deleteAllRules");
+// // validation
+// exports.validateCompany = require("./src/validation/validateCompany");
+// exports.addRule = require("./src/validation/addRule");
+// exports.deleteAllRules = require("./src/validation/deleteAllRules");
 
-// google
-exports.googleFetchSheet = require("./src/google/fetchSheet");
+// // google
+// exports.googleFetchSheet = require("./src/google/fetchSheet");
 
 
 exports.getIP = require("./src/generic/getIP");
