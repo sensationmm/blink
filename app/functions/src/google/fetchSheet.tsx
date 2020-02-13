@@ -7,9 +7,8 @@ const server = express();
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 
 server.use(cors());
-server.post('*/', async function (req: any, res: any) {
-    const { sheetID, tabID } = req.body;
 
+const fetchGoogleSheet = async (sheetID: string, tabID: string = '0') => {
     const doc = new GoogleSpreadsheet(sheetID);
 
     await doc.useServiceAccountAuth({
@@ -35,6 +34,17 @@ server.post('*/', async function (req: any, res: any) {
     });
     cache = null;
 
-    return res.send(sheetJSON);
+    return sheetJSON;
+}
+
+server.post('*/', async function (req: any, res: any) {
+    const { sheetID, tabID } = req.body;
+
+    const sheet = await fetchGoogleSheet(sheetID, tabID);
+
+    return res.send(sheet);
 });
+
 module.exports = functions.https.onRequest(server);
+
+module.exports.fetchGoogleSheet = fetchGoogleSheet;

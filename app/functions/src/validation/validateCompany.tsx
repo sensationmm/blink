@@ -5,7 +5,7 @@ const admin = require("firebase-admin");
 const cors = require('cors');
 const validateJS = require('validate.js');
 const express = require('express');
-const validationCompany = require('../../../../src/utils/validation/functionsCompany');
+const validationCompany = require('./functionsCompany');
 const server = express();
 server.use(cors());
 
