@@ -75,7 +75,7 @@ const App = withRouter((props: any) => <div>
     <Route path="/graph/:companyId?/:countryCode?">
       <Graph />
     </Route>
-    <Route path="/progress">
+    <Route path="/progress/:companyId?">
       <SetupProgress />
     </Route>
     <Route path="/import">
