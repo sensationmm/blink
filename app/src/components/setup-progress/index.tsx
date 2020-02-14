@@ -10,6 +10,8 @@ import { blinkMarketList, blinkMarkets } from '../../utils/config/blink-markets'
 import { getByValue } from '../../utils/functions/getByValue';
 import { requestCompanyUBOStructure } from '../../utils/generic/request';
 
+import ProgressBar from '../progress-bar';
+
 interface newFile extends Element {
     files: Array<Blob>;
 }
@@ -144,7 +146,7 @@ const SetupProgress = (props: any) => {
     return (
         <MainSt>
             <div style={{ display: 'flex', flexGrow: 1, width: '100%', justifyContent: 'space-around' }}>
-                <div style={{ width: '50%', border: '1px solid #000', padding: '10px 30px 30px 30px' }}>
+                <div style={{ width: '45%', border: '1px solid #000', padding: '10px 30px 30px 30px' }}>
                     <ReactJson
                         name={'company'}
                         src={structure}
@@ -155,12 +157,14 @@ const SetupProgress = (props: any) => {
                         collapsed={1}
                     />
                 </div>
-                <div style={{ textAlign: 'center' }}>
+                <div style={{ width: '45%', textAlign: 'center' }}>
                     {completion.all && <div>
                         <h2>{Math.round((completion.all.passed / completion.all.total) * 100)}%</h2>
                         {
                             blinkMarketList.map((market: any, count: number) => {
-                                return <div key={`market-${count}`}>{getByValue(blinkMarkets, 'code', market).name} {completion[market].passed}/{completion[market].total}</div>
+                                const { passed, total } = completion[market];
+
+                                return <ProgressBar label={getByValue(blinkMarkets, 'code', market).name} value={passed} total={total} />
                             })
                         }
                         {renderFeedback()}
