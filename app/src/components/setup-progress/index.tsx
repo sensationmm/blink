@@ -159,7 +159,10 @@ const SetupProgress = (props: any) => {
                 </div>
                 <div style={{ width: '45%', textAlign: 'center' }}>
                     {completion.all && <div>
-                        <h2>{Math.round((completion.all.passed / completion.all.total) * 100)}%</h2>
+                        <h2>{structure.name}</h2>
+
+                        <ProgressBar large value={completion['all'].passed} total={completion['all'].total} />
+
                         {
                             blinkMarketList.map((market: any, count: number) => {
                                 const { passed, total } = completion[market];
