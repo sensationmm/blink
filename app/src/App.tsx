@@ -13,6 +13,7 @@ import KyckrFilingSearch from "./components/kyckr/filing-search";
 import DueDill from "./components/duedill"
 import Trulioo from "./components/trulioo"
 import Generic from "./components/generic"
+import Graph from "./components/graph"
 import SetupProgress from "./components/setup-progress";
 import Import from "./components/google-import";
 import { Tabs } from "./components/styles";
@@ -38,6 +39,9 @@ const App = withRouter((props: any) => <div>
     </li>
     <li className={props.location.pathname === "/duedill" ? "active" : ""}>
       <Link to="/duedill">Duedill</Link>
+    </li>
+    <li className={props.location.pathname.indexOf("/graph") > -1 ? "active" : ""}>
+      <Link to="/graph">Graph</Link>
     </li>
     <li className={props.location.pathname === "/combined" || props.location.pathname === "/" ? "active" : ""}>
       <Link to="/combined">Combined</Link>
@@ -67,6 +71,9 @@ const App = withRouter((props: any) => <div>
     </Route>
     <Route path="/combined">
       <Generic />
+    </Route>
+    <Route path="/graph/:companyId?/:countryCode?">
+      <Graph />
     </Route>
     <Route path="/progress">
       <SetupProgress />

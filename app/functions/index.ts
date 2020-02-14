@@ -29,6 +29,8 @@ exports.duedillCompanyShareholders = require("./src/duedill/requestCompanyShareh
 
 exports.duedillCompanyVitals = require("./src/duedill/requestCompanyVitals");
 
+exports.duedillCompanyIndustries = require("./src/duedill/requestCompanyIndustries");
+
 exports.duedillCompanyPersonsOfSignificantControl = require("./src/duedill/requestCompanyPersonsOfSignificantControl");
 
 exports.kyckrSearchCompany = require("./src/kyckr/searchCompany");

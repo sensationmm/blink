@@ -40,6 +40,6 @@ export default function SignificantPersons(props: Props) {
     }
 
     return <>
-        <OrgChart companyName={companyStructure.name} shareholders={companyStructure.shareholders} filter={filterList} />
+        <OrgChart companyName={companyStructure.name} officialStatus={companyStructure.officialStatus} companyId={companyStructure.companyId} shareholders={companyStructure.shareholders} filter={filterList} />
     </>
 }

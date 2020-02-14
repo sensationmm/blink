@@ -16,6 +16,9 @@ interface IOrgChartProps {
     companyName: string;
     shareholders: object[];
     filter: (list: object[]) => object[];
+    docId?: string,
+    companyId?: string,
+    officialStatus?: string
 }
 
 interface ITransformWrapperProps {
@@ -28,7 +31,7 @@ interface IOptions {
     defaultScale?: number;
 }
 
-const OrgChart = ({ companyName, filter, shareholders }: IOrgChartProps) => {
+const OrgChart = ({ companyName, filter, shareholders, docId, companyId, officialStatus }: IOrgChartProps) => {
     let chartContainer = useRef(null);
     let chartCanvas = useRef(null);
     let resizeTimeout: ReturnType<typeof setTimeout>;
