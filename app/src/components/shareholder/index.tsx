@@ -11,12 +11,14 @@ interface IShareholderProps {
     shares?: number;
     type?: string;
     showDetail?: (content: JSX.Element) => void;
-    docId: string,
+    // docId: string,
     companyId?: string,
     officialStatus?: string
 }
 
-const Shareholder = ({ name, shares, showDetail, type, docId, companyId, officialStatus }: IShareholderProps) => {
+const Shareholder = ({ name, shares, showDetail, type, 
+    // docId, 
+    companyId, officialStatus }: IShareholderProps) => {
     const ShareholderImage = type === 'P' ? Styled.ImagePerson : Styled.ImageCompany;
     const ShareholderLabel = type ? Styled.Label : Styled.Heading;
     const ShareholderIcon = type === 'P' ? PersonIcon : CompanyIcon;
@@ -34,7 +36,7 @@ const Shareholder = ({ name, shares, showDetail, type, docId, companyId, officia
     {companyId && <span style={{ fontSize: 14, display: "block" }}>({companyId})</span>}
     {officialStatus && <span style={{ fontSize: 14, display: "block" }}>({officialStatus})</span>}
     </ShareholderLabel>
-            {docId && <span style={{ position: "absolute", left: 0, bottom: 20, fontSize: 12, width: "100%" }}>{docId.substring(docId.length - 15)}</span>}
+            {/* {docId && <span style={{ position: "absolute", left: 0, bottom: 20, fontSize: 12, width: "100%" }}>{docId.substring(docId.length - 15)}</span>} */}
         </Styled.Shareholder >
     )
 }
