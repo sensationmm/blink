@@ -14,7 +14,7 @@ import {
     getCompanyIdFromSearch,
     saveCompanyStructure
 } from '../../utils/generic/request';
-import { requestCompanyVitals } from '../../utils/duedill/request';
+import { requestCompanyVitals, requestCompanyIndustries } from '../../utils/duedill/request';
 // import {
 //     getCompanyIdFromSearch
 // } from '../../utils/opencorporates/request';
@@ -68,12 +68,23 @@ export default function Kyckr() {
         const countryCode = company.countryCode || selectedCountry.value;
 
         if (company.companyId) {
+
+            let returnCompany = company;
+
             const companyVitals = await requestCompanyVitals(company.companyId, countryCode.toLowerCase());
+
             if (companyVitals.httpCode !== 404 && companyVitals.httpCode !== 400) {
-                setSelectedCompany({ ...company, ...companyVitals });
-            } else {
-                setSelectedCompany({ ...company })
-            }
+                returnCompany = { ...returnCompany, ...companyVitals };
+            } 
+            
+            const companyIndustries = await requestCompanyIndustries(company.companyId, countryCode.toLowerCase());
+
+            if (companyIndustries.httpCode !== 404 && companyIndustries.httpCode !== 400) {
+                returnCompany = { ...returnCompany, ...companyIndustries };
+            } 
+
+            setSelectedCompany(returnCompany)
+            
         }
     }
 
@@ -85,7 +96,9 @@ export default function Kyckr() {
 
         const { companyId, code, registrationAuthorityCode } = selectedCompany;
 
-        let searchCode =  companyId
+        let searchCode =  companyId;
+
+        console.log(selectedCompany);
 
         if ((countryCode === "DE" || countryCode === "IT" || countryCode === "RO") && code) {
             searchCode = code; // for DE it's a proprietary code;
@@ -93,6 +106,8 @@ export default function Kyckr() {
 
 
         let UBOStructure = await requestCompanyUBOStructure(companyId, countryCode); // we always save with companyId, not a proprietary code
+        
+            console.log("UBOStructure", UBOStructure)
         setCompanyStructure(UBOStructure);
             setHackValue(Math.random())
 
@@ -142,15 +157,15 @@ export default function Kyckr() {
                 //         await getCompanyProfile(nextCompanyId, nextCompanySearchCode, countryCode, registrationAuthorityCode, isNewSearch, companyProfile.entitiesAdded);
                 //     }
                 // }));
-                const UBOStructure = await requestCompanyUBOStructure(companyId, countryCode);
-                setCompanyStructure(UBOStructure);
-                setHackValue(Math.random())
+            //     const UBOStructure = await requestCompanyUBOStructure(companyId, countryCode);
+            //     setCompanyStructure(UBOStructure);
+            //     setHackValue(Math.random())
 
-            }
-            else {
-                const UBOStructure = await requestCompanyUBOStructure(companyId, countryCode);
-                setCompanyStructure(UBOStructure);
-                setHackValue(Math.random())
+            // }
+            // else {
+            //     const UBOStructure = await requestCompanyUBOStructure(companyId, countryCode);
+            //     setCompanyStructure(UBOStructure);
+            //     setHackValue(Math.random())
             }
         }
 

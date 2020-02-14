@@ -9,8 +9,20 @@ const stringSimilarity = require('string-similarity');
 
 const domain = window.location.href.indexOf("localhost") > -1 ? "http://localhost:5001/blink-3b651/us-central1" : "https://us-central1-blink-3b651.cloudfunctions.net";
 
-const requestCompanyUBOStructure = async (companyNumber: string, countryISOCode: string = "GB") => {
-    const response = await fetch(`${domain}/requestCompanyUBOStructure/any/${companyNumber}/${countryISOCode}`, { mode: 'cors' });
+const requestCompanyUBOStructure = async (companyId: string, countryISOCode: string = "GB") => {
+    // const response = await fetch(`${domain}/requestCompanyUBOStructure/any/${companyNumber}/${countryISOCode}`, { mode: 'cors' });
+
+    const data = {
+        companyId,
+        countryISOCode
+    }
+
+    const response =  await fetch(`${domain}/requestCompanyUBOStructure`, {
+        method: 'post',
+        body: JSON.stringify(data)
+    })
+
+
     if (response.status === 404) {
         // console.log("response", response)
         return "not found"

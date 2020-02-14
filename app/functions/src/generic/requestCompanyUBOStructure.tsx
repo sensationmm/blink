@@ -8,11 +8,14 @@ const server = express();
 
 server.use(cors());
 
-server.get('*/:source/:companyId/:countryISOCode', async function (req: any, res: any) {
+// server.get('*/:source/:companyId/:countryISOCode', async function (req: any, res: any) {
 
+
+server.post('*/', async function (req: any, res: any) {
+    console.log(req.body)
     const {
         companyId,
-    } = req.params;
+    } = JSON.parse(req.body);
 
     const db = admin.firestore();
     const companiesRef = db.collection('companies');
@@ -65,10 +68,10 @@ server.get('*/:source/:companyId/:countryISOCode', async function (req: any, res
                 const shareholderDoc = await shareholderRelationshipDoc.source.get()
                 let shareholder = { ...shareholderDoc.data() };
                 shareholder = { ...shareholder, ...shareholderRelationshipDoc };
-           
+
                 if (shareholder.shareholderType === "C") {
                     if (shareholder.companyId) {
-             
+
                         console.log("shareholder.shareholderType", shareholder.shareholderType, shareholder.companyId)
 
                         const companyShareholders = await getShareholdersAndOfficers(shareholder.companyId, shareholder.source);
@@ -79,11 +82,15 @@ server.get('*/:source/:companyId/:countryISOCode', async function (req: any, res
                         }
 
                     }
+                    shareholder.docId = shareholder.source.path;
+
                     delete shareholder.source;
                     delete shareholder.target;
-                    
+
                     return { ...shareholder }
                 }
+
+                shareholder.docId = shareholder.source.path;
 
                 delete shareholder.source;
                 delete shareholder.target;
@@ -115,6 +122,7 @@ server.get('*/:source/:companyId/:countryISOCode', async function (req: any, res
         } else {
             const companiesDoc = companies.docs[0];
             returnCompany = companiesDoc.data();
+            returnCompany.docId = companiesDoc.ref.path;
 
             const shareholdersAndOfficers = await getShareholdersAndOfficers(companyId, companiesDoc.ref);
             if (shareholdersAndOfficers) {

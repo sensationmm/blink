@@ -18,6 +18,12 @@ const requestCompanyVitals = async (companyNumber: string, countryCode: string =
     return body;
 }
 
+const requestCompanyIndustries = async (companyNumber: string, countryCode: string = "GB", ignoreDB: boolean = false) => {
+    const response = await fetch(`${domain}/duedillCompanyIndustries/${companyNumber}/${countryCode && countryCode.toLowerCase()}${ignoreDB ? '?ignoreDB=true': ''}`, { mode: 'cors' });
+    const body = await response.json();
+    return body;
+}
+
 const requestCompanyShareholders = async (companyNumber: string, countryCode: string = "GB", ignoreDB: boolean = false) => {
     const response = await fetch(`${domain}/duedillCompanyShareholders/${countryCode && countryCode.toLowerCase()}/${companyNumber}${ignoreDB ? '?ignoreDB=true': ''}`, { mode: 'cors' });
     const body = await response.json();
@@ -30,4 +36,4 @@ const requestCompanyPersonsOfSignificantControl = async (companyNumber: string, 
     return body;
 }
 
-export { searchCompany, requestCompanyVitals, requestCompanyShareholders, requestCompanyPersonsOfSignificantControl }
+export { searchCompany, requestCompanyVitals, requestCompanyIndustries, requestCompanyShareholders, requestCompanyPersonsOfSignificantControl }

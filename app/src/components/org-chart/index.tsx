@@ -16,6 +16,9 @@ interface IOrgChartProps {
     companyName: string;
     shareholders: object[];
     filter: (list: object[]) => object[];
+    docId?: string,
+    companyId?: string,
+    officialStatus?: string
 }
 
 interface ITransformWrapperProps {
@@ -28,7 +31,7 @@ interface IOptions {
     defaultScale?: number;
 }
 
-const OrgChart = ({ companyName, filter, shareholders }: IOrgChartProps) => {
+const OrgChart = ({ companyName, filter, shareholders, docId, companyId, officialStatus }: IOrgChartProps) => {
     let chartContainer = useRef(null);
     let chartCanvas = useRef(null);
     let resizeTimeout: ReturnType<typeof setTimeout>;
@@ -47,7 +50,9 @@ const OrgChart = ({ companyName, filter, shareholders }: IOrgChartProps) => {
         const childPercentage = parseFloat(shareholder.percentage) * (parentShares / 100);
 
         return (
-            <TreeNode key={`shareholder-${shareholderCount}`} label={<Shareholder name={shareholder.name || shareholder.fullName} shares={childPercentage} type={shareholder.shareholderType} showDetail={showDetailModal} />}>
+            <TreeNode key={`shareholder-${shareholderCount}`} label={<Shareholder name={shareholder.name || shareholder.fullName} 
+            // docId={shareholder.docId} 
+            shares={childPercentage} type={shareholder.shareholderType} showDetail={showDetailModal} />}>
                 {shareholder.shareholders && filter(shareholder.shareholders).reverse().map((shareholder2: any, count2: number) => {
                     return renderShareholder(shareholder2, `${shareholderCount}-${count2}`, childPercentage);
                 })}
@@ -139,7 +144,9 @@ const OrgChart = ({ companyName, filter, shareholders }: IOrgChartProps) => {
                         <div>
                             <TransformComponent>
                                 <Styled.OrgChartInner ref={chartCanvas}>
-                                    <Tree label={<Shareholder name={companyName} />} lineWidth={'2px'} lineBorderRadius={'5px'} lineHeight={'20px'} lineColor={'black'} nodePadding={'5px'}>
+                                    <Tree label={<Shareholder 
+                                    // docId={docId || ""} 
+                                    name={`${companyName}`} officialStatus={officialStatus} companyId={companyId} />} lineWidth={'2px'} lineBorderRadius={'5px'} lineHeight={'20px'} lineColor={'black'} nodePadding={'5px'}>
                                         {filter(shareholders)?.reverse().map((shareholder: any, count: number) => {
                                             return renderShareholder(shareholder, `${count}`);
                                         })}
