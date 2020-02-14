@@ -4,6 +4,8 @@ import { addRule, deleteAllRules } from '../../utils/validation/request';
 import { MainSt } from "../styles";
 import { fetchGoogleSheet } from '../../utils/google/request';
 
+import { blinkMarketList } from '../../utils/config/blink-markets';
+
 import * as Styled from './styles';
 
 interface newFile extends Element {
@@ -28,12 +30,21 @@ const GoogleImport = () => {
         setAction('Adding');
 
         sheet.map((row: any) => {
-            if (row['Validation Rule'] !== '{}') {
+            const marketRules = [] as Array<string>;
+
+            blinkMarketList.forEach((market: string) => {
+                if (row[market] !== '' && row[market] !== 'undefined' && row[market] !== undefined) {
+                    marketRules.push(market);
+                }
+            });
+
+            if (row['Validation Rule'] !== '{}' && marketRules.length !== 0) {
                 const rule = {
-                    [row['Field Name']]: JSON.parse(row['Validation Rule'])
-                };
+                    [row['Field Name']]: JSON.parse(row['Validation Rule']),
+                    marketRuleMapping: marketRules
+                } as { [key: string]: any };
+
                 rulesList.push(rule);
-                rulesList.push();
             }
         });
 

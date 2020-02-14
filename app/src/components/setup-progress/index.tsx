@@ -5,10 +5,14 @@ import { MainSt } from "../styles";
 import ReactJson, { InteractionProps } from 'react-json-view'
 
 import { CompanyData } from '../../utils/validation/request';
+import { blinkMarketList, blinkMarkets } from '../../utils/config/blink-markets';
+import { getByValue } from '../../utils/functions/getByValue';
 
 interface newFile extends Element {
     files: Array<Blob>;
 }
+type market = 'all' | 'GB' | 'DE' | 'FR' | 'RO' | 'IT' | 'SE';
+type indexedObject = { [key: string]: any };
 
 const SetupProgress = () => {
     const company = {
@@ -82,7 +86,7 @@ const SetupProgress = () => {
         vatId: null,
     };
 
-    const [completion, setCompletion] = useState(0);
+    const [completion, setCompletion] = useState({} as { [key: string]: indexedObject });
     const [errors, setErrors] = useState({} as { [key: string]: string });
     const [structure, setStructure] = useState(company);
 
@@ -95,9 +99,21 @@ const SetupProgress = () => {
         const rules = await validateCompany(src, 'GB')
 
         console.log(rules)
-        const complete = isNaN(rules.completion) ? 0 : rules.completion * 100;
-        setCompletion(complete);
-        setErrors(rules.errors);
+        // const complete = isNaN(rules.all.completion) ? 0 : rules.all.completion * 100;
+
+        const marketCompletion = {
+            all: {} as indexedObject,
+            GB: {} as indexedObject,
+            DE: {} as indexedObject,
+            FR: {} as indexedObject,
+            RO: {} as indexedObject,
+            IT: {} as indexedObject,
+            SE: {} as indexedObject,
+        };
+
+        Object.keys(rules).forEach((rule) => marketCompletion[rule as market] = { passed: rules[rule].passed, total: rules[rule].total });
+        setCompletion(marketCompletion);
+        setErrors(rules.all.errors);
     };
 
     const renderFeedback = () => {
@@ -109,7 +125,7 @@ const SetupProgress = () => {
             });
 
             return <ul style={{ listStyle: 'none' }}>{errorList}</ul>
-        } else if (completion === 1) {
+        } else if (completion.all.passed === completion.all.total) {
             return <h3>Congratulations!</h3>
         }
     }
@@ -128,8 +144,15 @@ const SetupProgress = () => {
                     />
                 </div>
                 <div style={{ textAlign: 'center' }}>
-                    <h2>{completion}%</h2>
-                    {renderFeedback()}
+                    {completion.all && <div>
+                        <h2>{Math.round((completion.all.passed / completion.all.total) * 100)}%</h2>
+                        {
+                            blinkMarketList.map((market: any) => {
+                                return <div>{getByValue(blinkMarkets, 'code', market).name} {completion[market].passed}/{completion[market].total}</div>
+                            })
+                        }
+                        {renderFeedback()}
+                    </div>}
                 </div>
             </div>
         </MainSt>
