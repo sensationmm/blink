@@ -249,15 +249,23 @@ const requestCompanyProfile = async (
                                             let companiesQuery = companyCollection.where('searchName', '==', searchName);
                                             await companiesQuery.get().then(async (companies: any) => {
 
+                                                let obj: any;
+                                                let company;
                                                 const searchResponse = await dueDilCompanySearch(searchName, "gb,ie,de,fr,ro,se"); // not 'es' or 'it' from duedil
-                                                // console.log(searchResponse);
-                                                const results = await JSON.parse(searchResponse)
-                                                const company = results?.companies?.find((c: any) => c.name?.toLowerCase() === searchName);
-                                                let obj: any = {
-                                                    searchName,
-                                                    name
-                                                }
+                                                try {
+                                                    if (searchResponse) {
+                                                        const results = await JSON.parse(searchResponse)
+                                                        company = results?.companies?.find((c: any) => c.name?.toLowerCase() === searchName);
+                                                        obj = {
+                                                            searchName,
+                                                            name
+                                                        }
+                                                    }
 
+                                                }
+                                                catch (e) {
+                                                    console.log(e)
+                                                }
                                                 if (company && company.companyId) {
                                                     obj.companyId = company.companyId;
                                                     shareholder.companyId = company.companyId;
@@ -269,10 +277,14 @@ const requestCompanyProfile = async (
                                                     // for DE will need to go to kyckr for the vitals and 'code' as they have their own proprietary code
 
                                                     const vitalsResponse = await dueDilCompanyVitals(company.companyId, company?.countryCode.toLowerCase());
-                                                    if (vitalsResponse && vitalsResponse.httpCode !== 400 && vitalsResponse.httpCode !== 404) {
-                                                        obj = { ...obj, ...JSON.parse(vitalsResponse) }
+                                                    try {
+                                                        if (vitalsResponse && vitalsResponse.httpCode !== 400 && vitalsResponse.httpCode !== 404) {
+                                                            obj = { ...obj, ...JSON.parse(vitalsResponse) }
+                                                        }
                                                     }
-
+                                                    catch (e) {
+                                                        console.log(e)
+                                                    }
                                                 }
 
 
@@ -328,13 +340,24 @@ const requestCompanyProfile = async (
                                         // is a it a company?
 
                                         const searchResponse = await dueDilCompanySearch(searchName, "gb,ie,de,fr,ro,se"); // not 'es' or 'it'
-                                        const results = await JSON.parse(searchResponse)
-                                        const company = results?.companies?.find((c: any) => c.name?.toLowerCase() === searchName);
-                                        if (company) {
-                                            officer = { ...officer, ...company }
+                                        if (searchResponse) {
 
-                                            const vitalsResponse = await dueDilCompanyVitals(company.companyId, company?.countryCode.toLowerCase());
-                                            officer = { ...officer, ...JSON.parse(vitalsResponse) }
+                                            try {
+                                                const results = await JSON.parse(searchResponse);
+                                                const company = results?.companies?.find((c: any) => c.name?.toLowerCase() === searchName);
+                                                if (company) {
+                                                    officer = { ...officer, ...company }
+
+                                                    const vitalsResponse = await dueDilCompanyVitals(company.companyId, company?.countryCode.toLowerCase());
+                                                    if (vitalsResponse) {
+                                                        officer = { ...officer, ...JSON.parse(vitalsResponse) }
+                                                    }
+                                                }
+                                            }
+                                            catch (e) {
+                                                console.log(e)
+                                            }
+
                                         }
                                     }
 

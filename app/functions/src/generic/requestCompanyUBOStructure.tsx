@@ -77,7 +77,9 @@ server.post('*/', async function (req: any, res: any) {
                         const companyShareholders = await getShareholdersAndOfficers(shareholder.companyId, shareholder.source);
 
                         if (companyShareholders) {
-                            shareholder.shareholders = companyShareholders.shareholders.sort((shareholderA: any, shareholderB: any) => parseFloat(shareholderB.percentage) - parseFloat(shareholderA.percentage) );
+                            if (companyShareholders.shareholders) {
+                                shareholder.shareholders = companyShareholders.shareholders.sort((shareholderA: any, shareholderB: any) => parseFloat(shareholderB.percentage) - parseFloat(shareholderA.percentage) );
+                            }
                             shareholder.officers = companyShareholders.officers;
                         }
 
