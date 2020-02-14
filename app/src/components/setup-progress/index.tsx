@@ -3,10 +3,12 @@ import React, { useState, useEffect } from "react";
 import { addRule, validateCompany } from '../../utils/validation/request';
 import { MainSt } from "../styles";
 import ReactJson, { InteractionProps } from 'react-json-view'
+import { withRouter } from "react-router-dom";
 
 import { CompanyData } from '../../utils/validation/request';
 import { blinkMarketList, blinkMarkets } from '../../utils/config/blink-markets';
 import { getByValue } from '../../utils/functions/getByValue';
+import { requestCompanyUBOStructure } from '../../utils/generic/request';
 
 interface newFile extends Element {
     files: Array<Blob>;
@@ -14,9 +16,9 @@ interface newFile extends Element {
 type market = 'all' | 'GB' | 'DE' | 'FR' | 'RO' | 'IT' | 'SE';
 type indexedObject = { [key: string]: any };
 
-const SetupProgress = () => {
+const SetupProgress = (props: any) => {
     const company = {
-        name: '11:FS',
+        name: null,
         adverseMediaCheckPassed: null,
         AMLRedFlagsListPassed: null,
         AMLWatchListPassed: null,
@@ -88,11 +90,20 @@ const SetupProgress = () => {
 
     const [completion, setCompletion] = useState({} as { [key: string]: indexedObject });
     const [errors, setErrors] = useState({} as { [key: string]: string });
-    const [structure, setStructure] = useState(company);
+    const [structure, setStructure] = useState();
+
+    const go = async () => {
+        const { match: { params: { companyId, countryCode } } } = props;
+        const requestedCompany = await requestCompanyUBOStructure(companyId || "10103078", 'GB');
+        setStructure(requestedCompany);
+    }
+    if (!structure) {
+        go()
+    }
 
     useEffect(() => {
         getValidation(structure);
-    }, []);
+    }, [structure]);
 
     const getValidation = async (src: CompanyData) => {
         setErrors({});
@@ -133,7 +144,7 @@ const SetupProgress = () => {
     return (
         <MainSt>
             <div style={{ display: 'flex', flexGrow: 1, width: '100%', justifyContent: 'space-around' }}>
-                <div style={{ border: '1px solid #000', padding: '10px 30px 30px 30px' }}>
+                <div style={{ width: '50%', border: '1px solid #000', padding: '10px 30px 30px 30px' }}>
                     <ReactJson
                         name={'company'}
                         src={structure}
@@ -141,14 +152,15 @@ const SetupProgress = () => {
                         onEdit={(props: InteractionProps) => getValidation(props.updated_src as CompanyData)}
                         onAdd={(props: InteractionProps) => getValidation(props.updated_src as CompanyData)}
                         style={{ height: '80vh', fontSize: '1.4em', overflow: 'auto' }}
+                        collapsed={1}
                     />
                 </div>
                 <div style={{ textAlign: 'center' }}>
                     {completion.all && <div>
                         <h2>{Math.round((completion.all.passed / completion.all.total) * 100)}%</h2>
                         {
-                            blinkMarketList.map((market: any) => {
-                                return <div>{getByValue(blinkMarkets, 'code', market).name} {completion[market].passed}/{completion[market].total}</div>
+                            blinkMarketList.map((market: any, count: number) => {
+                                return <div key={`market-${count}`}>{getByValue(blinkMarkets, 'code', market).name} {completion[market].passed}/{completion[market].total}</div>
                             })
                         }
                         {renderFeedback()}
@@ -159,4 +171,4 @@ const SetupProgress = () => {
     );
 }
 
-export default SetupProgress;
+export default withRouter(SetupProgress)

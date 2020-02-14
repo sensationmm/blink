@@ -2,7 +2,7 @@ const domain = window.location.href.indexOf("localhost") > -1 ? "http://localhos
 
 // @TODO: move this somewhere more company-focused
 export interface CompanyData {
-    name: string;
+    name: any;
 }
 
 class Rule {
