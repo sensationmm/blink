@@ -94,12 +94,12 @@ export default function FilingSearch() {
                 setSelectedCompany={setSelectedCompany}
                 setIgnoreDB={() => { }}
                 toggleShowDirectors={() => { }}
-                changeShareholderRange={() => { }}
+                changeShareholderThreshold={() => { }}
                 toggleShowOnlyOrdinaryShareTypes={() => { }}
                 showControls={false}
                 ignoreDB={false}
                 selectedCountry={selectedCountry}
-                shareholderRange={100}
+                shareholderThreshold={100}
                 showDirectors={true}
                 setSelectedCountry={setSelectedCountry}
                 showOnlyOrdinaryShareTypes={false}
