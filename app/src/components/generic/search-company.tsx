@@ -133,8 +133,8 @@ export default function SearchCompany(props: SearchCompanyProps) {
                 <FilterLabel htmlFor="showDirectors"><span>Show Directors?</span> <input id="showDirectors" type="checkbox" checked={props.showDirectors} onChange={(e: any) => props.toggleShowDirectors(e.target.checked)} /> </FilterLabel>
                 <FilterLabel htmlFor="showOnlyOrdinaryShareTypes"><span>Show only ordinary share types?</span> <input id="showOnlyOrdinaryShareTypes" type="checkbox" checked={props.showOnlyOrdinaryShareTypes} onChange={(e: any) => props.toggleShowOnlyOrdinaryShareTypes(e.target.checked)} /> </FilterLabel>
 
-                <label htmlFor="shareholderRange">Shareholder percentage</label>
-                <input style={{ width: 100, padding: 0, margin: "0px 20px 30px" }} type="range" id="shareholderRange" value={props.shareholderRange} onChange={e => props.changeShareholderRange(parseInt(e.target.value))} name="shareholderRange" min="0" max="100" /><span>greater than: {props.shareholderRange} %</span>
+                <label htmlFor="shareholderThreshold">Shareholder Threshold</label>
+                <input style={{ width: 100, padding: 0, margin: "0px 20px 30px" }} type="range" id="shareholderThreshold" value={props.shareholderThreshold} onChange={e => props.changeShareholderThreshold(parseInt(e.target.value))} name="shareholderThreshold" min="0" max="100" /><span>greater than: {props.shareholderThreshold} %</span>
             </>
             }
             <InputWrapper>

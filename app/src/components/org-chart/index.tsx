@@ -50,7 +50,7 @@ const OrgChart = ({ companyName, filter, shareholders, docId, companyId, officia
 
         return (
             <TreeNode key={`shareholder-${shareholderCount}`} label={<Shareholder name={shareholder.name || shareholder.fullName} 
-            docId={shareholder.docId} 
+            // docId={shareholder.docId} 
             isWithinShareholderThreshold={shareholder.isWithinShareholderThreshold}
             shares={shareholder.totalShareholding * 100} type={shareholder.shareholderType} showDetail={showDetailModal} />}>
                 {shareholder.shareholders && filter(shareholder.shareholders).reverse().map((shareholder2: any, count2: number) => {
@@ -146,7 +146,7 @@ const OrgChart = ({ companyName, filter, shareholders, docId, companyId, officia
                                 <Styled.OrgChartInner ref={chartCanvas}>
                                     <Tree label={<Shareholder 
                                     isWithinShareholderThreshold
-                                    docId={docId || ""} 
+                                    // docId={docId || ""} 
                                     name={`${companyName}`} officialStatus={officialStatus} companyId={companyId} />} lineWidth={'2px'} lineBorderRadius={'5px'} lineHeight={'20px'} lineColor={'black'} nodePadding={'5px'}>
                                         {filter(shareholders)?.reverse().map((shareholder: any, count: number) => {
                                             return renderShareholder(shareholder, `${count}`);
