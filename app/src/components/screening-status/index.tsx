@@ -36,7 +36,12 @@ const ScreeningStatus: React.FC<ScreeningStatusProps> = ({ company, country, loc
             <Styled.Nav>
                 {steps.map((step, count) => {
                     return (
-                        <Styled.NavItem key={`nav-item-${count}`} className={classNames({ active: currentStep >= count })}>
+                        <Styled.NavItem
+                            to={step.url}
+                            key={`nav-item-${count}`}
+                            className={classNames({ active: currentStep >= count })}
+                            onClick={(e) => { if (count > currentStep) { e.preventDefault(); return false; } }}
+                        >
                             {step.label}
                         </Styled.NavItem>
                     )

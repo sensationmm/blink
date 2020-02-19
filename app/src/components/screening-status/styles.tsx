@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom'
 
 export const Main = styled.div`
     width: calc(100% + 60px);
@@ -19,7 +20,7 @@ export const Nav = styled.nav`
     background: var(--basic-white);
 `;
 
-export const NavItem = styled.div`
+export const NavItem = styled(Link)`
     display: flex;
     justify-content: center;
     align-items: center;
@@ -30,6 +31,7 @@ export const NavItem = styled.div`
     border-right: 2px solid var(--basic-shadow);
     border-bottom: 2px solid var(--basic-white);
     padding: 10px 15px 15px 15px;
+    text-decoration: none;
 
     &:last-child {
         border-right: 0;
