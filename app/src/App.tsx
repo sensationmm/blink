@@ -4,7 +4,8 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  // Link
+  Redirect,
+  withRouter
 } from "react-router-dom";
 
 // import CompaniesHouse from "./components/companies-house-2"
@@ -16,44 +17,30 @@ import Generic from "./components/generic"
 import Graph from "./components/graph"
 import SetupProgress from "./components/setup-progress";
 import Import from "./components/google-import";
-import { Tabs } from "./components/styles";
-import { Link, withRouter } from "react-router-dom";
+import { Provider } from "react-redux";
+import store from "./redux/store";
+
+import Search from './containers/Search';
+import CompanyStructure from './containers/CompanyStructure';
+import Loader from './components/loader';
 
 export default () => {
 
   return (<Router>
-    <App />
+    <Provider store={store}>
+      <App />
+      <Loader />
+    </Provider>
   </Router>);
 }
 
 const App = withRouter((props: any) => <div>
-  <Tabs>
-    {/* <li className={props.location.pathname === "/companies-house" || props.location.pathname === "/" ? "active" : ""}>
-      <Link to="/companies-house">Companies House</Link>
-    </li> */}
-    <li className={props.location.pathname === "/kyckr" ? "active" : ""}>
-      <Link to="/kyckr">Kyckr</Link>
-    </li>
-    <li className={props.location.pathname === "/kyckr-filing-search" ? "active" : ""}>
-      <Link to="/kyckr-filing-search">Kyckr Filing Search</Link>
-    </li>
-    <li className={props.location.pathname === "/duedill" ? "active" : ""}>
-      <Link to="/duedill">Duedill</Link>
-    </li>
-    <li className={props.location.pathname.indexOf("/graph") > -1 ? "active" : ""}>
-      <Link to="/graph">Graph</Link>
-    </li>
-    <li className={props.location.pathname === "/combined" || props.location.pathname === "/" ? "active" : ""}>
-      <Link to="/combined">Combined</Link>
-    </li>
-    {/* <li className={props.location.pathname === "/trulioo" ? "active" : ""}>
-      <Link to="/trulioo">Trulioo</Link>
-    </li> */}
-  </Tabs>
   <Switch>
-    <Route exact path="/">
-      <Generic />
-    </Route>
+    <Route exact path="/"><Redirect to="/search" /></Route>
+
+    <Route exact path="/search"><Search /></Route>
+    <Route exact path="/company-structure"><CompanyStructure /></Route>
+
     {/* <Route path="/companies-house">
       <CompaniesHouse />
     </Route> */}

@@ -4,13 +4,18 @@ const moment = require('moment');
 const validateJS = require('validate.js');
 const { fetchGoogleSheet } = require('../google/fetchSheet');
 
+type Value = any;
+type Options = { [key: string]: any };
+type Key = string;
+type Attributes = { [key: string]: any };
+
 /*
 PLEASE NOTE
 All functions MUST take the same four props as they are validateJS custom validators
 (value, options, key, attributes)
 */
 
-const ageLessThanThree = (value: any, options: { [key: string]: any }, key: string, attributes: { [key: string]: any }) => {
+const ageLessThanThree = (value: Value, options: Options, key: Key, attributes: Attributes) => {
     const undefinedYear = attributes.incorporationDate === undefined || attributes.incorporationDate === null || attributes.incorporationDate === '';
     const younger = moment(attributes.incorporationDate) > moment.utc().subtract(3, 'years');
 
@@ -21,7 +26,7 @@ const ageLessThanThree = (value: any, options: { [key: string]: any }, key: stri
     }
 }
 
-const bearerSharesChecks = async (value: any, options: { [key: string]: any }, key: string, attributes: { [key: string]: any }) => {
+const bearerSharesChecks = async (value: Value, options: Options, key: Key, attributes: Attributes) => {
     const bearerInfo = await fetchGoogleSheet('1jg0qSvZLQQPHfL572BQKiHgolS91uyHFtznzX94OCrw');
     const bearerConfig = JSON.parse(bearerInfo).map((row: any) => {
         return { code: row['Alpha-2 code'], allowed: row['AllowBearerShares'], exception: row['CompanyTypeException'] }
@@ -72,7 +77,7 @@ const bearerSharesChecks = async (value: any, options: { [key: string]: any }, k
     return null;
 };
 
-const requiredIfValueEquals = (value: any, { search, match }: { [key: string]: any }, key: string, attributes: { [key: string]: any }) => {
+const requiredIfValueEquals = (value: Value, { search, match }: Options, key: Key, attributes: Attributes) => {
     if (!search) {
         return ': ERROR requiredIfValueEquals.options.search not defined';
     }
@@ -95,9 +100,28 @@ const requiredIfValueEquals = (value: any, { search, match }: { [key: string]: a
     }
 }
 
+const naicsChecks = async (value: Value, options: Options, key: Key, attributes: Attributes) => {
+    const { NAICSCode, SICCode } = attributes;
+
+    const naicsSheet = await fetchGoogleSheet('1K2dp6glyD6b0D7hTPBA_zFKjbqls0lrDbXoVra95dzo');
+    const naicsList = JSON.parse(naicsSheet).map((row: any) => {
+        return { code: row['NAICCode'], score: row['NAICScore'] }
+    });
+    if (!NAICSCode) {
+        if (!SICCode) {
+            return 'is required';
+        } else {
+
+        }
+    }
+
+    return null;
+};
+
 const validationFunctions = {
     ageLessThanThree,
     bearerSharesChecks,
+    naicsChecks,
     requiredIfValueEquals,
 };
 

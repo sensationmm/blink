@@ -5,15 +5,24 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: #fafafa;
 
-  --brand-primary: #d9fff9;
-  --brand-primary-alt: #f0fffd;
-  --brand-secondary: #eeeaff;
-  --brand-secondary-alt: #f8f7ff;
+  --brand-primary: #44D7B6;
+  --brand-secondary: #FF788B;
+  --brand-company: #D9FFF9;
+  --brand-person: #EEEAFF;
+  
   --basic-shadow: #ccc;
+  --basic-white: #ffffff;
+  --basic-text: #505050;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: normal;
 }

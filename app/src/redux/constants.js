@@ -1,0 +1,11 @@
+export const SET_VIEWPORT = 'SET_VIEWPORT';
+export const CHECK_BREAKPOINT = 'CHECK_BREAKPOINT';
+
+export const SHOW_LOADER = 'SHOW_LOADER';
+export const HIDE_LOADER = 'HIDE_LOADER';
+
+export const SET_WIDTH = 'SET_WIDTH';
+
+export const SET_COUNTRY = 'SET_COUNTRY';
+export const SET_COMPANY = 'SET_COMPANY';
+export const SET_COMPANY_STRUCTURE = 'SET_COMPANY_STRUCTURE';

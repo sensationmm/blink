@@ -14,6 +14,7 @@ const delay = 400;
 type SearchCompanyProps = {
     setSelectedCompany: Dispatch<any>,
     selectedCountry: any,
+    selectedCompany?: any,
     setSelectedCountry: any,
     setIgnoreDB: Function,
     ignoreDB: boolean,
@@ -28,9 +29,9 @@ type SearchCompanyProps = {
 
 export default function SearchCompany(props: SearchCompanyProps) {
 
-    const [query, setQuery] = useState("");
+    const [query, setQuery] = useState(props.selectedCompany ? props.selectedCompany.name : '');
     const [companies, setCompanies] = useState();
-    const [typeAheadListVisible, showTypeAheadList] = useState(true);
+    const [typeAheadListVisible, showTypeAheadList] = useState(false);
     const [status, setStatus] = useState();
     const [errors, setErrors] = useState();
     const [selectedCountry, setSelectedCountry] = useState(props.selectedCountry);
@@ -82,7 +83,7 @@ export default function SearchCompany(props: SearchCompanyProps) {
         // console.log(selectedCountry)
 
         let res;
-        if (selectedCountry.value === "IT" || selectedCountry.value === "DE" || selectedCountry.value === "ES" || selectedCountry.value === "RO" ) {
+        if (selectedCountry.value === "IT" || selectedCountry.value === "DE" || selectedCountry.value === "ES" || selectedCountry.value === "RO") {
             // duedil don't do IT
             res = await kyckrSearchCompany(query, selectedCountry.value, "11fs-company-search");
 
@@ -97,7 +98,7 @@ export default function SearchCompany(props: SearchCompanyProps) {
         } else {
             let companies;
 
-            if (selectedCountry.value === "IT" || selectedCountry.value === "DE" || selectedCountry.value === "ES" || selectedCountry.value === "RO" ) {
+            if (selectedCountry.value === "IT" || selectedCountry.value === "DE" || selectedCountry.value === "ES" || selectedCountry.value === "RO") {
                 companies = res?.CompanySearchResult?.Companies?.CompanyDTO
             } else {
                 companies = res.companies
@@ -137,20 +138,26 @@ export default function SearchCompany(props: SearchCompanyProps) {
                 <input style={{ width: 100, padding: 0, margin: "0px 20px 30px" }} type="range" id="shareholderRange" value={props.shareholderRange} onChange={e => props.changeShareholderRange(parseInt(e.target.value))} name="shareholderRange" min="0" max="100" /><span>greater than: {props.shareholderRange} %</span>
             </>
             }
-            <InputWrapper>
-                <InputSt className="with-select" autoFocus onKeyUp={keyUp} placeholder="Company Search" onChange={(event: any) => setQuery(event.target.value)} type="text" value={query} />
-                {query && <Cancel className="with-select" onClick={clearCompany}>&times;</Cancel>}
-                <CountrySelector isMulti={false} value={selectedCountry} onChange={(country: any) => {
-                    setSelectedCountry(country)
-                    props.setSelectedCountry(country)
-                }}
-                />
 
+            <InputWrapper>
+                <div>
+                    <InputSt className="with-select" autoFocus onKeyUp={keyUp} placeholder="Company Search" onChange={(event: any) => setQuery(event.target.value)} type="text" value={query} />
+
+
+                    {companies && typeAheadListVisible && <ul>
+                        {companies.filter((company: any) => company.simplifiedStatus !== "Closed").splice(0, 10).map((company: any) => <li key={company.companyId} onClick={() => selectCompany(company)}>{company.name} {countries[company.countryCode] && countries[company.countryCode].icon} <span>({company.companyId})</span></li>)}
+                    </ul>
+                    }
+                </div>
+                <div>
+                    {query && <Cancel className="with-select" onClick={clearCompany}>&times;</Cancel>}
+                    <CountrySelector isMulti={false} value={selectedCountry} onChange={(country: any) => {
+                        setSelectedCountry(country)
+                        props.setSelectedCountry(country)
+                    }}
+                    />
+                </div>
             </InputWrapper>
-            {companies && typeAheadListVisible && <ul>
-                {companies.filter((company: any) => company.simplifiedStatus !== "Closed").splice(0, 10).map((company: any) => <li key={company.companyId} onClick={() => selectCompany(company)}>{company.name} {countries[company.countryCode] && countries[company.countryCode].icon} <span>({company.companyId})</span></li>)}
-            </ul>
-            }
         </TypeAhead>
 
     </>

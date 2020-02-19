@@ -8,6 +8,7 @@ export const OrgChart = styled.div`
     box-shadow: 0 0 10px var(--basic-shadow);
     border-radius: 10px;
     height: 70vh;
+    background: var(--basic-white);
 
     > div:first-of-type {
         width: 100% !important;

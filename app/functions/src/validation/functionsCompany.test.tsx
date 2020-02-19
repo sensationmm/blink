@@ -361,3 +361,7 @@ describe('requiredIfValueEquals()', () => {
         expect(valid).toBe(': ERROR requiredIfValueEquals.options.match not defined');
     });
 });
+
+describe('naicsChecks()', () => {
+
+});

@@ -53,11 +53,11 @@ export const Image = styled.div`
 `
 
 export const ImageCompany = styled(Image)`
-    background-color: var(--brand-primary);
+    background-color: var(--brand-company);
 `
 
 export const ImagePerson = styled(Image)`
-    background-color: var(--brand-secondary);
+    background-color: var(--brand-person);
 `
 
 export const Heading = styled.div`

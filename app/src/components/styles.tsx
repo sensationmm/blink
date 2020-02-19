@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import Select from "react-select";
 
 export const Tabs = styled.ul`
-
     padding: 0;
     margin: 0;
     width: 100%;
@@ -42,7 +41,7 @@ export const Tabs = styled.ul`
 `
 
 export const MainSt = styled.main`
-    padding: 10px;
+    padding: 0 30px 30px 30px;
 
     .pretty-json-container {
         margin-top: 20px;
@@ -50,9 +49,16 @@ export const MainSt = styled.main`
 `
 
 export const InputSt = styled.input`
-    padding: 10px;
+    padding: 0 0 10px 0;
     margin: 0;
     // width: 100%;
+    border-width: 0 0 2px 0;
+    background: none;
+    border-color: var(--brand-secondary);
+    width: 100%;
+    font-size: inherit;
+    outline: none;
+    min-height: 30px;
 `
 
 export const ButtonSt = styled.button`
@@ -77,22 +83,16 @@ export const FilterLabel = styled.label`
     float: left;
     z-index: 1;
     position: relative;
-
-    input {
-        float: left;
-        width: 20px;
-        margin-bottom: 20px;
-    }
 `
 
 export const Cancel = styled.span`
     width: 30px;
     height: 30px;
     position: absolute;
-    right: -5px;
+    right: 0px;
     top: calc(50% - 16px);
-    border: 1px solid #999;
-    color: #999;
+    border: 1px solid var(--brand-secondary);
+    color: var(--brand-secondary);
     border-radius: 50%;
     text-align: center;
     font-size: 22px;
@@ -100,49 +100,78 @@ export const Cancel = styled.span`
     cursor: pointer;
 
     &.with-select {
-        right: 275px;
+        right: 450px;
     }
 `
 
 export const CountrySelector = styled(Select)`
-    width: 250px;
+    width: 100%;
     float: ${props => props.float || "right"};
+
+    .react-select {
+
+        &__value-container {
+            padding: 0 0 10px 0;
+        }
+
+        &__control {
+            background: none;
+            border-radius: 0;
+            border-width: 0 0 2px 0;
+            border-color: var(--brand-secondary);
+
+            &:hover {
+                border-color: var(--brand-secondary);
+            }
+        }
+
+        &__indicator-separator {
+            display: none;
+        }
+
+        &__indicator {
+            padding: 10px 0 10px 10px;
+
+            svg {
+                fill: var(--brand-secondary);
+            }
+        }
+    }
+    
 `
 
 export const InputWrapper = styled.div`
     width: 100%;
     position: relative;
+    display: flex;
+
+    > div {
+        position: relative;
+        width: 40%;
+
+        &:first-child {
+            margin-right: 20%;
+        }
+    }
 `
 
 export const TypeAhead = styled.div`
-
     position: relative;
     margin: 20px auto;
     max-width: 800px;
-
-    input {
-        width: calc(100% - 22px);
-        padding: 20px;
-        font-size: 24px;
-        outline: none;
-
-        &.with-select {
-            width: calc(100% - 304px);
-        }
-    }
 
     ul {
         margin: 0 0 20px;
         padding: 0;
         position: absolute;
-        width: calc(100% - 260px);
-        background-color: #fff;
+        width: 100%;
+        background-color: none;
         z-index: 4;
 
         li {
             list-style-type: none;
             padding: 15px 20px;
-            border: 1px solid #ddd;
+            border: 1px solid var(--brand-secondary);
             border-bottom: none;
             width: calc(100% - 42px);
             cursor: pointer;
@@ -160,7 +189,7 @@ export const TypeAhead = styled.div`
                 border-top: none;
             }
             :last-child {
-                border: 1px solid #ddd;
+                border: 1px solid var(--brand-secondary);
             }
 
             :hover {

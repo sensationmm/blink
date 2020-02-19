@@ -7,7 +7,7 @@ import { withRouter } from "react-router-dom";
 
 import { CompanyData } from '../../utils/validation/request';
 import { blinkMarketList, blinkMarkets } from '../../utils/config/blink-markets';
-import { getByValue } from '../../utils/functions/getByValue';
+import getByValue from '../../utils/functions/getByValue';
 import { requestCompanyUBOStructure } from '../../utils/generic/request';
 
 import ProgressBar from '../progress-bar';
