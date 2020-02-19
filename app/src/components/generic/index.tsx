@@ -33,7 +33,7 @@ export default function Kyckr() {
         // { value: "DE", label: "Germany 🇩🇪" }
         { value: "GB", label: "United Kingdom 🇬🇧" }
     );
-    
+
     // const [selectedOfficer, setSelectedOfficer] = useState();
     const [ignoreDB, setIgnoreDB] = useState(false);
     // const [selectedSignificantPersons, setSelectedSignificantPersons] = useState();
@@ -75,16 +75,16 @@ export default function Kyckr() {
 
             if (companyVitals.httpCode !== 404 && companyVitals.httpCode !== 400) {
                 returnCompany = { ...returnCompany, ...companyVitals };
-            } 
-            
+            }
+
             const companyIndustries = await requestCompanyIndustries(company.companyId, countryCode.toLowerCase());
 
             if (companyIndustries.httpCode !== 404 && companyIndustries.httpCode !== 400) {
                 returnCompany = { ...returnCompany, ...companyIndustries };
-            } 
+            }
 
             setSelectedCompany(returnCompany)
-            
+
         }
     }
 
@@ -96,7 +96,7 @@ export default function Kyckr() {
 
         const { companyId, code, registrationAuthorityCode } = selectedCompany;
 
-        let searchCode =  companyId;
+        let searchCode = companyId;
 
         console.log(selectedCompany);
 
@@ -106,17 +106,17 @@ export default function Kyckr() {
 
 
         let UBOStructure = await requestCompanyUBOStructure(companyId, countryCode); // we always save with companyId, not a proprietary code
-        
-            console.log("UBOStructure", UBOStructure)
+
+        console.log("UBOStructure", UBOStructure)
         setCompanyStructure(UBOStructure);
-            setHackValue(Math.random())
+        setHackValue(Math.random())
 
         if (ignoreDB || UBOStructure === "not found") {
             console.log("company structure not found - begin build");
 
             // console.log(selectedCountry)
 
-            await saveCompanyStructure({ ...selectedCompany, searchName: selectedCompany?.name?.toLowerCase()}, ignoreDB);
+            await saveCompanyStructure({ ...selectedCompany, searchName: selectedCompany?.name?.toLowerCase() }, ignoreDB);
             console.log("saveCompanyStructure complete")
             await getCompanyProfile(companyId, searchCode, countryCode, registrationAuthorityCode, true);
             UBOStructure = await requestCompanyUBOStructure(companyId, countryCode);
@@ -134,7 +134,7 @@ export default function Kyckr() {
             const companyProfile = await requestCompanyProfile(companyId, searchCode, countryCode, orderReference(), (isNewSearch || ignoreDB), registrationAuthorityCode);
             if (companyProfile && companyProfile.shareholders) {
 
-                for (let i = 0; i < companyProfile.shareholders.length; i++) { 
+                for (let i = 0; i < companyProfile.shareholders.length; i++) {
                     if (companyProfile.shareholders[i].shareholderType === "C" && companyProfile.shareholders[i].companyId) {
 
                         const nextCompanyId = companyProfile.shareholders[i].companyId;
@@ -143,9 +143,9 @@ export default function Kyckr() {
                         await new Promise(async (next) => {
                             await getCompanyProfile(nextCompanyId, nextCompanySearchCode, countryCode, registrationAuthorityCode, isNewSearch);
                             next()
-                        })    
+                        })
                     }
-                        
+
                 }
 
                 // await Promise.all(companyProfile.shareholders.map(async (shareholder: any) => {
@@ -157,15 +157,15 @@ export default function Kyckr() {
                 //         await getCompanyProfile(nextCompanyId, nextCompanySearchCode, countryCode, registrationAuthorityCode, isNewSearch, companyProfile.entitiesAdded);
                 //     }
                 // }));
-            //     const UBOStructure = await requestCompanyUBOStructure(companyId, countryCode);
-            //     setCompanyStructure(UBOStructure);
-            //     setHackValue(Math.random())
+                //     const UBOStructure = await requestCompanyUBOStructure(companyId, countryCode);
+                //     setCompanyStructure(UBOStructure);
+                //     setHackValue(Math.random())
 
-            // }
-            // else {
-            //     const UBOStructure = await requestCompanyUBOStructure(companyId, countryCode);
-            //     setCompanyStructure(UBOStructure);
-            //     setHackValue(Math.random())
+                // }
+                // else {
+                //     const UBOStructure = await requestCompanyUBOStructure(companyId, countryCode);
+                //     setCompanyStructure(UBOStructure);
+                //     setHackValue(Math.random())
             }
         }
 
@@ -194,7 +194,6 @@ export default function Kyckr() {
                     showOnlyOrdinaryShareTypes={showOnlyOrdinaryShareTypes}
                     shareholderThreshold={shareholderThreshold}
                     companyStructure={companyStructure}
-                    showDirectors={showDirectors}
                 />
             }
 

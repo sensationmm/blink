@@ -151,7 +151,7 @@ const Search = (props: any) => {
 
     return (
         <MainSt>
-            <ScreeningStatus activeStep={'/search'} />
+            <ScreeningStatus />
 
             <div style={{ padding: '100px 0 300px 0' }}>
                 <CompanySearch

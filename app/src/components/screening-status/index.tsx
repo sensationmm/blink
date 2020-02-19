@@ -1,15 +1,18 @@
 import React from "react";
 import classNames from 'classnames';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
+import { RouteComponentProps } from "react-router";
 
 import getByValue from '../../utils/functions/getByValue';
 import ArrowBack from '../../svg/arrow-back.svg';
 import BlinkLogo from '../../svg/blink-logo.svg';
 
+import Box from '../../layout/box';
+
+
 import * as Styled from './styles';
 
-interface ScreeningStatusProps {
-    activeStep: string;
+interface ScreeningStatusProps extends RouteComponentProps {
     company?: string;
     country?: string;
 }
@@ -22,8 +25,9 @@ export const steps = [
     { label: 'Contact client', url: '/contact-client' },
 ];
 
-const ScreeningStatus: React.FC<ScreeningStatusProps> = ({ activeStep, company, country }) => {
-    const currentStep = steps.indexOf(getByValue(steps, 'url', activeStep));
+const ScreeningStatus: React.FC<ScreeningStatusProps> = ({ company, country, location }) => {
+    const path = location.pathname;
+    const currentStep = steps.indexOf(getByValue(steps, 'url', path));
     const prevStep = steps[currentStep - 1] || null;
 
     return (
@@ -47,15 +51,17 @@ const ScreeningStatus: React.FC<ScreeningStatusProps> = ({ activeStep, company, 
                 </Styled.Title> : <div />}
 
                 {company &&
-                    <Styled.CompanyInfo>
-                        <div>Company <span>{company}</span></div>
-                        <div>Country <span>{country}</span></div>
-                    </Styled.CompanyInfo>
+                    <Box>
+                        <Styled.CompanyInfo>
+                            <div>Company <span>{company}</span></div>
+                            <div>Country <span>{country}</span></div>
+                        </Styled.CompanyInfo>
+                    </Box>
                 }
             </Styled.Info>
         </Styled.Main >
     );
 };
 
-export default ScreeningStatus;
+export default withRouter(ScreeningStatus);
 

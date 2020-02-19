@@ -7,7 +7,6 @@ import { Items } from '../styles';
 
 type Props = {
     companyStructure: any,
-    showDirectors: boolean,
     showOnlyOrdinaryShareTypes: boolean,
     shareholderThreshold: number,
 }
@@ -15,7 +14,6 @@ type Props = {
 export default function SignificantPersons(props: Props) {
 
     const {
-        showDirectors,
         companyStructure,
         shareholderThreshold,
         showOnlyOrdinaryShareTypes,
@@ -27,7 +25,7 @@ export default function SignificantPersons(props: Props) {
         return list && list
             .map((item: any) => {
                 const company = distinctShareholders.find((distinctShareholder: any) => distinctShareholder.docId === item.docId);
-          
+
                 return {
                     ...item, isWithinShareholderThreshold: company && company.totalShareholding >= shareholderThreshold
                 }
@@ -39,13 +37,13 @@ export default function SignificantPersons(props: Props) {
                 }
                 return item
             })
-            // .filter((item: any) => {
-            //     if (!item.percentage) {
-            //         return item
-            //     } else if (item.percentage > shareholderThreshold) {
-            //         return item
-            //     }
-            // });
+        // .filter((item: any) => {
+        //     if (!item.percentage) {
+        //         return item
+        //     } else if (item.percentage > shareholderThreshold) {
+        //         return item
+        //     }
+        // });
     }
 
     return <>

@@ -2,6 +2,7 @@ import {
     SET_COMPANY,
     SET_COUNTRY,
     SET_COMPANY_STRUCTURE,
+    SET_OWNERSHIP_THRESHOLD,
 } from '../constants';
 
 export const setCompany = (company) => {
@@ -22,5 +23,12 @@ export const setCompanyStructure = (structure) => {
     return {
         type: SET_COMPANY_STRUCTURE,
         structure
+    }
+}
+
+export const setOwnershipThreshold = (threshold) => {
+    return {
+        type: SET_OWNERSHIP_THRESHOLD,
+        threshold
     }
 }

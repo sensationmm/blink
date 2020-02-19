@@ -3,10 +3,7 @@ import styled from 'styled-components';
 export const OrgChart = styled.div`
     display: flex;
     position: relative;
-    margin: 30px;
     text-align: center;
-    box-shadow: 0 0 10px var(--basic-shadow);
-    border-radius: 10px;
     height: 70vh;
     background: var(--basic-white);
 

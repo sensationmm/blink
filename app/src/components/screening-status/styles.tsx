@@ -44,6 +44,7 @@ export const NavItem = styled.div`
 export const Info = styled.div`
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin-bottom: 75px;
     padding: 0 30px;
 
@@ -65,14 +66,9 @@ export const Title = styled.div`
 `;
 
 export const CompanyInfo = styled.div`
-    background: var(--basic-white);
-    border-radius: 10px;
-    border: 1px solid var(--basic-shadow);
-    padding: 15px 30px;
     display: flex;
     align-items: center;
     color: var(--basic-shadow);
-    background: var(--basic-white);
 
     div {
         margin-right: 30px;
