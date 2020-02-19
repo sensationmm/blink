@@ -32,7 +32,7 @@ const CompanyStructure = (props: any) => {
             {companyStructure &&
                 <SignificantPersons
                     showOnlyOrdinaryShareTypes={showOnlyOrdinaryShareTypes}
-                    shareholderRange={shareholderRange}
+                    shareholderThreshold={shareholderRange}
                     companyStructure={companyStructure}
                     showDirectors={showDirectors}
                 />

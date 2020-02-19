@@ -16,7 +16,6 @@ import { MainSt } from "../components/styles";
 
 import ScreeningStatus from '../components/screening-status';
 import Button from '../components/button';
-import FullHeight from '../layout/full-height';
 import Actions from '../layout/actions';
 
 import { setCountry, setCompany, setCompanyStructure } from '../redux/actions/screening';
@@ -156,8 +155,8 @@ const Search = (props: any) => {
 
             <div style={{ padding: '100px 0 300px 0' }}>
                 <CompanySearch
-                    shareholderRange={shareholderRange}
-                    changeShareholderRange={changeShareholderRange}
+                    shareholderThreshold={shareholderRange}
+                    changeShareholderThreshold={changeShareholderRange}
                     toggleShowDirectors={toggleShowDirectors}
                     showDirectors={showDirectors}
                     toggleShowOnlyOrdinaryShareTypes={toggleShowOnlyOrdinaryShareTypes}
