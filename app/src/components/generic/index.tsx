@@ -41,7 +41,7 @@ export default function Kyckr() {
     const [showDirectors, toggleShowDirectors] = useState(true);
     const [showOnlyOrdinaryShareTypes, toggleShowOnlyOrdinaryShareTypes] = useState(false)
     const [hackValue, setHackValue] = useState(Math.random());
-    const [shareholderRange, changeShareholderRange] = useState(10);
+    const [shareholderThreshold, changeShareholderThreshold] = useState(10);
 
     // const knownPWSC: Array<string> = [];
 
@@ -175,8 +175,8 @@ export default function Kyckr() {
         <MainSt>
 
             <CompanySearch
-                shareholderRange={shareholderRange}
-                changeShareholderRange={changeShareholderRange}
+                shareholderThreshold={shareholderThreshold}
+                changeShareholderThreshold={changeShareholderThreshold}
                 toggleShowDirectors={toggleShowDirectors}
                 showDirectors={showDirectors}
                 toggleShowOnlyOrdinaryShareTypes={toggleShowOnlyOrdinaryShareTypes}
@@ -192,7 +192,7 @@ export default function Kyckr() {
             {companyStructure &&
                 <SignificantPersons
                     showOnlyOrdinaryShareTypes={showOnlyOrdinaryShareTypes}
-                    shareholderRange={shareholderRange}
+                    shareholderThreshold={shareholderThreshold}
                     companyStructure={companyStructure}
                     showDirectors={showDirectors}
                 />

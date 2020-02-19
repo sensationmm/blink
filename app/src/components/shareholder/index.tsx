@@ -13,11 +13,13 @@ interface IShareholderProps {
     showDetail?: (content: JSX.Element) => void;
     // docId: string,
     companyId?: string,
-    officialStatus?: string
+    officialStatus?: string,
+    isWithinShareholderThreshold: any,
 }
 
 const Shareholder = ({ name, shares, showDetail, type, 
     // docId, 
+    isWithinShareholderThreshold,
     companyId, officialStatus }: IShareholderProps) => {
     const ShareholderImage = type === 'P' ? Styled.ImagePerson : Styled.ImageCompany;
     const ShareholderLabel = type ? Styled.Label : Styled.Heading;
@@ -29,7 +31,7 @@ const Shareholder = ({ name, shares, showDetail, type,
     </>;
 
     return (
-        <Styled.Shareholder className={cx({ 'heading': !type }, { 'isCompany': type === 'C' }, { 'isPerson': type === 'P' })} onClick={() => showDetail ? showDetail(details) : null}>
+        <Styled.Shareholder className={cx({ 'heading': !type }, { 'isWithinShareholderThreshold': isWithinShareholderThreshold && type }, { 'isCompany': type === 'C' }, { 'isPerson': type === 'P' })} onClick={() => showDetail ? showDetail(details) : null}>
             <ShareholderImage className={!type ? 'large' : ''} style={{ backgroundImage: `url(${ShareholderIcon})` }} />
             {shares && <Styled.Shares>{shares.toFixed(2)}%</Styled.Shares>}
     <ShareholderLabel className={type}>{name}

@@ -15,6 +15,7 @@ body {
   --basic-shadow: #ccc;
   --basic-white: #ffffff;
   --basic-text: #505050;
+  --highlight: #8A70FF;
 }
 
 code {

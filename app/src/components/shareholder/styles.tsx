@@ -8,6 +8,7 @@ export const Shareholder = styled.div`
     transform: rotate(180deg);
     left: 3px;
     border-radius: 3px;
+    border: 2px solid transparent;
     box-shadow: 0px 0px 10px var(--basic-shadow);
     background: #fff;
     margin: 0 20px;
@@ -32,6 +33,11 @@ export const Shareholder = styled.div`
     &.isPerson:hover {
         background-color: var(--brand-secondary-alt);
         transform: rotate(180deg) scale(1.1);
+    }
+
+    &.isWithinShareholderThreshold {
+        box-shadow: 0px 0px 10px var(--highlight);
+        border: 2px solid var(--highlight);
     }
 `
 
