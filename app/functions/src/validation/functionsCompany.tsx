@@ -102,19 +102,19 @@ const requiredIfValueEquals = (value: Value, { search, match }: Options, key: Ke
 }
 
 const naicsChecks = async (value: Value, options: Options, key: Key, attributes: Attributes) => {
-    const { NAICSCode, SICCode } = attributes;
+    // const { NAICSCode, SICCode } = attributes;
 
-    const naicsSheet = await fetchGoogleSheet('1K2dp6glyD6b0D7hTPBA_zFKjbqls0lrDbXoVra95dzo');
-    const naicsList = JSON.parse(naicsSheet).map((row: any) => {
-        return { code: row['NAICCode'], score: row['NAICScore'] }
-    });
-    if (!NAICSCode) {
-        if (!SICCode) {
-            return 'is required';
-        } else {
+    // const naicsSheet = await fetchGoogleSheet('1K2dp6glyD6b0D7hTPBA_zFKjbqls0lrDbXoVra95dzo');
+    // const naicsList = JSON.parse(naicsSheet).map((row: any) => {
+    //     return { code: row['NAICCode'], score: row['NAICScore'] }
+    // });
+    // if (!NAICSCode) {
+    //     if (!SICCode) {
+    //         return 'is required';
+    //     } else {
 
-        }
-    }
+    //     }
+    // }
 
     return null;
 };
