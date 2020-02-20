@@ -2,7 +2,7 @@ export { }
 
 const moment = require('moment');
 const validateJS = require('validate.js');
-const { fetchGoogleSheet } = require('../google/fetchSheet');
+// const { fetchGoogleSheet } = require('../google/fetchSheet');
 
 type Value = any;
 type Options = { [key: string]: any };
