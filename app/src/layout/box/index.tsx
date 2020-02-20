@@ -6,14 +6,22 @@ import * as Styled from './styles';
 interface BoxProps {
     children: any;
     padded?: boolean;
+    paddedLarge?: boolean;
     centered?: boolean;
+    title?: string;
+    icon?: string;
 }
 
-const Box: React.FC<BoxProps> = ({ children, padded = true, centered = false }) => {
+const Box: React.FC<BoxProps> = ({ children, title, icon, padded = true, paddedLarge = false, centered = false }) => {
     return (
-        <Styled.Main className={classNames({ padded: padded }, { centered: centered })}>
-            {children}
-        </Styled.Main>
+        <div>
+            {(title || icon) && (
+                <Styled.Title>{icon && <img src={icon} />} {title}</Styled.Title>
+            )}
+            <Styled.Main className={classNames({ padded: padded }, { paddedLarge: paddedLarge }, { centered: centered })}>
+                {children}
+            </Styled.Main>
+        </div>
     );
 }
 

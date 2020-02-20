@@ -1,3 +1,4 @@
+import React from 'react';
 import { withKnobs } from '@storybook/addon-knobs';
 import { addDecorator, configure } from '@storybook/react';
 import StoryRouter from 'storybook-react-router';
@@ -12,6 +13,7 @@ const loadStories = () => {
 
 addDecorator(withKnobs);
 addDecorator(StoryRouter());
+addDecorator((story) => <div style={{ padding: '20px', background: '#fafafa' }}>{story()}</div>)
 
 // @ts-ignore
 global.__PATH_PREFIX__ = '';

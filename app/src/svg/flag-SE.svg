@@ -1,0 +1,31 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M12 24C18.6274 24 24 18.6274 24 12C24 5.37258 18.6274 0 12 0C5.37258 0 0 5.37258 0 12C0 18.6274 5.37258 24 12 24Z" fill="#D8D8D8"/>
+<mask id="mask0" mask-type="alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M12 24C18.6274 24 24 18.6274 24 12C24 5.37258 18.6274 0 12 0C5.37258 0 0 5.37258 0 12C0 18.6274 5.37258 24 12 24Z" fill="white"/>
+</mask>
+<g mask="url(#mask0)">
+<rect x="-4.89746" y="-0.489746" width="33.1776" height="24.9796" rx="3.38688" fill="white"/>
+<rect x="-2.01739" y="0.431827" width="32.9775" height="23.3086" rx="3.02279" fill="white" stroke="#F5F5F5" stroke-width="0.863654"/>
+<mask id="mask1" mask-type="alpha" maskUnits="userSpaceOnUse" x="-3" y="0" width="35" height="25">
+<rect x="-2.01739" y="0.431827" width="32.9775" height="23.3086" rx="3.02279" fill="white" stroke="white" stroke-width="0.863654"/>
+</mask>
+<g mask="url(#mask1)">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M-2.44922 8.05742H31.3919V0H-2.44922V8.05742Z" fill="#E03D52"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M-2.44922 24.1723H31.3919V16.1149H-2.44922V24.1723Z" fill="#5A9165"/>
+</g>
+<rect x="-5.83105" width="35.2653" height="25.1895" rx="4.32" fill="white"/>
+<mask id="mask2" mask-type="alpha" maskUnits="userSpaceOnUse" x="-6" y="0" width="36" height="26">
+<rect x="-5.83105" width="35.2653" height="25.1895" rx="4.32" fill="white"/>
+</mask>
+<g mask="url(#mask2)">
+<rect x="-4" width="34" height="24" fill="url(#pattern0)"/>
+</g>
+<path opacity="0.4" fill-rule="evenodd" clip-rule="evenodd" d="M-14.2858 39.5918C0.592042 39.5918 12.6529 27.5309 12.6529 12.653C12.6529 -2.22487 0.592042 -14.2858 -14.2858 -14.2858C-29.1637 -14.2858 -41.2246 -2.22487 -41.2246 12.653C-41.2246 27.5309 -29.1637 39.5918 -14.2858 39.5918Z" fill="#E5E5E5"/>
+</g>
+<defs>
+<pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
+<use xlink:href="#image0" transform="translate(0 -0.00595238) scale(0.0357143 0.0505952)"/>
+</pattern>
+<image id="image0" width="28" height="20" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAUCAYAAACeXl35AAAAkUlEQVRIDWOUqNnn9Y/x30yG//9lGLCAl+ETUUTFV+aj8InmMDI+YfrPlM6EzzKiDSNG4f//MiC7mHD5jBgzSFbz/78ME8maKNQwaiGFAYipne5Byvj/ss9/THfQToTuPhz+FjKK1ezGG4dUK0uhyWL4B+moD6leAjAxMDI+obqpuAwE1fqgap8uloIsY2RMAwB31icr/KYlegAAAABJRU5ErkJggg=="/>
+</defs>
+</svg>

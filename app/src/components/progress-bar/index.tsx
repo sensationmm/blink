@@ -8,11 +8,11 @@ interface ProgressBarProps {
     label?: string;
     value: number;
     total: number;
+    icon?: string | JSX.Element;
+    stacked?: boolean;
 }
 
-const ProgressBar = (props: ProgressBarProps) => {
-    const { large = false, label, value, total } = props;
-
+const ProgressBar: React.FC<ProgressBarProps> = ({ large = false, label, value, total, icon, stacked = false }) => {
     const fill = (value / total) * 100;
 
     const [fillPercent, setFillPercent] = useState(0);
@@ -27,13 +27,17 @@ const ProgressBar = (props: ProgressBarProps) => {
 
     return (
         <Styled.ProgressBar className={classNames({ large: large })}>
-            <Styled.Label>{label}</Styled.Label>
+            {icon && <Styled.Icon>{typeof icon === 'string' ? <img src={icon} /> : icon}</Styled.Icon>}
 
-            <Styled.Bar>
-                <Styled.Fill style={{ width: `${fillPercent}%` }} />
+            <Styled.Stacker className={classNames({ stacked: stacked })}>
+                <Styled.Label>{label}</Styled.Label>
 
-                {large && <Styled.Stat>{value}/{total} completed</Styled.Stat>}
-            </Styled.Bar>
+                <Styled.Bar>
+                    <Styled.Fill style={{ width: `${fillPercent}%` }} className={classNames({ warning: fillPercent < 50 })} />
+
+                    {large && <Styled.Stat>{value}/{total} completed</Styled.Stat>}
+                </Styled.Bar>
+            </Styled.Stacker>
 
             {!large && <Styled.Stat>{value}/{total}</Styled.Stat>}
         </Styled.ProgressBar>

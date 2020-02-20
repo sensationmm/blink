@@ -23,6 +23,7 @@ import store from "./redux/store";
 import Search from './containers/Search';
 import CompanyStructure from './containers/CompanyStructure';
 import CompanyReadiness from './containers/CompanyReadiness';
+import MissingData from './containers/MissingData';
 import Loader from './components/loader';
 
 export default () => {
@@ -42,6 +43,7 @@ const App = withRouter((props: any) => <div>
     <Route exact path="/search"><Search /></Route>
     <Route exact path="/company-structure"><CompanyStructure /></Route>
     <Route exact path="/company-readiness"><CompanyReadiness /></Route>
+    <Route exact path="/missing-data"><MissingData /></Route>
 
     {/* <Route path="/companies-house">
       <CompaniesHouse />
