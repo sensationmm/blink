@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -19,7 +18,7 @@ import { showLoader, hideLoader } from '../redux/actions/loader';
 import { MainSt } from "../components/styles";
 import * as Styled from './company-structure.styles';
 
-type market = 'all' | 'GB' | 'DE' | 'FR' | 'RO' | 'IT' | 'SE';
+type market = 'Core' | 'GB' | 'DE' | 'FR' | 'RO' | 'IT' | 'SE';
 type indexedObject = { [key: string]: any };
 
 const CompanyStructure = (props: any) => {
@@ -48,7 +47,7 @@ const CompanyStructure = (props: any) => {
         const rules = await validateCompany(company, 'GB')
 
         const marketCompletion = {
-            all: {} as indexedObject,
+            Core: {} as indexedObject,
             GB: {} as indexedObject,
             DE: {} as indexedObject,
             FR: {} as indexedObject,
@@ -57,9 +56,22 @@ const CompanyStructure = (props: any) => {
             SE: {} as indexedObject,
         };
 
-        Object.keys(rules).forEach((rule) => marketCompletion[rule as market] = { passed: rules[rule].passed, total: rules[rule].total });
+        const marketErrors = {
+            Core: {} as indexedObject,
+            GB: {} as indexedObject,
+            DE: {} as indexedObject,
+            FR: {} as indexedObject,
+            RO: {} as indexedObject,
+            IT: {} as indexedObject,
+            SE: {} as indexedObject,
+        };
+
+        Object.keys(rules).forEach((rule) => {
+            marketCompletion[rule as market] = { passed: rules[rule].passed, total: rules[rule].total };
+            marketErrors[rule as market] = rules[rule].errors;
+        });
         setCompletion(marketCompletion);
-        setErrors(rules.all.errors);
+        setErrors(marketErrors);
         hideLoader();
         props.history.push('/company-readiness')
     };
@@ -90,7 +102,7 @@ const CompanyStructure = (props: any) => {
 
                         {ultimateOwners.map((owner: any, count: number) => {
                             return (
-                                <ShareholderList name={owner.name} type={'P'} shares={owner.totalShareholding} />
+                                <ShareholderList key={`shareholder-${count}`} name={owner.name} type={'P'} shares={owner.totalShareholding} />
                             )
                         })}
                     </Box>

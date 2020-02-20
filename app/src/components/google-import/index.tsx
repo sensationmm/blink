@@ -33,12 +33,7 @@ const GoogleImport = () => {
             const marketRules = [] as Array<string>;
 
             if (row['Core'] !== '' && row['Core'] !== 'undefined' && row['Core'] !== undefined) {
-                marketRules.push('GB');
-                marketRules.push('DE');
-                marketRules.push('FR');
-                marketRules.push('RO');
-                marketRules.push('SE');
-                marketRules.push('IT');
+                marketRules.push('Core');
             }
 
             blinkMarketList.forEach((market: string) => {

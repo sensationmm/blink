@@ -13,6 +13,10 @@ export const Main = styled.div`
             border-bottom: 1px solid var(--basic-shadow);
         }
 
+        &:last-child {
+            border-bottom: 0;
+        }
+
         > div {
             display: flex;
             justify-content: center;

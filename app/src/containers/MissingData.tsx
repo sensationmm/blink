@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -8,11 +7,15 @@ import ScreeningStatus from '../components/screening-status';
 
 const MissingData = (props: any) => {
     const {
+        company,
         companyStructure,
+        validation,
     } = props;
 
-    if (!companyStructure) {
+    if (!company || !companyStructure) {
         return <Redirect to="/search" />;
+    } else if (!validation) {
+        return <Redirect to="/company-structure" />;
     }
 
     return (
@@ -26,8 +29,10 @@ const MissingData = (props: any) => {
 }
 
 const mapStateToProps = (state: any) => ({
+    company: state.screening.company,
     companyStructure: state.screening.companyStructure,
     ownershipThreshold: state.screening.ownershipThreshold,
+    validation: state.screening.validation,
 });
 
 export const RawComponent = MissingData;

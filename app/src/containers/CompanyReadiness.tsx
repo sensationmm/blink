@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -66,8 +65,8 @@ const CompanyReadiness = (props: any) => {
                         <ProgressBar
                             label={companyStructure.name}
                             icon={<Icon icon={CompanyIcon} size={'small'} />}
-                            value={completion['all'].passed}
-                            total={completion['all'].total}
+                            value={completion['Core'].passed}
+                            total={completion['Core'].total}
                             stacked
                         />
 
@@ -122,8 +121,8 @@ const CompanyReadiness = (props: any) => {
                                 <ProgressBar
                                     key={`bar-${count}`}
                                     label={marketInfo.name}
-                                    value={passed}
-                                    total={total}
+                                    value={passed + completion['Core'].passed}
+                                    total={total + completion['Core'].total}
                                     icon={marketInfo.flag}
                                 />
                             )
