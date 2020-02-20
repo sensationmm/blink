@@ -26,55 +26,56 @@ const ageLessThanThree = (value: Value, options: Options, key: Key, attributes: 
     }
 }
 
-const bearerSharesChecks = async (value: Value, options: Options, key: Key, attributes: Attributes) => {
-    const bearerInfo = await fetchGoogleSheet('1jg0qSvZLQQPHfL572BQKiHgolS91uyHFtznzX94OCrw');
-    const bearerConfig = JSON.parse(bearerInfo).map((row: any) => {
-        return { code: row['Alpha-2 code'], allowed: row['AllowBearerShares'], exception: row['CompanyTypeException'] }
-    });
-
-    const bearerSharesAllowed = (countryCode: string, type: string) => {
-        const data = bearerConfig.filter((item: any) => item.code === countryCode);
-        const allowed = data[0]
-            ? data[0].allowed === 'Y' || (type === data[0].exception || (Array.isArray(data[0].exception) && data[0].exception.indexOf(type) > -1))
-            : false;
-
-        return allowed;
-    }
-
-    const {
-        countryCode,
-        type,
-        companyAllowsBearerShares,
-        bearerSharesOutstanding,
-        bearerShareEvidenceLink,
-        bearerShareClientAttestation,
-        bearerShareRiskMitigationMethod
-    } = attributes;
-    let failedOn;
-
-    if (bearerSharesAllowed(countryCode, type)) {
-        if (!companyAllowsBearerShares) {
-            if (!validateJS.isDefined(bearerShareEvidenceLink)) {
-                failedOn = 'bearerShareEvidenceLink';
-            }
-        } else {
-            if (bearerSharesOutstanding > 10) {
-                if (!validateJS.isDefined(bearerShareRiskMitigationMethod)) {
-                    failedOn = 'bearerShareRiskMitigationMethod';
-                }
-            } else {
-                if (!validateJS.isDefined(bearerShareClientAttestation)) {
-                    failedOn = 'bearerShareClientAttestation';
-                }
-            }
-        }
-    }
-
-    if (failedOn === key) {
-        return 'is required';
-    }
-
+const bearerSharesChecks = /*async*/ (value: Value, options: Options, key: Key, attributes: Attributes) => {
     return null;
+    // const bearerInfo = await fetchGoogleSheet('1jg0qSvZLQQPHfL572BQKiHgolS91uyHFtznzX94OCrw');
+    // const bearerConfig = JSON.parse(bearerInfo).map((row: any) => {
+    //     return { code: row['Alpha-2 code'], allowed: row['AllowBearerShares'], exception: row['CompanyTypeException'] }
+    // });
+
+    // const bearerSharesAllowed = (countryCode: string, type: string) => {
+    //     const data = bearerConfig.filter((item: any) => item.code === countryCode);
+    //     const allowed = data[0]
+    //         ? data[0].allowed === 'Y' || (type === data[0].exception || (Array.isArray(data[0].exception) && data[0].exception.indexOf(type) > -1))
+    //         : false;
+
+    //     return allowed;
+    // }
+
+    // const {
+    //     countryCode,
+    //     type,
+    //     companyAllowsBearerShares,
+    //     bearerSharesOutstanding,
+    //     bearerShareEvidenceLink,
+    //     bearerShareClientAttestation,
+    //     bearerShareRiskMitigationMethod
+    // } = attributes;
+    // let failedOn;
+
+    // if (bearerSharesAllowed(countryCode, type)) {
+    //     if (!companyAllowsBearerShares) {
+    //         if (!validateJS.isDefined(bearerShareEvidenceLink)) {
+    //             failedOn = 'bearerShareEvidenceLink';
+    //         }
+    //     } else {
+    //         if (bearerSharesOutstanding > 10) {
+    //             if (!validateJS.isDefined(bearerShareRiskMitigationMethod)) {
+    //                 failedOn = 'bearerShareRiskMitigationMethod';
+    //             }
+    //         } else {
+    //             if (!validateJS.isDefined(bearerShareClientAttestation)) {
+    //                 failedOn = 'bearerShareClientAttestation';
+    //             }
+    //         }
+    //     }
+    // }
+
+    // if (failedOn === key) {
+    //     return 'is required';
+    // }
+
+    // return null;
 };
 
 const requiredIfValueEquals = (value: Value, { search, match }: Options, key: Key, attributes: Attributes) => {

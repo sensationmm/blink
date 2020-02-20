@@ -70,8 +70,6 @@ server.post('*/', function (req: any, res: any) {
 
         await Promise.all(responses)
 
-        // var responseObject = { ...response };
-
         return res.send(marketValidation);
     });
 });
