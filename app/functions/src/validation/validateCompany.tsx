@@ -15,7 +15,7 @@ validationCompanyKeys.forEach((key) => {
     validateJS.validate.validators[key] = validationCompany[key];
 });
 
-type market = 'all' | 'GB' | 'DE' | 'FR' | 'RO' | 'IT' | 'SE';
+type market = 'Core' | 'GB' | 'DE' | 'FR' | 'RO' | 'IT' | 'SE';
 type indexedObject = { [key: string]: any };
 
 server.post('*/', function (req: any, res: any) {
@@ -25,7 +25,7 @@ server.post('*/', function (req: any, res: any) {
     const ruleset = {} as indexedObject;
 
     const marketRulesets = {
-        all: {} as indexedObject,
+        Core: {} as indexedObject,
         GB: {} as indexedObject,
         DE: {} as indexedObject,
         FR: {} as indexedObject,
@@ -49,7 +49,7 @@ server.post('*/', function (req: any, res: any) {
             ruleset[ruleName] = rule[ruleName];
         });
 
-        marketRulesets.all = ruleset;
+        // marketRulesets.all = ruleset;
 
         const responses = marketsToValidate.map((market: market) => {
             validateJS.validate.async(company, marketRulesets[market], { cleanAttributes: false }).then(null, (errors: any) => {
@@ -69,8 +69,6 @@ server.post('*/', function (req: any, res: any) {
         })
 
         await Promise.all(responses)
-
-        // var responseObject = { ...response };
 
         return res.send(marketValidation);
     });

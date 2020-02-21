@@ -3,6 +3,7 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
+  letter-spacing: 1px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background: #fafafa;
@@ -11,8 +12,10 @@ body {
   --brand-secondary: #FF788B;
   --brand-company: #D9FFF9;
   --brand-person: #EEEAFF;
+  --brand-warning: #FFD521;
   
   --basic-shadow: #ccc;
+  --basic-black: #000000;
   --basic-white: #ffffff;
   --basic-text: #505050;
   --highlight: #8A70FF;

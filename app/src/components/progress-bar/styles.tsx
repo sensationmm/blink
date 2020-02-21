@@ -2,23 +2,29 @@ import styled from 'styled-components';
 
 export const Label = styled.div`
     width: 150px;
-    text-align: right;
-    padding-right: 10px;
+    margin-right: 20px;
+`;
+
+export const Icon = styled.div`
+    margin-right: 30px;
+    img {
+        width: 26px;
+    }
 `;
 
 export const Bar = styled.div`
     position: relative;
-    width: calc(100% - 210px);
-    height: 20px;
-    border-radius: 10px;
+    width: calc(100% - 170px);
+    height: 4px;
+    border-radius: 2px;
     background: var(--basic-shadow);
     overflow: hidden;
 `;
 
 export const Stat = styled.div`
     width: 60px;
-    text-align: left;
-    padding-left: 10px;
+    text-align: right;
+    padding-left: 30px;
     z-index: 2;
     position: relative;
 `;
@@ -33,16 +39,41 @@ export const Fill = styled.div`
     border-radius: inherit;
     transition: all ease-out 0.5s;
     z-index: 1;
+
+    &.warning {
+        background: var(--brand-warning);
+    }
+`;
+
+export const Stacker = styled.div`
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: calc(100% - 60px);
+
+    &.stacked {
+        width: calc(100% - 60px);
+        flex-direction: column;
+        align-items: flex-start;
+
+        ${Bar} {
+            width: 100%;
+        }
+
+        ${Label} {
+            width: 100%;
+            margin-right: 0;
+            margin-bottom: 10px;
+        }
+    }
 `;
 
 export const ProgressBar = styled.div`
     position: relative;
     display: flex;
-    margin-bottom: 20px;
+    align-items: center;
 
     &.large {
-        margin-bottom: 40px;
-        
         ${Label} {
             display: none;
         }
@@ -58,12 +89,12 @@ export const ProgressBar = styled.div`
 
         ${Bar} {
             width: 100%;
-            height: 40px;
-            border-radius: 20px;
+            height: 20px;
+            border-radius: 10px;
         }
 
         ${Fill} {
-            border-radius: 20px;
+            border-radius: 10px;
         }
     }
 `;

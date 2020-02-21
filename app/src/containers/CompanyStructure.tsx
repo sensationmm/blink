@@ -1,36 +1,80 @@
-
 import React, { useState } from "react";
 import { Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import SignificantPersons from "../components/generic/persons-with-significant-control";
-import { MainSt } from "../components/styles";
-
-import ScreeningStatus from '../components/screening-status';
-import { setOwnershipThreshold } from '../redux/actions/screening';
-
-import Box from '../layout/box';
 import Button from '../components/button';
+import ScreeningStatus from '../components/screening-status';
 import ShareholderList from '../components/shareholder/list';
 import Actions from '../layout/actions';
+import Box from '../layout/box';
 import FlexRow from '../layout/flex-row';
 
+import { validateCompany } from '../utils/validation/request';
+
+import { setOwnershipThreshold, setCompletion, setErrors } from '../redux/actions/screening';
+import { showLoader, hideLoader } from '../redux/actions/loader';
+
+import { MainSt } from "../components/styles";
 import * as Styled from './company-structure.styles';
+
+type market = 'Core' | 'GB' | 'DE' | 'FR' | 'RO' | 'IT' | 'SE';
+type indexedObject = { [key: string]: any };
 
 const CompanyStructure = (props: any) => {
     const {
+        company,
         companyStructure,
         ownershipThreshold,
-        setOwnershipThreshold
+        setOwnershipThreshold,
+        setCompletion,
+        setErrors,
+        showLoader,
+        hideLoader,
     } = props;
 
     const [showOnlyOrdinaryShareTypes, toggleShowOnlyOrdinaryShareTypes] = useState(false)
 
-    if (!companyStructure) {
+    if (!company || !companyStructure) {
         return <Redirect to="/search" />;
     }
 
     const ultimateOwners = companyStructure.distinctShareholders.filter((shareholder: any) => shareholder.totalShareholding >= ownershipThreshold);
+
+    const getValidation = async () => {
+        showLoader();
+        setErrors({});
+        const rules = await validateCompany(company, 'GB')
+
+        const marketCompletion = {
+            Core: {} as indexedObject,
+            GB: {} as indexedObject,
+            DE: {} as indexedObject,
+            FR: {} as indexedObject,
+            RO: {} as indexedObject,
+            IT: {} as indexedObject,
+            SE: {} as indexedObject,
+        };
+
+        const marketErrors = {
+            Core: {} as indexedObject,
+            GB: {} as indexedObject,
+            DE: {} as indexedObject,
+            FR: {} as indexedObject,
+            RO: {} as indexedObject,
+            IT: {} as indexedObject,
+            SE: {} as indexedObject,
+        };
+
+        Object.keys(rules).forEach((rule) => {
+            marketCompletion[rule as market] = { passed: rules[rule].passed, total: rules[rule].total };
+            marketErrors[rule as market] = rules[rule].errors;
+        });
+        setCompletion(marketCompletion);
+        setErrors(marketErrors);
+        hideLoader();
+        props.history.push('/company-readiness')
+    };
 
     return (
         <MainSt>
@@ -58,7 +102,7 @@ const CompanyStructure = (props: any) => {
 
                         {ultimateOwners.map((owner: any, count: number) => {
                             return (
-                                <ShareholderList name={owner.name} type={'P'} shares={owner.totalShareholding} />
+                                <ShareholderList key={`shareholder-${count}`} name={owner.name} type={'P'} shares={owner.totalShareholding} />
                             )
                         })}
                     </Box>
@@ -74,18 +118,19 @@ const CompanyStructure = (props: any) => {
             }
 
             <Actions>
-                <Button onClick={() => props.history.push('/company-readiness')} label={'Next'} />
+                <Button onClick={getValidation} label={'Next'} />
             </Actions>
         </MainSt>
     )
 }
 
 const mapStateToProps = (state: any) => ({
+    company: state.screening.company,
     companyStructure: state.screening.companyStructure,
     ownershipThreshold: state.screening.ownershipThreshold,
 });
 
-const actions = { setOwnershipThreshold };
+const actions = { setOwnershipThreshold, setCompletion, setErrors, showLoader, hideLoader };
 
 export const RawComponent = CompanyStructure;
 

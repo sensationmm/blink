@@ -1,15 +1,9 @@
-
 import React, { useState, useEffect } from "react";
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import CompanySearch from '../components/generic/search-company'
-import {
-    requestCompanyProfile
-} from '../utils/kyckr/request';
-import {
-    getCompanyIdFromSearch,
-    saveCompanyStructure
-} from '../utils/generic/request';
+import { requestCompanyProfile } from '../utils/kyckr/request';
+import { saveCompanyStructure } from '../utils/generic/request';
 import { requestCompanyVitals, requestCompanyIndustries } from '../utils/duedill/request';
 import { requestCompanyUBOStructure } from '../utils/generic/request';
 import { MainSt } from "../components/styles";

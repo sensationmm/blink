@@ -32,6 +32,10 @@ const GoogleImport = () => {
         sheet.map((row: any) => {
             const marketRules = [] as Array<string>;
 
+            if (row['Core'] !== '' && row['Core'] !== 'undefined' && row['Core'] !== undefined) {
+                marketRules.push('Core');
+            }
+
             blinkMarketList.forEach((market: string) => {
                 if (row[market] !== '' && row[market] !== 'undefined' && row[market] !== undefined) {
                     marketRules.push(market);

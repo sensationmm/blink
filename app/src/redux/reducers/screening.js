@@ -2,7 +2,9 @@ import {
   SET_COUNTRY,
   SET_COMPANY,
   SET_COMPANY_STRUCTURE,
-  SET_OWNERSHIP_THRESHOLD
+  SET_OWNERSHIP_THRESHOLD,
+  SET_COMPLETION,
+  SET_ERRORS,
 } from '../constants';
 
 export const initialState = {
@@ -10,6 +12,7 @@ export const initialState = {
   companyStructure: null,
   country: { 'value': "GB", 'label': "United Kingdom 🇬🇧" },
   ownershipThreshold: 10,
+  validation: null
 };
 
 export const screening = (state = initialState, action) => {
@@ -36,6 +39,24 @@ export const screening = (state = initialState, action) => {
       return {
         ...state,
         ownershipThreshold: action.threshold,
+      }
+
+    case SET_COMPLETION:
+      return {
+        ...state,
+        validation: {
+          ...state.validation,
+          completion: action.completion,
+        }
+      }
+
+    case SET_ERRORS:
+      return {
+        ...state,
+        validation: {
+          ...state.validation,
+          errors: action.errors,
+        }
       }
 
     default:

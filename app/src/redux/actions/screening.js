@@ -3,6 +3,8 @@ import {
     SET_COUNTRY,
     SET_COMPANY_STRUCTURE,
     SET_OWNERSHIP_THRESHOLD,
+    SET_COMPLETION,
+    SET_ERRORS,
 } from '../constants';
 
 export const setCompany = (company) => {
@@ -30,5 +32,19 @@ export const setOwnershipThreshold = (threshold) => {
     return {
         type: SET_OWNERSHIP_THRESHOLD,
         threshold
+    }
+}
+
+export const setCompletion = (completion) => {
+    return {
+        type: SET_COMPLETION,
+        completion
+    }
+}
+
+export const setErrors = (errors) => {
+    return {
+        type: SET_ERRORS,
+        errors
     }
 }
