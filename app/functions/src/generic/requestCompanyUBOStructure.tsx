@@ -73,7 +73,7 @@ server.post('*/', async function (req: any, res: any) {
                 shareholder.totalShareholding = (totalShareholding / 100) * (shareholder.percentage / 100);
 
                 const distinctShareholderIndex = distinctShareholders.findIndex((distinctShareholder: any) =>
-                    distinctShareholder.name === shareholder.name || distinctShareholder.name === shareholder.fullName);
+                    distinctShareholder.docId === shareholder.source.path);
 
                 if (distinctShareholderIndex > -1) {
                     distinctShareholders[distinctShareholderIndex].totalShareholding += (totalShareholding / 100) * shareholder.percentage;
@@ -108,7 +108,7 @@ server.post('*/', async function (req: any, res: any) {
 
                     if (shareholder.shareholders) {
                         const index = distinctShareholders.findIndex((distinctShareholder: any) =>
-                            distinctShareholder.name === shareholder.name);
+                            distinctShareholder.docId === shareholder.docId);
                         if (index > -1) {
                             distinctShareholders.splice(index, 1);
                         }
