@@ -106,9 +106,9 @@ const MissingData = (props: any) => {
                                             <Styled.Field key={`missing-${count}`}>
                                                 <InputSt
                                                     placeholder={capitalize(prettify(key))}
-                                                    // onChange={(event: any) => setQuery(event.target.value)}
+                                                    onChange={() => { }}
                                                     type="text"
-                                                    value={company[key]}
+                                                    value={company[key] ? company[key] : ''}
                                                 />
                                                 <Styled.Error>{validation.errors.Core[key]}</Styled.Error>
                                             </Styled.Field>
@@ -156,9 +156,9 @@ const MissingData = (props: any) => {
                                                                         <Styled.Field key={`missing-${market}-${count}`}>
                                                                             <InputSt
                                                                                 placeholder={capitalize(prettify(error))}
-                                                                                // onChange={(event: any) => setQuery(event.target.value)}
+                                                                                onChange={() => { }}
                                                                                 type="text"
-                                                                                value={company[error]}
+                                                                                value={company[error] ? company[error] : ''}
                                                                             />
                                                                             <Styled.Error>{validation.errors[marketInfo.code][error]}</Styled.Error>
                                                                         </Styled.Field>
