@@ -18,6 +18,10 @@ export const Main = styled.div`
         text-align: center;
     }
 
+    &.shadowed {
+        box-shadow: 0 0 5px var(--basic-shadow);
+    }
+
     > div {
         margin-bottom: 20px;
 

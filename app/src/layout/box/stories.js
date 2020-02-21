@@ -27,6 +27,7 @@ storiesOf('Layout Elements|box', module)
             children={FooList(number('Num children', 2))}
             padded={boolean('padded', true)}
             centered={boolean('centered', false)}
+            shadowed={boolean('shadowed', false)}
             title={text('title', '')}
             icon={select('icon', ['', IconSearch, IconLocation, IconTarget], '')}
         />
