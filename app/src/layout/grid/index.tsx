@@ -7,7 +7,7 @@ import Checkbox from '../../components/form-checkbox';
 import * as Styled from './styles';
 
 interface GridRowProps {
-    label: string;
+    label?: string;
     icon?: string | JSX.Element;
     values: Array<any>;
 }
@@ -20,7 +20,7 @@ interface GridProps {
 
 const Grid: React.FC<GridProps> = ({ labels, content, rowHeaderWidth }) => {
     let layout: Array<number> | undefined = [];
-    if (rowHeaderWidth) {
+    if (rowHeaderWidth || rowHeaderWidth === 0) {
         layout.push(rowHeaderWidth);
 
         const numCols = content[0].values.length;
@@ -50,10 +50,10 @@ const Grid: React.FC<GridProps> = ({ labels, content, rowHeaderWidth }) => {
                     return (
                         <FlexRow key={`row-${count}`} layout={layout}>
                             {spreadChildren(
-                                <Styled.RowHeader key={`row-${count}-header`}>
+                                item.label ? <Styled.RowHeader key={`row-${count}-header`}>
                                     {item.icon && <div>{typeof item.icon === 'string' ? <img src={item.icon} /> : item.icon}</div>}
                                     {item.label}
-                                </Styled.RowHeader>,
+                                </Styled.RowHeader> : <div />,
                                 item.values.map((value, iter) => {
                                     return <Checkbox key={`row-${count}-val-${iter}`} checked={value} />;
                                 })

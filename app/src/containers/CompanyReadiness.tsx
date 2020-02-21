@@ -60,7 +60,7 @@ const CompanyReadiness = (props: any) => {
             />
 
             <Blocks>
-                <Box title={'KYC'} icon={IconSearch} paddedLarge>
+                <Box title={'KYC'} icon={IconSearch} paddedLarge shadowed>
                     <Blocks>
                         <ProgressBar
                             label={companyStructure.name}
@@ -84,7 +84,7 @@ const CompanyReadiness = (props: any) => {
                     </Blocks>
                 </Box>
 
-                <Box title={'Screening'} icon={IconTarget} paddedLarge>
+                <Box title={'Screening'} icon={IconTarget} paddedLarge shadowed>
                     <Grid
                         labels={['AML Watchlist', 'Sanctions Screening', 'AML Red Flag List', 'Adverse Media', 'Senior Public Figure']}
                         content={[
@@ -111,7 +111,7 @@ const CompanyReadiness = (props: any) => {
                     />
                 </Box>
 
-                <Box title={'In-Country Requirements'} icon={IconLocation} paddedLarge>
+                <Box title={'In-Country Requirements'} icon={IconLocation} paddedLarge shadowed>
                     <Blocks>
                         {blinkMarketList.filter(item => { return completion[item].total }).map((market: any, count: number) => {
                             const { passed, total } = completion[market];

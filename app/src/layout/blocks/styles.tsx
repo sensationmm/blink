@@ -8,4 +8,10 @@ export const Blocks = styled.div`
             margin-bottom: 0;
         }
     }
+
+    &.small {
+        > div {
+            margin-bottom: 20px;
+        }
+    }
 `;

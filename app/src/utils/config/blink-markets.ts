@@ -5,7 +5,7 @@ import FlagRO from '../../svg/flag-RO.svg';
 import FlagIT from '../../svg/flag-IT.svg';
 import FlagSE from '../../svg/flag-SE.svg';
 
-const blinkMarkets = [
+export const blinkMarkets = [
     { code: 'GB', name: 'United Kingdom', flag: FlagGB },
     { code: 'DE', name: 'Germany', flag: FlagDE },
     { code: 'FR', name: 'France', flag: FlagFR },
@@ -14,6 +14,6 @@ const blinkMarkets = [
     { code: 'SE', name: 'Sweden', flag: FlagSE }
 ];
 
-const blinkMarketList = blinkMarkets.map(market => market.code);
+export const blinkMarketList = blinkMarkets.map(market => market.code);
 
-export { blinkMarkets, blinkMarketList };
+export type marketType = 'Core' | 'GB' | 'DE' | 'FR' | 'RO' | 'IT' | 'SE';
