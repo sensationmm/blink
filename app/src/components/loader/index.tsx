@@ -16,12 +16,14 @@ const Loader = (props: any) => {
         <div />
         <div />
       </div>
+      <Styled.Label>{props.label}</Styled.Label>
     </Styled.Loader>
   );
 };
 
 const mapStateToProps = (state: any) => ({
   loading: state.loader.isLoading,
+  label: state.loader.label
 });
 
 export default connect(mapStateToProps)(Loader);

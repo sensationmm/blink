@@ -5,6 +5,7 @@ import {
     SET_OWNERSHIP_THRESHOLD,
     SET_COMPLETION,
     SET_ERRORS,
+    EDIT_FIELD,
 } from '../constants';
 
 export const setCompany = (company) => {
@@ -46,5 +47,13 @@ export const setErrors = (errors) => {
     return {
         type: SET_ERRORS,
         errors
+    }
+}
+
+export const editField = (field, value) => {
+    return {
+        type: EDIT_FIELD,
+        field,
+        value
     }
 }

@@ -10,7 +10,7 @@ import Actions from '../layout/actions';
 import Box from '../layout/box';
 import FlexRow from '../layout/flex-row';
 
-import { validateCompany } from '../utils/validation/request';
+import { validateCompany, CompanyData } from '../utils/validation/request';
 
 import { setOwnershipThreshold, setCompletion, setErrors } from '../redux/actions/screening';
 import { showLoader, hideLoader } from '../redux/actions/loader';
@@ -20,6 +20,49 @@ import * as Styled from './company-structure.styles';
 
 type market = 'Core' | 'GB' | 'DE' | 'FR' | 'RO' | 'IT' | 'SE';
 type indexedObject = { [key: string]: any };
+
+export const onGetValidation = async (
+    showLoader: () => void,
+    setErrors: (src: object) => void,
+    companyStructure: CompanyData,
+    setCompletion: (src: object) => void,
+    hideLoader: () => void,
+    push: (target: string) => void,
+    redirect: string
+) => {
+    showLoader();
+    setErrors({});
+    const rules = await validateCompany(companyStructure, 'GB')
+
+    const marketCompletion = {
+        Core: {} as indexedObject,
+        GB: {} as indexedObject,
+        DE: {} as indexedObject,
+        FR: {} as indexedObject,
+        RO: {} as indexedObject,
+        IT: {} as indexedObject,
+        SE: {} as indexedObject,
+    };
+
+    const marketErrors = {
+        Core: {} as indexedObject,
+        GB: {} as indexedObject,
+        DE: {} as indexedObject,
+        FR: {} as indexedObject,
+        RO: {} as indexedObject,
+        IT: {} as indexedObject,
+        SE: {} as indexedObject,
+    };
+
+    Object.keys(rules).forEach((rule) => {
+        marketCompletion[rule as market] = { passed: rules[rule].passed, total: rules[rule].total };
+        marketErrors[rule as market] = rules[rule].errors;
+    });
+    setCompletion(marketCompletion);
+    setErrors(marketErrors);
+    hideLoader();
+    push(redirect)
+}
 
 const CompanyStructure = (props: any) => {
     const {
@@ -41,39 +84,16 @@ const CompanyStructure = (props: any) => {
 
     const ultimateOwners = companyStructure.distinctShareholders.filter((shareholder: any) => shareholder.totalShareholding >= ownershipThreshold);
 
-    const getValidation = async () => {
-        showLoader();
-        setErrors({});
-        const rules = await validateCompany(company, 'GB')
-
-        const marketCompletion = {
-            Core: {} as indexedObject,
-            GB: {} as indexedObject,
-            DE: {} as indexedObject,
-            FR: {} as indexedObject,
-            RO: {} as indexedObject,
-            IT: {} as indexedObject,
-            SE: {} as indexedObject,
-        };
-
-        const marketErrors = {
-            Core: {} as indexedObject,
-            GB: {} as indexedObject,
-            DE: {} as indexedObject,
-            FR: {} as indexedObject,
-            RO: {} as indexedObject,
-            IT: {} as indexedObject,
-            SE: {} as indexedObject,
-        };
-
-        Object.keys(rules).forEach((rule) => {
-            marketCompletion[rule as market] = { passed: rules[rule].passed, total: rules[rule].total };
-            marketErrors[rule as market] = rules[rule].errors;
-        });
-        setCompletion(marketCompletion);
-        setErrors(marketErrors);
-        hideLoader();
-        props.history.push('/company-readiness')
+    const getValidation = () => {
+        onGetValidation(
+            showLoader,
+            setErrors,
+            companyStructure,
+            setCompletion,
+            hideLoader,
+            props.history.push,
+            '/company-readiness'
+        );
     };
 
     return (

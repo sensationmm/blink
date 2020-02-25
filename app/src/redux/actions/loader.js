@@ -3,9 +3,10 @@ import {
   HIDE_LOADER,
 } from '../constants';
 
-export const showLoader = () => {
+export const showLoader = (label = 'Loading') => {
   return {
-    type: SHOW_LOADER
+    type: SHOW_LOADER,
+    label
   }
 }
 

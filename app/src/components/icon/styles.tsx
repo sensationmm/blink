@@ -29,4 +29,10 @@ export const Main = styled.div`
     &.person {
         background-color: var(--brand-person);
     }
+
+    &.button {
+        border: 0;
+        background: var(--brand-primary) center center no-repeat;
+        background-size: 60%;
+    }
 `;

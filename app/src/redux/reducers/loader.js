@@ -4,7 +4,8 @@ import {
 } from '../constants';
 
 export const initialState = {
-  isLoading: false
+  isLoading: false,
+  label: null
 };
 
 export const loader = (state = initialState, action) => {
@@ -13,12 +14,12 @@ export const loader = (state = initialState, action) => {
       return {
         ...initialState,
         isLoading: true,
+        label: action.label
       }
 
     case HIDE_LOADER:
       return {
         ...initialState,
-        isLoading: false,
       }
 
     default:

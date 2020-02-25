@@ -6,7 +6,7 @@ interface StatProps {
     icon: string;
     label: string;
     value: number;
-    total: number;
+    total?: number;
 }
 
 interface StatsProps {
@@ -18,7 +18,7 @@ const Stat: React.FC<StatProps> = ({ icon, label, value, total }) => {
         <Styled.Item>
             <Styled.Icon src={icon} alt={label} title={label} />
 
-            <Styled.Value>{value}/{total}</Styled.Value>
+            <Styled.Value>{value}{total && `/${total}`}</Styled.Value>
         </Styled.Item>
     )
 };

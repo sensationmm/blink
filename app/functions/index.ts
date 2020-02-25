@@ -79,6 +79,7 @@ exports.saveCompanyUBOStructure = require("./src/generic/saveCompanyUBOStructure
 exports.validateCompany = require("./src/validation/validateCompany");
 exports.addRule = require("./src/validation/addRule");
 exports.deleteAllRules = require("./src/validation/deleteAllRules");
+exports.editField = require('./src/validation/editField');
 
 // google
 exports.googleFetchSheet = require("./src/google/fetchSheet");

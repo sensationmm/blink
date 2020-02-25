@@ -5,6 +5,7 @@ import {
   SET_OWNERSHIP_THRESHOLD,
   SET_COMPLETION,
   SET_ERRORS,
+  EDIT_FIELD,
 } from '../constants';
 
 export const initialState = {
@@ -56,6 +57,15 @@ export const screening = (state = initialState, action) => {
         validation: {
           ...state.validation,
           errors: action.errors,
+        }
+      }
+
+    case EDIT_FIELD:
+      return {
+        ...state,
+        companyStructure: {
+          ...state.companyStructure,
+          [action.field]: action.value
         }
       }
 

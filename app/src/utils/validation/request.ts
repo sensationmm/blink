@@ -52,4 +52,21 @@ const deleteAllRules = async () => {
     return body.msg;
 }
 
-export { validateCompany, addRule, deleteAllRules };
+const editField = async (docId: string, field: string, value: any) => {
+    const response = await fetch(`${domain}/editField`, {
+        method: "POST",
+        mode: "cors",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            docId,
+            field,
+            value,
+        })
+    });
+    const body = await response.json();
+    return body.msg;
+}
+
+export { validateCompany, addRule, deleteAllRules, editField };

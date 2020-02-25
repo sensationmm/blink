@@ -23,7 +23,7 @@ export const Loader = styled.div`
   z-index: 100000;
   top: 0px;
   left: 0px;
-  background: rgba(0,0,0,0.2);
+  background: rgba(0, 0, 0, 0.4);
   width: 100vw;
   height: 100vh;
   
@@ -43,13 +43,24 @@ export const Loader = styled.div`
       opacity: 1;
       border-radius: 50%;
       border-color: var(--brand-primary);
-      -webkit-animation: ${ldsRipple} 0.7s cubic-bezier(0, 0.2, 0.8, 1) infinite;
-      animation: ${ldsRipple} 0.7s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+      -webkit-animation: ${ldsRipple} 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+      animation: ${ldsRipple} 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
   
       &:nth-child(2) {
-        -webkit-animation-delay: -0.35s;
-        animation-delay: -0.35s;
+        -webkit-animation-delay: -0.5s;
+        animation-delay: -0.5s;
       }
     }
   }
+`;
+
+export const Label = styled.div`
+  text-transform: uppercase;
+  color: var(--brand-primary);
+  font-weight: bold;
+  font-size: 1.6em;
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  top: calc(50% + 90px);
 `;

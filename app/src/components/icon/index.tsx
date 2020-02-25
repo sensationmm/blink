@@ -6,7 +6,7 @@ import * as Styled from './styles'
 interface IconProps {
     icon: string;
     full?: boolean;
-    style?: 'company' | 'person';
+    style?: 'company' | 'person' | 'button';
     size?: 'default' | 'small' | 'large';
 }
 
