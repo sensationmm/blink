@@ -8,6 +8,7 @@ const server = express();
 var soap = require('soap');
 const dueDilCompanySearch = require('../duedill/searchCompany').searchCompany;
 const dueDilCompanyVitals = require('../duedill/requestCompanyVitals').requestCompanyVitals;
+const bloombergSearchCompany = require('../bloomberg/searchCompany').searchCompany;
 
 server.use(cors());
 
@@ -30,6 +31,16 @@ const buildShareholderPerson = (shareholder: any) => {
         newShareholder.dateOfBirth = shareholder?.dateOfBirth;
     }
     return newShareholder;
+}
+
+const isCompanyByName = (name: string) => {
+    return name?.indexOf("gmbh") > -1 ||
+    name?.indexOf("hrb") > -1 ||
+    name?.indexOf("limited") > -1 ||
+    name?.indexOf("corporation") > -1 ||
+    name?.slice(name.length - 3) === " ag" ||  // bit weak?
+    name?.indexOf("ltd") > -1 ||
+    name?.indexOf("s.r.l") > -1
 }
 
 // -------------------------------------
@@ -118,50 +129,22 @@ const requestCompanyProfile = async (
         var args = { email: "terry.cordeiro@11fs.com", password: "6c72fde3", countryISOCode, companyCode: searchCode, orderReference, registrationAuthority, termsAndConditions: true };
 
         const auth = "Basic " + JSON.stringify({ "terry.cordeiro@11fs.com": "6c72fde3" })
-        // // const companyShareholdingsDocRef = shareholdingsRef.doc(companyCode)
-        // const companyOfficersDocRef = officersRef.doc(companyCode)
-        // const relationshipsRef = relationshipsCollection.doc(companyCode)
 
         const go = async () => {
-
-            // const companyShareholdingsDoc = await companyShareholdingsDocRef
-            //     .get()
-
-            // const companyOfficersDoc = await companyOfficersDocRef
-            //     .get()
-
-            // console.log("companyRelationshipsQuery", companyRelationshipsQuery)
-
             let parentCompanyIsInDB = false;
             // THE PARENT COMPANY
             const targetCompanyQuery = await companyCollection.where('companyId', '==', companyCode).get();
-
-
-            // console.log("targetCompanyQuery?.docs.length", targetCompanyQuery?.docs.length)
-
             let targetCompanyRef: any;
+            let targetCompany: any;
             if (targetCompanyQuery?.docs.length > 0) {
                 parentCompanyIsInDB = true;
                 targetCompanyRef = targetCompanyQuery?.docs[0].ref;
+                targetCompany = targetCompanyQuery?.docs[0].data();
             } else {
-                // add the company 
-                // get the ref  
-                // const obj = {
-                //     companyId: companyCode,
-                //     name: "new Co",
-                //     searchName: "new co"
-                // };
-                // const targetCompany = await companyCollection.add(obj, { merge: true })
-                // targetCompanyRef = targetCompany.ref;
                 resolve("error, company not found");
             }
 
-            if (ignoreDB === "true" ||
-                !parentCompanyIsInDB
-                // || !companyShareholdingsDoc.exists || !companyOfficersDoc.exists
-            ) {
-
-
+            if (ignoreDB === "true" || !parentCompanyIsInDB) {
                 soap.createClient(url, { wsdl_headers: { Authorization: auth } }, function (err: any, client: any) {
                     client.CompanyProfile(args, async function (err: any, result: any) {
 
@@ -174,6 +157,25 @@ const requestCompanyProfile = async (
 
                         let shareholders: any = [];
                         let officers: any = [];
+
+                         // no shareholders so the company might be public..
+                         const companiesResult = await bloombergSearchCompany(targetCompany.searchName);
+                         const companies = JSON.parse(companiesResult)
+                         
+                         if (companies?.results) {
+                             const matchingCompanies = companies?.results.filter((company: any) => {
+                                 const matchingCompanyName = company.name.toLowerCase() === targetCompany.searchName
+                                 let matchingCountryCode = true;
+                                 if (targetCompany.countryCode) {
+                                    matchingCountryCode = targetCompany.countryCode.toLowerCase() === company.country.toLowerCase();
+                                 }
+
+                                 return matchingCompanyName && matchingCountryCode
+                             });
+                             if (matchingCompanies.length > 0 ) {
+                                 await targetCompanyRef.update({ bloomberg: matchingCompanies[0], updatedAt: new Date() }, { merge: true });
+                             }
+                         }
 
                         if (directorAndShareDetails) {
 
@@ -192,12 +194,7 @@ const requestCompanyProfile = async (
                                         if (!shareholder.shareholderType) {
                                             const shareholderName = shareholder.name;
                                             if (
-                                                // weak logic right now - will need to catch all of the company types
-                                                // german ltd
-                                                shareholderName?.toLowerCase().indexOf("gmbh") > -1 ||
-                                                shareholderName?.indexOf("HRB") > -1 ||
-                                                shareholderName?.indexOf("limited") > -1 ||
-                                                shareholderName?.toLowerCase().indexOf("s.r.l") > -1
+                                                isCompanyByName(shareholderName?.toLowerCase())
                                             ) {
                                                 shareholder.shareholderType = "C";
                                             } else {
@@ -244,7 +241,6 @@ const requestCompanyProfile = async (
                                         }
 
                                         if (shareholder.shareholderType === "C" || shareholder.shareholderType === "O") {
-
 
                                             let companiesQuery = companyCollection.where('searchName', '==', searchName);
                                             await companiesQuery.get().then(async (companies: any) => {
@@ -337,8 +333,7 @@ const requestCompanyProfile = async (
 
                                         if (
                                             sourceOfficer.birthdate === "" ||
-                                            sourceOfficer.name.toLowerCase().indexOf("limited") > -1) {
-                                            // is a it a company?
+                                            isCompanyByName(sourceOfficer?.name?.toLowerCase()))  {
 
                                             const searchResponse = await dueDilCompanySearch(searchName, "gb,ie,de,fr,ro,se"); // not 'es' or 'it'
                                             if (searchResponse) {
