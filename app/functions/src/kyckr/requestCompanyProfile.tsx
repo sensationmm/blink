@@ -35,12 +35,12 @@ const buildShareholderPerson = (shareholder: any) => {
 
 const isCompanyByName = (name: string) => {
     return name?.indexOf("gmbh") > -1 ||
-    name?.indexOf("hrb") > -1 ||
-    name?.indexOf("limited") > -1 ||
-    name?.indexOf("corporation") > -1 ||
-    name?.slice(name.length - 3) === " ag" ||  // bit weak?
-    name?.indexOf("ltd") > -1 ||
-    name?.indexOf("s.r.l") > -1
+        name?.indexOf("hrb") > -1 ||
+        name?.indexOf("limited") > -1 ||
+        name?.indexOf("corporation") > -1 ||
+        name?.slice(name.length - 3) === " ag" ||  // bit weak?
+        name?.indexOf("ltd") > -1 ||
+        name?.indexOf("s.r.l") > -1
 }
 
 // -------------------------------------
@@ -158,24 +158,33 @@ const requestCompanyProfile = async (
                         let shareholders: any = [];
                         let officers: any = [];
 
-                         // no shareholders so the company might be public..
-                         const companiesResult = await bloombergSearchCompany(targetCompany.searchName);
-                         const companies = JSON.parse(companiesResult)
-                         
-                         if (companies?.results) {
-                             const matchingCompanies = companies?.results.filter((company: any) => {
-                                 const matchingCompanyName = company.name.toLowerCase() === targetCompany.searchName
-                                 let matchingCountryCode = true;
-                                 if (targetCompany.countryCode) {
-                                    matchingCountryCode = targetCompany.countryCode.toLowerCase() === company.country.toLowerCase();
-                                 }
+                        // no shareholders so the company might be public..
+                        const companiesResult = await bloombergSearchCompany(targetCompany.searchName);
+                        const companies = JSON.parse(companiesResult)
 
-                                 return matchingCompanyName && matchingCountryCode
-                             });
-                             if (matchingCompanies.length > 0 ) {
-                                 await targetCompanyRef.update({ bloomberg: matchingCompanies[0], updatedAt: new Date() }, { merge: true });
-                             }
-                         }
+                        if (companies?.results) {
+                            const matchingCompanies = companies?.results.filter((company: any) => {
+                                const matchingCompanyName = company.name.toLowerCase() === targetCompany.searchName
+                                let matchingCountryCode = true;
+                                if (targetCompany.countryCode) {
+                                    matchingCountryCode = targetCompany.countryCode.toLowerCase() === company.country.toLowerCase();
+                                }
+
+                                return matchingCompanyName && matchingCountryCode
+                            });
+                            //  if (matchingCompanies.length > 0 ) {
+                            await targetCompanyRef.update({
+                                bloomberg: matchingCompanies.map((matchingCompany: any) => {
+                                    return {
+                                        securityType: matchingCompany.security_type,
+                                        resourceId: matchingCompany.resource_id,
+                                        tickerSymbol: matchingCompany.ticker_symbol
+
+                                    }
+                                }), updatedAt: new Date()
+                            }, { merge: true });
+                            //  }
+                        }
 
                         if (directorAndShareDetails) {
 
@@ -333,7 +342,7 @@ const requestCompanyProfile = async (
 
                                         if (
                                             sourceOfficer.birthdate === "" ||
-                                            isCompanyByName(sourceOfficer?.name?.toLowerCase()))  {
+                                            isCompanyByName(sourceOfficer?.name?.toLowerCase())) {
 
                                             const searchResponse = await dueDilCompanySearch(searchName, "gb,ie,de,fr,ro,se"); // not 'es' or 'it'
                                             if (searchResponse) {
