@@ -8,20 +8,16 @@ import { blinkMarketList } from '../../utils/config/blink-markets';
 
 import * as Styled from './styles';
 
-interface newFile extends Element {
-    files: Array<Blob>;
-}
-
 const GoogleImport = () => {
     const [added, setAdded] = useState(0);
     const [type, setType] = useState('');
     const [action, setAction] = useState('');
 
-    const importFile = async (type: string, sheetID: string, tabID: string) => {
+    const importFile = async (type: string, sheetID: string, tabID: string, collection: string) => {
         setType(type);
         setAction('Deleting existing');
 
-        await deleteAllRules();
+        await deleteAllRules(collection);
 
         const sheet = await fetchGoogleSheet(sheetID, tabID);
         const rulesList = [] as any;
@@ -53,7 +49,7 @@ const GoogleImport = () => {
         });
 
         await rulesList.map(async (rule: any) => {
-            const ruleAddFunc = await addRule(rule);
+            const ruleAddFunc = await addRule(rule, collection);
 
             count++;
             setAdded(count);
@@ -69,9 +65,15 @@ const GoogleImport = () => {
                     {((added === 0) ? <div>{action} {type}...</div> : <div>Added {added} {type}</div>)}
                 </Styled.Actions>}
 
-                <button
-                    onClick={() => importFile('Company Rules', '1Y3XdWL4TbiaY75HRc8xaTGdTsOVun2klbMsQ576mvy4', '901635867')}
-                >Import Company Rules</button>
+                <Styled.Buttons>
+                    <button
+                        onClick={() => importFile('Company Rules', '1Y3XdWL4TbiaY75HRc8xaTGdTsOVun2klbMsQ576mvy4', '901635867', 'companyRules')}
+                    >Import Company Rules</button>
+
+                    <button
+                        onClick={() => importFile('Person Rules', '1Y3XdWL4TbiaY75HRc8xaTGdTsOVun2klbMsQ576mvy4', '901635867', 'personRules')}
+                    >Import Person Rules</button>
+                </Styled.Buttons>
             </Styled.Import>
         </MainSt>
     );

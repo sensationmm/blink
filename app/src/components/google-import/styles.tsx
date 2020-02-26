@@ -16,4 +16,13 @@ export const Actions = styled.div`
     border: 2px solid red;
     padding: 30px;
     margin-bottom: 50px;
-`; 
+`;
+
+export const Buttons = styled.div`
+    display: flex;
+    justify-content: center;
+
+    > button {
+        margin: 0 10px;
+    }
+`;

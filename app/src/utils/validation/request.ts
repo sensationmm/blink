@@ -25,7 +25,7 @@ const validateCompany = async (company: CompanyData, countryID: string) => {
     return body;
 }
 
-const addRule = async (rule: any) => {
+const addRule = async (rule: any, collection: string) => {
     const response = await fetch(`${domain}/addRule`, {
         method: "POST",
         mode: "cors",
@@ -33,20 +33,24 @@ const addRule = async (rule: any) => {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            rule
+            rule,
+            collection
         })
     });
     const body = await response.json();
     return body;
 }
 
-const deleteAllRules = async () => {
+const deleteAllRules = async (collection: string) => {
     const response = await fetch(`${domain}/deleteAllRules`, {
         method: "POST",
         mode: "cors",
         headers: {
             'Content-Type': 'application/json'
-        }
+        },
+        body: JSON.stringify({
+            collection
+        })
     });
     const body = await response.json();
     return body.msg;

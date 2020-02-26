@@ -7,9 +7,9 @@ const express = require('express');
 const server = express();
 server.use(cors());
 server.post('*/', function (req: any, res: any) {
-    const { rule } = req.body;
+    const { rule, collection } = req.body;
 
-    admin.firestore().collection('companyRules')
+    admin.firestore().collection(collection)
         .add(rule)
         .then(function (docRef: any) {
             console.log("Rule written with ID: ", docRef.id);

@@ -7,8 +7,10 @@ const express = require('express');
 const server = express();
 server.use(cors());
 server.post('*/', function (req: any, res: any) {
+    const { collection } = req.body;
+
     console.log('Deleting all rules...')
-    const rules = admin.firestore().collection('companyRules');
+    const rules = admin.firestore().collection(collection);
 
     rules.get().then((list: any) => {
         list.forEach((doc: any) => {

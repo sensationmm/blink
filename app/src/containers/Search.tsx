@@ -148,7 +148,7 @@ const Search = (props: any) => {
             <ScreeningStatus />
 
             <Styled.Content>
-                <div style={{ padding: '100px 0 300px 0' }}>
+                <div style={{ padding: '100px 0 200px 0' }}>
                     <CompanySearch
                         shareholderThreshold={shareholderRange}
                         changeShareholderThreshold={changeShareholderRange}
