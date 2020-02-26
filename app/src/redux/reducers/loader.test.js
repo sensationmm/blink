@@ -15,12 +15,13 @@ describe('loader reducer', () => {
     }
 
     const expectedState = {
-      isLoading: false
+      isLoading: false,
+      label: null,
     }
 
     const newState = loader(state, action)
 
-    expect(expectedState).toEqual(newState)
+    expect(newState).toEqual(expectedState)
   })
 
   it('set isLoading to true', () => {
@@ -34,11 +35,12 @@ describe('loader reducer', () => {
     }
 
     const expectedState = {
-      isLoading: true
+      isLoading: true,
+      label: undefined,
     }
 
     const newState = loader(state, action)
 
-    expect(expectedState).toEqual(newState)
+    expect(newState).toEqual(expectedState)
   })
 })

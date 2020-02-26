@@ -12,7 +12,7 @@ describe('Loader actions', () => {
 
   test('showLoader returns an action with type `SHOW_LOADER`', () => {
     store.dispatch(showLoader());
-    expect(store.getActions()).toEqual([{ type: SHOW_LOADER }]);
+    expect(store.getActions()).toEqual([{ type: SHOW_LOADER, label: 'Loading' }]);
   });
 
   test('hideLoader returns an action with type `HIDE_LOADER`', () => {
