@@ -38,7 +38,7 @@ const MissingData = (props: any) => {
         company,
         companyStructure,
         ownershipThreshold,
-        validation,
+        validationCompany,
         saveEditField,
         showLoader,
         hideLoader,
@@ -48,12 +48,12 @@ const MissingData = (props: any) => {
 
     if (!company || !companyStructure) {
         return <Redirect to="/search" />;
-    } else if (!validation.completion) {
+    } else if (!validationCompany.completion) {
         return <Redirect to="/company-structure" />;
     }
 
-    const countryCompletion = Object.keys(validation.completion)
-        .map((item: any) => validation.completion[item].passed)
+    const countryCompletion = Object.keys(validationCompany.completion)
+        .map((item: any) => validationCompany.completion[item].passed)
         .reduce((total, current) => {
             if (current) {
                 return total + current;
@@ -62,8 +62,8 @@ const MissingData = (props: any) => {
             }
         });
 
-    const countryTotal = Object.keys(validation.completion)
-        .map((item: any) => validation.completion[item].total)
+    const countryTotal = Object.keys(validationCompany.completion)
+        .map((item: any) => validationCompany.completion[item].total)
         .reduce((total, current) => {
             if (current) {
                 return total + current;
@@ -95,7 +95,7 @@ const MissingData = (props: any) => {
         );
     };
 
-    const shareholders = companyStructure.distinctShareholders.filter((shareholder: any) => shareholder.totalShareholding > ownershipThreshold);
+    const shareholders = companyStructure.distinctShareholders.filter((shareholder: any) => shareholder.totalShareholding > ownershipThreshold && shareholder.shareholderType === 'P');
 
     return (
         <MainStyled.MainSt>
@@ -121,12 +121,12 @@ const MissingData = (props: any) => {
                                         {
                                             label: 'In-Country requirements',
                                             icon: IconLocation,
-                                            value: ((countryTotal - validation.completion.Core.total) - (countryCompletion - validation.completion.Core.passed)),
+                                            value: ((countryTotal - validationCompany.completion.Core.total) - (countryCompletion - validationCompany.completion.Core.passed)),
                                         },
                                         {
                                             label: 'KYC',
                                             icon: IconSearch,
-                                            value: validation.completion.Core.total - validation.completion.Core.passed,
+                                            value: validationCompany.completion.Core.total - validationCompany.completion.Core.passed,
                                         }
                                     ]} />
                                 </Styled.AccordionHeader>
@@ -138,9 +138,9 @@ const MissingData = (props: any) => {
                                         <FlexRowGrid
                                             cols={2}
                                             component={FormInput}
-                                            content={validation.errors.Core && Object.keys(validation.errors.Core).map(key => {
+                                            content={validationCompany.errors.Core && Object.keys(validationCompany.errors.Core).map(key => {
                                                 const label = capitalize(prettify(key));
-                                                let msg = String(validation.errors.Core[key]);
+                                                let msg = String(validationCompany.errors.Core[key]);
                                                 msg = capitalize(msg.replace(label, '').trim());
 
                                                 // if (companyStructure[key]) {
@@ -183,7 +183,7 @@ const MissingData = (props: any) => {
                                         {Object.keys(blinkMarketList)
                                             .filter(market => {
                                                 const marketInfo = blinkMarkets[market as any];
-                                                return validation.errors[marketInfo.code] && Object.keys(validation.errors[marketInfo.code]).length > 0;
+                                                return validationCompany.errors[marketInfo.code] && Object.keys(validationCompany.errors[marketInfo.code]).length > 0;
                                             })
                                             .map((market, count) => {
                                                 const marketInfo = blinkMarkets[market as any];
@@ -199,10 +199,10 @@ const MissingData = (props: any) => {
                                                             <FlexRowGrid
                                                                 cols={2}
                                                                 component={FormInput}
-                                                                content={Object.keys(validation.errors[marketInfo.code])
+                                                                content={Object.keys(validationCompany.errors[marketInfo.code])
                                                                     .map(key => {
                                                                         const label = capitalize(prettify(key));
-                                                                        let msg = String(validation.errors[marketInfo.code][key]);
+                                                                        let msg = String(validationCompany.errors[marketInfo.code][key]);
                                                                         msg = capitalize(msg.replace(label, '').trim());
 
                                                                         return {
@@ -252,7 +252,7 @@ const mapStateToProps = (state: any) => ({
     company: state.screening.company,
     companyStructure: state.screening.companyStructure,
     ownershipThreshold: state.screening.ownershipThreshold,
-    validation: state.screening.validation,
+    validationCompany: state.screening.validation.company,
 });
 
 const actions = { saveEditField, showLoader, hideLoader, setCompletion, setErrors };

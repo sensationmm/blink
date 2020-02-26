@@ -4,7 +4,7 @@ export const OrgChart = styled.div`
     display: flex;
     position: relative;
     text-align: center;
-    height: 70vh;
+    height: 50vh;
     background: var(--basic-white);
 
     > div:first-of-type {

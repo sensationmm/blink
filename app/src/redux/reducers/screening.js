@@ -13,7 +13,10 @@ export const initialState = {
   companyStructure: null,
   country: { 'value': "GB", 'label': "United Kingdom 🇬🇧" },
   ownershipThreshold: 10,
-  validation: null
+  validation: {
+    company: null,
+    person: null
+  }
 };
 
 export const screening = (state = initialState, action) => {
@@ -47,7 +50,10 @@ export const screening = (state = initialState, action) => {
         ...state,
         validation: {
           ...state.validation,
-          completion: action.completion,
+          [action.target]: {
+            ...state.validation[action.target],
+            completion: action.completion,
+          }
         }
       }
 
@@ -56,7 +62,10 @@ export const screening = (state = initialState, action) => {
         ...state,
         validation: {
           ...state.validation,
-          errors: action.errors,
+          [action.target]: {
+            ...state.validation[action.target],
+            errors: action.errors,
+          }
         }
       }
 

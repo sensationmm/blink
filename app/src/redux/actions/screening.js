@@ -36,17 +36,19 @@ export const setOwnershipThreshold = (threshold) => {
     }
 }
 
-export const setCompletion = (completion) => {
+export const setCompletion = (target, completion) => {
     return {
         type: SET_COMPLETION,
-        completion
+        completion,
+        target
     }
 }
 
-export const setErrors = (errors) => {
+export const setErrors = (target, errors) => {
     return {
         type: SET_ERRORS,
-        errors
+        errors,
+        target
     }
 }
 

@@ -40,17 +40,16 @@ const Readiness: React.FC<ReadinessProps> = ({
                         stacked
                     />
 
-                    {companyStructure.distinctShareholders.filter((shareholder: any) => shareholder.totalShareholding > ownershipThreshold)
-                        .map((shareholder: any, count: number) =>
-                            <ProgressBar
-                                key={`shareholder-${count}`}
-                                label={shareholder.name}
-                                icon={<Icon icon={PersonIcon} size={'small'} style={'person'} />}
-                                value={0}
-                                total={0}
-                                stacked
-                            />
-                        )}
+                    {shareholders.map((shareholder: any, count: number) =>
+                        <ProgressBar
+                            key={`shareholder-${count}`}
+                            label={shareholder.name}
+                            icon={<Icon icon={PersonIcon} size={'small'} style={'person'} />}
+                            value={0}
+                            total={0}
+                            stacked
+                        />
+                    )}
                 </Blocks>
             </Box>
 

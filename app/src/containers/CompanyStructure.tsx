@@ -24,9 +24,9 @@ type indexedObject = { [key: string]: any };
 
 export const onGetValidation = async (
     showLoader: () => void,
-    setErrors: (src: object) => void,
+    setErrors: (type: string, src: object) => void,
     companyStructure: CompanyData,
-    setCompletion: (src: object) => void,
+    setCompletion: (type: string, src: object) => void,
     hideLoader: () => void,
     push: (target: string) => void,
     redirect: string
@@ -58,8 +58,8 @@ export const onGetValidation = async (
         marketCompletion[rule as market] = { passed: rules[rule].passed, total: rules[rule].total };
         marketErrors[rule as market] = rules[rule].errors;
     });
-    setCompletion(marketCompletion);
-    setErrors(marketErrors);
+    setCompletion('company', marketCompletion);
+    setErrors('company', marketErrors);
     hideLoader();
     push(redirect)
 }
