@@ -1,4 +1,5 @@
 import React from "react";
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import * as MainStyled from "../components/styles";
@@ -9,8 +10,13 @@ import * as Styled from './screening-complete.styles';
 
 const ScreeningComplete = (props: any) => {
     const {
+        company,
         companyStructure,
     } = props;
+
+    if (!company || !companyStructure) {
+        return <Redirect to="/search" />;
+    }
 
     return (
         <MainStyled.MainSt>
@@ -30,6 +36,7 @@ const ScreeningComplete = (props: any) => {
 }
 
 const mapStateToProps = (state: any) => ({
+    company: state.screening.company,
     companyStructure: state.screening.companyStructure,
 });
 
