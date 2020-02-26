@@ -47,8 +47,9 @@ export const Info = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 75px;
+    margin: 0 auto 75px auto;
     padding: 0 30px;
+    max-width: var(--max-content);
 
     a {
         display: flex;

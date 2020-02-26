@@ -7,14 +7,15 @@ import ScreeningStatus from '../components/screening-status';
 import Button from '../components/button';
 import Actions from '../layout/actions';
 import Readiness from '../components/readiness';
-import ArrowRight from '../svg/arrow-right.svg';
+import IconEmail from '../svg/icon-email.svg';
 
-const CompanyReadiness = (props: any) => {
+const ContactClient = (props: any) => {
     const {
         company,
         companyStructure,
         validation,
-        ownershipThreshold
+        ownershipThreshold,
+        history
     } = props;
 
     if (!company || !companyStructure) {
@@ -43,7 +44,8 @@ const CompanyReadiness = (props: any) => {
                 />
 
                 <Actions>
-                    <Button onClick={() => props.history.push('/missing-data')} label={'Next'} icon={ArrowRight} />
+                    <Button onClick={() => history.push('/screening-complete')} label={'Send email to client'} icon={IconEmail} />
+                    <Button type={'secondary'} onClick={() => history.push('/missing-data')} label={'Back to edit'} />
                 </Actions>
             </Styled.ContentNarrow>
         </Styled.MainSt>
@@ -57,6 +59,6 @@ const mapStateToProps = (state: any) => ({
     validation: state.screening.validation,
 });
 
-export const RawComponent = CompanyReadiness;
+export const RawComponent = ContactClient;
 
-export default connect(mapStateToProps)(withRouter(CompanyReadiness));
+export default connect(mapStateToProps)(withRouter(ContactClient));

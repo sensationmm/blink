@@ -2,33 +2,50 @@ import styled from 'styled-components';
 
 export const Button = styled.button`
   position: relative;
+  height: 60px;
   padding: 20px 40px;
   min-width: 280px;
-  text-align: center;
   font-size: inherit;
   color: var(--basic-white);
-  background: var(--brand-secondary);
   transition: all 0.2s;
   border-radius: 30px;
   white-space: nowrap;
   box-shadow: none;
   border: none;
   cursor: pointer;
-
-  &:hover {
-    background: var(--brand-primary);
-  }
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  font-weight: bold;
 
   &.full {
     width: 100%;
   }
 
-  &.disabled {
-    background: var(--basic-shadow);
-    cursor: not-allowed;
+  &.primary {
+    background: var(--brand-secondary);
+  }
 
-    &:hover {
-      background: var(--basic-shadow);
-    }
+  &.secondary {
+    background: var(--basic-shadow);
+  }
+
+  &:hover {
+    background: var(--brand-primary);
+  }
+
+  &.hidden {
+    display: none;
+  }
+
+  &.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .button-icon {
+    margin-left: 20px;
+    height: 20px;
   }
 `;

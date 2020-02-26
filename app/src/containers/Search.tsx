@@ -6,7 +6,7 @@ import { requestCompanyProfile } from '../utils/kyckr/request';
 import { saveCompanyStructure } from '../utils/generic/request';
 import { requestCompanyVitals, requestCompanyIndustries } from '../utils/duedill/request';
 import { requestCompanyUBOStructure } from '../utils/generic/request';
-import { MainSt } from "../components/styles";
+import * as Styled from "../components/styles";
 
 import ScreeningStatus from '../components/screening-status';
 import Button from '../components/button';
@@ -144,31 +144,33 @@ const Search = (props: any) => {
     }
 
     return (
-        <MainSt>
+        <Styled.MainSt>
             <ScreeningStatus />
 
-            <div style={{ padding: '100px 0 300px 0' }}>
-                <CompanySearch
-                    shareholderThreshold={shareholderRange}
-                    changeShareholderThreshold={changeShareholderRange}
-                    toggleShowDirectors={toggleShowDirectors}
-                    showDirectors={showDirectors}
-                    toggleShowOnlyOrdinaryShareTypes={toggleShowOnlyOrdinaryShareTypes}
-                    showOnlyOrdinaryShareTypes={showOnlyOrdinaryShareTypes}
-                    setIgnoreDB={setIgnoreDB}
-                    ignoreDB={ignoreDB}
-                    showControls={false}
-                    selectedCompany={selectedCompany}
-                    setSelectedCompany={getCompanyVitalsAndSetSelectedCompany}
-                    selectedCountry={selectedCountry}
-                    setSelectedCountry={setCountry}
-                />
-            </div>
+            <Styled.Content>
+                <div style={{ padding: '100px 0 300px 0' }}>
+                    <CompanySearch
+                        shareholderThreshold={shareholderRange}
+                        changeShareholderThreshold={changeShareholderRange}
+                        toggleShowDirectors={toggleShowDirectors}
+                        showDirectors={showDirectors}
+                        toggleShowOnlyOrdinaryShareTypes={toggleShowOnlyOrdinaryShareTypes}
+                        showOnlyOrdinaryShareTypes={showOnlyOrdinaryShareTypes}
+                        setIgnoreDB={setIgnoreDB}
+                        ignoreDB={ignoreDB}
+                        showControls={false}
+                        selectedCompany={selectedCompany}
+                        setSelectedCompany={getCompanyVitalsAndSetSelectedCompany}
+                        selectedCountry={selectedCountry}
+                        setSelectedCountry={setCountry}
+                    />
+                </div>
 
-            <Actions>
-                <Button onClick={getStructure} disabled={!(selectedCompany && selectedCompany.companyId && selectedCountry)} />
-            </Actions>
-        </MainSt>
+                <Actions>
+                    <Button onClick={getStructure} disabled={!(selectedCompany && selectedCompany.companyId && selectedCountry)} />
+                </Actions>
+            </Styled.Content>
+        </Styled.MainSt>
     )
 }
 

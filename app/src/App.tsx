@@ -24,6 +24,8 @@ import Search from './containers/Search';
 import CompanyStructure from './containers/CompanyStructure';
 import CompanyReadiness from './containers/CompanyReadiness';
 import MissingData from './containers/MissingData';
+import ContactClient from './containers/ContactClient';
+import ScreeningComplete from './containers/ScreeningComplete';
 import Loader from './components/loader';
 
 export default () => {
@@ -44,6 +46,8 @@ const App = withRouter((props: any) => <div>
     <Route exact path="/company-structure"><CompanyStructure /></Route>
     <Route exact path="/company-readiness"><CompanyReadiness /></Route>
     <Route exact path="/missing-data"><MissingData /></Route>
+    <Route exact path="/contact-client"><ContactClient /></Route>
+    <Route exact path="/screening-complete"><ScreeningComplete /></Route>
 
     {/* <Route path="/companies-house">
       <CompaniesHouse />

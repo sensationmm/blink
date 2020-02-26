@@ -26,8 +26,9 @@ import PersonIcon from '../svg/individual-icon.svg';
 import IconSearch from '../svg/icon-search.svg';
 import IconLocation from '../svg/icon-location.svg';
 import IconTarget from '../svg/icon-target.svg';
+import ArrowRight from '../svg/arrow-right.svg';
 
-import { MainSt } from "../components/styles";
+import * as MainStyled from "../components/styles";
 import FormInput from '../components/form-input';
 
 import * as Styled from './missing-data.styles';
@@ -97,151 +98,153 @@ const MissingData = (props: any) => {
     const shareholders = companyStructure.distinctShareholders.filter((shareholder: any) => shareholder.totalShareholding > ownershipThreshold);
 
     return (
-        <MainSt>
+        <MainStyled.MainSt>
             <ScreeningStatus
                 company={companyStructure.name}
                 country={companyStructure.incorporationCountry}
             />
 
-            <Blocks>
-                <Box shadowed>
-                    <Accordion
-                        header={
-                            <Styled.AccordionHeader>
-                                <Styled.Label><Icon icon={CompanyIcon} size={'small'} />{companyStructure.name}</Styled.Label>
+            <MainStyled.ContentNarrow>
+                <Blocks>
+                    <Box shadowed>
+                        <Accordion
+                            header={
+                                <Styled.AccordionHeader>
+                                    <Styled.Label><Icon icon={CompanyIcon} size={'small'} />{companyStructure.name}</Styled.Label>
 
+                                    <Stats list={[
+                                        {
+                                            label: 'Screening',
+                                            icon: IconTarget,
+                                            value: 5,
+                                        },
+                                        {
+                                            label: 'In-Country requirements',
+                                            icon: IconLocation,
+                                            value: ((countryTotal - validation.completion.Core.total) - (countryCompletion - validation.completion.Core.passed)),
+                                        },
+                                        {
+                                            label: 'KYC',
+                                            icon: IconSearch,
+                                            value: validation.completion.Core.total - validation.completion.Core.passed,
+                                        }
+                                    ]} />
+                                </Styled.AccordionHeader>
+                            }
+                            content={
+                                <Blocks>
+                                    <Blocks gutter={'small'}>
+                                        <IconTitle title={'KYC'} icon={IconSearch} />
+                                        <FlexRowGrid
+                                            cols={2}
+                                            component={FormInput}
+                                            content={validation.errors.Core && Object.keys(validation.errors.Core).map(key => {
+                                                const label = capitalize(prettify(key));
+                                                let msg = String(validation.errors.Core[key]);
+                                                msg = capitalize(msg.replace(label, '').trim());
+
+                                                // if (companyStructure[key]) {
+                                                //     msg += ` (found: ${companyStructure[key]})`;
+                                                // }
+
+                                                return {
+                                                    stateKey: key,
+                                                    label,
+                                                    placeholder: msg,
+                                                    onChange: saveEditField,
+                                                    onBlur: onEditField,
+                                                    value: companyStructure[key] ? companyStructure[key] : '',
+                                                }
+                                            })}
+                                        />
+                                    </Blocks>
+
+                                    <Blocks gutter={'small'}>
+                                        <IconTitle title={'Screening'} icon={IconTarget} />
+                                        <Grid
+                                            labels={['AML Watchlist', 'Sanctions Screening', 'AML Red Flag List', 'Adverse Media', 'Senior Public Figure']}
+                                            content={[
+                                                {
+                                                    values: [
+                                                        companyStructure.AMLWatchListPassed,
+                                                        companyStructure.sanctionsScreeningPassed,
+                                                        companyStructure.AMLRedFlagListPassed,
+                                                        companyStructure.adverseMediaChecksPassed,
+                                                        null,
+                                                    ]
+                                                }
+                                            ]}
+                                            rowHeaderWidth={0}
+                                        />
+                                    </Blocks>
+
+                                    <Blocks gutter={'small'}>
+                                        <IconTitle title={'In-Country requirements'} icon={IconLocation} />
+                                        {Object.keys(blinkMarketList)
+                                            .filter(market => {
+                                                const marketInfo = blinkMarkets[market as any];
+                                                return validation.errors[marketInfo.code] && Object.keys(validation.errors[marketInfo.code]).length > 0;
+                                            })
+                                            .map((market, count) => {
+                                                const marketInfo = blinkMarkets[market as any];
+                                                return (
+                                                    <Accordion
+                                                        key={`accordion-${count}`}
+                                                        header={
+                                                            <Styled.AccordionHeader>
+                                                                <IconTitle title={marketInfo.name} icon={marketInfo.flag} />
+                                                            </Styled.AccordionHeader>
+                                                        }
+                                                        content={
+                                                            <FlexRowGrid
+                                                                cols={2}
+                                                                component={FormInput}
+                                                                content={Object.keys(validation.errors[marketInfo.code])
+                                                                    .map(key => {
+                                                                        const label = capitalize(prettify(key));
+                                                                        let msg = String(validation.errors[marketInfo.code][key]);
+                                                                        msg = capitalize(msg.replace(label, '').trim());
+
+                                                                        return {
+                                                                            stateKey: key,
+                                                                            label,
+                                                                            placeholder: msg,
+                                                                            onChange: saveEditField,
+                                                                            onBlur: onEditField,
+                                                                            value: companyStructure[key] ? companyStructure[key] : '',
+                                                                        }
+                                                                    })
+                                                                }
+                                                            />
+                                                        }
+                                                    />
+                                                )
+                                            })}
+                                    </Blocks>
+                                </Blocks>
+                            }
+                        />
+                    </Box>
+
+                    {shareholders.map((shareholder: any, count: number) =>
+                        <Box shadowed key={`shareholder-${count}`}>
+                            <Styled.AccordionHeader>
+                                <Styled.Label><Icon icon={PersonIcon} size={'small'} style={'person'} />{shareholder.name}</Styled.Label>
                                 <Stats list={[
-                                    {
-                                        label: 'Screening',
-                                        icon: IconTarget,
-                                        value: 5,
-                                    },
-                                    {
-                                        label: 'In-Country requirements',
-                                        icon: IconLocation,
-                                        value: ((countryTotal - validation.completion.Core.total) - (countryCompletion - validation.completion.Core.passed)),
-                                    },
-                                    {
-                                        label: 'KYC',
-                                        icon: IconSearch,
-                                        value: validation.completion.Core.total - validation.completion.Core.passed,
-                                    }
+                                    { label: 'Screening', icon: IconTarget, value: 5 },
+                                    { label: 'In-Country requirements', icon: IconLocation, value: 0, },
+                                    { label: 'KYC', icon: IconSearch, value: 0, }
                                 ]} />
                             </Styled.AccordionHeader>
-                        }
-                        content={
-                            <Blocks>
-                                <Blocks gutter={'small'}>
-                                    <IconTitle title={'KYC'} icon={IconSearch} />
-                                    <FlexRowGrid
-                                        cols={2}
-                                        component={FormInput}
-                                        content={validation.errors.Core && Object.keys(validation.errors.Core).map(key => {
-                                            const label = capitalize(prettify(key));
-                                            let msg = String(validation.errors.Core[key]);
-                                            msg = capitalize(msg.replace(label, '').trim());
+                        </Box>
+                    )}
+                </Blocks>
 
-                                            // if (companyStructure[key]) {
-                                            //     msg += ` (found: ${companyStructure[key]})`;
-                                            // }
-
-                                            return {
-                                                stateKey: key,
-                                                label,
-                                                placeholder: msg,
-                                                onChange: saveEditField,
-                                                onBlur: onEditField,
-                                                value: companyStructure[key] ? companyStructure[key] : '',
-                                            }
-                                        })}
-                                    />
-                                </Blocks>
-
-                                <Blocks gutter={'small'}>
-                                    <IconTitle title={'Screening'} icon={IconTarget} />
-                                    <Grid
-                                        labels={['AML Watchlist', 'Sanctions Screening', 'AML Red Flag List', 'Adverse Media', 'Senior Public Figure']}
-                                        content={[
-                                            {
-                                                values: [
-                                                    companyStructure.AMLWatchListPassed,
-                                                    companyStructure.sanctionsScreeningPassed,
-                                                    companyStructure.AMLRedFlagListPassed,
-                                                    companyStructure.adverseMediaChecksPassed,
-                                                    null,
-                                                ]
-                                            }
-                                        ]}
-                                        rowHeaderWidth={0}
-                                    />
-                                </Blocks>
-
-                                <Blocks gutter={'small'}>
-                                    <IconTitle title={'In-Country requirements'} icon={IconLocation} />
-                                    {Object.keys(blinkMarketList)
-                                        .filter(market => {
-                                            const marketInfo = blinkMarkets[market as any];
-                                            return validation.errors[marketInfo.code] && Object.keys(validation.errors[marketInfo.code]).length > 0;
-                                        })
-                                        .map((market, count) => {
-                                            const marketInfo = blinkMarkets[market as any];
-                                            return (
-                                                <Accordion
-                                                    key={`accordion-${count}`}
-                                                    header={
-                                                        <Styled.AccordionHeader>
-                                                            <IconTitle title={marketInfo.name} icon={marketInfo.flag} />
-                                                        </Styled.AccordionHeader>
-                                                    }
-                                                    content={
-                                                        <FlexRowGrid
-                                                            cols={2}
-                                                            component={FormInput}
-                                                            content={Object.keys(validation.errors[marketInfo.code])
-                                                                .map(key => {
-                                                                    const label = capitalize(prettify(key));
-                                                                    let msg = String(validation.errors[marketInfo.code][key]);
-                                                                    msg = capitalize(msg.replace(label, '').trim());
-
-                                                                    return {
-                                                                        stateKey: key,
-                                                                        label,
-                                                                        placeholder: msg,
-                                                                        onChange: saveEditField,
-                                                                        onBlur: onEditField,
-                                                                        value: companyStructure[key] ? companyStructure[key] : '',
-                                                                    }
-                                                                })
-                                                            }
-                                                        />
-                                                    }
-                                                />
-                                            )
-                                        })}
-                                </Blocks>
-                            </Blocks>
-                        }
-                    />
-                </Box>
-
-                {shareholders.map((shareholder: any, count: number) =>
-                    <Box shadowed key={`shareholder-${count}`}>
-                        <Styled.AccordionHeader>
-                            <Styled.Label><Icon icon={PersonIcon} size={'small'} style={'person'} />{shareholder.name}</Styled.Label>
-                            <Stats list={[
-                                { label: 'Screening', icon: IconTarget, value: 5 },
-                                { label: 'In-Country requirements', icon: IconLocation, value: 0, },
-                                { label: 'KYC', icon: IconSearch, value: 0, }
-                            ]} />
-                        </Styled.AccordionHeader>
-                    </Box>
-                )}
-            </Blocks>
-
-            <Actions>
-                <Button onClick={getValidation} label={'Return check with new info'} />
-            </Actions>
-        </MainSt>
+                <Actions>
+                    <Button onClick={getValidation} label={'Return check with new info'} icon={ArrowRight} />
+                </Actions>
+            </MainStyled.ContentNarrow>
+        </MainStyled.MainSt>
     )
 }
 

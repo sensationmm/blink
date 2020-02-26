@@ -15,7 +15,8 @@ import { validateCompany, CompanyData } from '../utils/validation/request';
 import { setOwnershipThreshold, setCompletion, setErrors } from '../redux/actions/screening';
 import { showLoader, hideLoader } from '../redux/actions/loader';
 
-import { MainSt } from "../components/styles";
+import ArrowRight from '../svg/arrow-right.svg';
+import * as MainStyled from "../components/styles";
 import * as Styled from './company-structure.styles';
 
 type market = 'Core' | 'GB' | 'DE' | 'FR' | 'RO' | 'IT' | 'SE';
@@ -31,7 +32,6 @@ export const onGetValidation = async (
     redirect: string
 ) => {
     showLoader();
-    setErrors({});
     const rules = await validateCompany(companyStructure, 'GB')
 
     const marketCompletion = {
@@ -97,50 +97,52 @@ const CompanyStructure = (props: any) => {
     };
 
     return (
-        <MainSt>
+        <MainStyled.MainSt>
             <ScreeningStatus
                 company={companyStructure.name}
                 country={companyStructure.incorporationCountry}
             />
 
-            {companyStructure &&
-                <FlexRow layout={[30, 70]}>
-                    <Box centered>
-                        <Styled.Controls>
-                            <Styled.ControlItem><div>{ownershipThreshold} <span>%</span></div> Ownership threshold</Styled.ControlItem>
-                            <input
-                                type="range"
-                                id="shareholderThreshold"
-                                value={ownershipThreshold}
-                                onChange={e => setOwnershipThreshold(parseInt(e.target.value))}
-                                name="shareholderThreshold"
-                                min="0"
-                                max="100"
+            <MainStyled.Content>
+                {companyStructure &&
+                    <FlexRow layout={[30, 70]}>
+                        <Box centered>
+                            <Styled.Controls>
+                                <Styled.ControlItem><div>{ownershipThreshold} <span>%</span></div> Ownership threshold</Styled.ControlItem>
+                                <input
+                                    type="range"
+                                    id="shareholderThreshold"
+                                    value={ownershipThreshold}
+                                    onChange={e => setOwnershipThreshold(parseInt(e.target.value))}
+                                    name="shareholderThreshold"
+                                    min="0"
+                                    max="100"
+                                />
+                                <Styled.ControlItem><div>{ultimateOwners.length}</div> Ultimate beneficial owners</Styled.ControlItem>
+                            </Styled.Controls>
+
+                            {ultimateOwners.filter((owner: any) => owner.shareholderType === 'P').map((owner: any, count: number) => {
+                                return (
+                                    <ShareholderList key={`shareholder-${count}`} name={owner.name} type={owner.shareholderType} shares={owner.totalShareholding} />
+                                )
+                            })}
+                        </Box>
+
+                        <Box padded={false}>
+                            <SignificantPersons
+                                showOnlyOrdinaryShareTypes={showOnlyOrdinaryShareTypes}
+                                shareholderThreshold={ownershipThreshold}
+                                companyStructure={companyStructure}
                             />
-                            <Styled.ControlItem><div>{ultimateOwners.length}</div> Ultimate beneficial owners</Styled.ControlItem>
-                        </Styled.Controls>
+                        </Box>
+                    </FlexRow>
+                }
 
-                        {ultimateOwners.map((owner: any, count: number) => {
-                            return (
-                                <ShareholderList key={`shareholder-${count}`} name={owner.name} type={'P'} shares={owner.totalShareholding} />
-                            )
-                        })}
-                    </Box>
-
-                    <Box padded={false}>
-                        <SignificantPersons
-                            showOnlyOrdinaryShareTypes={showOnlyOrdinaryShareTypes}
-                            shareholderThreshold={ownershipThreshold}
-                            companyStructure={companyStructure}
-                        />
-                    </Box>
-                </FlexRow>
-            }
-
-            <Actions>
-                <Button onClick={getValidation} label={'Next'} />
-            </Actions>
-        </MainSt>
+                <Actions>
+                    <Button onClick={getValidation} label={'Next'} icon={ArrowRight} />
+                </Actions>
+            </MainStyled.Content>
+        </MainStyled.MainSt>
     )
 }
 

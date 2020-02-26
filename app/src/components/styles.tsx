@@ -48,6 +48,16 @@ export const MainSt = styled.main`
     }
 `
 
+export const Content = styled.div`
+    max-width: var(--max-content);
+    margin: 0 auto;
+`;
+
+export const ContentNarrow = styled.div`
+    max-width: var(--max-content-narrow);
+    margin: 0 auto;
+`;
+
 export const InputSt = styled.input`
     padding: 0 0 10px 0;
     margin: 0;

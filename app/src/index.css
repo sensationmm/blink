@@ -19,6 +19,9 @@ body {
   --basic-white: #ffffff;
   --basic-text: #505050;
   --highlight: #8A70FF;
+
+  --max-content: 1200px;
+  --max-content-narrow: 920px;
 }
 
 code {

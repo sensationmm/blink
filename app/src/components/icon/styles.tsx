@@ -1,13 +1,14 @@
 import styled from 'styled-components';
 
 export const Main = styled.div`
+    position: relative;
     width: 50px;
     height: 50px;
     border-radius: 26px;
     border: 2px solid #000;
-    position: relative;
     background: center top 10px no-repeat;
     background-size: contain;
+    flex-shrink: 0;
 
     &.large {
         width: 100px;

@@ -4,46 +4,43 @@ import classNames from 'classnames'
 
 import * as Styled from './styles';
 
-const Button = props => {
-  const {
-    label,
-    onClick,
-    disabled,
-    fullWidth,
-    hidden,
-    icon,
-  } = props;
+interface ButtonProps {
+  label?: string;
+  onClick: () => void;
+  disabled?: boolean;
+  fullWidth?: boolean;
+  hidden?: boolean;
+  icon?: string;
+  type?: 'primary' | 'secondary';
+}
 
+const Button: React.FC<ButtonProps> = ({
+  label = 'Submit',
+  onClick,
+  disabled = false,
+  fullWidth = false,
+  hidden = false,
+  icon,
+  type = 'primary'
+}) => {
   return (
     <Styled.Button
       data-test='component-button'
       disabled={disabled}
-      style={{ display: hidden ? 'none' : 'block' }}
       className={classNames(
+        type,
         { 'full': fullWidth },
         { 'disabled': disabled },
+        { 'hidden': hidden }
       )}
       onClick={onClick}
     >
-      {label}
+      <span>{label}</span>
       {icon &&
         <img className="button-icon" alt="" src={icon} />
       }
     </Styled.Button>
   );
-};
-
-Button.propTypes = {
-  label: PropTypes.string,
-  onClick: PropTypes.func,
-  disabled: PropTypes.bool,
-  fullWidth: PropTypes.bool,
-};
-
-Button.defaultProps = {
-  label: 'Submit',
-  disabled: false,
-  fullWidth: false,
 };
 
 export default Button;
