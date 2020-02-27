@@ -85,7 +85,7 @@ const CompanyStructure = (props: any) => {
         return <Redirect to="/search" />;
     }
 
-    const ultimateOwners = companyStructure.distinctShareholders.filter((shareholder: any) => shareholder.totalShareholding >= ownershipThreshold);
+    const ultimateOwners = companyStructure.distinctShareholders.filter((shareholder: any) => shareholder.totalShareholding >= ownershipThreshold && shareholder.shareholderType === 'P');
 
     const getValidation = () => {
         onGetValidation(
@@ -124,7 +124,7 @@ const CompanyStructure = (props: any) => {
                                 <Styled.ControlItem><div>{ultimateOwners.length}</div> Ultimate beneficial owners</Styled.ControlItem>
                             </Styled.Controls>
 
-                            {ultimateOwners.filter((owner: any) => owner.shareholderType === 'P').map((owner: any, count: number) => {
+                            {ultimateOwners.map((owner: any, count: number) => {
                                 return (
                                     <ShareholderList key={`shareholder-${count}`} name={owner.name} type={owner.shareholderType} shares={owner.totalShareholding} />
                                 )

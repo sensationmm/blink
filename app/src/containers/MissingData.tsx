@@ -226,122 +226,147 @@ const MissingData = (props: any) => {
                         />
                     </Box>
 
-                    {shareholders.map((shareholder: any, count: number) =>
-                        <Box shadowed key={`shareholder-${count}`}>
-                            <Accordion
-                                header={
-                                    <Styled.AccordionHeader>
-                                        <Styled.Label><Icon icon={PersonIcon} size={'small'} style={'person'} />{shareholder.name}</Styled.Label>
-                                        <Stats list={[
-                                            {
-                                                label: 'Screening',
-                                                icon: IconTarget,
-                                                value: 5
-                                            },
-                                            {
-                                                label: 'In-Country requirements',
-                                                icon: IconLocation,
-                                                value: 0,
-                                            },
-                                            {
-                                                label: 'KYC',
-                                                icon: IconSearch,
-                                                value: Object.keys(validation[shareholder.docId].errors.Core).length,
-                                            }
-                                        ]} />
-                                    </Styled.AccordionHeader>
+                    {shareholders.map((shareholder: any, count: number) => {
+                        const marketCompletion = Object.keys(validation[shareholder.docId].completion)
+                            .filter((x, i, a) => a.indexOf(x) === i)
+                            .map((item: any) => validation[shareholder.docId].completion[item].passed)
+                            .reduce((total, current) => {
+                                if (current) {
+                                    return total + current;
+                                } else {
+                                    return total;
                                 }
-                                content={
-                                    <Blocks>
-                                        <Blocks gutter={'small'}>
-                                            <IconTitle title={'KYC'} icon={IconSearch} />
-                                            <FlexRowGrid
-                                                cols={2}
-                                                component={FormInput}
-                                                content={validation[shareholder.docId].errors.Core && Object.keys(validation[shareholder.docId].errors.Core).map(key => {
-                                                    const label = capitalize(prettify(key));
-                                                    let msg = String(validation[shareholder.docId].errors.Core[key]);
-                                                    msg = capitalize(msg.replace(label, '').trim());
+                            });
 
-                                                    return {
-                                                        stateKey: key,
-                                                        label,
-                                                        placeholder: msg,
-                                                        onChange: saveEditField,
-                                                        onBlur: onEditField,
-                                                        value: shareholder[key] ? shareholder[key] : '',
-                                                    }
-                                                })}
-                                            />
-                                        </Blocks>
-
-                                        <Blocks gutter={'small'}>
-                                            <IconTitle title={'Screening'} icon={IconTarget} />
-                                            <Grid
-                                                labels={['AML Watchlist', 'Sanctions Screening', 'AML Red Flag List', 'Adverse Media', 'Senior Public Figure']}
-                                                content={[
-                                                    {
-                                                        values: [
-                                                            shareholder.AMLWatchListPassed,
-                                                            shareholder.sanctionsScreeningPassed,
-                                                            shareholder.AMLRedFlagListPassed,
-                                                            shareholder.adverseMediaChecksPassed,
-                                                            null,
-                                                        ]
-                                                    }
-                                                ]}
-                                                rowHeaderWidth={0}
-                                            />
-                                        </Blocks>
-
-                                        <Blocks gutter={'small'}>
-                                            <IconTitle title={'In-Country requirements'} icon={IconLocation} />
-                                            {Object.keys(blinkMarketList)
-                                                .filter(market => {
-                                                    const marketInfo = blinkMarkets[market as any];
-                                                    return validation[shareholder.docId].errors[marketInfo.code] && Object.keys(validation[shareholder.docId].errors[marketInfo.code]).length > 0;
-                                                })
-                                                .map((market, count) => {
-                                                    const marketInfo = blinkMarkets[market as any];
-                                                    return (
-                                                        <Accordion
-                                                            key={`accordion-${count}`}
-                                                            header={
-                                                                <Styled.AccordionHeader>
-                                                                    <IconTitle title={marketInfo.name} icon={marketInfo.flag} />
-                                                                </Styled.AccordionHeader>
-                                                            }
-                                                            content={
-                                                                <FlexRowGrid
-                                                                    cols={2}
-                                                                    component={FormInput}
-                                                                    content={Object.keys(validation[shareholder.docId].errors[marketInfo.code])
-                                                                        .map(key => {
-                                                                            const label = capitalize(prettify(key));
-                                                                            let msg = String(validation[shareholder.docId].errors[marketInfo.code][key]);
-                                                                            msg = capitalize(msg.replace(label, '').trim());
-
-                                                                            return {
-                                                                                stateKey: key,
-                                                                                label,
-                                                                                placeholder: msg,
-                                                                                onChange: saveEditField,
-                                                                                onBlur: onEditField,
-                                                                                value: shareholder[key] ? shareholder[key] : '',
-                                                                            }
-                                                                        })
-                                                                    }
-                                                                />
-                                                            }
-                                                        />
-                                                    )
-                                                })}
-                                        </Blocks>
-                                    </Blocks>
+                        const marketTotal = Object.keys(validation[shareholder.docId].completion)
+                            .filter((x, i, a) => a.indexOf(x) === i)
+                            .map((item: any) => validation[shareholder.docId].completion[item].total)
+                            .reduce((total, current) => {
+                                if (current) {
+                                    return total + current;
+                                } else {
+                                    return total;
                                 }
-                            />
-                        </Box>
-                    )}
+                            });
+
+
+                        return (
+                            <Box shadowed key={`shareholder-${count}`}>
+                                <Accordion
+                                    header={
+                                        <Styled.AccordionHeader>
+                                            <Styled.Label><Icon icon={PersonIcon} size={'small'} style={'person'} />{shareholder.name}</Styled.Label>
+                                            <Stats list={[
+                                                {
+                                                    label: 'Screening',
+                                                    icon: IconTarget,
+                                                    value: 5
+                                                },
+                                                {
+                                                    label: 'In-Country requirements',
+                                                    icon: IconLocation,
+                                                    value: ((marketTotal - validation[shareholder.docId].completion.Core.total) - (marketCompletion - validation[shareholder.docId].completion.Core.passed)),
+                                                },
+                                                {
+                                                    label: 'KYC',
+                                                    icon: IconSearch,
+                                                    value: Object.keys(validation[shareholder.docId].errors.Core).length,
+                                                }
+                                            ]} />
+                                        </Styled.AccordionHeader>
+                                    }
+                                    content={
+                                        <Blocks>
+                                            <Blocks gutter={'small'}>
+                                                <IconTitle title={'KYC'} icon={IconSearch} />
+                                                <FlexRowGrid
+                                                    cols={2}
+                                                    component={FormInput}
+                                                    content={validation[shareholder.docId].errors.Core && Object.keys(validation[shareholder.docId].errors.Core).map(key => {
+                                                        const label = capitalize(prettify(key));
+                                                        let msg = String(validation[shareholder.docId].errors.Core[key]);
+                                                        msg = capitalize(msg.replace(label, '').trim());
+
+                                                        return {
+                                                            stateKey: key,
+                                                            label,
+                                                            placeholder: msg,
+                                                            onChange: saveEditField,
+                                                            onBlur: onEditField,
+                                                            value: shareholder[key] ? shareholder[key] : '',
+                                                        }
+                                                    })}
+                                                />
+                                            </Blocks>
+
+                                            <Blocks gutter={'small'}>
+                                                <IconTitle title={'Screening'} icon={IconTarget} />
+                                                <Grid
+                                                    labels={['AML Watchlist', 'Sanctions Screening', 'AML Red Flag List', 'Adverse Media', 'Senior Public Figure']}
+                                                    content={[
+                                                        {
+                                                            values: [
+                                                                shareholder.AMLWatchListPassed,
+                                                                shareholder.sanctionsScreeningPassed,
+                                                                shareholder.AMLRedFlagListPassed,
+                                                                shareholder.adverseMediaChecksPassed,
+                                                                null,
+                                                            ]
+                                                        }
+                                                    ]}
+                                                    rowHeaderWidth={0}
+                                                />
+                                            </Blocks>
+
+                                            <Blocks gutter={'small'}>
+                                                <IconTitle title={'In-Country requirements'} icon={IconLocation} />
+                                                {Object.keys(blinkMarketList)
+                                                    .filter(market => {
+                                                        const marketInfo = blinkMarkets[market as any];
+                                                        return validation[shareholder.docId].errors[marketInfo.code] && Object.keys(validation[shareholder.docId].errors[marketInfo.code]).length > 0;
+                                                    })
+                                                    .map((market, count) => {
+                                                        const marketInfo = blinkMarkets[market as any];
+                                                        return (
+                                                            <Accordion
+                                                                key={`accordion-${count}`}
+                                                                header={
+                                                                    <Styled.AccordionHeader>
+                                                                        <IconTitle title={marketInfo.name} icon={marketInfo.flag} />
+                                                                    </Styled.AccordionHeader>
+                                                                }
+                                                                content={
+                                                                    <FlexRowGrid
+                                                                        cols={2}
+                                                                        component={FormInput}
+                                                                        content={Object.keys(validation[shareholder.docId].errors[marketInfo.code])
+                                                                            .map(key => {
+                                                                                const label = capitalize(prettify(key));
+                                                                                let msg = String(validation[shareholder.docId].errors[marketInfo.code][key]);
+                                                                                msg = capitalize(msg.replace(label, '').trim());
+
+                                                                                return {
+                                                                                    stateKey: key,
+                                                                                    label,
+                                                                                    placeholder: msg,
+                                                                                    onChange: saveEditField,
+                                                                                    onBlur: onEditField,
+                                                                                    value: shareholder[key] ? shareholder[key] : '',
+                                                                                }
+                                                                            })
+                                                                        }
+                                                                    />
+                                                                }
+                                                            />
+                                                        )
+                                                    })}
+                                            </Blocks>
+                                        </Blocks>
+                                    }
+                                />
+                            </Box>
+                        )
+                    })}
                 </Blocks>
 
                 <Actions>

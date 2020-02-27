@@ -72,7 +72,13 @@ const Readiness: React.FC<ReadinessProps> = ({
                             return {
                                 label: shareholder.name,
                                 icon: <Icon icon={PersonIcon} size={'small'} style={'person'} />,
-                                values: [false, false, false, false, false]
+                                values: [
+                                    shareholder.AMLWatchListPassed,
+                                    shareholder.sanctionsScreeningPassed,
+                                    shareholder.AMLRedFlagListPassed,
+                                    shareholder.adverseMediaChecksPassed,
+                                    null,
+                                ]
                             }
                         })
                     ]}
