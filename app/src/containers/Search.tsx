@@ -6,14 +6,14 @@ import { requestCompanyProfile } from '../utils/kyckr/request';
 import { saveCompanyStructure } from '../utils/generic/request';
 import { requestCompanyVitals, requestCompanyIndustries } from '../utils/duedill/request';
 import { requestCompanyUBOStructure } from '../utils/generic/request';
-import * as Styled from "../components/styles";
 
 import ScreeningStatus from '../components/screening-status';
 import Button from '../components/button';
 import Actions from '../layout/actions';
-
 import { setCountry, setCompany, setCompanyStructure } from '../redux/actions/screening';
 import { showLoader, hideLoader } from '../redux/actions/loader';
+
+import * as Styled from "../components/styles";
 
 const Search = (props: any) => {
 

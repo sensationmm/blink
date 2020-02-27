@@ -6,6 +6,7 @@ import * as React from 'react';
 import Button from './';
 
 import ArrowRight from '../../svg/arrow-right.svg';
+import IconEmail from '../../svg/icon-email.svg';
 import '../../index.css';
 
 storiesOf('Components|Button', module).add('default', () => {
@@ -16,7 +17,7 @@ storiesOf('Components|Button', module).add('default', () => {
             onClick={action('onClick')}
             disabled={boolean('disabled', false)}
             fullWidth={boolean('fullWidth', false)}
-            icon={select('icon', [undefined, ArrowRight], undefined)}
+            icon={select('icon', [undefined, ArrowRight, IconEmail], undefined)}
         />
     );
 });

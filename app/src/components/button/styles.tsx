@@ -31,7 +31,7 @@ export const Button = styled.button`
     background: var(--basic-shadow);
   }
 
-  &:hover {
+  &:hover:not(.disabled) {
     background: var(--brand-primary);
   }
 

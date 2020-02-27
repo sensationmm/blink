@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames'
 
 import * as Styled from './styles';
@@ -34,6 +33,7 @@ const Button: React.FC<ButtonProps> = ({
         { 'hidden': hidden }
       )}
       onClick={onClick}
+      style={{ color: '#fff' }}
     >
       <span>{label}</span>
       {icon &&
