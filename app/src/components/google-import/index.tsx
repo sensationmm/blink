@@ -71,7 +71,7 @@ const GoogleImport = () => {
                     >Import Company Rules</button>
 
                     <button
-                        onClick={() => importFile('Person Rules', '1Y3XdWL4TbiaY75HRc8xaTGdTsOVun2klbMsQ576mvy4', '901635867', 'personRules')}
+                        onClick={() => importFile('Person Rules', '1Y3XdWL4TbiaY75HRc8xaTGdTsOVun2klbMsQ576mvy4', '610941360', 'personRules')}
                     >Import Person Rules</button>
                 </Styled.Buttons>
             </Styled.Import>

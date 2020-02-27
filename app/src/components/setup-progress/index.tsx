@@ -15,7 +15,7 @@ import ProgressBar from '../progress-bar';
 interface newFile extends Element {
     files: Array<Blob>;
 }
-type market = 'all' | 'GB' | 'DE' | 'FR' | 'RO' | 'IT' | 'SE';
+type market = 'Core' | 'GB' | 'DE' | 'FR' | 'RO' | 'IT' | 'SE';
 type indexedObject = { [key: string]: any };
 
 const SetupProgress = (props: any) => {
@@ -104,7 +104,9 @@ const SetupProgress = (props: any) => {
     }
 
     useEffect(() => {
-        getValidation(structure);
+        if (structure) {
+            getValidation(structure);
+        }
     }, [structure]);
 
     const getValidation = async (src: CompanyData) => {
@@ -112,10 +114,10 @@ const SetupProgress = (props: any) => {
         const rules = await validateCompany(src, 'GB')
 
         console.log(rules)
-        // const complete = isNaN(rules.all.completion) ? 0 : rules.all.completion * 100;
+        // const complete = isNaN(rules.Core.completion) ? 0 : rules.Core.completion * 100;
 
         const marketCompletion = {
-            all: {} as indexedObject,
+            Core: {} as indexedObject,
             GB: {} as indexedObject,
             DE: {} as indexedObject,
             FR: {} as indexedObject,
@@ -124,9 +126,9 @@ const SetupProgress = (props: any) => {
             SE: {} as indexedObject,
         };
 
-        Object.keys(rules).forEach((rule) => marketCompletion[rule as market] = { passed: rules[rule].passed, total: rules[rule].total });
+        Object.keys(rules.company).forEach((rule) => marketCompletion[rule as market] = { passed: rules.company[rule].passed, total: rules.company[rule].total });
         setCompletion(marketCompletion);
-        setErrors(rules.all.errors);
+        setErrors(rules.company.Core.errors);
     };
 
     const renderFeedback = () => {
@@ -138,7 +140,7 @@ const SetupProgress = (props: any) => {
             });
 
             return <ul style={{ listStyle: 'none' }}>{errorList}</ul>
-        } else if (completion.all.passed === completion.all.total) {
+        } else if (completion.Core.passed === completion.Core.total) {
             return <h3>Congratulations!</h3>
         }
     }
@@ -158,10 +160,10 @@ const SetupProgress = (props: any) => {
                     />
                 </div>
                 <div style={{ width: '45%', textAlign: 'center' }}>
-                    {completion.all && <div>
+                    {completion.Core && <div>
                         <h2>{structure.name}</h2>
 
-                        <ProgressBar large value={completion['all'].passed} total={completion['all'].total} />
+                        <ProgressBar large value={completion['Core'].passed} total={completion['Core'].total} />
 
                         {
                             blinkMarketList.map((market: any, count: number) => {
