@@ -10,6 +10,8 @@ const dueDilCompanySearch = require('../duedill/searchCompany').searchCompany;
 const dueDilCompanyVitals = require('../duedill/requestCompanyVitals').requestCompanyVitals;
 const bloombergSearchCompany = require('../bloomberg/searchCompany').searchCompany;
 
+const compositeExchangeCodes = require('../bloomberg/searchCompany');
+
 server.use(cors());
 
 const buildShareholderPerson = (shareholder: any) => {
@@ -173,15 +175,29 @@ const requestCompanyProfile = async (
                                 return matchingCompanyName && matchingCountryCode
                             });
                             //  if (matchingCompanies.length > 0 ) {
-                            await targetCompanyRef.update({
-                                bloomberg: matchingCompanies.map((matchingCompany: any) => {
-                                    return {
-                                        securityType: matchingCompany.security_type,
-                                        resourceId: matchingCompany.resource_id,
-                                        tickerSymbol: matchingCompany.ticker_symbol
 
-                                    }
-                                }), updatedAt: new Date()
+                            const bloombergExhangeData = matchingCompanies.map((matchingCompany: any) => {
+                                return {
+                                    securityType: matchingCompany.security_type,
+                                    resourceId: matchingCompany.resource_id,
+                                    tickerSymbol: matchingCompany.ticker_symbol
+
+                                }
+                            });
+
+                            let citiCovereredExchange = false
+                            bloombergExhangeData.forEach((exchange: any) => {
+                                const exchangeCode = exchange.tickerSymbol.split(":").pop();
+                                if (compositeExchangeCodes.indexOf(exchangeCode) > -1) {
+                                    citiCovereredExchange = true;
+                                }
+                                
+                            })
+
+                            await targetCompanyRef.update({
+                                bloomberg: bloombergExhangeData,
+                                updatedAt: new Date(),
+                                citiCovereredExchange
                             }, { merge: true });
                             //  }
                         }

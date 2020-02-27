@@ -1,4 +1,4 @@
-const domain = window.location.href.indexOf("localhost") > -1 ? "http://localhost:5001/blink-3b651/us-central1" : "https://us-central1-blink-3b651.cloudfunctions.net";
+const domain = window.location.href.indexOf("localhost") > -1 ? "http://localhost:5001/blink-3b651/us-central1" : "";
 
 // @TODO: move this somewhere more company-focused
 export interface CompanyData {

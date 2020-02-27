@@ -14,6 +14,54 @@
     "rewrites": [{
       "source": "**",
       "destination": "/index.html"
-    }]
+    }, 
+    {
+      "source": "/requestCompanyUBOStructure",
+      "function": "requestCompanyUBOStructure"
+    },
+    {
+      "source": "/saveCompanyUBOStructure",
+      "function": "requestCompanyUBOStructure"
+    },
+    {
+      "source": "/duedillSearchCompany",
+      "function": "duedillSearchCompany"
+    },
+    {
+      "source": "/duedillCompanyVitals",
+      "function": "duedillCompanyVitals"
+    },
+    {
+      "source": "/duedillCompanyIndustries",
+      "function": "duedillCompanyIndustries"
+    },
+    {
+      "source": "/kyckrSearchCompany",
+      "function": "kyckrSearchCompany"
+    },
+    {
+      "source": "/validateCompany",
+      "function": "validateCompany"
+    },
+    {
+      "source": "/addRule",
+      "function": "addRule"
+    },
+    {
+      "source": "/deleteAllRules",
+      "function": "deleteAllRules"
+    },
+    {
+      "source": "/editField",
+      "function": "editField"
+    },
+    {
+      "source": "/googleFetchSheet",
+      "function": "googleFetchSheet"
+    },
+    {
+      "source": "/signIn",
+      "function": "signIn"
+    } ]
   }
 }
