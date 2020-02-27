@@ -27,7 +27,7 @@ const ScreeningComplete = (props: any) => {
 
             <MainStyled.ContentNarrow>
                 <Styled.Main>
-                    <Styled.Image src={IconEmail} />
+                    <Styled.Image />
                     <h1>Email Sent</h1>
                 </Styled.Main>
             </MainStyled.ContentNarrow>

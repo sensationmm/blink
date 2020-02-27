@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import IconTick from '../../svg/tick.svg';
 
 export const Main = styled.div`
   font-size: 14px;
@@ -30,7 +31,7 @@ export const Checkbox = styled.div`
     width: 100%;
     height: 100%;
     background: var(--basic-white);
-    mask: url('../../svg/tick.svg') center center no-repeat;
+    mask: url(${IconTick}) center center no-repeat;
   }
 
   &.error {
