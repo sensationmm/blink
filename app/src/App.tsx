@@ -47,7 +47,7 @@ const App = withRouter((props: any) => {
     setIsAuthed(result);
   }
 
-  const [isAuthed, setIsAuthed] = useState(window.location.href.indexOf("localhost") > -1);
+  const [isAuthed, setIsAuthed] = useState(window.location.href.indexOf("localhost:") > -1);
 
   return !isAuthed ? <div className="sign-in"><button onClick={signIn}>Sign in</button></div> : <div>
     <Switch>
