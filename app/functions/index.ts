@@ -84,5 +84,5 @@ exports.editField = require('./src/validation/editField');
 // google
 exports.googleFetchSheet = require("./src/google/fetchSheet");
 
-
 exports.getIP = require("./src/generic/getIP");
+exports.signIn = require("./src/generic/signIn");

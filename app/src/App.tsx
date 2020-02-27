@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import {
   BrowserRouter as Router,
@@ -28,6 +28,8 @@ import ContactClient from './containers/ContactClient';
 import ScreeningComplete from './containers/ScreeningComplete';
 import Loader from './components/loader';
 
+import { requestSignIn } from './utils/generic/request';
+
 export default () => {
 
   return (<Router>
@@ -38,46 +40,53 @@ export default () => {
   </Router>);
 }
 
-const App = withRouter((props: any) => <div>
-  <Switch>
-    <Route exact path="/"><Redirect to="/search" /></Route>
+const App = withRouter((props: any) => {
 
-    <Route exact path="/search"><Search /></Route>
-    <Route exact path="/company-structure"><CompanyStructure /></Route>
-    <Route exact path="/company-readiness"><CompanyReadiness /></Route>
-    <Route exact path="/missing-data"><MissingData /></Route>
-    <Route exact path="/contact-client"><ContactClient /></Route>
-    <Route exact path="/screening-complete"><ScreeningComplete /></Route>
+  const signIn = async () => {
+    const result = await requestSignIn(prompt("Password"));
+    setIsAuthed(result);
+  }
 
-    {/* <Route path="/companies-house">
-      <CompaniesHouse />
-    </Route> */}
-    <Route path="/kyckr">
-      <Kyckr />
-    </Route>
-    <Route path="/kyckr-filing-search">
-      <KyckrFilingSearch />
-    </Route>
-    <Route path="/duedill">
-      <DueDill />
-    </Route>
-    <Route path="/trulioo">
-      <Trulioo />
-    </Route>
-    <Route path="/combined">
-      <Generic />
-    </Route>
-    <Route path="/graph/:companyId?/:countryCode?">
-      <Graph />
-    </Route>
-    <Route path="/progress/:companyId?">
-      <SetupProgress />
-    </Route>
-    <Route path="/import">
-      <Import />
-    </Route>
-    <Route path="*">
-      <div>Not found</div>
-    </Route>
-  </Switch>
-</div>)
+  const [isAuthed, setIsAuthed] = useState(window.location.href.indexOf("localhost") > -1);
+
+  return !isAuthed ? <div className="sign-in"><button onClick={signIn}>Sign in</button></div> : <div>
+    <Switch>
+      <Route exact path="/"><Redirect to="/search" /></Route>
+
+      <Route exact path="/search"><Search /></Route>
+      <Route exact path="/company-structure"><CompanyStructure /></Route>
+      <Route exact path="/company-readiness"><CompanyReadiness /></Route>
+      <Route exact path="/missing-data"><MissingData /></Route>
+      <Route exact path="/contact-client"><ContactClient /></Route>
+      <Route exact path="/screening-complete"><ScreeningComplete /></Route>
+
+      <Route path="/kyckr">
+        <Kyckr />
+      </Route>
+      <Route path="/kyckr-filing-search">
+        <KyckrFilingSearch />
+      </Route>
+      <Route path="/duedill">
+        <DueDill />
+      </Route>
+      <Route path="/trulioo">
+        <Trulioo />
+      </Route>
+      <Route path="/combined">
+        <Generic />
+      </Route>
+      <Route path="/graph/:companyId?/:countryCode?">
+        <Graph />
+      </Route>
+      <Route path="/progress/:companyId?">
+        <SetupProgress />
+      </Route>
+      <Route path="/import">
+        <Import />
+      </Route>
+      <Route path="*">
+        <div>Not found</div>
+      </Route>
+    </Switch>
+  </div>
+})
