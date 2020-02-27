@@ -15,7 +15,6 @@ export const initialState = {
   ownershipThreshold: 10,
   validation: {
     company: null,
-    person: null
   }
 };
 

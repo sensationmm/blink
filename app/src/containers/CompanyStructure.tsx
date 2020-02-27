@@ -34,32 +34,35 @@ export const onGetValidation = async (
     showLoader();
     const rules = await validateCompany(companyStructure, 'GB')
 
-    const marketCompletion = {
-        Core: {} as indexedObject,
-        GB: {} as indexedObject,
-        DE: {} as indexedObject,
-        FR: {} as indexedObject,
-        RO: {} as indexedObject,
-        IT: {} as indexedObject,
-        SE: {} as indexedObject,
-    };
+    Object.keys(rules).forEach(entity => {
+        const marketCompletion = {
+            Core: {} as indexedObject,
+            GB: {} as indexedObject,
+            DE: {} as indexedObject,
+            FR: {} as indexedObject,
+            RO: {} as indexedObject,
+            IT: {} as indexedObject,
+            SE: {} as indexedObject,
+        };
 
-    const marketErrors = {
-        Core: {} as indexedObject,
-        GB: {} as indexedObject,
-        DE: {} as indexedObject,
-        FR: {} as indexedObject,
-        RO: {} as indexedObject,
-        IT: {} as indexedObject,
-        SE: {} as indexedObject,
-    };
+        const marketErrors = {
+            Core: {} as indexedObject,
+            GB: {} as indexedObject,
+            DE: {} as indexedObject,
+            FR: {} as indexedObject,
+            RO: {} as indexedObject,
+            IT: {} as indexedObject,
+            SE: {} as indexedObject,
+        };
 
-    Object.keys(rules).forEach((rule) => {
-        marketCompletion[rule as market] = { passed: rules[rule].passed, total: rules[rule].total };
-        marketErrors[rule as market] = rules[rule].errors;
-    });
-    setCompletion('company', marketCompletion);
-    setErrors('company', marketErrors);
+        Object.keys(rules[entity]).forEach((market) => {
+            marketCompletion[market as market] = { passed: rules[entity][market].passed, total: rules[entity][market].total };
+            marketErrors[market as market] = rules[entity][market].errors;
+        });
+
+        setCompletion(entity, marketCompletion);
+        setErrors(entity, marketErrors);
+    })
     hideLoader();
     push(redirect)
 }
@@ -82,7 +85,7 @@ const CompanyStructure = (props: any) => {
         return <Redirect to="/search" />;
     }
 
-    const ultimateOwners = companyStructure.distinctShareholders.filter((shareholder: any) => shareholder.totalShareholding >= ownershipThreshold);
+    const ultimateOwners = companyStructure.distinctShareholders.filter((shareholder: any) => shareholder.totalShareholding >= ownershipThreshold && shareholder.shareholderType === 'P');
 
     const getValidation = () => {
         onGetValidation(
@@ -121,7 +124,7 @@ const CompanyStructure = (props: any) => {
                                 <Styled.ControlItem><div>{ultimateOwners.length}</div> Ultimate beneficial owners</Styled.ControlItem>
                             </Styled.Controls>
 
-                            {ultimateOwners.filter((owner: any) => owner.shareholderType === 'P').map((owner: any, count: number) => {
+                            {ultimateOwners.map((owner: any, count: number) => {
                                 return (
                                     <ShareholderList key={`shareholder-${count}`} name={owner.name} type={owner.shareholderType} shares={owner.totalShareholding} />
                                 )

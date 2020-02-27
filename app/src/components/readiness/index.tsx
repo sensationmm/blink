@@ -19,14 +19,14 @@ interface ReadinessProps {
     companyStructure: any;
     ownershipThreshold: any;
     shareholders: any;
-    completion: any;
+    validation: any;
 }
 
 const Readiness: React.FC<ReadinessProps> = ({
     companyStructure,
     ownershipThreshold,
     shareholders,
-    completion,
+    validation,
 }) => {
     return (
         <Blocks>
@@ -35,8 +35,8 @@ const Readiness: React.FC<ReadinessProps> = ({
                     <ProgressBar
                         label={companyStructure.name}
                         icon={<Icon icon={CompanyIcon} size={'small'} />}
-                        value={completion['Core'].passed}
-                        total={completion['Core'].total}
+                        value={validation.company.completion['Core'].passed}
+                        total={validation.company.completion['Core'].total}
                         stacked
                     />
 
@@ -45,8 +45,8 @@ const Readiness: React.FC<ReadinessProps> = ({
                             key={`shareholder-${count}`}
                             label={shareholder.name}
                             icon={<Icon icon={PersonIcon} size={'small'} style={'person'} />}
-                            value={0}
-                            total={0}
+                            value={validation[shareholder.docId].completion['Core'].passed}
+                            total={validation[shareholder.docId].completion['Core'].total}
                             stacked
                         />
                     )}
@@ -72,7 +72,13 @@ const Readiness: React.FC<ReadinessProps> = ({
                             return {
                                 label: shareholder.name,
                                 icon: <Icon icon={PersonIcon} size={'small'} style={'person'} />,
-                                values: [false, false, false, false, false]
+                                values: [
+                                    shareholder.AMLWatchListPassed,
+                                    shareholder.sanctionsScreeningPassed,
+                                    shareholder.AMLRedFlagListPassed,
+                                    shareholder.adverseMediaChecksPassed,
+                                    null,
+                                ]
                             }
                         })
                     ]}
@@ -85,15 +91,15 @@ const Readiness: React.FC<ReadinessProps> = ({
                     {blinkMarketList
                         // .filter(item => { return completion[item].total })
                         .map((market: any, count: number) => {
-                            const { passed = 0, total = 0 } = completion[market];
+                            const { passed = 0, total = 0 } = validation.company.completion[market];
                             const marketInfo = getByValue(blinkMarkets, 'code', market);
 
                             return (
                                 <ProgressBar
                                     key={`bar-${count}`}
                                     label={marketInfo.name}
-                                    value={passed + completion['Core'].passed}
-                                    total={total + completion['Core'].total}
+                                    value={passed + validation.company.completion['Core'].passed}
+                                    total={total + validation.company.completion['Core'].total}
                                     icon={marketInfo.flag}
                                 />
                             )

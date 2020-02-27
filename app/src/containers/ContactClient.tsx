@@ -13,18 +13,16 @@ const ContactClient = (props: any) => {
     const {
         company,
         companyStructure,
-        validationCompany,
+        validation,
         ownershipThreshold,
         history
     } = props;
 
     if (!company || !companyStructure) {
         return <Redirect to="/search" />;
-    } else if (!validationCompany) {
+    } else if (!validation) {
         return <Redirect to="/company-structure" />;
     }
-
-    const { completion } = validationCompany;
 
     const shareholders = companyStructure.distinctShareholders.filter((shareholder: any) => shareholder.totalShareholding > ownershipThreshold && shareholder.shareholderType === 'P');
 
@@ -40,7 +38,7 @@ const ContactClient = (props: any) => {
                     companyStructure={companyStructure}
                     ownershipThreshold={ownershipThreshold}
                     shareholders={shareholders}
-                    completion={completion}
+                    validation={validation}
                 />
 
                 <Actions>
@@ -56,7 +54,7 @@ const mapStateToProps = (state: any) => ({
     company: state.screening.company,
     companyStructure: state.screening.companyStructure,
     ownershipThreshold: state.screening.ownershipThreshold,
-    validationCompany: state.screening.validation.company,
+    validation: state.screening.validation,
 });
 
 export const RawComponent = ContactClient;
