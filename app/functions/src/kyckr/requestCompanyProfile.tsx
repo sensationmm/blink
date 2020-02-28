@@ -10,7 +10,7 @@ const dueDilCompanySearch = require('../duedill/searchCompany').searchCompany;
 const dueDilCompanyVitals = require('../duedill/requestCompanyVitals').requestCompanyVitals;
 const bloombergSearchCompany = require('../bloomberg/searchCompany').searchCompany;
 
-const compositeExchangeCodes = require('../bloomberg/searchCompany');
+const compositeExchangeCodes = require('../bloomberg/compositeExchangeCodes');
 
 server.use(cors());
 

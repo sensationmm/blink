@@ -1,4 +1,4 @@
-export const bloombergComposite = [
+const bloombergComposite = [
     "AR",
     "AU",
     "AV",
@@ -42,4 +42,6 @@ export const bloombergComposite = [
     "LD",
     "LN",
     "US"
-]
+];
+
+module.exports = bloombergComposite;
