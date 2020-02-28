@@ -4,12 +4,12 @@ const admin = require("firebase-admin");
 const cors = require('cors');
 const express = require('express');
 const server = express();
-
 var soap = require('soap');
+
+const fetchGoogleSheet = require('../google/fetchSheet').fetchGoogleSheet;
 const dueDilCompanySearch = require('../duedill/searchCompany').searchCompany;
 const dueDilCompanyVitals = require('../duedill/requestCompanyVitals').requestCompanyVitals;
 const bloombergSearchCompany = require('../bloomberg/searchCompany').searchCompany;
-
 const compositeExchangeCodes = require('../bloomberg/compositeExchangeCodes');
 
 server.use(cors());
@@ -176,6 +176,63 @@ const requestCompanyProfile = async (
                             });
                             //  if (matchingCompanies.length > 0 ) {
 
+                            const publicCompanyTypes = await fetchGoogleSheet('15rgjIj9PElEKw48TFGJoX87A_biUqpGqrVM2wOG4UQE', '1450221886');
+                            // publicCompanyTypes && console.log("publicCompanyTypes", publicCompanyTypes);
+                            // const cleanedPublicCompany
+
+                            const publicCompanyFlags: any = {
+                            }
+
+                            if (publicCompanyTypes) {
+
+                                publicCompanyFlags.isPublic = false;
+
+                                // console.log("publicCompanyTypes", publicCompanyTypes)
+                                const cleanedPublicCompanies = JSON.parse(publicCompanyTypes).filter((companyType: any) => {
+                                    const { PublicLimitedLiabilityCompanyLongForm, PublicLimitedLiabilityCompanyShortForm } = companyType;
+                                    return !!PublicLimitedLiabilityCompanyLongForm && !!PublicLimitedLiabilityCompanyShortForm
+                                }).map((companyType: any) => {
+                                    // console.log("companyType", companyType)
+                                    return {
+                                        PublicLimitedLiabilityCompanyLongForm: companyType.PublicLimitedLiabilityCompanyLongForm,
+                                        PublicLimitedLiabilityCompanyShortForm: companyType.PublicLimitedLiabilityCompanyShortForm,
+                                        countryCode: companyType["Alpha-2 code"]
+                                    }
+                                })
+                                // .sort((companyTypeA: any, companyTypeB: any) => companyTypeA.countryCode.localeCompare(companyTypeB.countryCode));
+                                const companyName = targetCompany.name?.toLowerCase();
+                                if (targetCompany && targetCompany.countryCode) {
+                                    const countryCodeCleanedPublicCompanies = cleanedPublicCompanies.filter((publicCompanyTypes: any) =>
+                                        publicCompanyTypes.countryCode === targetCompany.countryCode);
+                                    if (countryCodeCleanedPublicCompanies) {
+                                        countryCodeCleanedPublicCompanies.forEach((countryCodeCleanedPublicCompany: any) => {
+                                            const { PublicLimitedLiabilityCompanyShortForm } = countryCodeCleanedPublicCompany;
+                                            const shortFormString = PublicLimitedLiabilityCompanyShortForm.toLowerCase();
+                                            if (
+                                                companyName.indexOf(" " + shortFormString) > -1
+                                                ||
+                                                companyName.indexOf(shortFormString + " ") > -1
+                                            ) {
+                                                publicCompanyFlags.isPublic = true;
+                                            }
+                                        });
+                                    }
+                                } else {
+                                    cleanedPublicCompanies.forEach((cleanedPublicCompany: any) => {
+                                        const { PublicLimitedLiabilityCompanyShortForm } = cleanedPublicCompany;
+                                        const shortFormString = PublicLimitedLiabilityCompanyShortForm.toLowerCase();
+                                        if (
+                                            companyName.indexOf(" " + shortFormString) > -1
+                                            ||
+                                            companyName.indexOf(shortFormString + " ") > -1
+                                        ) {
+                                            publicCompanyFlags.isPublic = true;
+                                            publicCompanyFlags.suspectedCountryFromName = cleanedPublicCompany.countryCode
+                                        }
+                                    });
+                                }
+                            }
+
                             const bloombergExhangeData = matchingCompanies.map((matchingCompany: any) => {
                                 return {
                                     securityType: matchingCompany.security_type,
@@ -191,15 +248,15 @@ const requestCompanyProfile = async (
                                 if (compositeExchangeCodes.indexOf(exchangeCode) > -1) {
                                     citiCovereredExchange = true;
                                 }
-                                
+
                             })
 
                             await targetCompanyRef.update({
                                 bloomberg: bloombergExhangeData,
+                                ...publicCompanyFlags,
                                 updatedAt: new Date(),
                                 citiCovereredExchange
                             }, { merge: true });
-                            //  }
                         }
 
                         if (directorAndShareDetails) {
