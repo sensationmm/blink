@@ -11,10 +11,7 @@
       "**/.*",
       "**/node_modules/**"
     ],
-    "rewrites": [{
-      "source": "**",
-      "destination": "/index.html"
-    }, 
+    "rewrites": [
     {
       "source": "/requestCompanyUBOStructure",
       "function": "requestCompanyUBOStructure"
@@ -62,6 +59,10 @@
     {
       "source": "/signIn",
       "function": "signIn"
-    } ]
+    },
+    {
+      "source": "**",
+      "destination": "/index.html"
+    }, ]
   }
 }
