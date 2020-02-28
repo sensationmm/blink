@@ -12,8 +12,8 @@ const fetchGoogleSheet = async (sheetID: string, tabID: string = '0') => {
     const doc = new GoogleSpreadsheet(sheetID);
 
     await doc.useServiceAccountAuth({
-        client_email: process.env.APP_GOOGLE_SERVICE_ACCOUNT_EMAIL,
-        private_key: process.env.APP_GOOGLE_PRIVATE_KEY,
+        private_key: (`-----BEGIN PRIVATE KEY-----\n${process.env.APP_GOOGLE_PRIVATE_KEY || functions.config().app_google_private_key.key}\n-----END PRIVATE KEY-----\n`).replace(/\\n/g, '\n'),
+        client_email: process.env.APP_GOOGLE_SERVICE_ACCOUNT_EMAIL || functions.config().app_google_service_account_email.key
     });
 
     await doc.loadInfo();
