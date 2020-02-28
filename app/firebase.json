@@ -24,19 +24,19 @@
       "function": "requestCompanyUBOStructure"
     },
     {
-      "source": "/duedillSearchCompany/**",
+      "source": "/duedillSearchCompany/**/**",
       "function": "duedillSearchCompany"
     },
     {
-      "source": "/duedillCompanyVitals/**",
+      "source": "/duedillCompanyVitals/**/**",
       "function": "duedillCompanyVitals"
     },
     {
-      "source": "/duedillCompanyIndustries/**",
+      "source": "/duedillCompanyIndustries/**/**",
       "function": "duedillCompanyIndustries"
     },
     {
-      "source": "/kyckrSearchCompany/**",
+      "source": "/kyckrSearchCompany/**/**",
       "function": "kyckrSearchCompany"
     },
     {
