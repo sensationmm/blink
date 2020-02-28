@@ -37,6 +37,10 @@
       "function": "kyckrSearchCompany"
     },
     {
+      "source": "/kyckrCompanyProfile/",
+      "function": "kyckrCompanyProfile"
+    },
+    {
       "source": "/validateCompany",
       "function": "validateCompany"
     },
