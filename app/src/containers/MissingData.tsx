@@ -72,11 +72,11 @@ const MissingData = (props: any) => {
             }
         });
 
-    const onEditField = async (field: string, value: any) => {
+    const onEditField = async (field: string, value: any, docId: any) => {
         if (value !== undefined && value !== '') {
             showLoader('Saving');
 
-            const res = await apiEditField(props.companyStructure.docId, field, value);
+            const res = await apiEditField(docId || props.companyStructure.docId, field, value);
             console.log('onEditField', res)
 
             hideLoader();
@@ -291,8 +291,8 @@ const MissingData = (props: any) => {
                                                             stateKey: key,
                                                             label,
                                                             placeholder: msg,
-                                                            onChange: saveEditField,
-                                                            onBlur: onEditField,
+                                                            onChange: (field: any, value: any) => saveEditField(field, value, "distinctShareholders", shareholder.docId),
+                                                            onBlur: (field: any, value: any) => onEditField(field, value, shareholder.docId),
                                                             value: shareholder[key] ? shareholder[key] : '',
                                                         }
                                                     })}
@@ -349,8 +349,8 @@ const MissingData = (props: any) => {
                                                                                     stateKey: key,
                                                                                     label,
                                                                                     placeholder: msg,
-                                                                                    onChange: saveEditField,
-                                                                                    onBlur: onEditField,
+                                                                                    onChange: (field: any, value: any) => saveEditField(field, value, "distinctShareholders", shareholder.docId),
+                                                                                    onBlur: (field: any, value: any) => onEditField(field, value, shareholder.docId),
                                                                                     value: shareholder[key] ? shareholder[key] : '',
                                                                                 }
                                                                             })

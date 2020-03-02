@@ -107,6 +107,10 @@ describe('ageLessThanThree()', () => {
     });
 });
 
+describe('shareholdingGreaterThan()', () => {
+    
+});
+
 describe('bearerSharesChecks()', () => {
     describe('passes validation', () => {
         it('bearer shares not allowed by country or company', async () => {

@@ -52,10 +52,12 @@ export const setErrors = (target, errors) => {
     }
 }
 
-export const editField = (field, value) => {
+export const editField = (field, value, collection, docId) => {
     return {
         type: EDIT_FIELD,
         field,
-        value
+        value,
+        collection,
+        docId
     }
 }

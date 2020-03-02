@@ -69,6 +69,22 @@ export const screening = (state = initialState, action) => {
       }
 
     case EDIT_FIELD:
+      if (action.collection) {
+        return {
+          ...state,
+          companyStructure: {
+            ...state.companyStructure,
+            [action.collection]: 
+            state.companyStructure[action.collection].map(doc => {
+              if (doc.docId === action.docId) {
+                doc[action.field] = action.value
+              }
+              return doc;
+            })
+          }
+        }
+      }
+
       return {
         ...state,
         companyStructure: {

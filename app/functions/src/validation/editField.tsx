@@ -9,9 +9,11 @@ server.use(cors());
 server.post('*/', function (req: any, res: any) {
     const { docId, field, value } = req.body;
 
-    const newDocID = docId.replace('companies/', '');
+    const documentParts = docId.split("/");
 
-    admin.firestore().collection('companies')
+    const newDocID = documentParts.pop();
+
+    admin.firestore().collection(documentParts[0])
         .doc(newDocID)
         .set({ [field]: value }, { merge: true })
         .then(function (res: any) {
