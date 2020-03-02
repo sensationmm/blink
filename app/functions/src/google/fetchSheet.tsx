@@ -9,9 +9,8 @@ const { GoogleSpreadsheet } = require('google-spreadsheet');
 server.use(cors());
 
 const fetchGoogleSheet = async (sheetID: string, tabID: string = '0') => {
+    
     const doc = new GoogleSpreadsheet(sheetID);
-
-    console.log(functions.config().app_google_service_account_email, functions.config().app_google_private_key.key);
 
     await doc.useServiceAccountAuth({
         private_key: (`-----BEGIN PRIVATE KEY-----\n${process.env.APP_GOOGLE_PRIVATE_KEY || functions.config().app_google_private_key.key}\n-----END PRIVATE KEY-----\n`).replace(/\\n/g, '\n'),
