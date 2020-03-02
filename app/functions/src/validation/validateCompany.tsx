@@ -94,13 +94,14 @@ server.post('*/', function (req: any, res: any) {
                 rulesetPerson[ruleName] = rule[ruleName];
             });
 
-            const shareholders = company.distinctShareholders.filter((shareholder: any) => shareholder.totalShareholding >= 10);
+            const shareholders = company.distinctShareholders
+            // .filter((shareholder: any) => shareholder.totalShareholding >= 10);
 
             const responsesPeople = shareholders.map((shareholder: any) => {
                 const personMarketValidation = {} as { [key: string]: indexedObject };
 
                 personMarketsToValidate.map((market: market) => {
-                    validateJS.validate.async(company, personMarketRulesets[market], { cleanAttributes: false }).then(null, (errors: any) => {
+                    validateJS.validate.async(shareholder, personMarketRulesets[market], { cleanAttributes: false }).then(null, (errors: any) => {
                         const failedRules = errors ? Object.keys(errors).length : 0;
                         const numRules = Object.keys(personMarketRulesets[market]).length;
 
@@ -124,7 +125,14 @@ server.post('*/', function (req: any, res: any) {
 
             await Promise.all(responses);
 
-            return res.send({ company: companyMarketValidation, ...peopleMarketValidation });
+            let returnedPeopleMarketValidation: any = peopleMarketValidation;
+            Object.keys(returnedPeopleMarketValidation).forEach((docId: string) => {
+                if (Object.keys(returnedPeopleMarketValidation[docId]).length  === 0) {
+                    delete returnedPeopleMarketValidation[docId];
+                }
+            });
+
+            return res.send({ company: companyMarketValidation, ...returnedPeopleMarketValidation });
         });
     });
 });

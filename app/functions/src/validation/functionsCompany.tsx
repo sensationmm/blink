@@ -27,6 +27,17 @@ const ageLessThanThree = (value: Value, options: Options, key: Key, attributes: 
 }
 
 const bearerSharesChecks = async (value: Value, options: Options, key: Key, attributes: Attributes) => {
+
+const shareholdingGreaterThan = (value: Value, options: string, key: Key, attributes: Attributes) => {
+    let threshold = parseFloat(options);
+    let shareholding = attributes.totalShareholding;
+
+    if (shareholding >= threshold && !attributes.hasOwnProperty(key)) {
+        return 'is required if shareholding > ' + threshold + '%';
+    }
+
+    return null;
+};
     const bearerInfo = await fetchGoogleSheet('1jg0qSvZLQQPHfL572BQKiHgolS91uyHFtznzX94OCrw');
     const bearerConfig = JSON.parse(bearerInfo).map((row: any) => {
         return { code: row['Alpha-2 code'], allowed: row['AllowBearerShares'], exception: row['CompanyTypeException'] }
@@ -123,6 +134,7 @@ const validationFunctions = {
     bearerSharesChecks,
     naicsChecks,
     requiredIfValueEquals,
+    shareholdingGreaterThan
 };
 
 module.exports = validationFunctions;

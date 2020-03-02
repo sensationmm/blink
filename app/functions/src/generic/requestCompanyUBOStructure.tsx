@@ -79,6 +79,7 @@ server.post('*/', async function (req: any, res: any) {
                     distinctShareholders[distinctShareholderIndex].totalShareholding += (totalShareholding / 100) * shareholder.percentage;
                 } else {
                     distinctShareholders.push({
+                        ...shareholder,
                         totalShareholding: (totalShareholding / 100) * shareholder.percentage,
                         name: shareholder.name || shareholder.fullName,
                         shareholderType: shareholder.shareholderType,
