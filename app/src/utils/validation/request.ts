@@ -9,7 +9,7 @@ class Rule {
     [key: string]: any;
 }
 
-const validateCompany = async (company: CompanyData, countryID: string) => {
+const validateCompany = async (company: CompanyData, ownershipThreshold: string) => {
     const response = await fetch(`${domain}/validateCompany`, {
         method: "POST",
         mode: "cors",
@@ -18,7 +18,7 @@ const validateCompany = async (company: CompanyData, countryID: string) => {
         },
         body: JSON.stringify({
             company,
-            countryID
+            ownershipThreshold
         })
     });
     const body = await response.json();

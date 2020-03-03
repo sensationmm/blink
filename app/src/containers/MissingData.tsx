@@ -91,7 +91,8 @@ const MissingData = (props: any) => {
             setCompletion,
             hideLoader,
             props.history.push,
-            '/contact-client'
+            '/contact-client',
+            ownershipThreshold
         );
     };
 
@@ -141,7 +142,8 @@ const MissingData = (props: any) => {
                                             content={validation.company.errors.Core && Object.keys(validation.company.errors.Core).map(key => {
                                                 const label = capitalize(prettify(key));
                                                 let msg = String(validation.company.errors.Core[key]);
-                                                msg = capitalize(msg.replace(label, '').trim());
+                                                msg = msg.replace(`${label} is`, '').replace(label, '');
+                                                msg = capitalize(msg.trim());
 
                                                 // if (companyStructure[key]) {
                                                 //     msg += ` (found: ${companyStructure[key]})`;
@@ -203,7 +205,8 @@ const MissingData = (props: any) => {
                                                                     .map(key => {
                                                                         const label = capitalize(prettify(key));
                                                                         let msg = String(validation.company.errors[marketInfo.code][key]);
-                                                                        msg = capitalize(msg.replace(label, '').trim());
+                                                                        msg = msg.replace(`${label} is`, '').replace(label, '');
+                                                                        msg = capitalize(msg.trim());
 
                                                                         return {
                                                                             stateKey: key,
@@ -285,7 +288,8 @@ const MissingData = (props: any) => {
                                                     content={validation[shareholder.docId].errors.Core && Object.keys(validation[shareholder.docId].errors.Core).map(key => {
                                                         const label = capitalize(prettify(key));
                                                         let msg = String(validation[shareholder.docId].errors.Core[key]);
-                                                        msg = capitalize(msg.replace(label, '').trim());
+                                                        msg = msg.replace(`${label} is`, '').replace(label, '');
+                                                        msg = capitalize(msg.trim());
 
                                                         return {
                                                             stateKey: key,
@@ -343,7 +347,8 @@ const MissingData = (props: any) => {
                                                                             .map(key => {
                                                                                 const label = capitalize(prettify(key));
                                                                                 let msg = String(validation[shareholder.docId].errors[marketInfo.code][key]);
-                                                                                msg = capitalize(msg.replace(label, '').trim());
+                                                                                msg = msg.replace(`${label} is`, '').replace(label, '');
+                                                                                msg = capitalize(msg.trim());
 
                                                                                 return {
                                                                                     stateKey: key,

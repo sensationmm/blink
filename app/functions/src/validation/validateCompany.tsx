@@ -19,7 +19,7 @@ type market = 'Core' | 'GB' | 'DE' | 'FR' | 'RO' | 'IT' | 'SE';
 type indexedObject = { [key: string]: any };
 
 server.post('*/', function (req: any, res: any) {
-    const { company } = req.body;
+    const { company, ownershipThreshold } = req.body;
 
     const rulesCompany = admin.firestore().collection('companyRules');
     const rulesetCompany = {} as indexedObject;
@@ -65,7 +65,17 @@ server.post('*/', function (req: any, res: any) {
         // marketRulesets.all = rulesetCompany;
 
         const responsesCompany = companyMarketsToValidate.map((market: market) => {
-            return validateJS.validate.async(company, companyMarketRulesets[market], { cleanAttributes: false }).then(null, (errors: any) => {
+            return validateJS.validate.async(company, companyMarketRulesets[market], { cleanAttributes: false }).then(() => {
+                const numRules = Object.keys(companyMarketRulesets[market]).length;
+
+                const valid = {
+                    completion: numRules / numRules,
+                    passed: numRules,
+                    total: numRules,
+                };
+
+                companyMarketValidation[market] = valid;
+            }, (errors: any) => {
                 const failedRules = errors ? Object.keys(errors).length : 0;
                 const numRules = Object.keys(companyMarketRulesets[market]).length;
 
@@ -94,14 +104,23 @@ server.post('*/', function (req: any, res: any) {
                 rulesetPerson[ruleName] = rule[ruleName];
             });
 
-            const shareholders = company.distinctShareholders
-            // .filter((shareholder: any) => shareholder.totalShareholding >= 10);
+            const shareholders = company.distinctShareholders.filter((shareholder: any) => shareholder.totalShareholding >= parseInt(ownershipThreshold));
 
             const responsesPeople = shareholders.map((shareholder: any) => {
                 const personMarketValidation = {} as { [key: string]: indexedObject };
 
                 personMarketsToValidate.map((market: market) => {
-                    validateJS.validate.async(shareholder, personMarketRulesets[market], { cleanAttributes: false }).then(null, (errors: any) => {
+                    validateJS.validate.async(shareholder, personMarketRulesets[market], { cleanAttributes: false }).then(() => {
+                        const numRules = Object.keys(personMarketRulesets[market]).length;
+
+                        const valid = {
+                            completion: numRules / numRules,
+                            passed: numRules,
+                            total: numRules,
+                        };
+
+                        return personMarketValidation[market] = valid;
+                    }, (errors: any) => {
                         const failedRules = errors ? Object.keys(errors).length : 0;
                         const numRules = Object.keys(personMarketRulesets[market]).length;
 
@@ -126,11 +145,11 @@ server.post('*/', function (req: any, res: any) {
             await Promise.all(responses);
 
             let returnedPeopleMarketValidation: any = peopleMarketValidation;
-            Object.keys(returnedPeopleMarketValidation).forEach((docId: string) => {
-                if (Object.keys(returnedPeopleMarketValidation[docId]).length  === 0) {
-                    delete returnedPeopleMarketValidation[docId];
-                }
-            });
+            // Object.keys(returnedPeopleMarketValidation).forEach((docId: string) => {
+            //     if (Object.keys(returnedPeopleMarketValidation[docId]).length === 0) {
+            //         delete returnedPeopleMarketValidation[docId];
+            //     }
+            // });
 
             return res.send({ company: companyMarketValidation, ...returnedPeopleMarketValidation });
         });

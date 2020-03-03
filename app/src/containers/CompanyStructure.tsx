@@ -29,10 +29,11 @@ export const onGetValidation = async (
     setCompletion: (type: string, src: object) => void,
     hideLoader: () => void,
     push: (target: string) => void,
-    redirect: string
+    redirect: string,
+    ownershipThreshold: string
 ) => {
     showLoader();
-    const rules = await validateCompany(companyStructure, 'GB')
+    const rules = await validateCompany(companyStructure, ownershipThreshold)
 
     Object.keys(rules).forEach(entity => {
         const marketCompletion = {
@@ -95,7 +96,8 @@ const CompanyStructure = (props: any) => {
             setCompletion,
             hideLoader,
             props.history.push,
-            '/company-readiness'
+            '/company-readiness',
+            ownershipThreshold
         );
     };
 
