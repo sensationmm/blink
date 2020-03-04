@@ -242,11 +242,11 @@ const requestCompanyProfile = async (
                                 }
                             });
 
-                            let citiCovereredExchange = false
+                            let citiCoveredExchange = false
                             bloombergExhangeData.forEach((exchange: any) => {
                                 const exchangeCode = exchange.tickerSymbol.split(":").pop();
                                 if (compositeExchangeCodes.indexOf(exchangeCode) > -1) {
-                                    citiCovereredExchange = true;
+                                    citiCoveredExchange = true;
                                 }
 
                             })
@@ -255,7 +255,7 @@ const requestCompanyProfile = async (
                                 bloomberg: bloombergExhangeData,
                                 ...publicCompanyFlags,
                                 updatedAt: new Date(),
-                                citiCovereredExchange
+                                citiCoveredExchange
                             }, { merge: true });
                         }
 
