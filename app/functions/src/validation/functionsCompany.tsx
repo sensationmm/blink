@@ -15,6 +15,25 @@ All functions MUST take the same four props as they are validateJS custom valida
 (value, options, key, attributes)
 */
 
+const requiresUBOChecks = (value: Value, options: Options, key: Key, attributes: Attributes): boolean => {
+    const { isPublic, distinctShareholders } = attributes;
+
+    const majorityShareholder = distinctShareholders.filter((shareholder: any) => shareholder.totalShareholding > 50);
+
+    if (isPublic === true || (
+        majorityShareholder.length > 0 &&
+        (
+            majorityShareholder[0].shareholderType === 'C' &&
+            majorityShareholder[0].isPublic === true &&
+            majorityShareholder[0].citiCoveredExchange === true
+        )
+    )) {
+        return false;
+    }
+
+    return true;
+};
+
 const ageLessThanThree = (value: Value, options: Options, key: Key, attributes: Attributes) => {
     const undefinedYear = attributes.incorporationDate === undefined || attributes.incorporationDate === null || attributes.incorporationDate === '';
     const younger = moment(attributes.incorporationDate) > moment.utc().subtract(3, 'years');
@@ -78,17 +97,6 @@ const bearerSharesChecks = async (value: Value, options: Options, key: Key, attr
     return null;
 };
 
-const shareholdingGreaterThan = (value: Value, options: string, key: Key, attributes: Attributes) => {
-    let threshold = parseFloat(options);
-    let shareholding = attributes.totalShareholding;
-
-    if (shareholding >= threshold && !attributes.hasOwnProperty(key)) {
-        return 'is required if shareholding > ' + threshold + '%';
-    }
-
-    return null;
-};
-
 const requiredIfValueEquals = (value: Value, { search, match }: Options, key: Key, attributes: Attributes) => {
     if (!search) {
         return ': ERROR requiredIfValueEquals.options.search not defined';
@@ -112,30 +120,30 @@ const requiredIfValueEquals = (value: Value, { search, match }: Options, key: Ke
     }
 }
 
-const naicsChecks = async (value: Value, options: Options, key: Key, attributes: Attributes) => {
-    // const { NAICSCode, SICCode } = attributes;
+// const naicsChecks = async (value: Value, options: Options, key: Key, attributes: Attributes) => {
+//     const { NAICSCode, SICCode } = attributes;
 
-    // const naicsSheet = await fetchGoogleSheet('1K2dp6glyD6b0D7hTPBA_zFKjbqls0lrDbXoVra95dzo');
-    // const naicsList = JSON.parse(naicsSheet).map((row: any) => {
-    //     return { code: row['NAICCode'], score: row['NAICScore'] }
-    // });
-    // if (!NAICSCode) {
-    //     if (!SICCode) {
-    //         return 'is required';
-    //     } else {
+//     const naicsSheet = await fetchGoogleSheet('1K2dp6glyD6b0D7hTPBA_zFKjbqls0lrDbXoVra95dzo');
+//     const naicsList = JSON.parse(naicsSheet).map((row: any) => {
+//         return { code: row['NAICCode'], score: row['NAICScore'] }
+//     });
+//     if (!NAICSCode) {
+//         if (!SICCode) {
+//             return 'is required';
+//         } else {
 
-    //     }
-    // }
+//         }
+//     }
 
-    return null;
-};
+//     return null;
+// };
 
 const validationFunctions = {
     ageLessThanThree,
     bearerSharesChecks,
-    naicsChecks,
+    // naicsChecks,
     requiredIfValueEquals,
-    shareholdingGreaterThan
+    requiresUBOChecks
 };
 
 module.exports = validationFunctions;

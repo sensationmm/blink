@@ -15,6 +15,8 @@ import IconTarget from '../../svg/icon-target.svg';
 import getByValue from '../../utils/functions/getByValue';
 import { blinkMarketList, blinkMarkets } from '../../utils/config/blink-markets';
 
+import * as Styled from './styles';
+
 interface ReadinessProps {
     companyStructure: any;
     ownershipThreshold: any;
@@ -40,16 +42,30 @@ const Readiness: React.FC<ReadinessProps> = ({
                         stacked
                     />
 
-                    {shareholders.map((shareholder: any, count: number) =>
-                        <ProgressBar
-                            key={`shareholder-${count}`}
-                            label={shareholder.name}
-                            icon={<Icon icon={PersonIcon} size={'small'} style={'person'} />}
-                            value={validation[shareholder.docId].completion['Core'].passed}
-                            total={validation[shareholder.docId].completion['Core'].total}
-                            stacked
-                        />
-                    )}
+                    {shareholders.map((shareholder: any, count: number) => {
+                        if (!validation[shareholder.docId]) {
+                            return (
+                                <Styled.NotRequired>
+                                    <Styled.Header>
+                                        <Icon icon={PersonIcon} size={'small'} style={'person'} />
+                                        <div>{shareholder.name}</div>
+                                    </Styled.Header>
+                                    <Styled.Message>UBO Checks not required</Styled.Message>
+                                </Styled.NotRequired>
+                            )
+                        }
+
+                        return (
+                            <ProgressBar
+                                key={`shareholder-${count}`}
+                                label={shareholder.name}
+                                icon={<Icon icon={PersonIcon} size={'small'} style={'person'} />}
+                                value={validation[shareholder.docId].completion['Core'].passed}
+                                total={validation[shareholder.docId].completion['Core'].total}
+                                stacked
+                            />
+                        )
+                    })}
                 </Blocks>
             </Box>
 
@@ -68,7 +84,7 @@ const Readiness: React.FC<ReadinessProps> = ({
                                 null,
                             ]
                         },
-                        ...shareholders.map((shareholder: any, count: number) => {
+                        ...shareholders.filter((shareholder: any) => validation[shareholder.docId]).map((shareholder: any, count: number) => {
                             return {
                                 label: shareholder.name,
                                 icon: <Icon icon={PersonIcon} size={'small'} style={'person'} />,

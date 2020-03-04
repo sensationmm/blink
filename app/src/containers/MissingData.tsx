@@ -229,7 +229,7 @@ const MissingData = (props: any) => {
                         />
                     </Box>
 
-                    {shareholders.map((shareholder: any, count: number) => {
+                    {shareholders.filter((shareholder: any) => validation[shareholder.docId]).map((shareholder: any, count: number) => {
                         const marketCompletion = Object.keys(validation[shareholder.docId].completion)
                             .filter((x, i, a) => a.indexOf(x) === i)
                             .map((item: any) => validation[shareholder.docId].completion[item].passed)

@@ -6,13 +6,15 @@ const cors = require('cors');
 const validateJS = require('validate.js');
 const express = require('express');
 const validationCompany = require('./functionsCompany');
+const validationPerson = require('./functionsPerson');
 const server = express();
 server.use(cors());
 
 // add custom company validators
-const validationCompanyKeys = Object.keys(validationCompany);
-validationCompanyKeys.forEach((key) => {
-    validateJS.validate.validators[key] = validationCompany[key];
+const customValidation = { ...validationCompany, ...validationPerson };
+const customValidationKeys = Object.keys(customValidation);
+customValidationKeys.forEach((key) => {
+    validateJS.validate.validators[key] = customValidation[key];
 });
 
 type market = 'Core' | 'GB' | 'DE' | 'FR' | 'RO' | 'IT' | 'SE';
@@ -91,68 +93,73 @@ server.post('*/', function (req: any, res: any) {
             });
         });
 
-        rulesPerson.get().then(async (rulesPersonItem: any) => {
-            rulesPersonItem.forEach((doc: any) => {
-                const rule = doc.data();
-                const rulesMarkets = rule.marketRuleMapping;
-                delete rule.marketRuleMapping;
-                const ruleName = Object.keys(rule)[0] as string;
+        if (validationCompany.requiresUBOChecks(null, {}, null, company)) {
+            rulesPerson.get().then(async (rulesPersonItem: any) => {
+                rulesPersonItem.forEach((doc: any) => {
+                    const rule = doc.data();
+                    const rulesMarkets = rule.marketRuleMapping;
+                    delete rule.marketRuleMapping;
+                    const ruleName = Object.keys(rule)[0] as string;
 
-                rulesMarkets.forEach((market: market) => {
-                    personMarketRulesets[market][ruleName] = rule[ruleName]
+                    rulesMarkets.forEach((market: market) => {
+                        personMarketRulesets[market][ruleName] = rule[ruleName]
+                    });
+                    rulesetPerson[ruleName] = rule[ruleName];
                 });
-                rulesetPerson[ruleName] = rule[ruleName];
-            });
 
-            const shareholders = company.distinctShareholders.filter((shareholder: any) => shareholder.totalShareholding >= parseInt(ownershipThreshold));
+                const shareholders = company.distinctShareholders.filter((shareholder: any) => shareholder.totalShareholding >= parseInt(ownershipThreshold));
 
-            const responsesPeople = shareholders.map((shareholder: any) => {
-                const personMarketValidation = {} as { [key: string]: indexedObject };
+                const responsesPeople = shareholders.map((shareholder: any) => {
+                    const personMarketValidation = {} as { [key: string]: indexedObject };
 
-                personMarketsToValidate.map((market: market) => {
-                    validateJS.validate.async(shareholder, personMarketRulesets[market], { cleanAttributes: false }).then(() => {
-                        const numRules = Object.keys(personMarketRulesets[market]).length;
+                    personMarketsToValidate.map((market: market) => {
+                        validateJS.validate.async(shareholder, personMarketRulesets[market], { cleanAttributes: false }).then(() => {
+                            const numRules = Object.keys(personMarketRulesets[market]).length;
 
-                        const valid = {
-                            completion: numRules / numRules,
-                            passed: numRules,
-                            total: numRules,
-                        };
+                            const valid = {
+                                completion: numRules / numRules,
+                                passed: numRules,
+                                total: numRules,
+                            };
 
-                        return personMarketValidation[market] = valid;
-                    }, (errors: any) => {
-                        const failedRules = errors ? Object.keys(errors).length : 0;
-                        const numRules = Object.keys(personMarketRulesets[market]).length;
+                            return personMarketValidation[market] = valid;
+                        }, (errors: any) => {
+                            const failedRules = errors ? Object.keys(errors).length : 0;
+                            const numRules = Object.keys(personMarketRulesets[market]).length;
 
-                        const valid = {
-                            completion: ((numRules - failedRules) / numRules),
-                            errors,
-                            passed: numRules - failedRules,
-                            failed: failedRules,
-                            total: numRules,
-                        };
+                            const valid = {
+                                completion: ((numRules - failedRules) / numRules),
+                                errors,
+                                passed: numRules - failedRules,
+                                failed: failedRules,
+                                total: numRules,
+                            };
 
-                        return personMarketValidation[market] = valid;
+                            return personMarketValidation[market] = valid;
+                        });
+
+                        peopleMarketValidation[shareholder.docId] = personMarketValidation;
                     });
 
-                    peopleMarketValidation[shareholder.docId] = personMarketValidation;
                 });
 
+                const responses = responsesCompany.concat(responsesPeople);
+
+                await Promise.all(responses);
+
+                let returnedPeopleMarketValidation: any = peopleMarketValidation;
+                // Object.keys(returnedPeopleMarketValidation).forEach((docId: string) => {
+                //     if (Object.keys(returnedPeopleMarketValidation[docId]).length === 0) {
+                //         delete returnedPeopleMarketValidation[docId];
+                //     }
+                // });
+
+                return res.send({ company: companyMarketValidation, ...returnedPeopleMarketValidation });
             });
-
-            const responses = responsesCompany.concat(responsesPeople);
-
-            await Promise.all(responses);
-
-            let returnedPeopleMarketValidation: any = peopleMarketValidation;
-            // Object.keys(returnedPeopleMarketValidation).forEach((docId: string) => {
-            //     if (Object.keys(returnedPeopleMarketValidation[docId]).length === 0) {
-            //         delete returnedPeopleMarketValidation[docId];
-            //     }
-            // });
-
-            return res.send({ company: companyMarketValidation, ...returnedPeopleMarketValidation });
-        });
+        } else {
+            await Promise.all(responsesCompany);
+            return res.send({ company: companyMarketValidation });
+        }
     });
 });
 module.exports = functions.https.onRequest(server);

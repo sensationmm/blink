@@ -1,4 +1,4 @@
-const validationFunctions = require('./functionsCompany');
+const companyValidation = require('./functionsCompany');
 
 jest.mock('google-spreadsheet', () => ({
     GoogleSpreadsheet: jest.fn().mockImplementation(() => {
@@ -19,6 +19,188 @@ jest.mock('google-spreadsheet', () => ({
     })
 }));
 
+describe('requiresUBOChecks()', () => {
+    it('test 1', () => {
+        const company = {
+            "type": null,
+            "isPublic": true,
+            "citiCoveredExchange": true,
+            "distinctShareholders": [
+                {
+                    "totalShareholding": 19,
+                    "shareholderType": "P"
+                },
+                {
+                    "totalShareholding": 30,
+                    "shareholderType": "P",
+                    "isPublic": true,
+                    "citiCoveredExchange": true
+                },
+                {
+                    "totalShareholding": 51,
+                    "shareholderType": "C",
+                    "isPublic": false,
+                    "citiCoveredExchange": false
+                }
+            ]
+        };
+
+        const required = companyValidation.requiresUBOChecks(company.isPublic, {}, 'isPublic', company);
+
+        expect(required).toBe(false);
+    });
+
+    it('test 2', () => {
+        const company = {
+            "type": null,
+            "isPublic": true,
+            "citiCoveredExchange": false,
+            "distinctShareholders": [
+                {
+                    "totalShareholding": 19,
+                    "shareholderType": "P"
+                },
+                {
+                    "totalShareholding": 30,
+                    "shareholderType": "P",
+                    "isPublic": true,
+                    "citiCoveredExchange": true
+                },
+                {
+                    "totalShareholding": 51,
+                    "shareholderType": "C",
+                    "isPublic": false,
+                    "citiCoveredExchange": false
+                }
+            ]
+        };
+
+        const required = companyValidation.requiresUBOChecks(company.isPublic, {}, 'isPublic', company);
+
+        expect(required).toBe(false);
+    });
+
+    it('test 3', () => {
+        const company = {
+            "type": null,
+            "isPublic": false,
+            "citiCoveredExchange": false,
+            "distinctShareholders": [
+                {
+                    "totalShareholding": 19,
+                    "shareholderType": "P"
+                },
+                {
+                    "totalShareholding": 30,
+                    "shareholderType": "P",
+                    "isPublic": true,
+                    "citiCoveredExchange": true
+                },
+                {
+                    "totalShareholding": 51,
+                    "shareholderType": "C",
+                    "isPublic": true,
+                    "citiCoveredExchange": false
+                }
+            ]
+        };
+
+        const required = companyValidation.requiresUBOChecks(company.isPublic, {}, 'isPublic', company);
+
+        expect(required).toBe(true);
+    });
+
+    it('test 4', () => {
+        const company = {
+            "type": null,
+            "isPublic": false,
+            "citiCoveredExchange": false,
+            "distinctShareholders": [
+                {
+                    "totalShareholding": 19,
+                    "shareholderType": "P"
+                },
+                {
+                    "totalShareholding": 30,
+                    "shareholderType": "P",
+                    "isPublic": true,
+                    "citiCoveredExchange": true
+                },
+                {
+                    "totalShareholding": 51,
+                    "shareholderType": "C",
+                    "isPublic": true,
+                    "citiCoveredExchange": true
+                }
+            ]
+        };
+
+        const required = companyValidation.requiresUBOChecks(company.isPublic, {}, 'isPublic', company);
+
+        expect(required).toBe(false);
+    });
+
+    it('test 5', () => {
+        const company = {
+            "type": null,
+            "isPublic": false,
+            "citiCoveredExchange": false,
+            "distinctShareholders": [
+                {
+                    "totalShareholding": 19,
+                    "shareholderType": "P"
+                },
+                {
+                    "totalShareholding": 30,
+                    "shareholderType": "P",
+                    "isPublic": true,
+                    "citiCoveredExchange": true
+                },
+                {
+                    "totalShareholding": 51,
+                    "shareholderType": "C",
+                    "isPublic": true,
+                    "citiCoveredExchange": false
+                }
+            ]
+        };
+
+        const required = companyValidation.requiresUBOChecks(company.isPublic, {}, 'isPublic', company);
+
+        expect(required).toBe(true);
+    });
+
+    it('test 6', () => {
+        const company = {
+            "type": null,
+            "isPublic": false,
+            "citiCoveredExchange": false,
+            "distinctShareholders": [
+                {
+                    "totalShareholding": 19,
+                    "shareholderType": "P"
+                },
+                {
+                    "totalShareholding": 30,
+                    "shareholderType": "P",
+                    "isPublic": true,
+                    "citiCoveredExchange": true
+                },
+                {
+                    "totalShareholding": 51,
+                    "shareholderType": "C",
+                    "isPublic": true,
+                    "citiCoveredExchange": false
+                }
+            ]
+        };
+
+        const required = companyValidation.requiresUBOChecks(company.isPublic, {}, 'isPublic', company);
+
+        expect(required).toBe(true);
+    });
+});
+
 describe('ageLessThanThree()', () => {
     it('passes if provided', () => {
         const company = {
@@ -26,7 +208,7 @@ describe('ageLessThanThree()', () => {
             incorporationDate: '2018-01-01',
         };
 
-        const valid = validationFunctions.ageLessThanThree(company.fundingSources, {}, 'fundingSources', company);
+        const valid = companyValidation.ageLessThanThree(company.fundingSources, {}, 'fundingSources', company);
 
         expect(valid).toBe(null);
     });
@@ -37,7 +219,7 @@ describe('ageLessThanThree()', () => {
             incorporationDate: '2015-01-01',
         };
 
-        const valid = validationFunctions.ageLessThanThree(company.fundingSources, {}, 'fundingSources', company);
+        const valid = companyValidation.ageLessThanThree(company.fundingSources, {}, 'fundingSources', company);
 
         expect(valid).toBe(null);
     });
@@ -48,7 +230,7 @@ describe('ageLessThanThree()', () => {
             incorporationDate: '2015-01-01',
         };
 
-        const valid = validationFunctions.ageLessThanThree(company.fundingSources, {}, 'fundingSources', company);
+        const valid = companyValidation.ageLessThanThree(company.fundingSources, {}, 'fundingSources', company);
 
         expect(valid).toBe(null);
     });
@@ -59,7 +241,7 @@ describe('ageLessThanThree()', () => {
             incorporationDate: '2018-01-01',
         };
 
-        const valid = validationFunctions.ageLessThanThree(company.fundingSources, {}, 'fundingSources', company);
+        const valid = companyValidation.ageLessThanThree(company.fundingSources, {}, 'fundingSources', company);
 
         expect(valid).toEqual('is required if incorporation is < 3yrs')
     });
@@ -69,7 +251,7 @@ describe('ageLessThanThree()', () => {
             fundingSources: 'yes'
         };
 
-        const valid = validationFunctions.ageLessThanThree(company.fundingSources, {}, 'fundingSources', company);
+        const valid = companyValidation.ageLessThanThree(company.fundingSources, {}, 'fundingSources', company);
 
         expect(valid).toEqual(null);
     });
@@ -79,7 +261,7 @@ describe('ageLessThanThree()', () => {
             fundingSources: null,
         };
 
-        const valid = validationFunctions.ageLessThanThree(company.fundingSources, {}, 'fundingSources', company);
+        const valid = companyValidation.ageLessThanThree(company.fundingSources, {}, 'fundingSources', company);
 
         expect(valid).toEqual('is required if incorporation is < 3yrs')
     });
@@ -90,7 +272,7 @@ describe('ageLessThanThree()', () => {
             fundingSources: null,
         };
 
-        const valid = validationFunctions.ageLessThanThree(company.fundingSources, {}, 'fundingSources', company);
+        const valid = companyValidation.ageLessThanThree(company.fundingSources, {}, 'fundingSources', company);
 
         expect(valid).toEqual('is required if incorporation is < 3yrs')
     });
@@ -101,14 +283,14 @@ describe('ageLessThanThree()', () => {
             fundingSources: null,
         };
 
-        const valid = validationFunctions.ageLessThanThree(company.fundingSources, {}, 'fundingSources', company);
+        const valid = companyValidation.ageLessThanThree(company.fundingSources, {}, 'fundingSources', company);
 
         expect(valid).toEqual('is required if incorporation is < 3yrs')
     });
 });
 
 describe('shareholdingGreaterThan()', () => {
-    
+
 });
 
 describe('bearerSharesChecks()', () => {
@@ -119,9 +301,9 @@ describe('bearerSharesChecks()', () => {
                 type: 'A',
             };
 
-            const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
-            const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
-            const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
+            const validate1 = await companyValidation.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
+            const validate2 = await companyValidation.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
+            const validate3 = await companyValidation.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
 
             expect(validate1).toEqual(null);
             expect(validate2).toEqual(null);
@@ -137,9 +319,9 @@ describe('bearerSharesChecks()', () => {
                 bearerShareRiskMitigationMethod: 'aasd',
             };
 
-            const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
-            const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
-            const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
+            const validate1 = await companyValidation.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
+            const validate2 = await companyValidation.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
+            const validate3 = await companyValidation.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
 
             expect(validate1).toEqual(null);
             expect(validate2).toEqual(null);
@@ -155,9 +337,9 @@ describe('bearerSharesChecks()', () => {
                 bearerShareClientAttestation: 'aasd',
             };
 
-            const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
-            const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
-            const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
+            const validate1 = await companyValidation.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
+            const validate2 = await companyValidation.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
+            const validate3 = await companyValidation.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
 
             expect(validate2).toEqual(null);
             expect(validate1).toEqual(null);
@@ -173,9 +355,9 @@ describe('bearerSharesChecks()', () => {
                 bearerShareEvidenceLink: 'aasd',
             };
 
-            const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
-            const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
-            const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
+            const validate1 = await companyValidation.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
+            const validate2 = await companyValidation.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
+            const validate3 = await companyValidation.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
 
             expect(validate3).toEqual(null);
             expect(validate1).toEqual(null);
@@ -190,9 +372,9 @@ describe('bearerSharesChecks()', () => {
                 type: 'B',
             };
 
-            const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
-            const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
-            const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
+            const validate1 = await companyValidation.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
+            const validate2 = await companyValidation.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
+            const validate3 = await companyValidation.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
 
             expect(validate1).toEqual(null);
             expect(validate2).toEqual(null);
@@ -205,9 +387,9 @@ describe('bearerSharesChecks()', () => {
                 type: 'B',
             };
 
-            const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
-            const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
-            const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
+            const validate1 = await companyValidation.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
+            const validate2 = await companyValidation.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
+            const validate3 = await companyValidation.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
 
             expect(validate1).toEqual(null);
             expect(validate2).toEqual(null);
@@ -220,9 +402,9 @@ describe('bearerSharesChecks()', () => {
                 type: 'B',
             };
 
-            const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
-            const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
-            const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
+            const validate1 = await companyValidation.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
+            const validate2 = await companyValidation.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
+            const validate3 = await companyValidation.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
 
             expect(validate1).toEqual(null);
             expect(validate2).toEqual(null);
@@ -237,9 +419,9 @@ describe('bearerSharesChecks()', () => {
                 bearerSharesOutstanding: 15,
             };
 
-            const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
-            const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
-            const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
+            const validate1 = await companyValidation.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
+            const validate2 = await companyValidation.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
+            const validate3 = await companyValidation.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
 
             expect(validate1).toEqual('is required');
             expect(validate2).toEqual(null);
@@ -254,9 +436,9 @@ describe('bearerSharesChecks()', () => {
                 bearerSharesOutstanding: 7,
             };
 
-            const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
-            const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
-            const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
+            const validate1 = await companyValidation.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
+            const validate2 = await companyValidation.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
+            const validate3 = await companyValidation.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
 
             expect(validate2).toEqual('is required');
             expect(validate1).toEqual(null);
@@ -271,9 +453,9 @@ describe('bearerSharesChecks()', () => {
                 bearerSharesOutstanding: 7,
             };
 
-            const validate1 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
-            const validate2 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
-            const validate3 = await validationFunctions.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
+            const validate1 = await companyValidation.bearerSharesChecks('null', {}, 'bearerShareRiskMitigationMethod', company);
+            const validate2 = await companyValidation.bearerSharesChecks('null', {}, 'bearerShareClientAttestation', company);
+            const validate3 = await companyValidation.bearerSharesChecks('null', {}, 'bearerShareEvidenceLink', company);
 
             expect(validate3).toEqual('is required');
             expect(validate1).toEqual(null);
@@ -295,7 +477,7 @@ describe('requiredIfValueEquals()', () => {
             materialMergers: true,
         };
 
-        const valid = validationFunctions.requiredIfValueEquals(company.materialMergerDetails, options, 'materialMergerDetails', company);
+        const valid = companyValidation.requiredIfValueEquals(company.materialMergerDetails, options, 'materialMergerDetails', company);
 
         expect(valid).toBe(null);
     });
@@ -306,7 +488,7 @@ describe('requiredIfValueEquals()', () => {
             materialMergers: false,
         };
 
-        const valid = validationFunctions.requiredIfValueEquals(company.materialMergerDetails, options, 'materialMergerDetails', company);
+        const valid = companyValidation.requiredIfValueEquals(company.materialMergerDetails, options, 'materialMergerDetails', company);
 
         expect(valid).toBe('cannot be supplied if material mergers is not true');
     });
@@ -317,7 +499,7 @@ describe('requiredIfValueEquals()', () => {
             materialMergerDetails: null,
         };
 
-        const valid = validationFunctions.requiredIfValueEquals(company.materialMergerDetails, options, 'materialMergerDetails', company);
+        const valid = companyValidation.requiredIfValueEquals(company.materialMergerDetails, options, 'materialMergerDetails', company);
 
         expect(valid).toBe('is required if material mergers is true');
     });
@@ -328,7 +510,7 @@ describe('requiredIfValueEquals()', () => {
             materialMergerDetails: null,
         };
 
-        const valid = validationFunctions.requiredIfValueEquals(company.materialMergerDetails, options, 'materialMergerDetails', company);
+        const valid = companyValidation.requiredIfValueEquals(company.materialMergerDetails, options, 'materialMergerDetails', company);
 
         expect(valid).toBe(null);
     });
@@ -344,7 +526,7 @@ describe('requiredIfValueEquals()', () => {
             materialMergers: true,
         };
 
-        const valid = validationFunctions.requiredIfValueEquals(company.materialMergerDetails, optionsError, 'materialMergerDetails', company);
+        const valid = companyValidation.requiredIfValueEquals(company.materialMergerDetails, optionsError, 'materialMergerDetails', company);
 
         expect(valid).toBe(': ERROR requiredIfValueEquals.options.search not defined');
     });
@@ -360,7 +542,7 @@ describe('requiredIfValueEquals()', () => {
             materialMergers: true,
         };
 
-        const valid = validationFunctions.requiredIfValueEquals(company.materialMergerDetails, optionsError, 'materialMergerDetails', company);
+        const valid = companyValidation.requiredIfValueEquals(company.materialMergerDetails, optionsError, 'materialMergerDetails', company);
 
         expect(valid).toBe(': ERROR requiredIfValueEquals.options.match not defined');
     });
