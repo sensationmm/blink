@@ -164,7 +164,7 @@ const MissingData = (props: any) => {
                                     <Blocks gutter={'small'}>
                                         <IconTitle title={'Screening'} icon={IconTarget} />
                                         <Grid
-                                            labels={['AML Watchlist', 'Sanctions Screening', 'AML Red Flag List', 'Adverse Media', 'Senior Public Figure']}
+                                            labels={['AML Watchlist', 'Sanctions Screening', 'AML Red Flag List', 'Adverse Media']}
                                             content={[
                                                 {
                                                     values: [
@@ -172,7 +172,6 @@ const MissingData = (props: any) => {
                                                         companyStructure.sanctionsScreeningPassed,
                                                         companyStructure.AMLRedFlagListPassed,
                                                         companyStructure.adverseMediaChecksPassed,
-                                                        null,
                                                     ]
                                                 }
                                             ]}
@@ -314,7 +313,7 @@ const MissingData = (props: any) => {
                                                                 shareholder.sanctionsScreeningPassed,
                                                                 shareholder.AMLRedFlagListPassed,
                                                                 shareholder.adverseMediaChecksPassed,
-                                                                null,
+                                                                shareholder.seniorPublicFigure,
                                                             ]
                                                         }
                                                     ]}

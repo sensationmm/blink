@@ -5,13 +5,14 @@ const admin = require("firebase-admin");
 const cors = require('cors');
 const validateJS = require('validate.js');
 const express = require('express');
+const validationGeneric = require('./functionsGeneric');
 const validationCompany = require('./functionsCompany');
 const validationPerson = require('./functionsPerson');
 const server = express();
 server.use(cors());
 
 // add custom company validators
-const customValidation = { ...validationCompany, ...validationPerson };
+const customValidation = { ...validationGeneric, ...validationCompany, ...validationPerson };
 const customValidationKeys = Object.keys(customValidation);
 customValidationKeys.forEach((key) => {
     validateJS.validate.validators[key] = customValidation[key];
@@ -64,10 +65,8 @@ server.post('*/', function (req: any, res: any) {
             rulesetCompany[ruleName] = rule[ruleName];
         });
 
-        // marketRulesets.all = rulesetCompany;
-
         const responsesCompany = companyMarketsToValidate.map((market: market) => {
-            return validateJS.validate.async(company, companyMarketRulesets[market], { cleanAttributes: false }).then(() => {
+            return validateJS.validate.async(company, companyMarketRulesets[market], { cleanAttributes: false, market }).then(() => {
                 const numRules = Object.keys(companyMarketRulesets[market]).length;
 
                 const valid = {
@@ -93,7 +92,9 @@ server.post('*/', function (req: any, res: any) {
             });
         });
 
-        if (validationCompany.requiresUBOChecks(null, {}, null, company)) {
+        const uboChecksRequired = validationCompany.requiresUBOChecks(null, { exceptions: ['IT'] }, null, company);
+
+        if (uboChecksRequired.required === true) {
             rulesPerson.get().then(async (rulesPersonItem: any) => {
                 rulesPersonItem.forEach((doc: any) => {
                     const rule = doc.data();
@@ -112,34 +113,38 @@ server.post('*/', function (req: any, res: any) {
                 const responsesPeople = shareholders.map((shareholder: any) => {
                     const personMarketValidation = {} as { [key: string]: indexedObject };
 
-                    personMarketsToValidate.map((market: market) => {
-                        validateJS.validate.async(shareholder, personMarketRulesets[market], { cleanAttributes: false }).then(() => {
-                            const numRules = Object.keys(personMarketRulesets[market]).length;
+                    personMarketsToValidate
+                        .filter((market: market) => {
+                            return market === 'Core' || !uboChecksRequired.for || (uboChecksRequired.for && uboChecksRequired.for.length > 0 && uboChecksRequired.for.indexOf(market) > -1)
+                        })
+                        .map((market: market) => {
+                            validateJS.validate.async(shareholder, personMarketRulesets[market], { cleanAttributes: false, market }).then(() => {
+                                const numRules = Object.keys(personMarketRulesets[market]).length;
 
-                            const valid = {
-                                completion: numRules / numRules,
-                                passed: numRules,
-                                total: numRules,
-                            };
+                                const valid = {
+                                    completion: numRules / numRules,
+                                    passed: numRules,
+                                    total: numRules,
+                                };
 
-                            return personMarketValidation[market] = valid;
-                        }, (errors: any) => {
-                            const failedRules = errors ? Object.keys(errors).length : 0;
-                            const numRules = Object.keys(personMarketRulesets[market]).length;
+                                return personMarketValidation[market] = valid;
+                            }, (errors: any) => {
+                                const failedRules = errors ? Object.keys(errors).length : 0;
+                                const numRules = Object.keys(personMarketRulesets[market]).length;
 
-                            const valid = {
-                                completion: ((numRules - failedRules) / numRules),
-                                errors,
-                                passed: numRules - failedRules,
-                                failed: failedRules,
-                                total: numRules,
-                            };
+                                const valid = {
+                                    completion: ((numRules - failedRules) / numRules),
+                                    errors,
+                                    passed: numRules - failedRules,
+                                    failed: failedRules,
+                                    total: numRules,
+                                };
 
-                            return personMarketValidation[market] = valid;
+                                return personMarketValidation[market] = valid;
+                            });
+
+                            peopleMarketValidation[shareholder.docId] = personMarketValidation;
                         });
-
-                        peopleMarketValidation[shareholder.docId] = personMarketValidation;
-                    });
 
                 });
 

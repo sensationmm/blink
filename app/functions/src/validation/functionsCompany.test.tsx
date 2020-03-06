@@ -47,7 +47,7 @@ describe('requiresUBOChecks()', () => {
 
         const required = companyValidation.requiresUBOChecks(company.isPublic, {}, 'isPublic', company);
 
-        expect(required).toBe(false);
+        expect(required).toEqual({ required: false });
     });
 
     it('test 2', () => {
@@ -77,7 +77,7 @@ describe('requiresUBOChecks()', () => {
 
         const required = companyValidation.requiresUBOChecks(company.isPublic, {}, 'isPublic', company);
 
-        expect(required).toBe(false);
+        expect(required).toEqual({ required: false });
     });
 
     it('test 3', () => {
@@ -107,7 +107,7 @@ describe('requiresUBOChecks()', () => {
 
         const required = companyValidation.requiresUBOChecks(company.isPublic, {}, 'isPublic', company);
 
-        expect(required).toBe(true);
+        expect(required).toEqual({ required: true });
     });
 
     it('test 4', () => {
@@ -137,7 +137,7 @@ describe('requiresUBOChecks()', () => {
 
         const required = companyValidation.requiresUBOChecks(company.isPublic, {}, 'isPublic', company);
 
-        expect(required).toBe(false);
+        expect(required).toEqual({ required: false });
     });
 
     it('test 5', () => {
@@ -167,7 +167,7 @@ describe('requiresUBOChecks()', () => {
 
         const required = companyValidation.requiresUBOChecks(company.isPublic, {}, 'isPublic', company);
 
-        expect(required).toBe(true);
+        expect(required).toEqual({ required: true });
     });
 
     it('test 6', () => {
@@ -197,7 +197,38 @@ describe('requiresUBOChecks()', () => {
 
         const required = companyValidation.requiresUBOChecks(company.isPublic, {}, 'isPublic', company);
 
-        expect(required).toBe(true);
+        expect(required).toEqual({ required: true });
+    });
+
+    it('handles market exceptions', () => {
+
+        const company = {
+            "type": null,
+            "isPublic": true,
+            "citiCoveredExchange": true,
+            "distinctShareholders": [
+                {
+                    "totalShareholding": 19,
+                    "shareholderType": "P"
+                },
+                {
+                    "totalShareholding": 30,
+                    "shareholderType": "P",
+                    "isPublic": true,
+                    "citiCoveredExchange": true
+                },
+                {
+                    "totalShareholding": 51,
+                    "shareholderType": "C",
+                    "isPublic": false,
+                    "citiCoveredExchange": false
+                }
+            ]
+        };
+
+        const required = companyValidation.requiresUBOChecks(company.isPublic, { exceptions: ['IT', 'PT'] }, 'isPublic', company);
+
+        expect(required).toEqual({ required: true, for: ['IT', 'PT'] });
     });
 });
 
@@ -463,89 +494,6 @@ describe('bearerSharesChecks()', () => {
         });
     });
 
-});
-
-describe('requiredIfValueEquals()', () => {
-    const options = {
-        search: 'materialMergers',
-        match: true,
-    };
-
-    it('pass if given and value matches', () => {
-        const company = {
-            materialMergerDetails: 'blah',
-            materialMergers: true,
-        };
-
-        const valid = companyValidation.requiredIfValueEquals(company.materialMergerDetails, options, 'materialMergerDetails', company);
-
-        expect(valid).toBe(null);
-    });
-
-    it('fail if given and value does not match', () => {
-        const company = {
-            materialMergerDetails: 'blah',
-            materialMergers: false,
-        };
-
-        const valid = companyValidation.requiredIfValueEquals(company.materialMergerDetails, options, 'materialMergerDetails', company);
-
-        expect(valid).toBe('cannot be supplied if material mergers is not true');
-    });
-
-    it('fail if not given and value matches', () => {
-        const company = {
-            materialMergers: true,
-            materialMergerDetails: null,
-        };
-
-        const valid = companyValidation.requiredIfValueEquals(company.materialMergerDetails, options, 'materialMergerDetails', company);
-
-        expect(valid).toBe('is required if material mergers is true');
-    });
-
-    it('pass if not given and value does not match', () => {
-        const company = {
-            materialMergers: false,
-            materialMergerDetails: null,
-        };
-
-        const valid = companyValidation.requiredIfValueEquals(company.materialMergerDetails, options, 'materialMergerDetails', company);
-
-        expect(valid).toBe(null);
-    });
-
-    it('error if `search` param not given', () => {
-        const optionsError = {
-            search: null,
-            match: true,
-        };
-
-        const company = {
-            materialMergerDetails: 'blah',
-            materialMergers: true,
-        };
-
-        const valid = companyValidation.requiredIfValueEquals(company.materialMergerDetails, optionsError, 'materialMergerDetails', company);
-
-        expect(valid).toBe(': ERROR requiredIfValueEquals.options.search not defined');
-    });
-
-    it('error if `find` param not given', () => {
-        const optionsError = {
-            search: 'materialMergers',
-            match: null,
-        };
-
-        const company = {
-            materialMergerDetails: 'blah',
-            materialMergers: true,
-        };
-
-        const valid = companyValidation.requiredIfValueEquals(company.materialMergerDetails, optionsError, 'materialMergerDetails', company);
-
-        expect(valid).toBe(': ERROR requiredIfValueEquals.options.match not defined');
-    });
 });
 
 describe('naicsChecks()', () => {

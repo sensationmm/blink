@@ -93,7 +93,7 @@ const Readiness: React.FC<ReadinessProps> = ({
                                     shareholder.sanctionsScreeningPassed,
                                     shareholder.AMLRedFlagListPassed,
                                     shareholder.adverseMediaChecksPassed,
-                                    null,
+                                    shareholder.seniorPublicFigure,
                                 ]
                             }
                         })

@@ -4,18 +4,20 @@ const moment = require('moment');
 const validateJS = require('validate.js');
 const { fetchGoogleSheet } = require('../google/fetchSheet');
 
-type Value = any;
-type Options = { [key: string]: any };
-type Key = string;
-type Attributes = { [key: string]: any };
+import { Value, Options, Key, Attributes } from './functionsGeneric';
+
+type UBORequired = {
+    required: boolean;
+    for?: Array<string>;
+}
 
 /*
 PLEASE NOTE
 All functions MUST take the same four props as they are validateJS custom validators
-(value, options, key, attributes)
+(value, options, key, attributes, globalOptions)
 */
 
-const requiresUBOChecks = (value: Value, options: Options, key: Key, attributes: Attributes): boolean => {
+const requiresUBOChecks = (value: Value, options: Options, key: Key, attributes: Attributes, globalOptions: Options): UBORequired => {
     const { isPublic, distinctShareholders } = attributes;
 
     const majorityShareholder = distinctShareholders.filter((shareholder: any) => shareholder.totalShareholding > 50);
@@ -28,13 +30,17 @@ const requiresUBOChecks = (value: Value, options: Options, key: Key, attributes:
             majorityShareholder[0].citiCoveredExchange === true
         )
     )) {
-        return false;
+        if (options.exceptions && options.exceptions.length > 0) {
+            return { required: true, for: options.exceptions };
+        }
+
+        return { required: false };
     }
 
-    return true;
+    return { required: true };
 };
 
-const ageLessThanThree = (value: Value, options: Options, key: Key, attributes: Attributes) => {
+const ageLessThanThree = (value: Value, options: Options, key: Key, attributes: Attributes, globalOptions: Options) => {
     const undefinedYear = attributes.incorporationDate === undefined || attributes.incorporationDate === null || attributes.incorporationDate === '';
     const younger = moment(attributes.incorporationDate) > moment.utc().subtract(3, 'years');
 
@@ -45,7 +51,7 @@ const ageLessThanThree = (value: Value, options: Options, key: Key, attributes: 
     }
 }
 
-const bearerSharesChecks = async (value: Value, options: Options, key: Key, attributes: Attributes) => {
+const bearerSharesChecks = async (value: Value, options: Options, key: Key, attributes: Attributes, globalOptions: Options) => {
 
     const bearerInfo = await fetchGoogleSheet('1jg0qSvZLQQPHfL572BQKiHgolS91uyHFtznzX94OCrw');
     const bearerConfig = JSON.parse(bearerInfo).map((row: any) => {
@@ -97,30 +103,7 @@ const bearerSharesChecks = async (value: Value, options: Options, key: Key, attr
     return null;
 };
 
-const requiredIfValueEquals = (value: Value, { search, match }: Options, key: Key, attributes: Attributes) => {
-    if (!search) {
-        return ': ERROR requiredIfValueEquals.options.search not defined';
-    }
-    if (!match) {
-        return ': ERROR requiredIfValueEquals.options.match not defined';
-    }
-
-    if (attributes[search] === match) {
-        if (validateJS.isDefined(value)) {
-            return null;
-        }
-
-        return `is required if ${validateJS.prettify(search)} is ${match}`;
-    } else {
-        if (validateJS.isDefined(value)) {
-            return `cannot be supplied if ${validateJS.prettify(search)} is not ${match}`;
-        }
-
-        return null;
-    }
-}
-
-// const naicsChecks = async (value: Value, options: Options, key: Key, attributes: Attributes) => {
+// const naicsChecks = async (value: Value, options: Options, key: Key, attributes: Attributes, globalOptions: Options) => {
 //     const { NAICSCode, SICCode } = attributes;
 
 //     const naicsSheet = await fetchGoogleSheet('1K2dp6glyD6b0D7hTPBA_zFKjbqls0lrDbXoVra95dzo');
@@ -142,7 +125,6 @@ const validationFunctions = {
     ageLessThanThree,
     bearerSharesChecks,
     // naicsChecks,
-    requiredIfValueEquals,
     requiresUBOChecks
 };
 

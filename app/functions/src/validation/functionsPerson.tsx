@@ -1,9 +1,6 @@
 export { }
 
-type Value = any;
-// type Options = { [key: string]: any };
-type Key = string;
-type Attributes = { [key: string]: any };
+import { Value, Key, Attributes } from './functionsGeneric';
 
 /*
 PLEASE NOTE
