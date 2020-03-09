@@ -1,7 +1,7 @@
 const genericValidation = require('./functionsGeneric');
 
 describe('requiredIfValueEquals()', () => {
-    const options = {
+    let options = {
         search: 'materialMergers',
         match: true,
     };
@@ -84,8 +84,6 @@ describe('requiredIfValueEquals()', () => {
 });
 
 describe('requiredIf', () => {
-    let options = { "presence": true, "type": "boolean" };
-
     describe('field not given', () => {
         it('should fail with passing validators', () => {
             const person = {
@@ -93,7 +91,7 @@ describe('requiredIf', () => {
                 totalShareholding: 30
             };
 
-            options = { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } };
+            const options = { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } };
 
             const valid = genericValidation.requiredIf(null, options, 'checkField', person);
 
@@ -106,7 +104,7 @@ describe('requiredIf', () => {
                 totalShareholding: 30
             };
 
-            options = { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } };
+            const options = { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } };
 
             const valid = genericValidation.requiredIf(null, options, 'checkField', person);
 
@@ -119,7 +117,7 @@ describe('requiredIf', () => {
                 totalShareholding: 20
             };
 
-            options = { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } };
+            const options = { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } };
 
             const valid = genericValidation.requiredIf(null, options, 'checkField', person);
 
@@ -135,7 +133,7 @@ describe('requiredIf', () => {
                 totalShareholding: 30
             };
 
-            options = { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } };
+            const options = { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } };
 
             const valid = genericValidation.requiredIf(null, options, 'checkField', person);
 
@@ -149,7 +147,7 @@ describe('requiredIf', () => {
                 totalShareholding: 30
             };
 
-            options = { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } };
+            const options = { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } };
 
             const valid = genericValidation.requiredIf(null, options, 'checkField', person);
 
@@ -163,7 +161,7 @@ describe('requiredIf', () => {
                 totalShareholding: 20
             };
 
-            options = { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } };
+            const options = { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } };
 
             const valid = genericValidation.requiredIf(null, options, 'checkField', person);
 
