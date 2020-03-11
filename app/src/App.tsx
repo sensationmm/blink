@@ -8,7 +8,6 @@ import {
   withRouter
 } from "react-router-dom";
 
-
 // import CompaniesHouse from "./components/companies-house-2"
 import Kyckr from "./components/kyckr"
 import KyckrFilingSearch from "./components/kyckr/filing-search";
