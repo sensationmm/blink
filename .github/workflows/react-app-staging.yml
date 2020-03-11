@@ -27,7 +27,7 @@ jobs:
         run: yarn run build
       - name: Deploy hosting to Firebase (staging)
         working-directory: ./app
-        run: ./node_modules/.bin/firebase deploy --only hosting -P staging 
+        run: ./node_modules/.bin/firebase deploy --only hosting -P staging --token $STAGING_FIREBASE_TOKEN
         env:
           STAGING_FIREBASE_TOKEN: ${{ secrets.STAGING_FIREBASE_TOKEN }}
           
