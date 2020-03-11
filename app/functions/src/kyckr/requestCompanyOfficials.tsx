@@ -20,7 +20,7 @@ kyckrCompanyOfficialsServer.get('*/:companyCode/:countryISOCode/:orderReference'
     soap.createClient(url, { wsdl_headers: { Authorization: auth } }, function (err: any, client: any) {
         // console.log("error", err)
         // console.log("client", client)
-        console.log("order reference: ", orderReference);
+        console.log("order reference:  ", orderReference);
         client.CompanyOfficials(args, function (err: any, result: any) {
 
             // console.log(result);
