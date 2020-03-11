@@ -19,7 +19,7 @@ jobs:
         run: yarn add firebase-tools
       - name: Set functions secrets
         working-directory: ./app
-        run: ./node_modules/.bin/firebase functions:config:set app_google_service_account_email.key=${APP_GOOGLE_SERVICE_ACCOUNT_EMAIL} app_google_private_key.key=${APP_GOOGLE_PRIVATE_KEY} app_password.key=${APP_PASSWORD} know_your_customer_api.key=${KNOW_YOUR_CUSTOMER_API_KEY} due_dill_api.key=${DUE_DILL_API_KEY} trulioo_api.key=${TRULIOO_API_KEY} service_account_private_key_id.key=${FIREBASE_SERVICE_ACCOUNT_PRIVATE_KEY_ID} service_account_client_id.key=${FIREBASE_SERVICE_ACCOUNT_CLIENT_ID} service_account_client_email.key=${FIREBASE_SERVICE_ACCOUNT_CLIENT_EMAIL} service_account_private_key.key=${FIREBASE_SERVICE_ACCOUNT_PRIVATE_KEY} companies_house_api.key=${COMPANIES_HOUSE_API_KEY} companies_house_api.id="Companies house" --token $FIREBASE_TOKEN
+        run: ./node_modules/.bin/firebase functions:config:set app_google_service_account_email.key=${APP_GOOGLE_SERVICE_ACCOUNT_EMAIL} app_google_private_key.key=${APP_GOOGLE_PRIVATE_KEY} app_password.key=${APP_PASSWORD} know_your_customer_api.key=${KNOW_YOUR_CUSTOMER_API_KEY} due_dill_api.key=${DUE_DILL_API_KEY} trulioo_api.key=${TRULIOO_API_KEY} service_account_private_key_id.key=${FIREBASE_SERVICE_ACCOUNT_PRIVATE_KEY_ID} service_account_client_id.key=${FIREBASE_SERVICE_ACCOUNT_CLIENT_ID} service_account_client_email.key=${FIREBASE_SERVICE_ACCOUNT_CLIENT_EMAIL} service_account_private_key.key=${FIREBASE_SERVICE_ACCOUNT_PRIVATE_KEY} companies_house_api.key=${COMPANIES_HOUSE_API_KEY} companies_house_api.id="Companies house" -P production --token $FIREBASE_TOKEN
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY}}
@@ -39,6 +39,6 @@ jobs:
         run: npm install 
       - name: Deploy functions to Firebase
         working-directory: ./app
-        run: ./node_modules/.bin/firebase deploy --only functions --token $FIREBASE_TOKEN
+        run: ./node_modules/.bin/firebase deploy --only functions -P production --token $FIREBASE_TOKEN
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
