@@ -50,7 +50,7 @@ const App = withRouter((props: any) => {
 
   const [isAuthed, setIsAuthed] = useState(window.location.href.indexOf("localhost:") > -1);
 
-  return !isAuthed ? <div className="sign-in"><button onClick={signIn}>Sign in</button></div> : <div>
+return !isAuthed ? <div className="sign-in"><button onClick={signIn}>Sign in {window.location.href.indexOf("staging") > -1 ? '(staging)': ''}</button></div> : <div>
     <Switch>
       <Route exact path="/"><Redirect to="/search" /></Route>
 
