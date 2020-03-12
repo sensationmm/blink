@@ -27,6 +27,7 @@ import MissingData from './containers/MissingData';
 import ContactClient from './containers/ContactClient';
 import ScreeningComplete from './containers/ScreeningComplete';
 import Loader from './components/loader';
+import Doc from './containers/Doc';
 
 import { requestSignIn } from './utils/generic/request';
 
@@ -59,6 +60,8 @@ const App = withRouter((props: any) => {
       <Route exact path="/missing-data"><MissingData /></Route>
       <Route exact path="/contact-client"><ContactClient /></Route>
       <Route exact path="/screening-complete"><ScreeningComplete /></Route>
+
+      <Route exact path="/doc"><Doc /></Route>
 
       <Route path="/kyckr">
         <Kyckr />

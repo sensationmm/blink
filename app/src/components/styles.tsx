@@ -46,6 +46,10 @@ export const MainSt = styled.main`
     .pretty-json-container {
         margin-top: 20px;
     }
+
+    dl.details {
+        display: none;
+    }
 `
 
 export const Content = styled.div`

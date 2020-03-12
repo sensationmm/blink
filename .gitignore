@@ -85,3 +85,5 @@ yarn-debug.log*
 yarn-error.log*
 
 *.xml
+
+/app/src/doc/fonts
