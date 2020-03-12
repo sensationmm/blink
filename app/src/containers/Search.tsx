@@ -108,6 +108,7 @@ const Search = (props: any) => {
             hideLoader();
             props.history.push('/company-structure')
         } else {
+            // console.log("UBOStructure", UBOStructure)
             setCompanyStructure(UBOStructure);
             setHackValue(Math.random());
             hideLoader();
@@ -124,10 +125,11 @@ const Search = (props: any) => {
             if (companyProfile && companyProfile.shareholders) {
 
                 for (let i = 0; i < companyProfile.shareholders.length; i++) {
-                    if (companyProfile.shareholders[i].shareholderType === "C" && companyProfile.shareholders[i].companyId) {
 
-                        const nextCompanyId = companyProfile.shareholders[i].companyId;
-                        const nextCompanySearchCode = companyProfile.shareholders[i].code || companyProfile.shareholders[i].companyId;
+                    if (companyProfile.shareholders[i].shareholderType?.value === "C" && companyProfile.shareholders[i].companyId?.value) {
+
+                        const nextCompanyId = companyProfile.shareholders[i].companyId?.value;
+                        const nextCompanySearchCode = companyProfile.shareholders[i].code?.value || companyProfile.shareholders[i].companyId?.value;
 
                         await new Promise(async (next) => {
                             await getCompanyProfile(nextCompanyId, nextCompanySearchCode, countryCode, registrationAuthorityCode, isNewSearch);

@@ -14,6 +14,16 @@ const compositeExchangeCodes = require('../bloomberg/compositeExchangeCodes');
 
 server.use(cors());
 
+const valueToObject = (value: any, source: string = "registry") => {
+    return {
+        value,
+        updatedAt: new Date(),
+        source,
+        certification: "",
+        document: ""
+    }
+}
+
 const buildShareholderPerson = (shareholder: any) => {
     const firstName = shareholder?.name?.split(' ').slice(0, -1).join(' ');
     const lastName = shareholder?.name?.split(' ').slice(-1).join(' ');
@@ -21,16 +31,16 @@ const buildShareholderPerson = (shareholder: any) => {
     let newShareholder: any = {};
 
     if (shareholder.name) {
-        newShareholder.fullName = shareholder?.name?.toLowerCase().replace(/  /g, " ");
+        newShareholder.fullName = valueToObject(shareholder?.name?.toLowerCase().replace(/  /g, " "));
     }
     if (firstName) {
-        newShareholder.firstName = firstName;
+        newShareholder.firstName = valueToObject(firstName);
     }
     if (lastName) {
-        newShareholder.lastName = lastName;
+        newShareholder.lastName = valueToObject(lastName);
     }
     if (shareholder?.dateOfBirth) {
-        newShareholder.dateOfBirth = shareholder?.dateOfBirth;
+        newShareholder.dateOfBirth = valueToObject(shareholder?.dateOfBirth);
     }
     return newShareholder;
 }
@@ -135,7 +145,7 @@ const requestCompanyProfile = async (
         const go = async () => {
             let parentCompanyIsInDB = false;
             // THE PARENT COMPANY
-            const targetCompanyQuery = await companyCollection.where('companyId', '==', companyCode).get();
+            const targetCompanyQuery = await companyCollection.where('companyId.value', '==', companyCode).get();
             let targetCompanyRef: any;
             let targetCompany: any;
             if (targetCompanyQuery?.docs.length > 0) {
@@ -161,15 +171,15 @@ const requestCompanyProfile = async (
                         let officers: any = [];
 
                         // no shareholders so the company might be public..
-                        const companiesResult = await bloombergSearchCompany(targetCompany.searchName);
+                        const companiesResult = await bloombergSearchCompany(targetCompany.searchName.value);
                         const companies = JSON.parse(companiesResult)
 
                         if (companies?.results) {
                             const matchingCompanies = companies?.results.filter((company: any) => {
-                                const matchingCompanyName = company.name.toLowerCase() === targetCompany.searchName
+                                const matchingCompanyName = company.name.toLowerCase() === targetCompany.searchName.value
                                 let matchingCountryCode = true;
-                                if (targetCompany.countryCode) {
-                                    matchingCountryCode = targetCompany.countryCode.toLowerCase() === company.country.toLowerCase();
+                                if (targetCompany.countryCode.value) {
+                                    matchingCountryCode = targetCompany.countryCode.value.toLowerCase() === company.country.toLowerCase();
                                 }
 
                                 return matchingCompanyName && matchingCountryCode
@@ -185,7 +195,7 @@ const requestCompanyProfile = async (
 
                             if (publicCompanyTypes) {
 
-                                publicCompanyFlags.isPublic = false;
+                                publicCompanyFlags.isPublic = valueToObject(false, "blink")
 
                                 // console.log("publicCompanyTypes", publicCompanyTypes)
                                 const cleanedPublicCompanies = JSON.parse(publicCompanyTypes).filter((companyType: any) => {
@@ -200,7 +210,7 @@ const requestCompanyProfile = async (
                                     }
                                 })
                                 // .sort((companyTypeA: any, companyTypeB: any) => companyTypeA.countryCode.localeCompare(companyTypeB.countryCode));
-                                const companyName = targetCompany.name?.toLowerCase();
+                                const companyName = targetCompany.name?.value.toLowerCase();
                                 if (targetCompany && targetCompany.countryCode) {
                                     const countryCodeCleanedPublicCompanies = cleanedPublicCompanies.filter((publicCompanyTypes: any) =>
                                         publicCompanyTypes.countryCode === targetCompany.countryCode);
@@ -213,7 +223,7 @@ const requestCompanyProfile = async (
                                                 ||
                                                 companyName.indexOf(shortFormString + " ") > -1
                                             ) {
-                                                publicCompanyFlags.isPublic = true;
+                                                publicCompanyFlags.isPublic.value = true;
                                             }
                                         });
                                     }
@@ -226,27 +236,26 @@ const requestCompanyProfile = async (
                                             ||
                                             companyName.indexOf(shortFormString + " ") > -1
                                         ) {
-                                            publicCompanyFlags.isPublic = true;
-                                            publicCompanyFlags.suspectedCountryFromName = cleanedPublicCompany.countryCode
+                                            publicCompanyFlags.isPublic.value = true;
+                                            publicCompanyFlags.suspectedCountryFromName = valueToObject(cleanedPublicCompany.countryCode)
                                         }
                                     });
                                 }
                             }
 
-                            const bloombergExhangeData = matchingCompanies.map((matchingCompany: any) => {
+                            const bloombergExhangeData = valueToObject(matchingCompanies.map((matchingCompany: any) => {
                                 return {
                                     securityType: matchingCompany.security_type,
                                     resourceId: matchingCompany.resource_id,
                                     tickerSymbol: matchingCompany.ticker_symbol
-
                                 }
-                            });
+                            }), "bloomberg")
 
-                            let citiCoveredExchange = false
-                            bloombergExhangeData.forEach((exchange: any) => {
+                            let citiCoveredExchange = valueToObject(false);
+                            bloombergExhangeData.value.forEach((exchange: any) => {
                                 const exchangeCode = exchange.tickerSymbol.split(":").pop();
                                 if (compositeExchangeCodes.indexOf(exchangeCode) > -1) {
-                                    citiCoveredExchange = true;
+                                    citiCoveredExchange.value = true;
                                 }
 
                             })
@@ -254,7 +263,7 @@ const requestCompanyProfile = async (
                             await targetCompanyRef.update({
                                 bloomberg: bloombergExhangeData,
                                 ...publicCompanyFlags,
-                                updatedAt: new Date(),
+                                // updatedAt: new Date(),
                                 citiCoveredExchange
                             }, { merge: true });
                         }
@@ -271,23 +280,27 @@ const requestCompanyProfile = async (
                                         const sourceShareholder = shareholderDetails[i];
                                         const searchName = sourceShareholder?.name?.toLowerCase().replace(/  /g, " ");
                                         const name = sourceShareholder?.name;
-                                        const shareholder = { ...sourceShareholder };
+                                        // const shareholder = { ...sourceShareholder };
+                                        const shareholder: any = {};
+                                        Object.keys(sourceShareholder).forEach((key: string) => {
+                                            shareholder[key] = valueToObject(sourceShareholder[key])
+                                        })
 
-                                        if (!shareholder.shareholderType) {
-                                            const shareholderName = shareholder.name;
+                                        if (!shareholder.shareholderType.value) {
+                                            const shareholderName = shareholder.name.value;
                                             if (
                                                 isCompanyByName(shareholderName?.toLowerCase())
                                             ) {
-                                                shareholder.shareholderType = "C";
+                                                shareholder.shareholderType.value = "C";
                                             } else {
-                                                shareholder.shareholderType = "P";
+                                                shareholder.shareholderType.value = "P";
                                             }
                                         }
                                         // console.log("shareholder", shareholder);
 
                                         let ref: any;
 
-                                        if (shareholder.shareholderType === "P") {
+                                        if (shareholder.shareholderType.value === "P") {
 
                                             const newShareholder = await buildShareholderPerson(sourceShareholder);
 
@@ -295,18 +308,18 @@ const requestCompanyProfile = async (
 
                                             // it's a person - see if we already have them in our DB and if not, add
 
-                                            let personsQuery = personsCollection.where('fullName', '==', searchName);
+                                            let personsQuery = personsCollection.where('fullName.value', '==', searchName);
                                             await personsQuery.get().then(async (persons: any) => {
 
                                                 const entityAlreadyAdded = entitiesAlreadyAdded.find((c: any) => c.searchName === searchName);
 
                                                 if (entityAlreadyAdded) {
                                                     ref = entityAlreadyAdded.ref;
-                                                    await ref.update({ ...newShareholder, updatedAt: new Date() }, { merge: true });
+                                                    await ref.update({ ...newShareholder }, { merge: true });
                                                 }
                                                 else if (persons.empty) {
                                                     console.log("empty")
-                                                    ref = await personsCollection.add({ ...newShareholder, updatedAt: new Date() }, { merge: true });
+                                                    ref = await personsCollection.add({ ...newShareholder }, { merge: true });
                                                     entitiesAlreadyAdded.push({
                                                         searchName,
                                                         ref
@@ -315,16 +328,16 @@ const requestCompanyProfile = async (
                                                     const personDoc = persons.docs[0];
                                                     ref = personDoc.ref;
                                                     // console.log("personDoc", personDoc?.ref.path)
-                                                    await ref.update({ ...newShareholder, updatedAt: new Date() }, { merge: true });
+                                                    await ref.update({ ...newShareholder }, { merge: true });
                                                 }
                                             });
 
                                             // console.log("person Ref", ref)
                                         }
+                                        
+                                        if (shareholder.shareholderType.value === "C" || shareholder.shareholderType.value === "O") {
 
-                                        if (shareholder.shareholderType === "C" || shareholder.shareholderType === "O") {
-
-                                            let companiesQuery = companyCollection.where('searchName', '==', searchName);
+                                            let companiesQuery = companyCollection.where('searchName.value', '==', searchName);
                                             await companiesQuery.get().then(async (companies: any) => {
 
                                                 let obj: any;
@@ -346,7 +359,7 @@ const requestCompanyProfile = async (
                                                 }
                                                 if (company && company.companyId) {
                                                     obj.companyId = company.companyId;
-                                                    shareholder.companyId = company.companyId;
+                                                    shareholder.companyId = valueToObject(company.companyId);
 
                                                     // get the vitals too.. 
                                                     // preserve the original name so the "where 'name' == name" still works
@@ -365,17 +378,25 @@ const requestCompanyProfile = async (
                                                     }
                                                 }
 
-
-                                                // console.log(searchName, `empty = ${companies.empty}`)
+                                                const companyEnrichmentProperties: any = {};
+                                                Object.keys(obj).forEach((key: any) => {
+                                                    companyEnrichmentProperties[key] = valueToObject(obj[key]);
+                                                })
+                                                
+                                                // console.log("searchName", searchName)
                                                 const entityAlreadyAdded = entitiesAlreadyAdded.find((c: any) => c.searchName === searchName);
 
                                                 if (entityAlreadyAdded) {
                                                     ref = entityAlreadyAdded.ref;
-                                                    await ref.update({ ...obj, updatedAt: new Date() }, { merge: true });
+                                                    await ref.update({ ...companyEnrichmentProperties, 
+                                                        // updatedAt: new Date() 
+                                                    }, { merge: true });
                                                 }
                                                 else if (companies.empty) {
                                                     console.log("empty")
-                                                    ref = await companyCollection.add({ ...obj, updatedAt: new Date() }, { merge: true });
+                                                    ref = await companyCollection.add({ ...companyEnrichmentProperties, 
+                                                        // updatedAt: new Date() 
+                                                    }, { merge: true });
                                                     entitiesAlreadyAdded.push({
                                                         searchName,
                                                         ref
@@ -384,7 +405,9 @@ const requestCompanyProfile = async (
                                                     const companiesDoc = companies.docs[0];
                                                     ref = companiesDoc.ref
                                                     // console.log("ref 2", ref)
-                                                    await ref.update({ ...obj, updatedAt: new Date() }, { merge: true });
+                                                    await ref.update({ ...companyEnrichmentProperties, 
+                                                        // updatedAt: new Date() 
+                                                    }, { merge: true });
                                                 }
                                             });
                                         }
@@ -439,25 +462,32 @@ const requestCompanyProfile = async (
                                             }
                                         }
 
-                                        const newOfficer = officer;
-                                        newOfficer.searchName = searchName;
-                                        newOfficer.fullName = searchName;
+                                        const newOfficer: any = {};
+                                        Object.keys(officer).forEach((key:any) => {
+                                            newOfficer[key] = valueToObject(officer[key]);
+                                        });
+                                        newOfficer.searchName = valueToObject(searchName);
+                                        newOfficer.fullName = valueToObject(searchName);
 
                                         // it's a person - see if we already have them in our DB and if not, add
 
                                         if (!newOfficer.companyId) {
 
-                                            let personsQuery = personsCollection.where('fullName', '==', searchName);
+                                            let personsQuery = personsCollection.where('fullName.value', '==', searchName);
                                             await personsQuery.get().then(async (persons: any) => {
 
                                                 const entityAlreadyAdded = entitiesAlreadyAdded.find((c: any) => c.searchName === searchName);
 
                                                 if (entityAlreadyAdded) {
                                                     ref = entityAlreadyAdded.ref;
-                                                    ref.update({ ...newOfficer, updatedAt: new Date() }, { merge: true });
+                                                    ref.update({ ...newOfficer, 
+                                                        // updatedAt: new Date() 
+                                                    }, { merge: true });
                                                 }
                                                 else if (persons.empty) {
-                                                    ref = await personsCollection.add({ ...newOfficer, updatedAt: new Date() }, { merge: true });
+                                                    ref = await personsCollection.add({ ...newOfficer, 
+                                                        // updatedAt: new Date() 
+                                                    }, { merge: true });
                                                     entitiesAlreadyAdded.push({
                                                         searchName,
                                                         ref
@@ -465,24 +495,30 @@ const requestCompanyProfile = async (
                                                 } else {
                                                     const personDoc = persons.docs[0];
                                                     ref = personDoc.ref;
-                                                    await personDoc.ref.update({ ...newOfficer, updatedAt: new Date() }, { merge: true });
+                                                    await personDoc.ref.update({ ...newOfficer, 
+                                                        // updatedAt: new Date() 
+                                                    }, { merge: true });
                                                 }
                                             });
                                         }
 
                                         else {
-                                            let companiesQuery = companyCollection.where('searchName', '==', searchName);
+                                            let companiesQuery = companyCollection.where('searchName.value', '==', searchName);
                                             await companiesQuery.get().then(async (companies: any) => {
 
                                                 const entityAlreadyAdded = entitiesAlreadyAdded.find((c: any) => c.searchName === searchName);
 
                                                 if (entityAlreadyAdded) {
                                                     ref = entityAlreadyAdded.ref;
-                                                    await ref.update({ ...newOfficer, updatedAt: new Date() }, { merge: true });
+                                                    await ref.update({ ...newOfficer, 
+                                                        // updatedAt: new Date() 
+                                                    }, { merge: true });
                                                 }
                                                 else if (companies.empty) {
                                                     // console.log("companies", companies)
-                                                    ref = await companyCollection.add({ ...newOfficer, updatedAt: new Date() }, { merge: true });
+                                                    ref = await companyCollection.add({ ...newOfficer, 
+                                                        // updatedAt: new Date() 
+                                                    }, { merge: true });
                                                     entitiesAlreadyAdded.push({
                                                         searchName,
                                                         ref
@@ -490,7 +526,9 @@ const requestCompanyProfile = async (
                                                 } else {
                                                     const companiesDoc = companies.docs[0];
                                                     ref = companiesDoc.ref;
-                                                    await companiesDoc.ref.update({ ...newOfficer, updatedAt: new Date() }, { merge: true });
+                                                    await companiesDoc.ref.update({ ...newOfficer, 
+                                                        // updatedAt: new Date() 
+                                                    }, { merge: true });
                                                 }
                                             });
                                         }
@@ -516,6 +554,8 @@ const requestCompanyProfile = async (
                                     type,
                                     updatedAt: new Date()
                                 }
+
+                                // console.log("relationship", relationship)
 
                                 // check if we already have the relationship
                                 const relationshipQuery = await relationshipsCollection
@@ -558,7 +598,6 @@ const requestCompanyProfile = async (
                                 }
                             }
 
-
                             if (shareholders.length > 0) {
                                 await Promise.all(
                                     shareholders.map(async (shareholder: any) => {
@@ -576,7 +615,7 @@ const requestCompanyProfile = async (
                             }
 
                             // console.log(shareholders)
-                            resolve({ shareholders, officers, entitiesAlreadyAdded });
+                            resolve({ shareholders, officers });
 
 
 

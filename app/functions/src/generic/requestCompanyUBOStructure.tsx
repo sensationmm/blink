@@ -70,33 +70,35 @@ server.post('*/', async function (req: any, res: any) {
                 let shareholder = { ...shareholderDoc.data() };
                 shareholder = { ...shareholder, ...shareholderRelationshipDoc };
 
-                shareholder.totalShareholding = (totalShareholding / 100) * (shareholder.percentage / 100);
+                delete shareholder.searchName;
+
+                shareholder.totalShareholding = (totalShareholding / 100) * (shareholder.percentage?.value / 100);
 
                 const distinctShareholderIndex = distinctShareholders.findIndex((distinctShareholder: any) =>
                     distinctShareholder.docId === shareholder.source.path);
 
                 if (distinctShareholderIndex > -1) {
-                    distinctShareholders[distinctShareholderIndex].totalShareholding += (totalShareholding / 100) * shareholder.percentage;
+                    distinctShareholders[distinctShareholderIndex].totalShareholding += (totalShareholding / 100) * shareholder.percentage?.value;
                 } else {
                     distinctShareholders.push({
                         ...shareholder,
-                        totalShareholding: (totalShareholding / 100) * shareholder.percentage,
+                        totalShareholding: (totalShareholding / 100) * shareholder.percentage?.value,
                         name: shareholder.name || shareholder.fullName,
                         shareholderType: shareholder.shareholderType,
                         docId: shareholder.source.path
                     })
                 }
 
-                if (shareholder.shareholderType === "C") {
-                    if (shareholder.companyId) {
+                if (shareholder.shareholderType.value === "C") {
+                    if (shareholder.companyId?.value) {
 
                         // console.log("shareholder.shareholderType", shareholder.shareholderType, shareholder.companyId)
 
-                        const companyShareholders = await getShareholdersAndOfficers(shareholder.companyId, shareholder.source, depth + 1, (totalShareholding / 100) * shareholder.percentage);
+                        const companyShareholders = await getShareholdersAndOfficers(shareholder.companyId?.value, shareholder.source, depth + 1, (totalShareholding / 100) * shareholder.percentage?.value);
 
                         if (companyShareholders) {
                             if (companyShareholders.shareholders) {
-                                shareholder.shareholders = companyShareholders.shareholders.sort((shareholderA: any, shareholderB: any) => parseFloat(shareholderB.percentage) - parseFloat(shareholderA.percentage));
+                                shareholder.shareholders = companyShareholders.shareholders.sort((shareholderA: any, shareholderB: any) => parseFloat(shareholderB.percentage?.value) - parseFloat(shareholderA.percentage?.value));
                             }
                             shareholder.officers = companyShareholders.officers;
                         }
@@ -127,7 +129,7 @@ server.post('*/', async function (req: any, res: any) {
             }))
 
             if (returnCompany.shareholders) {
-                returnCompany.shareholders = returnCompany.shareholders.sort((shareholderA: any, shareholderB: any) => parseFloat(shareholderB.percentage) - parseFloat(shareholderA.percentage));
+                returnCompany.shareholders = returnCompany.shareholders.sort((shareholderA: any, shareholderB: any) => parseFloat(shareholderB.percentage?.value) - parseFloat(shareholderA.percentage?.value));
             }
         }
 
@@ -139,7 +141,7 @@ server.post('*/', async function (req: any, res: any) {
 
     companiesRef.doc(companyId);
 
-    let companiesQuery = companiesRef.where('companyId', '==', companyId);
+    let companiesQuery = companiesRef.where('companyId.value', '==', companyId);
     await companiesQuery.get().then(async (companies: any) => {
 
         let returnCompany: any;
