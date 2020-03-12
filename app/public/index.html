@@ -24,7 +24,7 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>blink</title>
+    <title>blink [staging]</title>
     <!-- <script>
       setInterval(function() {
         document.title = document.title === "_" ? "Blink" : "_"
@@ -45,4 +45,9 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
   </body>
+  <script>
+    if (window.location.href.indexOf("blink-bank.com") > -1) {
+      document.title = "blink"
+    }
+  </script>
 </html>

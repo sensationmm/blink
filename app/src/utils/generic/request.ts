@@ -7,7 +7,7 @@ const stringSimilarity = require('string-similarity');
 
 // const debounce = require('lodash.debounce');
 
-const domain = window.location.href.indexOf("localhost") > -1 ? "http://localhost:5001/blink-3b651/us-central1" : "";
+const domain = window.location.href.indexOf("localhost") > -1 ? "http://localhost:5001/blink-staging-20006/us-central1" : "";
 
 const requestCompanyUBOStructure = async (companyId: string, countryISOCode: string = "GB") => {
     // const response = await fetch(`${domain}/requestCompanyUBOStructure/any/${companyNumber}/${countryISOCode}`, { mode: 'cors' });

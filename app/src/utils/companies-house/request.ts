@@ -1,7 +1,7 @@
 
 const stringSimilarity = require('string-similarity');
 
-const domain = window.location.href.indexOf("localhost") > -1 ? "http://localhost:5001/blink-3b651/us-central1" : "https://us-central1-blink-3b651.cloudfunctions.net"
+const domain = window.location.href.indexOf("localhost") > -1 ? "http://localhost:5001/blink-staging-20006/us-central1" : ""
 
 const requestCompany = async (companyId: string) => {
     const response = await fetch(`${domain}/companiesHouseCompany/${companyId}`, { mode: 'cors' });

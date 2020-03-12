@@ -1,9 +1,9 @@
-name: CI - React App
+name: CI - React App Staging
 
 on:
   push:
     branches:
-      - master
+      - develop
     paths:
       - app/**
       - '!app/functions/**'
@@ -25,8 +25,9 @@ jobs:
       - name: Build
         working-directory: ./app
         run: yarn run build
-      - name: Deploy hosting to Firebase
+      - name: Deploy hosting to Firebase (staging)
         working-directory: ./app
-        run: ./node_modules/.bin/firebase deploy --only hosting  
+        run: ./node_modules/.bin/firebase deploy --only hosting -P staging --token $FIREBASE_TOKEN
         env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          FIREBASE_TOKEN: ${{ secrets.STAGING_FIREBASE_TOKEN }}
+          
