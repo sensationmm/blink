@@ -69,27 +69,38 @@ export const screening = (state = initialState, action) => {
       }
 
     case EDIT_FIELD:
+      const field = action.field.split('.');
+
       if (action.collection) {
         return {
           ...state,
           companyStructure: {
             ...state.companyStructure,
-            [action.collection]: 
-            state.companyStructure[action.collection].map(doc => {
-              if (doc.docId === action.docId) {
-                doc[action.field] = action.value
-              }
-              return doc;
-            })
+            [action.collection]:
+              state.companyStructure[action.collection].map(doc => {
+                if (doc.docId === action.docId) {
+                  doc[field[0]] = {
+                    ...doc[field[0]],
+                    [field[1]]: action.value,
+                    source: 'entry'
+                  };
+                }
+                return doc;
+              })
           }
         }
       }
+
 
       return {
         ...state,
         companyStructure: {
           ...state.companyStructure,
-          [action.field]: action.value
+          [field[0]]: {
+            ...state.companyStructure[field[0]],
+            [field[1]]: action.value,
+            source: 'entry'
+          }
         }
       }
 

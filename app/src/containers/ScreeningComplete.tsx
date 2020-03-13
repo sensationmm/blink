@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import * as MainStyled from "../components/styles";
 import ScreeningStatus from '../components/screening-status';
-import IconEmail from '../svg/icon-email.svg';
+import getValue from '../utils/functions/getValue';
 
 import * as Styled from './screening-complete.styles';
 
@@ -21,8 +21,8 @@ const ScreeningComplete = (props: any) => {
     return (
         <MainStyled.MainSt>
             <ScreeningStatus
-                company={companyStructure.name}
-                country={companyStructure.incorporationCountry}
+                company={getValue(companyStructure.name)}
+                country={getValue(companyStructure.incorporationCountry)}
             />
 
             <MainStyled.ContentNarrow>

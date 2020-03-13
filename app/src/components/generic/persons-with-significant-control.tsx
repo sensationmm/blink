@@ -1,9 +1,7 @@
 import React from 'react';
 
-import PersonsWithSignificantControl from "./persons-with-significant-control";
 import OrgChart from '../org-chart/index';
-
-import { Items } from '../styles';
+import getValue from '../../utils/functions/getValue';
 
 type Props = {
     companyStructure: any,
@@ -25,9 +23,10 @@ export default function SignificantPersons(props: Props) {
         return list && list
             .map((item: any) => {
                 const company = distinctShareholders.find((distinctShareholder: any) => distinctShareholder.docId === item.docId);
+                const isWithinShareholderThreshold = company && company.totalShareholding >= shareholderThreshold;
 
                 return {
-                    ...item, isWithinShareholderThreshold: company && company.totalShareholding >= shareholderThreshold
+                    ...item, isWithinShareholderThreshold
                 }
             })
             .filter((item: any) => !item.ceased_on)
@@ -49,9 +48,9 @@ export default function SignificantPersons(props: Props) {
     return <>
         <OrgChart
             shareholderThreshold={shareholderThreshold}
-            companyName={companyStructure.name}
-            officialStatus={companyStructure.officialStatus}
-            companyId={companyStructure.companyId}
+            companyName={getValue(companyStructure.name)}
+            officialStatus={getValue(companyStructure.officialStatus)}
+            companyId={getValue(companyStructure.companyId)}
             shareholders={companyStructure.shareholders}
             filter={filterList}
         />

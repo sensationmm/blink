@@ -9,6 +9,7 @@ import ShareholderList from '../components/shareholder/list';
 import Actions from '../layout/actions';
 import Box from '../layout/box';
 import FlexRow from '../layout/flex-row';
+import getValue from '../utils/functions/getValue';
 
 import { validateCompany, CompanyData } from '../utils/validation/request';
 
@@ -86,7 +87,7 @@ const CompanyStructure = (props: any) => {
         return <Redirect to="/search" />;
     }
 
-    const ultimateOwners = companyStructure?.distinctShareholders?.filter((shareholder: any) => shareholder.totalShareholding >= ownershipThreshold && shareholder.shareholderType === 'P');
+    const ultimateOwners = companyStructure?.distinctShareholders?.filter((shareholder: any) => shareholder.totalShareholding >= ownershipThreshold && getValue(shareholder.shareholderType) === 'P');
 
     const getValidation = () => {
         onGetValidation(
@@ -104,8 +105,8 @@ const CompanyStructure = (props: any) => {
     return (
         <MainStyled.MainSt>
             <ScreeningStatus
-                company={companyStructure.name}
-                country={companyStructure.incorporationCountry}
+                company={getValue(companyStructure.name)}
+                country={getValue(companyStructure.incorporationCountry)}
             />
 
             <MainStyled.Content>
@@ -128,7 +129,12 @@ const CompanyStructure = (props: any) => {
 
                             {ultimateOwners?.map((owner: any, count: number) => {
                                 return (
-                                    <ShareholderList key={`shareholder-${count}`} name={owner.name} type={owner.shareholderType} shares={owner.totalShareholding} />
+                                    <ShareholderList
+                                        key={`shareholder-${count}`}
+                                        name={getValue(owner.name)}
+                                        type={getValue(owner.shareholderType)}
+                                        shares={owner.totalShareholding}
+                                    />
                                 )
                             })}
                         </Box>

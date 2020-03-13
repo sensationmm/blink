@@ -8,6 +8,7 @@ import Button from '../components/button';
 import Actions from '../layout/actions';
 import Readiness from '../components/readiness';
 import ArrowRight from '../svg/arrow-right.svg';
+import getValue from '../utils/functions/getValue';
 
 const CompanyReadiness = (props: any) => {
     const {
@@ -23,13 +24,13 @@ const CompanyReadiness = (props: any) => {
         return <Redirect to="/company-structure" />;
     }
 
-    const shareholders = companyStructure.distinctShareholders.filter((shareholder: any) => shareholder.totalShareholding > ownershipThreshold && shareholder.shareholderType === 'P');
+    const shareholders = companyStructure.distinctShareholders.filter((shareholder: any) => shareholder.totalShareholding > ownershipThreshold && getValue(shareholder.shareholderType) === 'P');
 
     return (
         <Styled.MainSt>
             <ScreeningStatus
-                company={companyStructure.name}
-                country={companyStructure.incorporationCountry}
+                company={getValue(companyStructure.name)}
+                country={getValue(companyStructure.incorporationCountry)}
             />
 
             <Styled.ContentNarrow>

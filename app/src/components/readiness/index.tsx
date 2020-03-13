@@ -13,6 +13,7 @@ import IconLocation from '../../svg/icon-location.svg';
 import IconTarget from '../../svg/icon-target.svg';
 
 import getByValue from '../../utils/functions/getByValue';
+import getValue from '../../utils/functions/getValue';
 import { blinkMarketList, blinkMarkets } from '../../utils/config/blink-markets';
 
 import * as Styled from './styles';
@@ -35,7 +36,7 @@ const Readiness: React.FC<ReadinessProps> = ({
             <Box title={'KYC'} icon={IconSearch} paddedLarge shadowed>
                 <Blocks>
                     <ProgressBar
-                        label={companyStructure.name}
+                        label={getValue(companyStructure.name)}
                         icon={<Icon icon={CompanyIcon} size={'small'} />}
                         value={validation.company.completion['Core'].passed}
                         total={validation.company.completion['Core'].total}
@@ -48,7 +49,7 @@ const Readiness: React.FC<ReadinessProps> = ({
                                 <Styled.NotRequired>
                                     <Styled.Header>
                                         <Icon icon={PersonIcon} size={'small'} style={'person'} />
-                                        <div>{shareholder.name}</div>
+                                        <div>{getValue(shareholder.name)}</div>
                                     </Styled.Header>
                                     <Styled.Message>UBO Checks not required</Styled.Message>
                                 </Styled.NotRequired>
@@ -58,7 +59,7 @@ const Readiness: React.FC<ReadinessProps> = ({
                         return (
                             <ProgressBar
                                 key={`shareholder-${count}`}
-                                label={shareholder.name}
+                                label={getValue(shareholder.name)}
                                 icon={<Icon icon={PersonIcon} size={'small'} style={'person'} />}
                                 value={validation[shareholder.docId].completion['Core'].passed}
                                 total={validation[shareholder.docId].completion['Core'].total}
@@ -74,26 +75,26 @@ const Readiness: React.FC<ReadinessProps> = ({
                     labels={['AML Watchlist', 'Sanctions Screening', 'AML Red Flag List', 'Adverse Media', 'Senior Public Figure']}
                     content={[
                         {
-                            label: companyStructure.name,
+                            label: getValue(companyStructure.name),
                             icon: <Icon icon={CompanyIcon} size={'small'} style={'company'} />,
                             values: [
-                                companyStructure.AMLWatchListPassed,
-                                companyStructure.sanctionsScreeningPassed,
-                                companyStructure.AMLRedFlagListPassed,
-                                companyStructure.adverseMediaChecksPassed,
+                                getValue(companyStructure.AMLWatchListPassed),
+                                getValue(companyStructure.sanctionsScreeningPassed),
+                                getValue(companyStructure.AMLRedFlagListPassed),
+                                getValue(companyStructure.adverseMediaChecksPassed),
                                 null,
                             ]
                         },
                         ...shareholders.filter((shareholder: any) => validation[shareholder.docId]).map((shareholder: any, count: number) => {
                             return {
-                                label: shareholder.name,
+                                label: getValue(shareholder.name),
                                 icon: <Icon icon={PersonIcon} size={'small'} style={'person'} />,
                                 values: [
-                                    shareholder.AMLWatchListPassed,
-                                    shareholder.sanctionsScreeningPassed,
-                                    shareholder.AMLRedFlagListPassed,
-                                    shareholder.adverseMediaChecksPassed,
-                                    shareholder.seniorPublicFigure,
+                                    getValue(shareholder.AMLWatchListPassed),
+                                    getValue(shareholder.sanctionsScreeningPassed),
+                                    getValue(shareholder.AMLRedFlagListPassed),
+                                    getValue(shareholder.adverseMediaChecksPassed),
+                                    getValue(shareholder.seniorPublicFigure),
                                 ]
                             }
                         })
