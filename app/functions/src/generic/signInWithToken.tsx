@@ -1,5 +1,6 @@
 export {} 
 const functions = require('firebase-functions');
+// const admin = require("firebase-admin");
 const cors = require('cors');
 const express = require('express');
 const request = require('request');
@@ -9,20 +10,17 @@ server.use(cors());
 
 server.post('*/', async function (req: any, res: any) {
     const {
-        username,
-        password,
+        token
     } = JSON.parse(req.body);
 
     const apiKey = process.env.FIREBASE_AUTH_API_KEY || functions.config().auth_api.key;
-
+    console.log("token", token)
     const body = {
-        email: username,
-        password,
-        returnSecureToken: true
+        idToken: token
     }
 
     request.post({
-        url: `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`,
+        url: `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${apiKey}`,
         body: JSON.stringify(body)
     }, function (error: any, response: any, body: any) {
         if (error) {

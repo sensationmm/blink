@@ -86,3 +86,4 @@ exports.googleFetchSheet = require("./src/google/fetchSheet");
 
 exports.getIP = require("./src/generic/getIP");
 exports.signIn = require("./src/generic/signIn");
+exports.signInWithToken = require("./src/generic/signInWithToken");

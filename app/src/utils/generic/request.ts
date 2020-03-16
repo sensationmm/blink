@@ -68,21 +68,6 @@ const saveCompanyStructure = async (companyStructure: any, ignoreDB: boolean) =>
     })
 };
 
-
-const requestSignIn = async (password: any) => {
-    const data = {
-        password
-    }
-
-    const response = await fetch(`${domain}/signIn`, {
-        method: 'post',
-        body: JSON.stringify(data)
-    })
-
-    return response.status === 200;
-};
-
-
 const toCamel = (obj: any) => {
     let newO: any, origKey, newKey, value
     if (obj instanceof Array) {
@@ -130,4 +115,4 @@ const normalisePropertyNames = (obj: any) => {
     }
 }
 
-export { requestCompanyUBOStructure, getCompanyIdFromSearch, saveCompanyStructure, toCamel, normalisePropertyNames, requestSignIn }
+export { requestCompanyUBOStructure, getCompanyIdFromSearch, saveCompanyStructure, toCamel, normalisePropertyNames }
