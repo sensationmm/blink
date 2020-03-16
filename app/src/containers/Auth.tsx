@@ -18,8 +18,8 @@ const Auth = (props: any) => {
         props.requestUserSignInWithToken(token);
     }
 
-    const [username, setUsername] = useState("nick.procopiou@11fs.com");
-    const [password, setPassword] = useState("Brain999!!!");
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
 
     const validCredentials = () => username === "" || password === "";
 
