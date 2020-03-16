@@ -35,7 +35,7 @@ const Auth = (props: any) => {
                     <InputSt autoComplete="off" type="text" value={username} placeholder="Username" onChange={(e: any) => setUsername(e.target.value)} />
                 </div>
                 <div>
-                    <InputSt type="text" value={password} placeholder="Password" onChange={(e: any) => setPassword(e.target.value)} />
+                    <InputSt type="password" value={password} placeholder="Password" onChange={(e: any) => setPassword(e.target.value)} />
                 </div>
 
             </Styled.AuthWrapper>
