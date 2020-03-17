@@ -5,9 +5,11 @@ import { connect } from 'react-redux';
 import * as Styled from "./user-styles";
 
 const User = (props: any) => {
-    console.log(props?.auth)
+    if (!props.auth.user) {
+        return <div></div>
+    }
     return <Styled.User>
-        {props?.auth?.user.email} - 
+        {props?.auth?.user.displayName || props?.auth?.user.email} - 
         <Styled.Button onClick={props.userSignout}>Signout</Styled.Button>
     </Styled.User>
 

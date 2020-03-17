@@ -1,12 +1,14 @@
 export {} 
 const functions = require('firebase-functions');
-// const admin = require("firebase-admin");
+const admin = require("firebase-admin");
 const cors = require('cors');
 const express = require('express');
 const request = require('request');
 const server = express();
 
 server.use(cors());
+
+const userCollection = admin.firestore().collection('users');
 
 server.post('*/', async function (req: any, res: any) {
     const {
@@ -21,11 +23,17 @@ server.post('*/', async function (req: any, res: any) {
     request.post({
         url: `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${apiKey}`,
         body: JSON.stringify(body)
-    }, function (error: any, response: any, body: any) {
+    }, async function (error: any, response: any, body: any) {
         if (error) {
             console.log("error", error);
         }
-        res.send(body);
+        let user = {};
+        const parsedBody = JSON.parse(body);
+        if (parsedBody.users && parsedBody.users[0] && parsedBody.users[0].localId) {
+            const userDoc = await userCollection.doc(parsedBody.users[0]?.localId).get();
+            user = await userDoc.data();
+        }
+        res.send({ ...user, ...parsedBody.users[0] });
     });
 })
 

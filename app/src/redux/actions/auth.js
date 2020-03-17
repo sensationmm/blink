@@ -36,11 +36,11 @@ export const requestUserSignInWithToken = token => async (dispatch, getState) =>
         type: HIDE_LOADER,
     }), 1000);
 
-    if (result.error || !result.users) {
+    if (result.error) {
         return dispatch(userSignInError(result.error.errors));
     }
 
-    return dispatch(userSignInSuccess({ ...result.users[0], idToken: token }));
+    return dispatch(userSignInSuccess({ ...result, idToken: token }));
 
 };
 

@@ -8,7 +8,7 @@ export const User = styled.div`
 `
 
 export const Button = styled.button`
-    bortylder: none;
+    border: none;
     background: none;
     outline: none;
 
