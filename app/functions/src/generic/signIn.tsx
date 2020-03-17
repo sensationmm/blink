@@ -20,6 +20,7 @@ server.post('*/', async function (req: any, res: any) {
         password,
         returnSecureToken: true
     }
+    
 
     request.post({
         url: `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`,
