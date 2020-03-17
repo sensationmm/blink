@@ -1,5 +1,5 @@
 import {
-    USER_SIGNIN_SUCCESS, USER_SIGNIN_ERRORS, SHOW_LOADER, HIDE_LOADER,
+    USER_SIGNIN_SUCCESS, USER_SIGNIN_ERRORS, SHOW_LOADER, HIDE_LOADER, USER_SIGNOUT, SET_MODAL
 } from '../constants';
 
 import { userSignIn, userSignInWithToken } from "../../utils/auth/request"
@@ -52,10 +52,18 @@ export const userSignInSuccess = user => {
     }
 }
 
-export const userSignInError = errors => {
+export const userSignInError = errors => async (dispatch, getState) => {
 
+    dispatch({
+        type: SET_MODAL,
+        heading: "Sign in error",
+        message: errors[0].message,
+        onClose: () => dispatch(userSignout())
+    })
+}
+
+export const userSignout = () => {
     return {
-        type: USER_SIGNIN_ERRORS,
-        errors
+        type: USER_SIGNOUT
     }
 }

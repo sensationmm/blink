@@ -28,6 +28,7 @@ import MissingData from './containers/MissingData';
 import ContactClient from './containers/ContactClient';
 import ScreeningComplete from './containers/ScreeningComplete';
 import Loader from './components/loader';
+import Modal from './containers/Modal';
 import Doc from './containers/Doc';
 
 export default () => {
@@ -36,6 +37,7 @@ export default () => {
     <Provider store={store}>
       <App />
       <Loader />
+      <Modal />
     </Provider>
   </Router>);
 }

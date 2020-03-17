@@ -24,6 +24,11 @@ export const auth = (state = initialState, action) => {
             }
         }
         case USER_SIGNOUT:
+
+            if (window.localStorage) {
+                window.localStorage.removeItem("firebase-token")
+            }
+
             return {
                 ...initialState,
                 user: null
