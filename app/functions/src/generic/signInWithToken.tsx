@@ -31,9 +31,11 @@ server.post('*/', async function (req: any, res: any) {
         const parsedBody = JSON.parse(body);
         if (parsedBody.users && parsedBody.users[0] && parsedBody.users[0].localId) {
             const userDoc = await userCollection.doc(parsedBody.users[0]?.localId).get();
-            user = await userDoc.data();
+            if (userDoc) {
+                user = await userDoc.data();
+            }
+            res.send({ ...user, ...parsedBody.users[0] });
         }
-        res.send({ ...user, ...parsedBody.users[0] });
     });
 })
 
