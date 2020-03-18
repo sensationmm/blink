@@ -30,7 +30,7 @@ import IconTarget from '../svg/icon-target.svg';
 import ArrowRight from '../svg/arrow-right.svg';
 
 import * as MainStyled from "../components/styles";
-import FormInput from '../components/form-input';
+import MissingField from '../components/missing-field';
 
 import * as Styled from './missing-data.styles';
 
@@ -102,6 +102,15 @@ const MissingData = (props: any) => {
     const companyInCountryRequirements = ((countryTotal - validation.company.completion.Core.total) - (countryCompletion - validation.company.completion.Core.passed));
     const companyKYC = Object.keys(validation.company.errors.Core).length;
 
+    const sanitizeError = (err: string, label: string) => {
+        let error = String(err);
+
+        error = error.replace(`${label} is`, '').replace(label, '');
+        error = capitalize(error.trim());
+
+        return error;
+    }
+
     return (
         <MainStyled.MainSt>
             <ScreeningStatus
@@ -143,12 +152,14 @@ const MissingData = (props: any) => {
                                             <IconTitle title={'KYC'} icon={IconSearch} />
                                             <FlexRowGrid
                                                 cols={2}
-                                                component={FormInput}
+                                                component={MissingField}
                                                 content={validation.company.errors.Core && Object.keys(validation.company.errors.Core).map(key => {
                                                     const label = capitalize(prettify(key));
-                                                    let msg = String(validation.company.errors.Core[key]);
-                                                    msg = msg.replace(`${label} is`, '').replace(label, '');
-                                                    msg = capitalize(msg.trim());
+                                                    const msg = sanitizeError(validation.company.errors.Core[key].value, label);
+
+                                                    const valueMissing = validation.company.errors.Core[key].value !== undefined;
+                                                    const sourceMissing = sanitizeError(validation.company.errors.Core[key].source, label);
+                                                    const certificationMissing = sanitizeError(validation.company.errors.Core[key].certification, label);
 
                                                     // if (companyStructure[key]) {
                                                     //     msg += ` (found: ${companyStructure[key]})`;
@@ -167,6 +178,9 @@ const MissingData = (props: any) => {
                                                             companyStructure.docId
                                                         ),
                                                         value: getValue(companyStructure[sanitizedKey]) || '',
+                                                        missingValue: valueMissing,
+                                                        missingSource: sourceMissing,
+                                                        missingCertification: certificationMissing,
                                                     }
                                                 })}
                                             />
@@ -212,16 +226,17 @@ const MissingData = (props: any) => {
                                                             content={
                                                                 <FlexRowGrid
                                                                     cols={2}
-                                                                    component={FormInput}
+                                                                    component={MissingField}
                                                                     content={Object.keys(validation.company.errors[marketInfo.code])
                                                                         .map(key => {
                                                                             const label = capitalize(prettify(key));
-                                                                            let msg = String(validation.company.errors[marketInfo.code][key]);
-                                                                            msg = msg.replace(`${label} is`, '').replace(label, '');
-                                                                            msg = capitalize(msg.trim());
-
+                                                                            const msg = sanitizeError(validation.company.errors[marketInfo.code][key].value, label);
 
                                                                             const sanitizedKey = key.replace('.value', '');
+
+                                                                            const valueMissing = validation.company.errors[marketInfo.code][key].value !== undefined;
+                                                                            const sourceMissing = sanitizeError(validation.company.errors[marketInfo.code][key].source, label);
+                                                                            const certificationMissing = sanitizeError(validation.company.errors[marketInfo.code][key].certification, label);
 
                                                                             return {
                                                                                 stateKey: key,
@@ -234,6 +249,9 @@ const MissingData = (props: any) => {
                                                                                     companyStructure.docId
                                                                                 ),
                                                                                 value: getValue(companyStructure[sanitizedKey]) || '',
+                                                                                missingValue: valueMissing,
+                                                                                missingSource: sourceMissing,
+                                                                                missingCertification: certificationMissing,
                                                                             }
                                                                         })
                                                                     }
@@ -307,14 +325,16 @@ const MissingData = (props: any) => {
                                                     <IconTitle title={'KYC'} icon={IconSearch} />
                                                     <FlexRowGrid
                                                         cols={2}
-                                                        component={FormInput}
+                                                        component={MissingField}
                                                         content={validation[shareholder.docId].errors.Core && Object.keys(validation[shareholder.docId].errors.Core).map(key => {
                                                             const label = capitalize(prettify(key));
-                                                            let msg = String(validation[shareholder.docId].errors.Core[key]);
-                                                            msg = msg.replace(`${label} is`, '').replace(label, '');
-                                                            msg = capitalize(msg.trim());
+                                                            const msg = sanitizeError(validation[shareholder.docId].errors.Core[key].value, label);
 
                                                             const sanitizedKey = key.replace('.value', '');
+
+                                                            const valueMissing = validation[shareholder.docId].errors.Core[key].value !== undefined;
+                                                            const sourceMissing = sanitizeError(validation[shareholder.docId].errors.Core[key].source, label);
+                                                            const certificationMissing = sanitizeError(validation[shareholder.docId].errors.Core[key].certification, label);
 
                                                             return {
                                                                 stateKey: key,
@@ -327,6 +347,9 @@ const MissingData = (props: any) => {
                                                                     shareholder.docId
                                                                 ),
                                                                 value: getValue(shareholder[sanitizedKey]) || '',
+                                                                missingValue: valueMissing,
+                                                                missingSource: sourceMissing,
+                                                                missingCertification: certificationMissing,
                                                             }
                                                         })}
                                                     />
@@ -373,15 +396,17 @@ const MissingData = (props: any) => {
                                                                     content={
                                                                         <FlexRowGrid
                                                                             cols={2}
-                                                                            component={FormInput}
+                                                                            component={MissingField}
                                                                             content={Object.keys(validation[shareholder.docId].errors[marketInfo.code])
                                                                                 .map(key => {
                                                                                     const label = capitalize(prettify(key));
-                                                                                    let msg = String(validation[shareholder.docId].errors[marketInfo.code][key]);
-                                                                                    msg = msg.replace(`${label} is`, '').replace(label, '');
-                                                                                    msg = capitalize(msg.trim());
+                                                                                    const msg = sanitizeError(validation[shareholder.docId].errors[marketInfo.code][key].value, label);
 
                                                                                     const sanitizedKey = key.replace('.value', '');
+
+                                                                                    const valueMissing = validation[shareholder.docId].errors[marketInfo.code][key].value !== undefined;
+                                                                                    const sourceMissing = sanitizeError(validation[shareholder.docId].errors[marketInfo.code][key].source, label);
+                                                                                    const certificationMissing = sanitizeError(validation[shareholder.docId].errors[marketInfo.code][key].certification, label);
 
                                                                                     return {
                                                                                         stateKey: key,
@@ -394,6 +419,9 @@ const MissingData = (props: any) => {
                                                                                             shareholder.docId
                                                                                         ),
                                                                                         value: getValue(shareholder[sanitizedKey]) || '',
+                                                                                        missingValue: valueMissing,
+                                                                                        missingSource: sourceMissing,
+                                                                                        missingCertification: certificationMissing,
                                                                                     }
                                                                                 })
                                                                             }
