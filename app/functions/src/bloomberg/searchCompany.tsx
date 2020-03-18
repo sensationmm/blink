@@ -28,7 +28,7 @@ server.get('*/:query', async function (req: any, res: any) {
 
     const { query } = req.params;
     const body: any = await searchCompany(query);
-    res.send(body)
+    res.send(body);
 })
 
 module.exports = functions.https.onRequest(server);

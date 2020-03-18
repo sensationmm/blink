@@ -65,6 +65,10 @@
       "function": "signIn"
     },
     {
+      "source": "/signInWithToken",
+      "function": "signInWithToken"
+    },
+    {
       "source": "**",
       "destination": "/index.html"
     }]

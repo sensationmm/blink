@@ -75,6 +75,10 @@ exports.requestCompanyUBOStructure = require("./src/generic/requestCompanyUBOStr
 
 exports.saveCompanyUBOStructure = require("./src/generic/saveCompanyUBOStructure");
 
+exports.migrateCompanyStructure = require("./src/generic/migrateCompanyStructure");
+exports.migratePersonStructure = require("./src/generic/migratePersonStructure");
+exports.migrateRelationships = require("./src/generic/migrateRelationships");
+
 // validation
 exports.validateCompany = require("./src/validation/validateCompany");
 exports.addRule = require("./src/validation/addRule");
@@ -86,3 +90,4 @@ exports.googleFetchSheet = require("./src/google/fetchSheet");
 
 exports.getIP = require("./src/generic/getIP");
 exports.signIn = require("./src/generic/signIn");
+exports.signInWithToken = require("./src/generic/signInWithToken");

@@ -9,7 +9,6 @@ import {
 } from "react-router-dom";
 
 
-// import CompaniesHouse from "./components/companies-house-2"
 import Kyckr from "./components/kyckr"
 import KyckrFilingSearch from "./components/kyckr/filing-search";
 import DueDill from "./components/duedill"
@@ -22,15 +21,15 @@ import { Provider } from "react-redux";
 import store from "./redux/store";
 
 import Search from './containers/Search';
+import Auth from './containers/Auth';
 import CompanyStructure from './containers/CompanyStructure';
 import CompanyReadiness from './containers/CompanyReadiness';
 import MissingData from './containers/MissingData';
 import ContactClient from './containers/ContactClient';
 import ScreeningComplete from './containers/ScreeningComplete';
 import Loader from './components/loader';
+import Modal from './containers/Modal';
 import Doc from './containers/Doc';
-
-import { requestSignIn } from './utils/generic/request';
 
 export default () => {
 
@@ -38,20 +37,24 @@ export default () => {
     <Provider store={store}>
       <App />
       <Loader />
+      <Modal />
     </Provider>
   </Router>);
 }
 
 const App = withRouter((props: any) => {
 
-  const signIn = async () => {
-    const result = await requestSignIn(prompt("Password"));
-    setIsAuthed(result);
-  }
+  store.subscribe(() => {
+    const auth = store.getState().auth;
+    setIsAuthed(auth.user);
+  })
 
-  const [isAuthed, setIsAuthed] = useState(window.location.href.indexOf("localhost:") > -1);
+const [isAuthed, setIsAuthed] = useState(false) // useState(window.location.href.indexOf("localhost:") > -1);
 
-return !isAuthed ? <div className="sign-in"><button onClick={signIn}>Sign in {window.location.href.indexOf("staging") > -1 ? '(staging)': ''}</button></div> : <div>
+return !isAuthed ? 
+
+    <Auth />
+    : <div>
     <Switch>
       <Route exact path="/"><Redirect to="/search" /></Route>
 

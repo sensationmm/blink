@@ -18,6 +18,7 @@ export const Button = styled.button`
   align-content: center;
   justify-content: center;
   font-weight: bold;
+  outline: none;
 
   &.full {
     width: 100%;

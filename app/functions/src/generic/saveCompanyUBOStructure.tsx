@@ -17,15 +17,16 @@ server.post('*/', function (req: any, res: any) {
 
     const companyRef = admin.firestore().collection('companies');
 
-
-    const valueToObject = (value: any, source: string = "registry") => {
+    const valueToObject = (value: any, sourceType: string = "registry", sourceCountry: string = "") => {
         return {
             value,
             updatedAt: new Date(),
-            source,
+            sourceType,
+            sourceCountry,
             certification: "",
-            document: ""
-        }
+            evidence: "",
+            evidenceExpiration: ""
+        };
     }
 
     const newCompanyStructure: any = {};

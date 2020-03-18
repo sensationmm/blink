@@ -9,6 +9,8 @@ import BlinkLogo from '../../svg/blink-logo.svg';
 
 import Box from '../../layout/box';
 
+import User from '../../containers/User';
+
 
 import * as Styled from './styles';
 
@@ -32,7 +34,10 @@ const ScreeningStatus: React.FC<ScreeningStatusProps> = ({ company, country, loc
 
     return (
         <Styled.Main>
-            <Styled.Header><img src={BlinkLogo} /></Styled.Header>
+            <Styled.Header>
+                <img src={BlinkLogo} />
+                <User />
+            </Styled.Header>
             <Styled.Nav>
                 {steps.map((step, count) => {
                     return (

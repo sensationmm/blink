@@ -14,14 +14,16 @@ const compositeExchangeCodes = require('../bloomberg/compositeExchangeCodes');
 
 server.use(cors());
 
-const valueToObject = (value: any, source: string = "registry") => {
+const valueToObject = (value: any, sourceType: string = "registry", sourceCountry: string = "") => {
     return {
         value,
         updatedAt: new Date(),
-        source,
+        sourceType,
+        sourceCountry,
         certification: "",
-        document: ""
-    }
+        evidence: "",
+        evidenceExpiration: ""
+    };
 }
 
 const buildShareholderPerson = (shareholder: any) => {
