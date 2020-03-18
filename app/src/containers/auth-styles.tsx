@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 export const AuthWrapper = styled(InputWrapper)`
     max-width: 800px;
-    margin: 50px auto;
+    margin: 315px auto 50px;
 `
 
 export const Header = styled.header`

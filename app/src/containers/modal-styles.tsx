@@ -30,7 +30,6 @@ export const Message = styled.div`
     text-align: center;
     z-index: 100001;
     border-radius: 3px;
-    position: relative;
 `
 
 export const Actions = styled.div`
