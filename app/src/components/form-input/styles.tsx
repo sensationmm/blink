@@ -12,6 +12,12 @@ export const FieldLabel = styled.label`
     font-weight: bold;
 `;
 
+export const MissingLabel = styled.span`
+    color: var(--basic-text);
+    padding-top: 5px;
+    display: block;
+`;
+
 export const Save = styled.div`
     position: absolute;
     right: 0;

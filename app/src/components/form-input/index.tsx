@@ -7,7 +7,7 @@ import { InputSt } from '../styles';
 
 import * as Styled from './styles';
 
-interface FormInputProps {
+export interface FormInputProps {
     stateKey: string;
     label: string;
     placeholder: string;

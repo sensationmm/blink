@@ -80,9 +80,30 @@ server.post('*/', function (req: any, res: any) {
                 const failedRules = errors ? Object.keys(errors).length : 0;
                 const numRules = Object.keys(companyMarketRulesets[market]).length;
 
+                const groupedErrors: indexedObject = {};
+
+                Object.keys(errors).forEach(item => {
+                    const error = item.split('.');
+
+                    const errorType = error.pop();
+                    const errorField = error.join('.');
+
+                    if (errorField) {
+                        if (!groupedErrors[errorField]) {
+                            groupedErrors[errorField] = {};
+                        }
+
+                        if (errorType) {
+                            groupedErrors[errorField][errorType] = errors[item];
+                        } else {
+                            groupedErrors[errorField] = errors[item];
+                        }
+                    }
+                });
+
                 const valid = {
                     completion: ((numRules - failedRules) / numRules),
-                    errors,
+                    errors: groupedErrors,
                     passed: numRules - failedRules,
                     failed: failedRules,
                     total: numRules,
@@ -132,9 +153,30 @@ server.post('*/', function (req: any, res: any) {
                                 const failedRules = errors ? Object.keys(errors).length : 0;
                                 const numRules = Object.keys(personMarketRulesets[market]).length;
 
+                                const groupedErrors: indexedObject = {};
+
+                                Object.keys(errors).forEach(item => {
+                                    const error = item.split('.');
+
+                                    const errorType = error.pop();
+                                    const errorField = error.join('.');
+
+                                    if (errorField) {
+                                        if (!groupedErrors[errorField]) {
+                                            groupedErrors[errorField] = {};
+                                        }
+
+                                        if (errorType) {
+                                            groupedErrors[errorField][errorType] = errors[item];
+                                        } else {
+                                            groupedErrors[errorField] = errors[item];
+                                        }
+                                    }
+                                });
+
                                 const valid = {
                                     completion: ((numRules - failedRules) / numRules),
-                                    errors,
+                                    errors: groupedErrors,
                                     passed: numRules - failedRules,
                                     failed: failedRules,
                                     total: numRules,
