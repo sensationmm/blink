@@ -13,6 +13,7 @@ server.get('*/', function (req: any, res: any) {
     ipRequest({url: "http://httpbin.org/ip"}, function (error: any, response: any, body: any) {
         console.log(body);
         // console.log("Response", response)
+        
         res.send(body)
     });
 })
