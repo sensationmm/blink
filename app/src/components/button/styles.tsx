@@ -19,6 +19,7 @@ export const Button = styled.button`
   justify-content: center;
   font-weight: bold;
   outline: none;
+  border: 1px solid;
 
   &.full {
     width: 100%;
@@ -26,14 +27,24 @@ export const Button = styled.button`
 
   &.primary {
     background: var(--brand-secondary);
+    border-color: var(--brand-secondary);
   }
 
   &.secondary {
+    color: var(--brand-secondary);
+    background: var(--basic-white);
+    border-color: var(--brand-secondary);
+  }
+
+  &.tertiary {
     background: var(--basic-shadow);
+    border-color: var(--basic-shadow);
   }
 
   &:hover:not(.disabled) {
+    color: var(--basic-white);
     background: var(--brand-primary);
+    border-color: var(--brand-primary);
   }
 
   &.hidden {
@@ -48,5 +59,12 @@ export const Button = styled.button`
   .button-icon {
     margin-left: 20px;
     height: 20px;
+  }
+
+  &.small {
+    padding: 10px 20px;
+    min-width: 0;
+    height: auto;
+    font-size: 0.9em;
   }
 `;

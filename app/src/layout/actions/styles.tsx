@@ -8,5 +8,16 @@ export const Main = styled.div`
 
     > div, > button {
         margin-left: 20px;
+
+        &:last-child {
+            margin: 0;
+        }
+    }
+
+    &.fill {
+        > div, > button {
+            width: 0;
+            flex-grow: 1;
+        }
     }
 `

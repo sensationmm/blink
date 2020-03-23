@@ -7,6 +7,7 @@ type Props = {
     companyStructure: any,
     showOnlyOrdinaryShareTypes: boolean,
     shareholderThreshold: number,
+    onClick?: (shareholder: any, shares: any) => void
 }
 
 export default function SignificantPersons(props: Props) {
@@ -15,6 +16,7 @@ export default function SignificantPersons(props: Props) {
         companyStructure,
         shareholderThreshold,
         showOnlyOrdinaryShareTypes,
+        onClick
     } = props;
 
     const distinctShareholders = companyStructure.distinctShareholders;
@@ -53,6 +55,7 @@ export default function SignificantPersons(props: Props) {
             companyId={getValue(companyStructure.companyId)}
             shareholders={companyStructure.shareholders}
             filter={filterList}
+            onClick={onClick}
         />
     </>
 }

@@ -79,7 +79,7 @@ const Search = (props: any) => {
 
     const requestedProfiles: any = [];
 
-    const startDoinIt = async () => {
+    const startDoinIt = async (redirect: string = '/company-structure') => {
         const countryCode = selectedCompany.countryCode || selectedCountry.value;
 
         const { companyId, code, registrationAuthorityCode } = selectedCompany;
@@ -106,13 +106,13 @@ const Search = (props: any) => {
             setCompanyStructure(UBOStructure);
             setHackValue(Math.random())
             hideLoader();
-            props.history.push('/company-structure')
+            props.history.push(redirect)
         } else {
             // console.log("UBOStructure", UBOStructure)
             setCompanyStructure(UBOStructure);
             setHackValue(Math.random());
             hideLoader();
-            props.history.push('/company-structure')
+            props.history.push(redirect)
         }
     }
 
@@ -141,9 +141,9 @@ const Search = (props: any) => {
         }
     }
 
-    const getStructure = () => {
+    const getStructure = (redirect: string) => {
         showLoader();
-        startDoinIt();
+        startDoinIt(redirect);
     }
 
     return (
@@ -170,7 +170,8 @@ const Search = (props: any) => {
                 </div>
 
                 <Actions>
-                    <Button onClick={getStructure} disabled={!(selectedCompany && selectedCompany.companyId && selectedCountry)} />
+                    <Button onClick={() => getStructure('/company-structure')} disabled={!(selectedCompany && selectedCompany.companyId && selectedCountry)} />
+                    <Button label="My Company" onClick={() => getStructure('/onboarding/my-company')} disabled={!(selectedCompany && selectedCompany.companyId && selectedCountry)} />
                 </Actions>
             </Styled.Content>
         </Styled.MainSt>

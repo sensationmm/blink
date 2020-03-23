@@ -16,7 +16,10 @@ export const EDIT_FIELD = 'EDIT_FIELD';
 
 export const USER_SIGNIN_SUCCESS = 'USER_SIGNIN_SUCCESS';
 export const USER_SIGNIN_ERRORS = 'USER_SIGNIN_ERRORS';
-export const USER_SIGNOUT = 'USER_SIGNOUT'  
+export const USER_SIGNOUT = 'USER_SIGNOUT'
 
 export const SET_MODAL = 'SET_MODAL';
 export const CLEAR_MODAL = 'CLEAR_MODAL';
+
+export const SET_SIDE_TRAY = 'SET_SIDE_TRAY';
+export const CLEAR_SIDE_TRAY = 'CLEAR_SIDE_TRAY';

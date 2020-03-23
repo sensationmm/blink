@@ -10,23 +10,24 @@ import * as Styled from './styles';
 export interface FormInputProps {
     stateKey: string;
     label: string;
-    placeholder: string;
+    placeholder?: string;
     onChange: (key: string, val: string) => void
-    onBlur: (key: string, val: string) => void
+    onBlur?: (key: string, val: string) => void
     value: string;
+    isEdit: boolean;
 }
 
-const FormInput: React.FC<FormInputProps> = ({ stateKey, label, placeholder, onChange, onBlur, value = '' }) => {
+const FormInput: React.FC<FormInputProps> = ({ stateKey, label, placeholder, onChange, onBlur, value = '', isEdit = false }) => {
     const [focused, setFocused] = useState(false);
     const [initVal] = useState(value);
 
     const handleOnFocus = () => {
-        setFocused(true);
+        onBlur && setFocused(true);
     }
 
     const handleOnBlur = (val: string) => {
         setFocused(false);
-        onBlur(stateKey, val)
+        onBlur && onBlur(stateKey, val)
     }
 
     let msg = placeholder;
@@ -44,7 +45,7 @@ const FormInput: React.FC<FormInputProps> = ({ stateKey, label, placeholder, onC
                 onFocus={handleOnFocus}
                 onBlur={(e) => handleOnBlur(e.target.value)}
                 type="text"
-                value={initVal !== value ? value : ''}
+                value={initVal !== value || isEdit ? value : ''}
             />
             {focused && <Styled.Save onClick={() => handleOnBlur(value)}><Icon icon={TickIcon} size={'small'} style={'button'} /></Styled.Save>}
         </Styled.Field>

@@ -9,8 +9,9 @@ interface ButtonProps {
   disabled?: boolean;
   fullWidth?: boolean;
   hidden?: boolean;
+  small?: boolean;
   icon?: string;
-  type?: 'primary' | 'secondary';
+  type?: 'primary' | 'secondary' | 'tertiary';
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -19,6 +20,7 @@ const Button: React.FC<ButtonProps> = ({
   disabled = false,
   fullWidth = false,
   hidden = false,
+  small = false,
   icon,
   type = 'primary'
 }) => {
@@ -30,10 +32,10 @@ const Button: React.FC<ButtonProps> = ({
         type,
         { 'full': fullWidth },
         { 'disabled': disabled },
-        { 'hidden': hidden }
+        { 'hidden': hidden },
+        { 'small': small }
       )}
       onClick={onClick}
-      style={{ color: '#fff' }}
     >
       <span>{label}</span>
       {icon &&

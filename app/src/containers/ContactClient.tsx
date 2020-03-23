@@ -44,7 +44,7 @@ const ContactClient = (props: any) => {
 
                 <Actions>
                     <Button onClick={() => history.push('/screening-complete')} label={'Send email to client'} icon={IconEmail} />
-                    <Button type={'secondary'} onClick={() => history.push('/missing-data')} label={'Back to edit'} />
+                    <Button type={'tertiary'} onClick={() => history.push('/missing-data')} label={'Back to edit'} />
                 </Actions>
             </Styled.ContentNarrow>
         </Styled.MainSt>

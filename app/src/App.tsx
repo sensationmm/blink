@@ -31,6 +31,8 @@ import Loader from './components/loader';
 import Modal from './containers/Modal';
 import Doc from './containers/Doc';
 
+import MyCompany from './containers/MyCompany';
+
 export default () => {
 
   return (<Router>
@@ -49,51 +51,53 @@ const App = withRouter((props: any) => {
     setIsAuthed(auth.user);
   })
 
-const [isAuthed, setIsAuthed] = useState(false) // useState(window.location.href.indexOf("localhost:") > -1);
+  const [isAuthed, setIsAuthed] = useState(false) // useState(window.location.href.indexOf("localhost:") > -1);
 
-return !isAuthed ? 
+  return !isAuthed ?
 
     <Auth />
     : <div>
-    <Switch>
-      <Route exact path="/"><Redirect to="/search" /></Route>
+      <Switch>
+        <Route exact path="/"><Redirect to="/search" /></Route>
 
-      <Route exact path="/search"><Search /></Route>
-      <Route exact path="/company-structure"><CompanyStructure /></Route>
-      <Route exact path="/company-readiness"><CompanyReadiness /></Route>
-      <Route exact path="/missing-data"><MissingData /></Route>
-      <Route exact path="/contact-client"><ContactClient /></Route>
-      <Route exact path="/screening-complete"><ScreeningComplete /></Route>
+        <Route exact path="/onboarding/my-company"><MyCompany /></Route>
 
-      <Route exact path="/doc"><Doc /></Route>
+        <Route exact path="/search"><Search /></Route>
+        <Route exact path="/company-structure"><CompanyStructure /></Route>
+        <Route exact path="/company-readiness"><CompanyReadiness /></Route>
+        <Route exact path="/missing-data"><MissingData /></Route>
+        <Route exact path="/contact-client"><ContactClient /></Route>
+        <Route exact path="/screening-complete"><ScreeningComplete /></Route>
 
-      <Route path="/kyckr">
-        <Kyckr />
-      </Route>
-      <Route path="/kyckr-filing-search">
-        <KyckrFilingSearch />
-      </Route>
-      <Route path="/duedill">
-        <DueDill />
-      </Route>
-      <Route path="/trulioo">
-        <Trulioo />
-      </Route>
-      <Route path="/combined">
-        <Generic />
-      </Route>
-      <Route path="/graph/:companyId?/:countryCode?">
-        <Graph />
-      </Route>
-      <Route path="/progress/:companyId?">
-        <SetupProgress />
-      </Route>
-      <Route path="/import">
-        <Import />
-      </Route>
-      <Route path="*">
-        <div>Not found</div>
-      </Route>
-    </Switch>
-  </div>
+        <Route exact path="/doc"><Doc /></Route>
+
+        <Route path="/kyckr">
+          <Kyckr />
+        </Route>
+        <Route path="/kyckr-filing-search">
+          <KyckrFilingSearch />
+        </Route>
+        <Route path="/duedill">
+          <DueDill />
+        </Route>
+        <Route path="/trulioo">
+          <Trulioo />
+        </Route>
+        <Route path="/combined">
+          <Generic />
+        </Route>
+        <Route path="/graph/:companyId?/:countryCode?">
+          <Graph />
+        </Route>
+        <Route path="/progress/:companyId?">
+          <SetupProgress />
+        </Route>
+        <Route path="/import">
+          <Import />
+        </Route>
+        <Route path="*">
+          <div>Not found</div>
+        </Route>
+      </Switch>
+    </div>
 })
