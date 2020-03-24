@@ -70,6 +70,8 @@ server.post('*/', async function (req: any, res: any) {
                 let shareholder = { ...shareholderDoc.data() };
                 shareholder = { ...shareholder, ...shareholderRelationshipDoc };
 
+                shareholder.relationshipDocId = shareholderRelationship.ref.path;
+
                 delete shareholder.searchName;
 
                 shareholder.totalShareholding = (totalShareholding / 100) * (shareholder.percentage?.value / 100);

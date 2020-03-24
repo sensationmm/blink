@@ -55,11 +55,12 @@ const ShareholderEdit: React.FC<ShareholderEditProps> = ({
         clearSideTray();
         showLoader('Saving');
 
-        const edit = await apiEditField(shareholder.docId, 'name', { ...shareholder.name, value: editName });
+        const apiEditName = await apiEditField(shareholder.docId, 'name', { ...shareholder.name, value: editName });
+        const apiEditShares = await apiEditField(shareholder.relationshipDocId, 'percentage', { ...shareholder.percentage, value: editPercentage });
+
+        await Promise.all([apiEditName, apiEditShares]);
 
         const UBOStructure = await requestCompanyUBOStructure(companyId, countryCode);
-
-        await Promise.all([edit, UBOStructure]);
 
         setCompanyStructure(UBOStructure);
         setHackValue(Math.random());
