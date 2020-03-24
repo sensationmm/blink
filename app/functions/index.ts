@@ -91,3 +91,13 @@ exports.googleFetchSheet = require("./src/google/fetchSheet");
 exports.getIP = require("./src/generic/getIP");
 exports.signIn = require("./src/generic/signIn");
 exports.signInWithToken = require("./src/generic/signInWithToken");
+
+// integrations 
+
+exports.xeroAuthenticateCallback = require("./src/xero/authenticateCallback");
+exports.xeroDisconnect = require("./src/xero/disconnect");
+exports.xeroAuthenticate = require("./src/xero/authenticate");
+exports.xeroInvoices = require("./src/xero/invoices");
+exports.xeroAddBankAccount = require("./src/xero/addBankAccount");
+exports.xeroGetBankAccounts = require("./src/xero/getBankAccounts");
+exports.xeroDeleteBankAccount = require("./src/xero/deleteBankAccount");

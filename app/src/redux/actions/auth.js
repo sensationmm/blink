@@ -40,8 +40,11 @@ export const requestUserSignInWithToken = token => async (dispatch, getState) =>
         return dispatch(userSignInError(result.error.errors));
     }
 
-    return dispatch(userSignInSuccess({ ...result, idToken: token }));
-
+    if (result.notFound) {
+        return dispatch(userSignout());
+    } else {
+        return dispatch(userSignInSuccess({ ...result, idToken: token }));
+    }
 };
 
 export const userSignInSuccess = user => {

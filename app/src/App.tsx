@@ -27,6 +27,7 @@ import CompanyReadiness from './containers/CompanyReadiness';
 import MissingData from './containers/MissingData';
 import ContactClient from './containers/ContactClient';
 import ScreeningComplete from './containers/ScreeningComplete';
+import Integrations from './containers/Integrations';
 import Loader from './components/loader';
 import Modal from './containers/Modal';
 import Doc from './containers/Doc';
@@ -94,6 +95,9 @@ const App = withRouter((props: any) => {
         </Route>
         <Route path="/import">
           <Import />
+        </Route>
+        <Route path="/integrations/:provider?">
+          <Integrations />
         </Route>
         <Route path="*">
           <div>Not found</div>

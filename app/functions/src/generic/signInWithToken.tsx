@@ -36,7 +36,11 @@ server.post('*/', async function (req: any, res: any) {
             }
             res.send({ ...user, ...parsedBody.users[0] });
         }
+        else {
+            res.status(404).send({notFound: true});
+        }
     });
+    
 })
 
 module.exports = functions.https.onRequest(server);
