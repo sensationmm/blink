@@ -49,7 +49,7 @@ const ShareholderEdit: React.FC<ShareholderEditProps> = ({
     const [editName, setName] = useState(shareholder.name.value);
     const [hackValue, setHackValue] = useState(Math.random());
 
-    const edited = editPercentage !== formattedShares || editName !== shareholder.name;
+    const edited = editPercentage !== formattedShares || editName !== shareholder.name.value;
 
     const saveChanges = async () => {
         clearSideTray();
