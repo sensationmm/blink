@@ -87,10 +87,9 @@ server.use(cors());
 
 server.get('*/', async function (req: any, res: any) {
     try {
-        // let consentUrl = await xero.buildConsentUrl();
         const uId = req.query.uId;
         const scope = "openid%20profile%20email%20accounting.transactions%20accounting.settings%20offline_access";
-        const consentUrl = `https://login.xero.com/identity/connect/authorize?response_type=code&client_id=${process.env.XERO_CLIENT_ID}&redirect_uri=${process.env.XERO_INTEGRATION_CALLBACK_URL}&scope=${scope}&state=${uId}`;
+        const consentUrl = `https://login.xero.com/identity/connect/authorize?response_type=code&client_id=${process.env.XERO_CLIENT_ID}&redirect_uri=${process.env.XERO_AUTHENTICATE_CALLBACK_URL}&scope=${scope}&state=${uId}`;
         res.send({ url: consentUrl });
     } catch (err) {
         res.send("Sorry, something went wrong");

@@ -7,6 +7,7 @@ const express = require('express');
 const server = express();
 const admin = require('firebase-admin');
 const request = require('request');
+const FieldValue = require('firebase-admin').firestore.FieldValue;
 
 const refreshToken = require('./refreshToken');
 
@@ -64,17 +65,13 @@ server.get('*/:uId', async function (req: any, res: any) {
                     "Xero-tenant-id": connection.tenantId
                 },
                 url: `https://api.xero.com/connections/${connection.id}`,
-                // url: 'https://api.xero.com/api.xro/2.0/Accounts'
             }, async function (error: any, response: any, body: any) {
                 // console.log("response", body.toJSON())
                 if (error) {
                     console.log("error", error);
                 }
-
-                userDoc.update({...user, xero: db.FieldValue.delete() });
-                console.log(body);
-
-                res.send(body);
+                await userRef.update({ ...user, xero: FieldValue.delete() });
+                res.send({ success: true });
             });
         }
 

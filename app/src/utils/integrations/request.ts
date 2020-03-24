@@ -17,7 +17,8 @@ const xeroAuthenticate = async (uId: string) => {
 }
 
 
-const xeroDisconnect = async (uId: string) => {
+const xeroDisconnectIntegration = async (uId: string) => {
+
     const response = await fetch(`${domain}/xeroDisconnect/${uId}`, {
         method: "GET",
         mode: "cors",
@@ -27,8 +28,7 @@ const xeroDisconnect = async (uId: string) => {
     });
 
     const body = await response.json();
-    console.log("body", body)
     return body;
 }
 
-export { xeroAuthenticate, xeroDisconnect };
+export { xeroAuthenticate, xeroDisconnectIntegration };
