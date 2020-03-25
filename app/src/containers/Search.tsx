@@ -86,7 +86,7 @@ const Search = (props: any) => {
 
         let searchCode = companyId;
 
-        console.log(selectedCompany);
+        // console.log(selectedCompany);
 
         if ((countryCode === "DE" || countryCode === "IT" || countryCode === "RO") && code) {
             searchCode = code; // for DE it's a proprietary code;

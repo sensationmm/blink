@@ -26,7 +26,9 @@ server.get('*/:uId', async function (req: any, res: any) {
 
         console.log("expired")
 
-        access_token = await refreshToken(refresh_token, uId)
+        access_token = await refreshToken(refresh_token, uId);
+
+        console.log("access_token", access_token)
     }
 
     // const ref = req.headers.referer;

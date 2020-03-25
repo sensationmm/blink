@@ -3,25 +3,26 @@ import Select from "react-select";
 
 export const Tabs = styled.ul`
     padding: 0;
-    margin: 0;
-    width: 100%;
-    background-color: #999;
-    overflow: hidden;
+    margin: 0 auto;
+    width: auto;
+    display: flex;
+    justify-content: center;
 
     li {
 
         margin: 0;
-        border: 1px solid #666;
-        border-top: none;
-        background-color: #999;
-        float: left;
+        // background-color: #999;
         list-style-type: none;
+        float: left;
+        text-align: center;
 
         a {
             color: #333;
             text-decoration: none;
-            padding: 20px;
+            padding: 20px 50px;
             display: block;
+            text-transform: capitalize;
+            cursor: pointer;
 
             span {
                 line-height: 18px;
@@ -29,11 +30,12 @@ export const Tabs = styled.ul`
         }
 
         &.active {
-            background-color: #fff;
-            border-bottom: 1px solid #fff;
+            // background-color: #fff;
+            border-bottom: 1px solid #999;
 
             a {
                 color: #000;
+                cursor: auto;
             }
         }
     }

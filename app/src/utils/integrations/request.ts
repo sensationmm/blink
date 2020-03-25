@@ -31,4 +31,37 @@ const xeroDisconnectIntegration = async (uId: string) => {
     return body;
 }
 
-export { xeroAuthenticate, xeroDisconnectIntegration };
+const xeroGetBankAccounts = async (uId: string) => {
+
+    const response = await fetch(`${domain}/xeroGetBankAccounts/${uId}`, {
+        method: "GET",
+        mode: "cors",
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    const body = await response.json();
+
+    return body;
+}
+
+
+const xeroGetInvoices = async (uId: string) => {
+
+    const response = await fetch(`${domain}/xeroGetInvoices/${uId}`, {
+        method: "GET",
+        mode: "cors",
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    const body = await response.json();
+    console.log("xeroGetInvoices", body)
+
+    return body;
+}
+
+
+export { xeroAuthenticate, xeroDisconnectIntegration, xeroGetBankAccounts, xeroGetInvoices };
