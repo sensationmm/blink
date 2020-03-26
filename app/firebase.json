@@ -73,7 +73,7 @@
       "function": "xeroAuthenticateCallback"
     },
     {
-      "source": "/xeroDisconnect",
+      "source": "/xeroDisconnect/**",
       "function": "xeroDisconnect"
     },
     {
