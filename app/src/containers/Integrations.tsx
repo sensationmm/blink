@@ -93,7 +93,7 @@ const Integrations = (props: any) => {
                 {/* </Styled.InputWrapper> */}
 
               </div></>}
-            <ReactJson collapsed src={activeTab ?.data[activeTab ?.name].filter((item: any) => {
+            <ReactJson collapsed src={activeTab ?.data[activeTab ?.name]?.filter((item: any) => {
               if (activeTab ?.name === "Accounts" && accountFilter !== "ANY") {
                 return item.Type === accountFilter
               }
