@@ -69,6 +69,38 @@
       "function": "signInWithToken"
     },
     {
+      "source": "/xeroAuthenticateCallback",
+      "function": "xeroAuthenticateCallback"
+    },
+    {
+      "source": "/xeroDisconnect",
+      "function": "xeroDisconnect"
+    },
+    {
+      "source": "/xeroAuthenticate",
+      "function": "xeroAuthenticate"
+    },
+    {
+      "source": "/xeroGetInvoices",
+      "function": "xeroGetInvoices"
+    },
+    {
+      "source": "/xeroAddBankAccount",
+      "function": "xeroAddBankAccount"
+    },
+    {
+      "source": "/xeroGetBankAccounts",
+      "function": "xeroGetBankAccounts"
+    },
+    {
+      "source": "/xeroDeleteBankAccount",
+      "function": "xeroDeleteBankAccount"
+    },
+    {
+      "source": "/xeroToggleAccountStatus",
+      "function": "xeroToggleAccountStatus"
+    },
+    {
       "source": "**",
       "destination": "/index.html"
     }]
