@@ -81,23 +81,23 @@
       "function": "xeroAuthenticate"
     },
     {
-      "source": "/xeroGetInvoices",
+      "source": "/xeroGetInvoices/**",
       "function": "xeroGetInvoices"
     },
     {
-      "source": "/xeroAddBankAccount",
+      "source": "/xeroAddBankAccount/**",
       "function": "xeroAddBankAccount"
     },
     {
-      "source": "/xeroGetBankAccounts",
+      "source": "/xeroGetBankAccounts/**",
       "function": "xeroGetBankAccounts"
     },
     {
-      "source": "/xeroDeleteBankAccount",
+      "source": "/xeroDeleteBankAccount/**/**",
       "function": "xeroDeleteBankAccount"
     },
     {
-      "source": "/xeroToggleAccountStatus",
+      "source": "/xeroToggleAccountStatus/**/**/**",
       "function": "xeroToggleAccountStatus"
     },
     {
