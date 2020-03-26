@@ -92,7 +92,7 @@ server.post('*/', async function (req: any, res: any) {
                 }
 
                 if (shareholder.shareholderType.value === "C") {
-                    if (shareholder.companyId?.value) {
+                    // if (shareholder.companyId?.value) {
 
                         // console.log("shareholder.shareholderType", shareholder.shareholderType, shareholder.companyId)
 
@@ -105,7 +105,7 @@ server.post('*/', async function (req: any, res: any) {
                             shareholder.officers = companyShareholders.officers;
                         }
 
-                    }
+                    // }
                     shareholder.docId = shareholder.source.path;
 
                     delete shareholder.source;
