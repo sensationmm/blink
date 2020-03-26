@@ -52,5 +52,4 @@ server.get('*/', async function (req: any, res: any) {
   });
 });
 
-
 module.exports = functions.https.onRequest(server)
