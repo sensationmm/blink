@@ -5,7 +5,12 @@ const admin = require("firebase-admin");
 const request = require('request');
 
 const refreshToken = (refresh_Token: string, uId: string) => {
-  let auth = new Buffer(`${process.env.XERO_CLIENT_ID}:${process.env.XERO_CLIENT_SECRET}`);
+
+  const XERO_CLIENT_ID = process.env.XERO_CLIENT_ID || functions.config().xero_client_id.key;
+  const XERO_CLIENT_SECRET = process.env.XERO_CLIENT_SECRET || functions.config().xero_client_secret.key;
+  
+
+  let auth = new Buffer(`${XERO_CLIENT_ID}:${XERO_CLIENT_SECRET}`);
   let base64auth = auth.toString('base64');
 
   return new Promise(resolve =>
