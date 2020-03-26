@@ -101,3 +101,4 @@ exports.xeroGetInvoices = require("./src/xero/getInvoices");
 exports.xeroAddBankAccount = require("./src/xero/addBankAccount");
 exports.xeroGetBankAccounts = require("./src/xero/getBankAccounts");
 exports.xeroDeleteBankAccount = require("./src/xero/deleteBankAccount");
+exports.xeroToggleAccountStatus = require("./src/xero/toggleAccountStatus");
