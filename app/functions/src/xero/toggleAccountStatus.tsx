@@ -90,6 +90,7 @@ server.get('*/:uId/:accountId/:status', async function (req: any, res: any) {
 
     const ref = req.headers.referer;
     console.log("ref", ref);
+    
 
     getTenantIdAndThenToggleAccountStatus(access_token)
 });
