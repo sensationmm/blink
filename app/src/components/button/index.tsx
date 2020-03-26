@@ -5,7 +5,7 @@ import * as Styled from './styles';
 
 interface ButtonProps {
   label?: string;
-  onClick: () => void;
+  onClick: (e: any) => void;
   disabled?: boolean;
   fullWidth?: boolean;
   hidden?: boolean;
@@ -35,7 +35,7 @@ const Button: React.FC<ButtonProps> = ({
         { 'hidden': hidden },
         { 'small': small }
       )}
-      onClick={onClick}
+      onClick={(e) => { e.stopPropagation(); onClick(e); }}
     >
       <span>{label}</span>
       {icon &&

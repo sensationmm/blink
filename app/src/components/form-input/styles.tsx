@@ -4,6 +4,10 @@ export const Field = styled.div`
     position: relative;
 `;
 
+export const FieldHolder = styled.div`
+    position: relative;
+`;
+
 export const FieldLabel = styled.label`
     display: block;
     margin-bottom: 5px;
@@ -19,10 +23,20 @@ export const MissingLabel = styled.span`
 `;
 
 export const Save = styled.div`
-    position: absolute;
-    right: 0;
-    bottom: 5px;
     width: 30px;
     height: 30px;
     cursor: pointer;
+`;
+
+export const After = styled.div`
+    display: flex;
+    align-items: center;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+`;
+
+export const Suffix = styled.div`
+    color: var(--basic-shadow);
 `;

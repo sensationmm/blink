@@ -73,4 +73,36 @@ const editField = async (docId: string, field: string, value: any) => {
     return body.msg;
 }
 
-export { validateCompany, addRule, deleteAllRules, editField };
+const addUBO = async (parentDocId: string, type: string, percentage: string, name: string, role: string) => {
+    const response = await fetch(`${domain}/addUBO`, {
+        method: "POST",
+        mode: "cors",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            parentDocId, type, percentage, name, role
+        })
+    });
+    const body = await response.json();
+    return body.msg;
+}
+
+const deleteUBO = async (relationshipDocId: string) => {
+    const response = await fetch(`${domain}/deleteUBO`, {
+        method: "POST",
+        mode: "cors",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            relationshipDocId
+        })
+    });
+    const body = await response.json();
+    return body.msg;
+}
+
+
+
+export { validateCompany, addRule, deleteAllRules, editField, addUBO, deleteUBO };
