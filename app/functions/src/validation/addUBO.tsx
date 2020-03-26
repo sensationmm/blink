@@ -12,11 +12,13 @@ server.post('*/', function (req: any, res: any) {
     const newUBO = {
         name: {
             certification: '',
+            validation: '',
             source: 'entry',
             value: name
         },
         shareholderType: {
             certification: '',
+            validation: '',
             source: 'entry',
             value: type === 'persons' ? 'P' : 'C'
         }
@@ -25,6 +27,7 @@ server.post('*/', function (req: any, res: any) {
     if (role) {
         newUBO.role = {
             certification: '',
+            validation: '',
             source: 'entry',
             value: role
         }
@@ -45,6 +48,7 @@ server.post('*/', function (req: any, res: any) {
                 type: 'shareholder',
                 percentage: {
                     certification: '',
+                    validation: '',
                     source: 'entry',
                     value: percentage
                 },
