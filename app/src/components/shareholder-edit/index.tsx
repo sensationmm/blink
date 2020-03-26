@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import classNames from 'classnames';
 
 import FormInput from '../form-input';
+import FormSelect from '../form-select';
 import CompanyIcon from '../../svg/company-icon.svg';
 import PersonIcon from '../../svg/individual-icon.svg';
 import Blocks from '../../layout/blocks';
@@ -12,7 +14,7 @@ import IconAdd from '../../svg/icon-add.svg';
 import getValue from '../../utils/functions/getValue';
 
 import { clearSideTray } from '../../redux/actions/side-tray';
-import { editField as apiEditField } from '../../utils/validation/request';
+import { editField as apiEditField, addUBO as apiAddUBO, deleteUBO as apiDeleteUBO } from '../../utils/validation/request';
 import { showLoader, hideLoader } from '../../redux/actions/loader';
 import { setCompanyStructure } from '../../redux/actions/screening';
 import { requestCompanyUBOStructure } from '../../utils/generic/request';
@@ -43,61 +45,150 @@ const ShareholderEdit: React.FC<ShareholderEditProps> = ({
     const ShareholderImage = getValue(shareholder.shareholderType) === 'P' ? Styled.ImagePerson : Styled.ImageCompany;
     const ShareholderIcon = getValue(shareholder.shareholderType) === 'P' ? PersonIcon : CompanyIcon;
 
-    const formattedShares = String(shares.toFixed(2));
-
-    const [editPercentage, setPercentage] = useState(formattedShares);
+    const [editPercentage, setPercentage] = useState(shareholder.percentage.value);
     const [editName, setName] = useState(shareholder.name.value);
     const [hackValue, setHackValue] = useState(Math.random());
 
-    const edited = editPercentage !== formattedShares || editName !== shareholder.name.value;
+    const [addNode, setAddNode] = useState(false);
+    const [addName, setAddName] = useState('');
+    const [addPercentage, setAddPercentage] = useState('');
+    const [addType, setAddType] = useState('persons');
+    const [addRole, setAddRole] = useState('');
+
+    const edited = editPercentage !== shareholder.percentage.value || editName !== shareholder.name.value;
+    const editedAdd = addName !== '' && addPercentage !== '';
 
     const saveChanges = async () => {
-        clearSideTray();
         showLoader('Saving');
 
-        const apiEditName = await apiEditField(shareholder.docId, 'name', { ...shareholder.name, value: editName });
-        const apiEditShares = await apiEditField(shareholder.relationshipDocId, 'percentage', { ...shareholder.percentage, value: editPercentage });
-
-        await Promise.all([apiEditName, apiEditShares]);
-
+        await apiEditField(shareholder.docId, 'name', { ...shareholder.name, value: editName });
+        await apiEditField(shareholder.relationshipDocId, 'percentage', { ...shareholder.percentage, value: editPercentage });
         const UBOStructure = await requestCompanyUBOStructure(companyId, countryCode);
 
         setCompanyStructure(UBOStructure);
         setHackValue(Math.random());
+        clearSideTray();
         hideLoader();
-    }
+    };
+
+    const addShareholder = async () => {
+        showLoader('Saving');
+
+        await apiAddUBO(shareholder.docId, addType, addPercentage, addName, addRole);
+        const UBOStructure = await requestCompanyUBOStructure(companyId, countryCode);
+
+        setCompanyStructure(UBOStructure);
+        setHackValue(Math.random());
+        clearSideTray();
+        hideLoader();
+    };
+
+    const deleteShareholder = async () => {
+        showLoader('Saving');
+
+        await apiDeleteUBO(shareholder.relationshipDocId);
+        const UBOStructure = await requestCompanyUBOStructure(companyId, countryCode);
+
+        setCompanyStructure(UBOStructure);
+        setHackValue(Math.random());
+        clearSideTray();
+        hideLoader();
+    };
 
     return (
         <Styled.Main>
-            <Styled.Add><img src={IconAdd} />Add new beneficial owner</Styled.Add>
+            <Styled.Add
+                className={classNames({ cta: !addNode }, { person: getValue(shareholder.shareholderType) === 'P' })}
+                onClick={() => setAddNode(true)}
+            >
+                {!addNode
+                    ? <div><img src={IconAdd} />Add new beneficial owner</div>
+                    : <Blocks gutter={'small'}>
+                        <FormSelect
+                            stateKey={'addType'}
+                            label={'Type of beneficial owner'}
+                            onChange={(key, value) => setAddType(value)}
+                            options={[
+                                {
+                                    value: 'persons',
+                                    label: 'Individual',
+                                    icon: <Styled.Image className={'small person'} style={{ backgroundImage: `url(${PersonIcon})` }} />
+                                },
+                                {
+                                    value: 'companies',
+                                    label: 'Company',
+                                    icon: <Styled.Image className={'small company'} style={{ backgroundImage: `url(${CompanyIcon})` }} />
+                                }
+                            ]}
+                            value={addType}
+                        />
 
-            <Styled.Delete>Delete</Styled.Delete>
+                        <FormInput
+                            stateKey={'addPercentage'}
+                            label={'Percentage held of parent'}
+                            onChange={(key, value) => setAddPercentage(value)}
+                            value={addPercentage}
+                            isEdit
+                            suffix={'%'}
+                        />
 
-            <Styled.Card>
-                <Blocks>
-                    <ShareholderImage style={{ backgroundImage: `url(${ShareholderIcon})` }} />
+                        <FormInput
+                            stateKey={'addName'}
+                            label={'Name'}
+                            onChange={(key, value) => setAddName(value)}
+                            value={addName}
+                            isEdit
+                        />
 
-                    <FormInput
-                        stateKey={'asd'}
-                        label={'Percentage held'}
-                        onChange={(key, value) => setPercentage(value)}
-                        value={editPercentage}
-                        isEdit
-                    />
+                        {addType !== 'companies' &&
+                            <FormInput
+                                stateKey={'addRole'}
+                                label={'Role'}
+                                onChange={(key, value) => setAddRole(value)}
+                                value={addRole}
+                                placeholder={'Optional'}
+                                isEdit
+                            />
+                        }
 
-                    <FormInput
-                        stateKey={'asd'}
-                        label={'Name'}
-                        onChange={(key, value) => setName(value)}
-                        value={editName}
-                        isEdit
-                    />
+                        <Actions fill>
+                            <Button type={'secondary'} small onClick={() => setAddNode(false)} label={'Cancel'} />
+                            <Button small onClick={addShareholder} label={'Confirm'} disabled={!editedAdd} />
+                        </Actions>
+                    </Blocks>
+                }
+            </Styled.Add>
 
-                    <Actions fill>
-                        <Button type={'secondary'} small onClick={clearSideTray} label={'Cancel'} disabled={!edited} />
-                        <Button small onClick={saveChanges} label={'Confirm'} disabled={!edited} />
-                    </Actions>
-                </Blocks>
+            <Styled.Delete className={classNames({ disabled: addNode })} onClick={deleteShareholder}>Delete</Styled.Delete>
+
+            <Styled.Card className={classNames({ disabled: addNode })}>
+                <Styled.CardContent>
+                    <Blocks gutter={'small'}>
+                        <ShareholderImage style={{ backgroundImage: `url(${ShareholderIcon})` }} />
+
+                        <FormInput
+                            stateKey={'asd'}
+                            label={'Percentage held of parent'}
+                            onChange={(key, value) => setPercentage(value)}
+                            value={editPercentage}
+                            isEdit
+                            suffix={'%'}
+                        />
+
+                        <FormInput
+                            stateKey={'asd'}
+                            label={'Name'}
+                            onChange={(key, value) => setName(value)}
+                            value={editName}
+                            isEdit
+                        />
+
+                        <Actions fill>
+                            <Button type={'secondary'} small onClick={clearSideTray} label={'Cancel'} disabled={!edited} />
+                            <Button small onClick={saveChanges} label={'Confirm'} disabled={!edited} />
+                        </Actions>
+                    </Blocks>
+                </Styled.CardContent>
             </Styled.Card>
         </Styled.Main>
 

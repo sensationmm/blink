@@ -15,9 +15,10 @@ export interface FormInputProps {
     onBlur?: (key: string, val: string) => void
     value: string;
     isEdit: boolean;
+    suffix?: string;
 }
 
-const FormInput: React.FC<FormInputProps> = ({ stateKey, label, placeholder, onChange, onBlur, value = '', isEdit = false }) => {
+const FormInput: React.FC<FormInputProps> = ({ stateKey, label, placeholder, onChange, onBlur, value = '', isEdit = false, suffix }) => {
     const [focused, setFocused] = useState(false);
     const [initVal] = useState(value);
 
@@ -39,15 +40,28 @@ const FormInput: React.FC<FormInputProps> = ({ stateKey, label, placeholder, onC
     return (
         <Styled.Field>
             <Styled.FieldLabel>{label}</Styled.FieldLabel>
-            <InputSt
-                placeholder={msg}
-                onChange={(e) => onChange(stateKey, e.target.value)}
-                onFocus={handleOnFocus}
-                onBlur={(e) => handleOnBlur(e.target.value)}
-                type="text"
-                value={initVal !== value || isEdit ? value : ''}
-            />
-            {focused && <Styled.Save onClick={() => handleOnBlur(value)}><Icon icon={TickIcon} size={'small'} style={'button'} /></Styled.Save>}
+
+            <Styled.FieldHolder>
+                <InputSt
+                    placeholder={msg}
+                    onChange={(e) => onChange(stateKey, e.target.value)}
+                    onFocus={handleOnFocus}
+                    onBlur={(e) => handleOnBlur(e.target.value)}
+                    type="text"
+                    value={initVal !== value || isEdit ? value : ''}
+                />
+                {(focused || suffix !== '') &&
+                    <Styled.After>
+                        {focused &&
+                            <Styled.Save onClick={() => handleOnBlur(value)}><Icon icon={TickIcon} size={'small'} style={'button'} /></Styled.Save>
+                        }
+
+                        {suffix !== '' &&
+                            <Styled.Suffix>{suffix}</Styled.Suffix>
+                        }
+                    </Styled.After>
+                }
+            </Styled.FieldHolder>
         </Styled.Field>
     )
 }

@@ -1,9 +1,18 @@
 import styled from 'styled-components';
 
+import { Main as Actions } from '../../layout/actions/styles';
+
 export const Main = styled.div`
     max-width: 300px;
     margin: 0 auto;
+
+    label {
+        font-size: 0.8em;
+        color: var(--basic-shadow);
+    }
 `;
+
+export const CardContent = styled.div``;
 
 export const Card = styled.div`
     position: relative;
@@ -14,17 +23,44 @@ export const Card = styled.div`
     padding: 20px;
     z-index: 2;
     background: var(--basic-white);
+
+    &.disabled {
+        ${CardContent} {
+            opacity: 0.4;
+            pointer-events: none;
+        }
+    }
+
+    ${Actions} {
+        padding-top: 0;
+    }
 `;
 
 export const Add = styled.div`
-    display: flex;
     position: relative;
-    border: 1px solid var(--brand-secondary);
+    border: 1px solid var(--basic-shadow);
     border-radius: 5px;
     padding: 20px;
     margin-bottom: 50px;
-    font-size: 0.8em;
     z-index: 1;
+    box-shadow: 0px 0px 10px var(--basic-shadow);
+
+    &.cta {
+        font-size: 0.8em;
+        display: flex;
+        border-color: var(--brand-secondary);
+        cursor: pointer;
+
+        &:hover {
+            background: var(--brand-secondary);
+            color: var(--basic-white);
+        }
+    }
+
+    &.person {
+        opacity: 0;
+        pointer-events: none;
+    }
 
     img {
         width: 10px;
@@ -41,6 +77,10 @@ export const Add = styled.div`
         height: 100px;
         background: var(--basic-text);
     }
+
+    ${Actions} {
+        padding-top: 0;
+    }
 `;
 
 export const Delete = styled.div`
@@ -51,6 +91,10 @@ export const Delete = styled.div`
 
     &:hover {
         color: var(--brand-primary);
+    }
+
+    &.disabled {
+        opacity: 0;
     }
 `;
 
@@ -63,6 +107,21 @@ export const Image = styled.div`
     margin-bottom: 10px;
     background: center top 10px no-repeat;
     background-size: contain;
+
+    &.small {
+        width: 20px;
+        height: 20px;
+        background-position: center top 3px;
+        margin-bottom: 0;
+    }
+
+    &.person {
+        background-color: var(--brand-person);
+    }
+
+    &.company {
+        background-color: var(--brand-company);
+    }
 `;
 
 export const ImageCompany = styled(Image)`
