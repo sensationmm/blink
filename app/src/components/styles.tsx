@@ -322,3 +322,32 @@ export const CountrySelect = styled.select`
     height: 72px;
     float: right;
 `
+
+export const Doc = styled.div`
+    padding-left: 30%;
+`;
+
+export const DocNav = styled.div`
+    width: 20%;
+    padding: 30px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: var(--basic-white);
+    border-bottom: 1px solid var(--brand-primary);
+
+    > div {
+        cursor: pointer;
+        text-align: center;
+        width: 0;
+        flex-grow: 1;
+        font-family: 'Open Sans Light', sans-serif;
+        font-size: 24px;
+        letter-spacing: -2px;
+        color: var(--brand-primary);
+
+        &:hover {
+            color: var(--brand-secondary);
+        }
+    }
+`;

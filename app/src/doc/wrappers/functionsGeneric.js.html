@@ -1,133 +1,131 @@
-export { }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: functionsGeneric.js</title>
 
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: functionsGeneric.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const validateJS = require('validate.js');
-
-export type Value = any;
-export type Options = { [key: string]: any };
-export type Key = string;
-export type Attributes = { [key: string]: any };
-
-const requiredIfValueEquals = (value: Value, { search, match }: Options, key: Key, attributes: Attributes, globalOptions: Options) => {
+const requiredIfValueEquals = (value, { search, match }, key, attributes, globalOptions) => {
     if (!search) {
         return ': ERROR requiredIfValueEquals.options.search not defined';
     }
     if (!match) {
         return ': ERROR requiredIfValueEquals.options.match not defined';
     }
-
     if (attributes[search] === match) {
         if (validateJS.isDefined(value)) {
             return null;
         }
-
         return `is required if ${validateJS.prettify(search)} is ${match}`;
-    } else {
+    }
+    else {
         if (validateJS.isDefined(value)) {
             return `cannot be supplied if ${validateJS.prettify(search)} is not ${match}`;
         }
-
         return null;
     }
-}
-
+};
 /**
  * Makes a field required if given conditions are true
- * <pre>{ "requiredIf": conditions }</pre>
+ * &lt;pre>{ "requiredIf": conditions }&lt;/pre>
  * @param {object} conditions - validation function list
  * @return {null|string} - returns null if validations are false, `is required` if validations are true
  */
-const requiredIf = (value: Value, options: Options, key: Key, attributes: Attributes) => {
+const requiredIf = (value, options, key, attributes) => {
     const valid = validateJS.validate(attributes, { [key]: options });
-
-    if ((valid === 'undefined' || valid === undefined) && !attributes.hasOwnProperty(key)) {
+    if ((valid === 'undefined' || valid === undefined) &amp;&amp; !attributes.hasOwnProperty(key)) {
         return 'is required';
     }
-
     return null;
 };
-
 /**
  * Makes a field match a value if given conditions are true
- * <pre>{ "requiredValueIf": {value, conditions} }</pre>
+ * &lt;pre>{ "requiredValueIf": {value, conditions} }&lt;/pre>
  * @param {any} value - value required
  * @param {object} conditions - validation function list
  * @return {null|string} - returns null if validations are false, `must be {value}` if validations are true
  */
-const requiredValueIf = (value: Value, options: Options, key: Key, attributes: Attributes) => {
+const requiredValueIf = (value, options, key, attributes) => {
     const valid = validateJS.validate(attributes, { [key]: options.conditions });
-
-    if ((valid === 'undefined' || valid === undefined) && value !== options.value) {
+    if ((valid === 'undefined' || valid === undefined) &amp;&amp; value !== options.value) {
         return `must be ${options.value}`;
     }
-
     return null;
 };
-
 /**
  * Makes a field required if one or more of a given set of conditions is true
- * <pre>{ "requiredIfOne": { scenarios: [conditions1, conditions2, {...rest}] }}</pre>
- * @param {array<object>} scenarios - x number of validation function list combinations
+ * &lt;pre>{ "requiredIfOne": { scenarios: [conditions1, conditions2, {...rest}] }}&lt;/pre>
+ * @param {array&lt;object>} scenarios - x number of validation function list combinations
  * @return {null|string} - returns null if no validation sets match, `is required` if one or more match
  */
-const requiredIfOne = (value: Value, options: Options, key: Key, attributes: Attributes) => {
+const requiredIfOne = (value, options, key, attributes) => {
     const scenarios = options.scenarios;
-
     if (!Array.isArray(scenarios)) {
         return ': ERROR options must contain `scenarios` array';
     }
-
     let required = false;
-
-    scenarios.forEach((scenario: any) => {
+    scenarios.forEach((scenario) => {
         const valid = requiredIf(value, scenario, key, attributes);
-
         if (valid === 'is required') {
             required = true;
         }
     });
-
     if (required) {
         return 'is required';
     }
-
     return null;
-}
-
+};
 /**
  * Makes a field match a value if one or more of a given set of conditions is true
- * <pre>{ "requiredValueIfOne": { value, scenarios: [conditions1, conditions2, {...rest}] }}</pre>
+ * &lt;pre>{ "requiredValueIfOne": { value, scenarios: [conditions1, conditions2, {...rest}] }}&lt;/pre>
  * @param {any} value - value required
- * @param {array<object>} scenarios - x number of validation function list combinations
+ * @param {array&lt;object>} scenarios - x number of validation function list combinations
  * @return {null|string} - returns null if no validation sets match, `is required` if one or more match
  */
-const requiredValueIfOne = (value: Value, options: Options, key: Key, attributes: Attributes) => {
+const requiredValueIfOne = (value, options, key, attributes) => {
     const scenarios = options.scenarios;
-
     if (!Array.isArray(scenarios)) {
         return ': ERROR options must contain `scenarios` array';
     }
-
     if (!options.value) {
         return ': ERROR options must contain required `value`';
     }
-
     let required = false;
-
-    scenarios.forEach((scenario: any) => {
+    scenarios.forEach((scenario) => {
         const valid = requiredValueIf(value, { value: options.value, conditions: scenario }, key, attributes);
-
         if (valid === `must be ${options.value}`) {
             required = true;
         }
     });
-
     if (required) {
         return `must be ${options.value}`;
     }
-
     return null;
-}
-
+};
 const validationFunctions = {
     requiredIfValueEquals,
     requiredIf,
@@ -135,12 +133,32 @@ const validationFunctions = {
     requiredIfOne,
     requiredValueIfOne
 };
-
 module.exports = validationFunctions;
-
 const primitiveValidation = require('./functionsPrimitive');
-
 const customValidationKeys = Object.keys(primitiveValidation);
 customValidationKeys.forEach((key) => {
     validateJS.validate.validators[key] = primitiveValidation[key];
 });
+//# sourceMappingURL=functionsGeneric.js.map</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#requiredIf">requiredIf</a></li><li><a href="global.html#requiredIfOne">requiredIfOne</a></li><li><a href="global.html#requiredValueIf">requiredValueIf</a></li><li><a href="global.html#requiredValueIfOne">requiredValueIfOne</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Thu Mar 26 2020 19:32:41 GMT+0000 (Greenwich Mean Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

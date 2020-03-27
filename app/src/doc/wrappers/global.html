@@ -104,7 +104,7 @@
     
 
     
-    <h4 class="name" id="equalTo"><span class="type-signature"></span>equalTo<span class="signature">(search, match)</span><span class="type-signature"> &rarr; {null|string}</span></h4>
+    <h4 class="name" id="requiredIf"><span class="type-signature"></span>requiredIf<span class="signature">(conditions)</span><span class="type-signature"> &rarr; {null|string}</span></h4>
     
 
     
@@ -112,9 +112,8 @@
 
 
 <div class="description">
-    Checks if a specified parameter matches a specified value
-<pre>{ "equalTo": {"search": "countryOfTaxResidence", "match": "IT" }}</pre>
-Will look for a field `countryOfTaxResidence` on the object being validated and pass if the value is `IT`
+    Makes a field required if given conditions are true
+<pre>{ "requiredIf": conditions }</pre>
 </div>
 
 
@@ -150,13 +149,13 @@ Will look for a field `countryOfTaxResidence` on the object being validated and 
 
         <tr>
             
-                <td class="name"><code>search</code></td>
+                <td class="name"><code>conditions</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">object</span>
 
 
             
@@ -166,14 +165,317 @@ Will look for a field `countryOfTaxResidence` on the object being validated and 
 
             
 
-            <td class="description last">attribute to compare</td>
+            <td class="description last">validation function list</td>
         </tr>
 
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="functionsGeneric.js.html">functionsGeneric.js</a>, <a href="functionsGeneric.js.html#line30">line 30</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    - returns null if validations are false, `is required` if validations are true
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">null</span>
+|
+
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="requiredIfOne"><span class="type-signature"></span>requiredIfOne<span class="signature">(scenarios)</span><span class="type-signature"> &rarr; {null|string}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Makes a field required if one or more of a given set of conditions is true
+<pre>{ "requiredIfOne": { scenarios: [conditions1, conditions2, {...rest}] }}</pre>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
     
 
         <tr>
             
-                <td class="name"><code>match</code></td>
+                <td class="name"><code>scenarios</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">array.&lt;object></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">x number of validation function list combinations</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="functionsGeneric.js.html">functionsGeneric.js</a>, <a href="functionsGeneric.js.html#line57">line 57</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    - returns null if no validation sets match, `is required` if one or more match
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">null</span>
+|
+
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="requiredValueIf"><span class="type-signature"></span>requiredValueIf<span class="signature">(value, conditions)</span><span class="type-signature"> &rarr; {null|string}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Makes a field match a value if given conditions are true
+<pre>{ "requiredValueIf": {value, conditions} }</pre>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>value</code></td>
             
 
             <td class="type">
@@ -189,7 +491,30 @@ Will look for a field `countryOfTaxResidence` on the object being validated and 
 
             
 
-            <td class="description last">value to compare with</td>
+            <td class="description last">value required</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>conditions</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">validation function list</td>
         </tr>
 
     
@@ -230,7 +555,7 @@ Will look for a field `countryOfTaxResidence` on the object being validated and 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="functionsPrimitive.js.html">functionsPrimitive.js</a>, <a href="functionsPrimitive.js.html#line11">line 11</a>
+        <a href="functionsGeneric.js.html">functionsGeneric.js</a>, <a href="functionsGeneric.js.html#line44">line 44</a>
     </li></ul></dd>
     
 
@@ -259,7 +584,7 @@ Will look for a field `countryOfTaxResidence` on the object being validated and 
 
         
 <div class="param-desc">
-    - returns null if success, `equalTo fail` if failure
+    - returns null if validations are false, `must be {value}` if validations are true
 </div>
 
 
@@ -291,7 +616,7 @@ Will look for a field `countryOfTaxResidence` on the object being validated and 
     
 
     
-    <h4 class="name" id="greaterThan"><span class="type-signature"></span>greaterThan<span class="signature">(search, match)</span><span class="type-signature"> &rarr; {null|string}</span></h4>
+    <h4 class="name" id="requiredValueIfOne"><span class="type-signature"></span>requiredValueIfOne<span class="signature">(value, scenarios)</span><span class="type-signature"> &rarr; {null|string}</span></h4>
     
 
     
@@ -299,9 +624,8 @@ Will look for a field `countryOfTaxResidence` on the object being validated and 
 
 
 <div class="description">
-    Checks if a specified parameter is greater than a specified value
-<pre>{ "greaterThan": {"search": "age", "match": 23 }}</pre>
-Will look for a field `age` on the object being validated and pass if the value is greater than or equal to `23`
+    Makes a field match a value if one or more of a given set of conditions is true
+<pre>{ "requiredValueIfOne": { value, scenarios: [conditions1, conditions2, {...rest}] }}</pre>
 </div>
 
 
@@ -337,404 +661,7 @@ Will look for a field `age` on the object being validated and pass if the value 
 
         <tr>
             
-                <td class="name"><code>search</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">attribute to compare</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>match</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">value to compare with</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="functionsPrimitive.js.html">functionsPrimitive.js</a>, <a href="functionsPrimitive.js.html#line41">line 41</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    - returns null if success, `greaterThan fail` if failure
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">null</span>
-|
-
-<span class="param-type">string</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="lessThan"><span class="type-signature"></span>lessThan<span class="signature">(search, match)</span><span class="type-signature"> &rarr; {null|string}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Checks if a specified parameter is less than a specified value
-<pre>{ "lessThan": {"search": "age", "match": 23 }}</pre>
-Will look for a field `age` on the object being validated and pass if the value is less than `23`
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>search</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">attribute to compare</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>match</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">value to compare with</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="functionsPrimitive.js.html">functionsPrimitive.js</a>, <a href="functionsPrimitive.js.html#line56">line 56</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    - returns null if success, `lessThan fail` if failure
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">null</span>
-|
-
-<span class="param-type">string</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="notEqualTo"><span class="type-signature"></span>notEqualTo<span class="signature">(search, match)</span><span class="type-signature"> &rarr; {null|string}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Checks if a specified parameter does not match a specified value
-<pre>{ "notEqualTo": {"search": "countryOfTaxResidence", "match": "IT" }}</pre>
-Will look for a field `countryOfTaxResidence` on the object being validated and fail if the value is `IT`
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>search</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">attribute to compare</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>match</code></td>
+                <td class="name"><code>value</code></td>
             
 
             <td class="type">
@@ -750,7 +677,30 @@ Will look for a field `countryOfTaxResidence` on the object being validated and 
 
             
 
-            <td class="description last">value to compare with</td>
+            <td class="description last">value required</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>scenarios</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">array.&lt;object></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">x number of validation function list combinations</td>
         </tr>
 
     
@@ -791,7 +741,7 @@ Will look for a field `countryOfTaxResidence` on the object being validated and 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="functionsPrimitive.js.html">functionsPrimitive.js</a>, <a href="functionsPrimitive.js.html#line26">line 26</a>
+        <a href="functionsGeneric.js.html">functionsGeneric.js</a>, <a href="functionsGeneric.js.html#line81">line 81</a>
     </li></ul></dd>
     
 
@@ -820,7 +770,7 @@ Will look for a field `countryOfTaxResidence` on the object being validated and 
 
         
 <div class="param-desc">
-    - returns null if success, `notEqualTo fail` if failure
+    - returns null if no validation sets match, `is required` if one or more match
 </div>
 
 
@@ -862,13 +812,13 @@ Will look for a field `countryOfTaxResidence` on the object being validated and 
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#equalTo">equalTo</a></li><li><a href="global.html#greaterThan">greaterThan</a></li><li><a href="global.html#lessThan">lessThan</a></li><li><a href="global.html#notEqualTo">notEqualTo</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#requiredIf">requiredIf</a></li><li><a href="global.html#requiredIfOne">requiredIfOne</a></li><li><a href="global.html#requiredValueIf">requiredValueIf</a></li><li><a href="global.html#requiredValueIfOne">requiredValueIfOne</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Mon Mar 23 2020 09:34:37 GMT+0000 (Greenwich Mean Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Thu Mar 26 2020 19:32:41 GMT+0000 (Greenwich Mean Time)
 </footer>
 
 <script> prettyPrint(); </script>

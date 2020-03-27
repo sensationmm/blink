@@ -169,3 +169,618 @@ describe('requiredIf', () => {
         });
     });
 });
+
+describe('requiredValueIf', () => {
+    describe('field not given', () => {
+        it('should fail with passing validators', () => {
+            const person = {
+                countryOfResidence: "GB",
+                totalShareholding: 30
+            };
+
+            const options = {
+                value: 'given',
+                conditions: { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } }
+            };
+
+            const valid = genericValidation.requiredValueIf(null, options, 'checkField', person);
+
+            expect(valid).toBe(`must be ${options.value}`);
+        });
+
+        it('should pass with mixed pass/fail validators', () => {
+            const person = {
+                countryOfResidence: "DE",
+                totalShareholding: 30
+            };
+
+            const options = {
+                value: 'given',
+                conditions: { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } }
+            };
+
+            const valid = genericValidation.requiredValueIf(null, options, 'checkField', person);
+
+            expect(valid).toBe(null);
+        });
+
+        it('should pass with failing validators', () => {
+            const person = {
+                countryOfResidence: "DE",
+                totalShareholding: 20
+            };
+
+            const options = {
+                value: 'given',
+                conditions: { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } }
+            };
+
+            const valid = genericValidation.requiredValueIf(null, options, 'checkField', person);
+
+            expect(valid).toBe(null);
+        });
+    });
+
+    describe('field given incorrect', () => {
+        it('should fail with passing validators', () => {
+            const person = {
+                checkField: 'notgiven',
+                countryOfResidence: "GB",
+                totalShareholding: 30
+            };
+
+            const options = {
+                value: 'given',
+                conditions: { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } }
+            };
+
+            const valid = genericValidation.requiredValueIf(person.checkField, options, 'checkField', person);
+
+            expect(valid).toBe(`must be ${options.value}`);
+        });
+
+        it('should pass with mixed pass/fail validators', () => {
+            const person = {
+                checkField: 'notgiven',
+                countryOfResidence: "DE",
+                totalShareholding: 30
+            };
+
+            const options = {
+                value: 'given',
+                conditions: { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } }
+            };
+
+            const valid = genericValidation.requiredValueIf(person.checkField, options, 'checkField', person);
+
+            expect(valid).toBe(null);
+        });
+
+        it('should pass with failing validators', () => {
+            const person = {
+                checkField: 'notgiven',
+                countryOfResidence: "DE",
+                totalShareholding: 20
+            };
+
+            const options = {
+                value: 'given',
+                conditions: { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } }
+            };
+
+            const valid = genericValidation.requiredValueIf(person.checkField, options, 'checkField', person);
+
+            expect(valid).toBe(null);
+        });
+    });
+
+    describe('field given correct', () => {
+        it('should pass with passing validators', () => {
+            const person = {
+                checkField: 'given',
+                countryOfResidence: "GB",
+                totalShareholding: 30
+            };
+
+            const options = {
+                value: 'given',
+                conditions: { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } }
+            };
+
+            const valid = genericValidation.requiredValueIf(person.checkField, options, 'checkField', person);
+
+            expect(valid).toBe(null);
+        });
+
+        it('should pass with mixed pass/fail validators', () => {
+            const person = {
+                checkField: 'given',
+                countryOfResidence: "DE",
+                totalShareholding: 30
+            };
+
+            const options = {
+                value: 'given',
+                conditions: { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } }
+            };
+
+            const valid = genericValidation.requiredValueIf(person.checkField, options, 'checkField', person);
+
+            expect(valid).toBe(null);
+        });
+
+        it('should pass with failing validators', () => {
+            const person = {
+                checkField: 'given',
+                countryOfResidence: "DE",
+                totalShareholding: 20
+            };
+
+            const options = {
+                value: 'given',
+                conditions: { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } }
+            };
+
+            const valid = genericValidation.requiredValueIf(person.checkField, options, 'checkField', person);
+
+            expect(valid).toBe(null);
+        });
+    });
+});
+
+describe('requiredIfOne', () => {
+
+    describe('field not given', () => {
+        it('errors with incorrect structure', () => {
+            const person = {
+                countryOfResidence: "GB",
+                totalShareholding: 30
+            };
+
+            const options = { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } };
+
+            const valid = genericValidation.requiredIfOne(null, options, 'checkField', person);
+
+            expect(valid).toBe(': ERROR options must contain `scenarios` array');
+        });
+
+        it('should fail with all passing validators', () => {
+            const person = {
+                countryOfResidence: "GB",
+                totalShareholding: 30,
+                highRisk: 'no'
+            };
+
+            const options = {
+                "scenarios": [
+                    { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } },
+                    { "notEqualTo": { "search": "highRisk", "match": "yes" } }
+                ]
+            };
+
+            const valid = genericValidation.requiredIfOne(null, options, 'checkField', person);
+
+            expect(valid).toBe('is required');
+        });
+
+        it('should fail with some passing validators', () => {
+            const person = {
+                countryOfResidence: "GB",
+                totalShareholding: 30,
+                highRisk: 'yes'
+            };
+
+            const options = {
+                "scenarios": [
+                    { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } },
+                    { "notEqualTo": { "search": "highRisk", "match": "yes" } }
+                ]
+            };
+
+            const valid = genericValidation.requiredIfOne(null, options, 'checkField', person);
+
+            expect(valid).toBe('is required');
+        });
+
+        it('should pass with all failing validators', () => {
+            const person = {
+                countryOfResidence: "IT",
+                totalShareholding: 20,
+                highRisk: 'yes'
+            };
+
+            const options = {
+                "scenarios": [
+                    { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } },
+                    { "notEqualTo": { "search": "highRisk", "match": "yes" } }
+                ]
+            };
+
+            const valid = genericValidation.requiredIfOne(null, options, 'checkField', person);
+
+            expect(valid).toBe(null);
+        });
+    });
+
+    describe('field given', () => {
+        it('errors with incorrect structure', () => {
+            const person = {
+                checkField: 'given',
+                countryOfResidence: "GB",
+                totalShareholding: 30
+            };
+
+            const options = { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } };
+
+            const valid = genericValidation.requiredIfOne(null, options, 'checkField', person);
+
+            expect(valid).toBe(': ERROR options must contain `scenarios` array');
+        });
+
+        it('should pass with all passing validators', () => {
+            const person = {
+                checkField: 'given',
+                countryOfResidence: "GB",
+                totalShareholding: 30,
+                highRisk: 'no'
+            };
+
+            const options = {
+                "scenarios": [
+                    { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } },
+                    { "notEqualTo": { "search": "highRisk", "match": "yes" } }
+                ]
+            };
+
+            const valid = genericValidation.requiredIfOne(null, options, 'checkField', person);
+
+            expect(valid).toBe(null);
+        });
+
+        it('should pass with some passing validators', () => {
+            const person = {
+                checkField: 'given',
+                countryOfResidence: "GB",
+                totalShareholding: 30,
+                highRisk: 'yes'
+            };
+
+            const options = {
+                "scenarios": [
+                    { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } },
+                    { "notEqualTo": { "search": "highRisk", "match": "yes" } }
+                ]
+            };
+
+            const valid = genericValidation.requiredIfOne(null, options, 'checkField', person);
+
+            expect(valid).toBe(null);
+        });
+
+        it('should pass with all failing validators', () => {
+            const person = {
+                checkField: 'given',
+                countryOfResidence: "IT",
+                totalShareholding: 20,
+                highRisk: 'yes'
+            };
+
+            const options = {
+                "scenarios": [
+                    { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } },
+                    { "notEqualTo": { "search": "highRisk", "match": "yes" } }
+                ]
+            };
+
+            const valid = genericValidation.requiredIfOne(null, options, 'checkField', person);
+
+            expect(valid).toBe(null);
+        });
+    });
+});
+
+describe('requiredValueIfOne', () => {
+    describe('field not given', () => {
+        it('errors with missing value', () => {
+            const person = {
+                countryOfResidence: "GB",
+                totalShareholding: 30,
+                highRisk: 'no',
+            };
+
+            const options = {
+                scenarios: [
+                    { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } },
+                    { "notEqualTo": { "search": "highRisk", "match": "yes" } }
+                ]
+            };
+
+            const valid = genericValidation.requiredValueIfOne(null, options, 'checkField', person);
+
+            expect(valid).toBe(': ERROR options must contain required `value`');
+        });
+
+        it('errors with incorrect structure', () => {
+            const person = {
+                countryOfResidence: "GB",
+                totalShareholding: 30,
+                highRisk: 'no',
+            };
+
+            const options = {
+                value: 'given',
+                scenarios: { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } }
+            };
+
+            const valid = genericValidation.requiredValueIfOne(null, options, 'checkField', person);
+
+            expect(valid).toBe(': ERROR options must contain `scenarios` array');
+        });
+
+        it('should fail with passing validators', () => {
+            const person = {
+                countryOfResidence: "GB",
+                totalShareholding: 30,
+                highRisk: 'no',
+            };
+
+            const options = {
+                value: 'given',
+                scenarios: [
+                    { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } },
+                    { "notEqualTo": { "search": "highRisk", "match": "yes" } }
+                ]
+            };
+
+            const valid = genericValidation.requiredValueIfOne(null, options, 'checkField', person);
+
+            expect(valid).toBe(`must be ${options.value}`);
+        });
+
+        it('should fail with mixed pass/fail validators', () => {
+            const person = {
+                countryOfResidence: "DE",
+                totalShareholding: 30,
+                highRisk: 'no',
+            };
+
+            const options = {
+                value: 'given',
+                scenarios: [
+                    { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } },
+                    { "notEqualTo": { "search": "highRisk", "match": "yes" } }
+                ]
+            };
+
+            const valid = genericValidation.requiredValueIfOne(null, options, 'checkField', person);
+
+            expect(valid).toBe(`must be ${options.value}`);
+        });
+
+        it('should pass with failing validators', () => {
+            const person = {
+                countryOfResidence: "DE",
+                totalShareholding: 20,
+                highRisk: 'yes',
+            };
+
+            const options = {
+                value: 'given',
+                scenarios: [
+                    { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } },
+                    { "notEqualTo": { "search": "highRisk", "match": "yes" } }
+                ]
+            };
+
+            const valid = genericValidation.requiredValueIfOne(null, options, 'checkField', person);
+
+            expect(valid).toBe(null);
+        });
+    });
+
+    describe('field given incorrect', () => {
+        it('errors with missing value', () => {
+            const person = {
+                checkField: 'notgiven',
+                countryOfResidence: "GB",
+                totalShareholding: 30,
+                highRisk: 'no',
+            };
+
+            const options = {
+                scenarios: [
+                    { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } },
+                    { "notEqualTo": { "search": "highRisk", "match": "yes" } }
+                ]
+            };
+
+            const valid = genericValidation.requiredValueIfOne(null, options, 'checkField', person);
+
+            expect(valid).toBe(': ERROR options must contain required `value`');
+        });
+
+        it('errors with incorrect structure', () => {
+            const person = {
+                checkField: 'notgiven',
+                countryOfResidence: "GB",
+                totalShareholding: 30,
+                highRisk: 'no',
+            };
+
+            const options = {
+                value: 'given',
+                scenarios: { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } }
+            };
+
+            const valid = genericValidation.requiredValueIfOne(null, options, 'checkField', person);
+
+            expect(valid).toBe(': ERROR options must contain `scenarios` array');
+        });
+
+        it('should fail with passing validators', () => {
+            const person = {
+                checkField: 'notgiven',
+                countryOfResidence: "GB",
+                totalShareholding: 30,
+                highRisk: 'no',
+            };
+
+            const options = {
+                value: 'given',
+                scenarios: [
+                    { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } },
+                    { "notEqualTo": { "search": "highRisk", "match": "yes" } }
+                ]
+            };
+
+            const valid = genericValidation.requiredValueIfOne(person.checkField, options, 'checkField', person);
+
+            expect(valid).toBe(`must be ${options.value}`);
+        });
+
+        it('should fail with mixed pass/fail validators', () => {
+            const person = {
+                checkField: 'notgiven',
+                countryOfResidence: "DE",
+                totalShareholding: 30,
+                highRisk: 'no',
+            };
+
+            const options = {
+                value: 'given',
+                scenarios: [
+                    { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } },
+                    { "notEqualTo": { "search": "highRisk", "match": "yes" } }
+                ]
+            };
+
+            const valid = genericValidation.requiredValueIfOne(person.checkField, options, 'checkField', person);
+
+            expect(valid).toBe(`must be ${options.value}`);
+        });
+
+        it('should pass with failing validators', () => {
+            const person = {
+                checkField: 'notgiven',
+                countryOfResidence: "DE",
+                totalShareholding: 20,
+                highRisk: 'yes',
+            };
+
+            const options = {
+                value: 'given',
+                scenarios: [
+                    { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } },
+                    { "notEqualTo": { "search": "highRisk", "match": "yes" } }
+                ]
+            };
+
+            const valid = genericValidation.requiredValueIfOne(person.checkField, options, 'checkField', person);
+
+            expect(valid).toBe(null);
+        });
+    });
+
+    describe('field given correct', () => {
+        it('errors with missing value', () => {
+            const person = {
+                checkField: 'given',
+                countryOfResidence: "GB",
+                totalShareholding: 30,
+                highRisk: 'no',
+            };
+
+            const options = {
+                scenarios: [
+                    { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } },
+                    { "notEqualTo": { "search": "highRisk", "match": "yes" } }
+                ]
+            };
+
+            const valid = genericValidation.requiredValueIfOne(null, options, 'checkField', person);
+
+            expect(valid).toBe(': ERROR options must contain required `value`');
+        });
+
+        it('errors with incorrect structure', () => {
+            const person = {
+                checkField: 'given',
+                countryOfResidence: "GB",
+                totalShareholding: 30,
+                highRisk: 'no',
+            };
+
+            const options = {
+                value: 'given',
+                scenarios: { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } }
+            };
+
+            const valid = genericValidation.requiredValueIfOne(null, options, 'checkField', person);
+
+            expect(valid).toBe(': ERROR options must contain `scenarios` array');
+        });
+
+        it('should pass with passing validators', () => {
+            const person = {
+                checkField: 'given',
+                countryOfResidence: "GB",
+                totalShareholding: 30,
+                highRisk: 'no',
+            };
+
+            const options = {
+                value: 'given',
+                scenarios: [
+                    { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } },
+                    { "notEqualTo": { "search": "highRisk", "match": "yes" } }
+                ]
+            };
+
+            const valid = genericValidation.requiredValueIfOne(person.checkField, options, 'checkField', person);
+
+            expect(valid).toBe(null);
+        });
+
+        it('should pass with mixed pass/fail validators', () => {
+            const person = {
+                checkField: 'given',
+                countryOfResidence: "DE",
+                totalShareholding: 30,
+                highRisk: 'no',
+            };
+
+            const options = {
+                value: 'given',
+                scenarios: [
+                    { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } },
+                    { "notEqualTo": { "search": "highRisk", "match": "yes" } }
+                ]
+            };
+
+            const valid = genericValidation.requiredValueIfOne(person.checkField, options, 'checkField', person);
+
+            expect(valid).toBe(null);
+        });
+
+        it('should pass with failing validators', () => {
+            const person = {
+                checkField: 'given',
+                countryOfResidence: "DE",
+                totalShareholding: 20,
+                highRisk: 'yes',
+            };
+
+            const options = {
+                value: 'given',
+                scenarios: [
+                    { "greaterThan": { "search": "totalShareholding", "match": "25" }, "equalTo": { "search": "countryOfResidence", "match": "GB" } },
+                    { "notEqualTo": { "search": "highRisk", "match": "yes" } }
+                ]
+            };
+
+            const valid = genericValidation.requiredValueIfOne(person.checkField, options, 'checkField', person);
+
+            expect(valid).toBe(null);
+        });
+    });
+});

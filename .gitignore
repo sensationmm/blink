@@ -87,5 +87,7 @@ yarn-error.log*
 *.xml
 
 # jsdoc package
-/app/src/doc/fonts
-/app/src/doc/styles
+/app/src/doc/wrappers/fonts
+/app/src/doc/wrappers/styles
+/app/src/doc/validators/fonts
+/app/src/doc/validators/styles
