@@ -24,6 +24,7 @@ server.get('*/:companyName', function (req: any, res: any) {
             sourceType,
             sourceCountry,
             certification: "",
+            validation: '',
             evidence: "",
             evidenceExpiration: ""
         };

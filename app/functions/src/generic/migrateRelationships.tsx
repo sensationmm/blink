@@ -24,6 +24,7 @@ server.get('*/:shareholderType', function (req: any, res: any) {
             updatedAt: new Date(),
             sourceType,
             certification: "",
+            validation: '',
             evidence: "",
             evidenceExpiration: ""
         };

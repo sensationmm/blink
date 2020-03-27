@@ -3,7 +3,7 @@ import Select from "react-select";
 
 export const Tabs = styled.ul`
     padding: 0;
-    margin: 0 auto;
+    margin: 50px auto;
     width: auto;
     display: flex;
     justify-content: center;

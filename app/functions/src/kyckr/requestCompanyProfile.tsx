@@ -21,6 +21,7 @@ const valueToObject = (value: any, sourceType: string = "registry", sourceCountr
         sourceType,
         sourceCountry,
         certification: "",
+        validation: "",
         evidence: "",
         evidenceExpiration: ""
     };

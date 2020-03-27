@@ -14,7 +14,12 @@ server.get('*/', async function (req: any, res: any) {
 
   const { state, code } = req.query;
 
-  let auth = new Buffer(`${process.env.XERO_CLIENT_ID}:${process.env.XERO_CLIENT_SECRET}`);
+  const XERO_CLIENT_ID = process.env.XERO_CLIENT_ID || functions.config().xero_client_id.key;
+  const XERO_CLIENT_SECRET = process.env.XERO_CLIENT_SECRET || functions.config().xero_client_secret.key;
+  const XERO_AUTHENTICATE_CALLBACK_URL = process.env.XERO_AUTHENTICATE_CALLBACK_URL || functions.config().xero_authenticate_callback_url.key;
+  const XERO_AUTHENTICATE_REDIRECT_URL = process.env.XERO_AUTHENTICATE_REDIRECT_URL || functions.config().xero_authenticate_redirect_url.key;
+
+  let auth = new Buffer(`${XERO_CLIENT_ID}:${XERO_CLIENT_SECRET}`);
   let base64auth = auth.toString('base64');
 
   request.post({
@@ -23,7 +28,7 @@ server.get('*/', async function (req: any, res: any) {
       "Content-Type": "application/x-www-form-urlencoded"
     },
     url: 'https://identity.xero.com/connect/token',
-    body: `grant_type=authorization_code&code=${code}&redirect_uri=${process.env.XERO_INTEGRATION_CALLBACK_URL}`
+    body: `grant_type=authorization_code&code=${code}&redirect_uri=${XERO_AUTHENTICATE_CALLBACK_URL}`
   }, async function (error: any, response: any, body: any) {
     console.log("response", response.toJSON())
     if (error) {
@@ -48,9 +53,8 @@ server.get('*/', async function (req: any, res: any) {
       xero: xero
     }, {merge: true});
 
-    res.redirect(process.env.XERO_AUTHENTICATE_REDIRECT_URL)
+    res.redirect(XERO_AUTHENTICATE_REDIRECT_URL)
   });
 });
-
 
 module.exports = functions.https.onRequest(server)

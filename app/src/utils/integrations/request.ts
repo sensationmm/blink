@@ -46,6 +46,35 @@ const xeroGetBankAccounts = async (uId: string) => {
     return body;
 }
 
+const xeroDeleteBankAccount = async (uId: string, accountId: string) => {
+
+    const response = await fetch(`${domain}/xeroDeleteBankAccount/${uId}/${accountId}`, {
+        method: "GET",
+        mode: "cors",
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    const body = await response.json();
+
+    return body;
+}
+
+const xeroToggleAccountStatus = async (uId: string, accountId: string, status: string) => {
+
+    const response = await fetch(`${domain}/xeroToggleAccountStatus/${uId}/${accountId}/${status}`, {
+        method: "GET",
+        mode: "cors",
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    const body = await response.json();
+
+    return body;
+}
 
 const xeroGetInvoices = async (uId: string) => {
 
@@ -58,10 +87,8 @@ const xeroGetInvoices = async (uId: string) => {
     });
 
     const body = await response.json();
-    console.log("xeroGetInvoices", body)
-
     return body;
 }
 
 
-export { xeroAuthenticate, xeroDisconnectIntegration, xeroGetBankAccounts, xeroGetInvoices };
+export { xeroAuthenticate, xeroDisconnectIntegration, xeroGetBankAccounts, xeroDeleteBankAccount, xeroGetInvoices, xeroToggleAccountStatus };

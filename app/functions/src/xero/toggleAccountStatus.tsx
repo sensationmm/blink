@@ -11,15 +11,21 @@ const request = require('request');
 const refreshToken = require('./refreshToken');
 
 server.use(cors());
-server.get('*/:uId/:accountId', async function (req: any, res: any) {
+server.get('*/:uId/:accountId/:status', async function (req: any, res: any) {
 
-    const deleteBankAccount = (tenantId: string, accountId: string, res: any) => {
-        request.delete({
+    const { uId, accountId, status } = req.params;
+
+    const toggleAccountStatus = (tenantId: string, accountId: string, res: any) => {
+        request.post({
             headers: {
                 authorization: `Bearer ${access_token}`,
                 "Content-Type": "application/json",
                 "Xero-tenant-id": tenantId
             },
+            body: JSON.stringify({
+                "AccountID": accountId,
+                "Status": status
+            }),
             url: `https://api.xero.com/api.xro/2.0/Accounts/${accountId}`,
         }, async function (error: any, response: any, body: any) {
             // console.log("response", body.toJSON())
@@ -36,7 +42,7 @@ server.get('*/:uId/:accountId', async function (req: any, res: any) {
                     return res.send({ message: parsedBody.Message });
                 } else if (parsedBody.Status) {
                     if (parsedBody.Status === "OK") {
-                        return res.send({ refresh: true, message: `Account ${parsedBody.Accounts[0].AccountID} deleted` });
+                        return res.send({ refresh: true, message: `Account ${parsedBody.Accounts[0].AccountID} status set to ${parsedBody.Accounts[0].Status}` });
                     }
                     return res.send({ message: parsedBody.Status });
                 }
@@ -46,7 +52,7 @@ server.get('*/:uId/:accountId', async function (req: any, res: any) {
         });
     }
 
-    const getTenantIdAndThenDeleteAccount = (access_token: string) => {
+    const getTenantIdAndThenToggleAccountStatus = (access_token: string) => {
         request.get({
             headers: {
                 authorization: `Bearer ${access_token}`,
@@ -62,16 +68,14 @@ server.get('*/:uId/:accountId', async function (req: any, res: any) {
             const tenantId = JSON.parse(body)[0] ?.tenantId;
             console.log("tenantId", tenantId);
             if (tenantId) {
-                deleteBankAccount(tenantId, accountId, res);
+                toggleAccountStatus(tenantId, accountId, res);
             } else {
                 const new_access_token = await refreshToken(refresh_token, uId);
                 console.log("new_access_token", new_access_token);
-                getTenantIdAndThenDeleteAccount(new_access_token)
+                getTenantIdAndThenToggleAccountStatus(new_access_token)
             }
         });
     }
-
-    const { uId, accountId } = req.params;
 
     const userCollection = admin.firestore().collection('users');
     const userDoc = await userCollection.doc(uId).get();
@@ -86,8 +90,9 @@ server.get('*/:uId/:accountId', async function (req: any, res: any) {
 
     const ref = req.headers.referer;
     console.log("ref", ref);
+    
 
-    getTenantIdAndThenDeleteAccount(access_token)
+    getTenantIdAndThenToggleAccountStatus(access_token)
 });
 
 
