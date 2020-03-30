@@ -63,7 +63,7 @@ server.get('*/', async function (req: any, res: any) {
             addedAt: new Date()
         }
 
-        console.log("revolut", revolut)
+        console.log("revolut ", revolut)
 
         if (uId) {
             const userCollection = admin.firestore().collection('users');
