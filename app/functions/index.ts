@@ -79,6 +79,8 @@ exports.migrateCompanyStructure = require("./src/generic/migrateCompanyStructure
 exports.migratePersonStructure = require("./src/generic/migratePersonStructure");
 exports.migrateRelationships = require("./src/generic/migrateRelationships");
 
+exports.relationshipCleanup = require("./src/generic/relationshipCleanup");
+
 // validation
 exports.validateCompany = require("./src/validation/validateCompany");
 exports.addRule = require("./src/validation/addRule");
