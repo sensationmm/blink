@@ -77,10 +77,12 @@
 
 .jsdoc nav
 {
+    position: fixed;
     display: block;
-    float: right;
+    left: 30px;
+    top: 150px;
     margin-top: 28px;
-    width: 30%;
+    width: 20%;
     box-sizing: border-box;
     border-left: 1px solid #ccc;
     padding-left: 16px;
@@ -122,12 +124,13 @@
     margin: 0;
 }
 
-.jsdoc h1
+.jsdoc h1, .jsdoc h2, .jsdoc h3
 {
     font-family: 'Open Sans Light', sans-serif;
     font-size: 48px;
     letter-spacing: -2px;
     margin: 12px 24px 20px;
+    display: none;
 }
 
 .jsdoc h2, .jsdoc h3.subsection-title
@@ -225,7 +228,7 @@
     font-family: Consolas, Monaco, 'Andale Mono', monospace;
 }
 
-.jsdoc .details { margin-top: 14px; border-left: 2px solid #DDD; }
+.jsdoc .details { display: none; margin-top: 14px; border-left: 2px solid #DDD; }
 .jsdoc .details dt { width: 120px; float: left; padding-left: 10px;  padding-top: 6px; }
 .jsdoc .details dd { margin-left: 70px; }
 .jsdoc .details ul { margin: 0; }
