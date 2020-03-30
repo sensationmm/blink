@@ -27,12 +27,24 @@ server.post('*/', async function (req: any, res: any) {
         if (error) {
             console.log("error", error);
         }
-        let user = {};
+        let user: any = {};
         const parsedBody = JSON.parse(body);
         if (parsedBody.users && parsedBody.users[0] && parsedBody.users[0].localId) {
             const userDoc = await userCollection.doc(parsedBody.users[0]?.localId).get();
             if (userDoc) {
                 user = await userDoc.data();
+            }
+            if (user.xero) {
+                const { expires } = user.xero
+                user.xero = {
+                    expires
+                };
+            }
+            if (user.revolut) {
+                const { expires } = user.revolut
+                user.revolut = {
+                    expires
+                };
             }
             res.send({ ...user, ...parsedBody.users[0] });
         }

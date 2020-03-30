@@ -91,4 +91,27 @@ const xeroGetInvoices = async (uId: string) => {
 }
 
 
-export { xeroAuthenticate, xeroDisconnectIntegration, xeroGetBankAccounts, xeroDeleteBankAccount, xeroGetInvoices, xeroToggleAccountStatus };
+const revolutGetBankAccounts = async (uId: string) => {
+
+    const response = await fetch(`${domain}/revolutGetBankAccounts/${uId}`, {
+        method: "GET",
+        mode: "cors",
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    const body = await response.json();
+    return body;
+}
+
+
+export { 
+    xeroAuthenticate, 
+    xeroDisconnectIntegration, 
+    xeroGetBankAccounts, 
+    xeroDeleteBankAccount, 
+    xeroGetInvoices, 
+    xeroToggleAccountStatus,
+    revolutGetBankAccounts
+ };

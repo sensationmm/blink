@@ -4,7 +4,7 @@ import {
     SET_MODAL
 } from '../constants';
 
-import * as xeroUtils from "../../utils/integrations/request";
+import * as integrationsUtils from "../../utils/integrations/request";
 import { requestUserSignInWithToken } from "../actions/auth";
 
 export const xeroDisconnect = () => async (dispatch, getState) => {
@@ -15,7 +15,7 @@ export const xeroDisconnect = () => async (dispatch, getState) => {
 
     const { idToken, localId } = getState().auth.user;
 
-    let result = await xeroUtils.xeroDisconnectIntegration(localId);
+    let result = await integrationsUtils.xeroDisconnectIntegration(localId);
 
     if (result.success) {
         dispatch(requestUserSignInWithToken(idToken));
@@ -30,7 +30,7 @@ export const xeroGetBankAccounts = () => async (dispatch, getState) => {
 
     const { localId } = getState().auth.user;
 
-    let result = await xeroUtils.xeroGetBankAccounts(localId);
+    let result = await integrationsUtils.xeroGetBankAccounts(localId);
 
     dispatch({
         type: HIDE_LOADER,
@@ -47,7 +47,7 @@ export const xeroDeleteBankAccount = accountId => async (dispatch, getState) => 
 
     const { localId } = getState().auth.user;
 
-    let result = await xeroUtils.xeroDeleteBankAccount(localId, accountId);
+    let result = await integrationsUtils.xeroDeleteBankAccount(localId, accountId);
 
     dispatch({
         type: SET_MODAL,
@@ -71,7 +71,7 @@ export const xeroToggleAccountStatus = (accountId, status = "ARCHIVED") => async
 
     const { localId } = getState().auth.user;
 
-    let result = await xeroUtils.xeroToggleAccountStatus(localId, accountId, status);
+    let result = await integrationsUtils.xeroToggleAccountStatus(localId, accountId, status);
 
     dispatch({
         type: SET_MODAL,
@@ -86,6 +86,23 @@ export const xeroToggleAccountStatus = (accountId, status = "ARCHIVED") => async
     return result;
 };
 
+
+export const revolutGetBankAccounts = () => async (dispatch, getState) => {
+
+    dispatch({
+        type: SHOW_LOADER,
+    });
+
+    const { localId } = getState().auth.user;
+
+    let result = await integrationsUtils.revolutGetBankAccounts(localId);
+    // console.log("result", result)
+    dispatch({
+        type: HIDE_LOADER,
+    });
+
+    return result
+};
 
 
 // 

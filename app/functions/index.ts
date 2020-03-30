@@ -108,3 +108,4 @@ exports.xeroDeleteBankAccount = require("./src/xero/deleteBankAccount");
 exports.xeroToggleAccountStatus = require("./src/xero/toggleAccountStatus");
 
 exports.revolutAuthenticateCallback = require("./src/revolut/authenticateCallback");
+exports.revolutGetBankAccounts = require("./src/revolut/getBankAccounts");

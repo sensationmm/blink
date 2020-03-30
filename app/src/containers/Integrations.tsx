@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { xeroDisconnect, xeroDeleteBankAccount, xeroToggleAccountStatus, xeroGetBankAccounts } from '../redux/actions/integrations';
+import { xeroDisconnect, xeroDeleteBankAccount, xeroToggleAccountStatus, xeroGetBankAccounts, revolutGetBankAccounts } from '../redux/actions/integrations';
 import User from './User';
 import { xeroAuthenticate, xeroGetInvoices } from '../utils/integrations/request';
 import { Actions } from './modal-styles';
@@ -25,7 +25,7 @@ const Integrations = (props: any) => {
   const [changeAccountStatusToArchived, setChangeAccountStatusToArchived] = useState(true);
   const [accountFilter, setAccountFilter] = useState("ANY");
   const [searchString, setSearchString] = useState("");
-
+  const [bankAccounts, setBankAccounts] = useState();
   const filterAccountTypes = ["Any", "Bank", "Revenue", "DirectCosts", "Expense", "Current", "Inventory", "Fixed", "Currliab", "termLiab", "Equity"]
 
   const toggleAccountStatusAndRefreshData = async () => {
@@ -35,10 +35,20 @@ const Integrations = (props: any) => {
     }
   }
 
-  const renderRevolut = () => <>
+  const getRevolutBankAccounts = async () => {
+    const accounts = await props.revolutGetBankAccounts();
+    setBankAccounts(accounts);
+  }
 
-    Revolut will go here
+  const renderRevolut = () => {
+
+    return <>
+
+      {bankAccounts && <ReactJson src={bankAccounts} />}
+
+
   </>
+  }
 
   const renderDeleteAccountInput = () => <>
     <Styled.Label>Delete acount:</Styled.Label>
@@ -151,6 +161,16 @@ const Integrations = (props: any) => {
   }
 
   const provider = props.match.params.provider;
+  
+  
+  if (provider === undefined || provider === "revolut") {
+    if (bankAccounts === undefined) {
+      getRevolutBankAccounts();
+    }
+  }
+
+
+
   return <Styled.MainSt>
     <User />
     <Styled.Content>
@@ -172,6 +192,7 @@ const actions = {
   xeroGetBankAccounts,
   xeroDeleteBankAccount,
   xeroToggleAccountStatus,
+  revolutGetBankAccounts
 };
 
 export default withRouter(connect(mapStateToProps, actions)(Integrations));
