@@ -106,3 +106,5 @@ exports.xeroAddBankAccount = require("./src/xero/addBankAccount");
 exports.xeroGetBankAccounts = require("./src/xero/getBankAccounts");
 exports.xeroDeleteBankAccount = require("./src/xero/deleteBankAccount");
 exports.xeroToggleAccountStatus = require("./src/xero/toggleAccountStatus");
+
+exports.revolutAuthenticateCallback = require("./src/revolut/authenticateCallback");
