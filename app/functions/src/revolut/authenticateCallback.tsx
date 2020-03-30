@@ -7,9 +7,6 @@ const express = require('express');
 const server = express();
 const admin = require("firebase-admin");
 const request = require('request');
-// const fs = require('fs')
-const jwt = require('jsonwebtoken')
-
 
 server.use(cors());
 
@@ -21,30 +18,17 @@ server.get('*/', async function (req: any, res: any) {
         uId
     } = req.query;
 
-    const REVOLUT_PRIVATE_KEY = (`-----BEGIN RSA PRIVATE KEY-----\n${process.env.REVOLUT_PRIVATE_KEY || functions.config().revolut_private_key.key}\n-----END RSA PRIVATE KEY-----\n`).replace(/\\n/g, '\n');
     const REVOLUT_CLIENT_ID = process.env.REVOLUT_CLIENT_ID || functions.config().revolut_client_id.key;
+    const REVOLUT_TOKEN = process.env.REVOLUT_TOKEN || functions.config().revolut_token.key;
     const REVOLUT_AUTHENTICATE_REDIRECT_URL = process.env.REVOLUT_PRIVATE_KEY || functions.config().revolut_authenticate_redirect_url.key;
-    const REVOLUT_ISS = process.env.REVOLUT_ISS || functions.config().revolut_iss.key;
-
-    // const privateKeyName = 'privatekey.pem' // Should be valid path to the private key
-    // const issuer = REVOLUT_ISS // Issuer for JWT, should be derived from your redirect URL
-    // const client_id = REVOLUT_CLIENT_ID // Your client ID
-    const aud = 'https://revolut.com' // Constant
-    const payload = {
-        "iss": REVOLUT_ISS,
-        "sub": REVOLUT_CLIENT_ID,
-        "aud": aud
-    }
-    // const privateKey = fs.readFileSync(privateKeyName);
-    const token = jwt.sign(payload, REVOLUT_PRIVATE_KEY, { algorithm: 'RS256', expiresIn: 60 * 60 });
-
+    
     request.post({
         headers: {
             // authorization: `Basic ${base64auth}`,
             "Content-Type": "application/x-www-form-urlencoded"
         },
         url: 'https://b2b.revolut.com/api/1.0/auth/token',
-        body: `grant_type=authorization_code&code=${code}&client_id=${REVOLUT_CLIENT_ID}&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&client_assertion=${token}`
+        body: `grant_type=authorization_code&code=${code}&client_id=${REVOLUT_CLIENT_ID}&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&client_assertion=${REVOLUT_TOKEN}`
     }, async function (error: any, response: any, body: any) {
         console.log("response", response.toJSON())
         if (error) {
