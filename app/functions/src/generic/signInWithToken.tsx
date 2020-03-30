@@ -17,7 +17,7 @@ server.post('*/', async function (req: any, res: any) {
 
     const apiKey = process.env.FIREBASE_AUTH_API_KEY || functions.config().auth_api.key;
     const body = {
-        idToken: token
+        idToken: token,
     }
 
     request.post({
