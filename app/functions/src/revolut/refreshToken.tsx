@@ -36,6 +36,7 @@ const refreshToken = (refresh_token: string, uId: string) => {
       }
       const t = new Date();
 
+      
       const { token_type, access_token, expires_in } = JSON.parse(body);
 
       const revolut = {
