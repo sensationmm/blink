@@ -44,7 +44,7 @@ const refreshToken = (refresh_token: string, uId: string) => {
         access_token,
         token_type,
         expires: t.setSeconds(t.getSeconds() + parseInt(expires_in)),
-        // refresh_token,
+        refresh_token,
         addedAt: new Date()
       }
 

@@ -17,7 +17,7 @@ const payload = {
 
 const generateJWT = () => {
   const token = jwt.sign(payload, REVOLUT_PRIVATE_KEY, { algorithm: 'RS256', expiresIn: 60 * 60 });
-  console.log(token)
+  // console.log(token)
   return token;
 }
 
