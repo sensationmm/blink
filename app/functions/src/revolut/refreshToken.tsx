@@ -7,13 +7,16 @@ const express = require('express');
 const server = express();
 const admin = require("firebase-admin");
 const request = require('request');
+const generateJWT = require("./generateJWT");
 
 server.use(cors());
 
 const refreshToken = (refresh_token: string, uId: string) => {
 
   const REVOLUT_CLIENT_ID = process.env.REVOLUT_CLIENT_ID || functions.config().revolut_client_id.key;
-  const REVOLUT_TOKEN = process.env.REVOLUT_TOKEN || functions.config().revolut_token.key;
+  // const REVOLUT_TOKEN = process.env.REVOLUT_TOKEN || functions.config().revolut_token.key;
+
+  const REVOLUT_TOKEN = generateJWT();
 
   // console.log("refresh_token", refresh_token)
   // console.log("REVOLUT_CLIENT_ID", REVOLUT_CLIENT_ID)
@@ -37,6 +40,7 @@ const refreshToken = (refresh_token: string, uId: string) => {
 
       const revolut = {
         // id_token,
+        jwt: REVOLUT_TOKEN,
         access_token,
         token_type,
         expires: t.setSeconds(t.getSeconds() + parseInt(expires_in)),

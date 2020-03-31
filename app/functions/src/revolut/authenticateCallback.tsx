@@ -19,7 +19,7 @@ server.get('*/', async function (req: any, res: any) {
     } = req.query;
 
     const REVOLUT_CLIENT_ID = process.env.REVOLUT_CLIENT_ID || functions.config().revolut_client_id.key;
-    const REVOLUT_TOKEN = process.env.REVOLUT_TOKEN || functions.config().revolut_token.key;
+    const REVOLUT_TOKEN = generateJWT();
     const REVOLUT_AUTHENTICATE_REDIRECT_URL = process.env.REVOLUT_PRIVATE_KEY || functions.config().revolut_authenticate_redirect_url.key;
     
     request.post({
@@ -40,6 +40,7 @@ server.get('*/', async function (req: any, res: any) {
 
         const revolut = {
             // id_token,
+            jwt: REVOLUT_TOKEN,
             access_token,
             token_type,
             expires: t.setSeconds(t.getSeconds() + parseInt(expires_in)),
