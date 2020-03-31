@@ -7,6 +7,7 @@ const express = require('express');
 const server = express();
 const admin = require("firebase-admin");
 const request = require('request');
+const generateJWT = require('./generateJWT');
 
 server.use(cors());
 
