@@ -8,7 +8,6 @@ const server = express();
 
 server.use(cors());
 
-
 server.get('*/', function (req: any, res: any) {
 
     ipRequest({url: "http://httpbin.org/ip"}, function (error: any, response: any, body: any) {
