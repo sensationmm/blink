@@ -101,6 +101,10 @@
       "function": "xeroToggleAccountStatus"
     },
     {
+      "source": "/revolutGetBankAccounts/**",
+      "function": "revolutGetBankAccounts"
+    },
+    {
       "source": "**",
       "destination": "/index.html"
     }]
