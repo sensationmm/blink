@@ -51,7 +51,7 @@ server.get('*/:uId', async function (req: any, res: any) {
 
     if (new Date() > expires) {
         console.log("refresh the token")
-        const access_token = await refreshToken(refresh_token);
+        const access_token = await refreshToken(refresh_token, uId);
         // return res.send("refreshToken")
         console.log("access_token", access_token)
         if (access_token) {
