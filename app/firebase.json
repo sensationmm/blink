@@ -105,6 +105,10 @@
       "function": "revolutGetBankAccounts"
     },
     {
+      "source": "/revolutGetBankAccounts/**/**",
+      "function": "revolutGetBankAccounts"
+    },
+    {
       "source": "**",
       "destination": "/index.html"
     }]

@@ -109,3 +109,4 @@ exports.xeroToggleAccountStatus = require("./src/xero/toggleAccountStatus");
 
 exports.revolutAuthenticateCallback = require("./src/revolut/authenticateCallback");
 exports.revolutGetBankAccounts = require("./src/revolut/getBankAccounts");
+exports.revolutGetBankAccountDetails = require("./src/revolut/getBankAccountDetails");

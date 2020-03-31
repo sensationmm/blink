@@ -105,6 +105,19 @@ const revolutGetBankAccounts = async (uId: string) => {
     return body;
 }
 
+const revolutGetBankAccountDetails = async (uId: string, accountId: string) => {
+
+    const response = await fetch(`${domain}/revolutGetBankAccountDetails/${uId}/${accountId}`, {
+        method: "GET",
+        mode: "cors",
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    const body = await response.json();
+    return body;
+}
 
 export { 
     xeroAuthenticate, 
@@ -113,5 +126,6 @@ export {
     xeroDeleteBankAccount, 
     xeroGetInvoices, 
     xeroToggleAccountStatus,
-    revolutGetBankAccounts
+    revolutGetBankAccounts,
+    revolutGetBankAccountDetails
  };

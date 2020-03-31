@@ -1,13 +1,25 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { xeroDisconnect, xeroDeleteBankAccount, xeroToggleAccountStatus, xeroGetBankAccounts, revolutGetBankAccounts } from '../redux/actions/integrations';
+import { xeroDisconnect, xeroDeleteBankAccount, xeroToggleAccountStatus, xeroGetBankAccounts, revolutGetBankAccounts, revolutGetBankAccountDetails } from '../redux/actions/integrations';
 import User from './User';
 import { xeroAuthenticate, xeroGetInvoices } from '../utils/integrations/request';
 import { Actions } from './modal-styles';
 import ReactJson from "react-json-view";
 import * as Styled from '../components/styles';
 import Button from "../components/button";
+import Box from '../layout/box';
+import Blocks from '../layout/blocks';
+import styled from 'styled-components';
+import { blinkMarkets } from '../utils/config/blink-markets';
+
+
+export const Icon = styled.div`
+    margin-right: 30px;
+    img {
+        width: 26px;
+    }
+`;
 
 
 const Integrations = (props: any) => {
@@ -37,7 +49,14 @@ const Integrations = (props: any) => {
 
   const getRevolutBankAccounts = async () => {
     const accounts = await props.revolutGetBankAccounts();
-    setBankAccounts(accounts);
+
+    const detailedAccounts = await Promise.all(
+      accounts.map(async (account: any) => {
+        const details = await props.revolutGetBankAccountDetails(account.id);
+        return { ...account, ...details }
+      })
+    )
+    setBankAccounts(detailedAccounts);
   }
 
   const renderRevolut = () => {
@@ -46,8 +65,20 @@ const Integrations = (props: any) => {
 
       {bankAccounts && <ReactJson src={bankAccounts} />}
 
+      {bankAccounts && <Blocks>
 
-  </>
+        {bankAccounts.filter((account: any) => blinkMarkets.find(market => market.currency === account.currency))
+          .map((account: any) => {
+            const country = blinkMarkets.find(market => market.currency === account.currency);
+            return <Box key={account.id} title={''} icon={""} paddedLarge shadowed><Blocks>
+              <Icon><img src={country ?.flag} /></Icon>
+            </Blocks>    </Box>
+          })}
+
+      </Blocks>}
+
+
+    </>
   }
 
   const renderDeleteAccountInput = () => <>
@@ -156,13 +187,16 @@ const Integrations = (props: any) => {
     setActiveTab(newActiveTab);
   }
 
-  if (activeTab === undefined) {
-    onSelectTab(tabs[0]);
-  }
 
   const provider = props.match.params.provider;
-  
-  
+
+
+  if (provider === undefined || provider === "xero") {
+    if (activeTab === undefined) {
+      onSelectTab(tabs[0]);
+    }
+  }
+
   if (provider === undefined || provider === "revolut") {
     if (bankAccounts === undefined) {
       getRevolutBankAccounts();
@@ -176,10 +210,10 @@ const Integrations = (props: any) => {
     <Styled.Content>
       {(provider === undefined || provider === "xero")
         && renderXero()}
-
       {(provider === undefined || provider === "revolut")
         && renderRevolut()}
     </Styled.Content>
+
   </Styled.MainSt>
 };
 
@@ -192,7 +226,8 @@ const actions = {
   xeroGetBankAccounts,
   xeroDeleteBankAccount,
   xeroToggleAccountStatus,
-  revolutGetBankAccounts
+  revolutGetBankAccounts,
+  revolutGetBankAccountDetails
 };
 
 export default withRouter(connect(mapStateToProps, actions)(Integrations));

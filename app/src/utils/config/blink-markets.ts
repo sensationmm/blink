@@ -6,12 +6,12 @@ import FlagIT from '../../svg/flag-IT.svg';
 import FlagSE from '../../svg/flag-SE.svg';
 
 export const blinkMarkets = [
-    { code: 'GB', name: 'United Kingdom', flag: FlagGB },
+    { code: 'GB', name: 'United Kingdom', flag: FlagGB, currency: "GBP"},
     { code: 'DE', name: 'Germany', flag: FlagDE },
     { code: 'FR', name: 'France', flag: FlagFR },
     { code: 'RO', name: 'Romania', flag: FlagRO },
     { code: 'IT', name: 'Italy', flag: FlagIT },
-    { code: 'SE', name: 'Sweden', flag: FlagSE }
+    { code: 'SE', name: 'Sweden', flag: FlagSE, currency: "SEK" }
 ];
 
 export const blinkMarketList = blinkMarkets.map(market => market.code);
