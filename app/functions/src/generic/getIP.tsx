@@ -6,7 +6,6 @@ const ipRequest = require('request');
 
 const server = express();
 
-
 server.use(cors());
 
 server.get('*/', function (req: any, res: any) {
