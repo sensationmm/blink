@@ -3,6 +3,7 @@ export { }
 
 const admin = require("firebase-admin");
 const request = require('request');
+const functions = require('firebase-functions');
 
 const refreshToken = (refresh_Token: string, uId: string) => {
 
