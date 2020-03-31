@@ -59,7 +59,7 @@ server.get('*/:uId', async function (req: any, res: any) {
         }
     } else {
         console.log("not expires", access_token)
-        // getAccounts(access_token);
+        getAccounts(access_token);
     }
 
 });
