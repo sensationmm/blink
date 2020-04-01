@@ -60,6 +60,8 @@ server.post('*/', async function (req: any, res: any) {
                 .where("target", "==", companyRef)
                 .where("type", "==", "shareholder").get()
 
+        let shareholderDepth = 1;
+
         if (shareholderRelationships.empty) {
             console.log("shareholders empty")
             delete returnCompany.shareholders
@@ -91,19 +93,23 @@ server.post('*/', async function (req: any, res: any) {
                     })
                 }
 
-                if (shareholder.shareholderType.value === "C") {
+                if (shareholder.shareholderType.value === "C" || shareholder.shareholderType.value === "O") {
                     // if (shareholder.companyId?.value) {
 
-                        // console.log("shareholder.shareholderType", shareholder.shareholderType, shareholder.companyId)
+                    // console.log("shareholder.shareholderType", shareholder.shareholderType, shareholder.companyId)
 
-                        const companyShareholders = await getShareholdersAndOfficers(shareholder.companyId?.value, shareholder.source, depth + 1, (totalShareholding / 100) * shareholder.percentage?.value);
+                    const companyShareholders = await getShareholdersAndOfficers(shareholder.companyId?.value, shareholder.source, depth + 1, (totalShareholding / 100) * shareholder.percentage?.value);
 
-                        if (companyShareholders) {
-                            if (companyShareholders.shareholders) {
-                                shareholder.shareholders = companyShareholders.shareholders.sort((shareholderA: any, shareholderB: any) => parseFloat(shareholderB.percentage?.value) - parseFloat(shareholderA.percentage?.value));
-                            }
-                            shareholder.officers = companyShareholders.officers;
+                    if (depth + 1 > shareholderDepth) {
+                        shareholderDepth = depth + 1;
+                    }
+
+                    if (companyShareholders) {
+                        if (companyShareholders.shareholders) {
+                            shareholder.shareholders = companyShareholders.shareholders.sort((shareholderA: any, shareholderB: any) => parseFloat(shareholderB.percentage?.value) - parseFloat(shareholderA.percentage?.value));
                         }
+                        shareholder.officers = companyShareholders.officers;
+                    }
 
                     // }
                     shareholder.docId = shareholder.source.path;
@@ -127,11 +133,12 @@ server.post('*/', async function (req: any, res: any) {
                 delete shareholder.source;
                 delete shareholder.target;
 
-                return shareholder
+                return { ...shareholder, depth }
             }))
 
             if (returnCompany.shareholders) {
                 returnCompany.shareholders = returnCompany.shareholders.sort((shareholderA: any, shareholderB: any) => parseFloat(shareholderB.percentage?.value) - parseFloat(shareholderA.percentage?.value));
+                returnCompany.shareholderDepth = shareholderDepth;
             }
         }
 

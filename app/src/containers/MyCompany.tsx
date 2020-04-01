@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import classNames from 'classnames';
 
+import SetupStatus from '../components/setup-status';
 import SignificantPersons from "../components/generic/persons-with-significant-control";
+import { shareholderAnimLevel, shareholderAnimVariant } from '../components/shareholder';
 import Button from '../components/button';
 import ScreeningStatus from '../components/screening-status';
 import ShareholderList from '../components/shareholder/list';
+import ProgressBar from '../components/progress-bar';
 import Actions from '../layout/actions';
 import Box from '../layout/box';
 import FlexRow from '../layout/flex-row';
@@ -21,10 +25,34 @@ import SideTray from '../components/side-tray';
 import ShareholderEdit from '../components/shareholder-edit';
 import ArrowRight from '../svg/arrow-right.svg';
 import * as MainStyled from "../components/styles";
-import * as Styled from './company-structure.styles';
+import * as Styled from './my-company.styles';
 
 // type market = 'Core' | 'GB' | 'DE' | 'FR' | 'RO' | 'IT' | 'SE';
 // type indexedObject = { [key: string]: any };
+
+interface MyCompanyProgressProps {
+    duration: number;
+}
+
+const MyCompanyProgress: React.FC<MyCompanyProgressProps> = ({ duration }) => {
+    useEffect(() => {
+        return () => {
+            clearInterval(progressTimeout);
+        };
+    });
+
+    const [progress, setProgress] = useState(0);
+
+    useEffect(() => {
+        if (progress >= duration) {
+            clearInterval(progressTimeout);
+        }
+    }, [progress]);
+
+    const progressTimeout = setInterval(() => setProgress(progress + 100), 100);
+
+    return <ProgressBar value={progress} total={duration} controlled />;
+}
 
 const MyCompany = (props: any) => {
     const {
@@ -36,9 +64,18 @@ const MyCompany = (props: any) => {
         // setErrors,
         // showLoader,
         // hideLoader,
-        setSideTray
+        setSideTray,
+        sideTrayOpen,
+        history
     } = props;
 
+    useEffect(() => {
+        return () => {
+            clearTimeout(buildingTimeout);
+        };
+    });
+
+    const [building, setBuilding] = useState(true);
 
     if (!company || !companyStructure) {
         return <Redirect to="/search" />;
@@ -61,28 +98,53 @@ const MyCompany = (props: any) => {
     //     );
     // };
 
+    const calculationTime = companyStructure.shareholderDepth * (shareholderAnimLevel + shareholderAnimVariant);
+
+    const buildingTimeout = setTimeout(() => setBuilding(false), calculationTime + 2000);
+
     return (
         <MainStyled.MainSt>
+            <SetupStatus />
+
             <MainStyled.Content>
-                <br /><br />
-                {companyStructure &&
-                    <Box>
-                        <SignificantPersons
-                            showOnlyOrdinaryShareTypes={false}
-                            shareholderThreshold={ownershipThreshold}
-                            companyStructure={companyStructure}
-                            onClick={editUBO}
-                        />
-                    </Box>
+                {building
+                    ? <h1 className="center">Identifying {company.name}'s company structure using public registry sources</h1>
+                    : <h1 className="center">Please confirm or edit your company structure so we can identify the UBO's and move on to the next step</h1>
                 }
+
+                {building &&
+                    <Styled.Progress>
+                        <MyCompanyProgress
+                            duration={calculationTime}
+                        />
+                    </Styled.Progress>
+                }
+
+                {companyStructure &&
+                    <SignificantPersons
+                        showOnlyOrdinaryShareTypes={false}
+                        shareholderThreshold={ownershipThreshold}
+                        companyStructure={companyStructure}
+                        onClick={editUBO}
+                        animate={building}
+                    />
+                }
+                {building && <Styled.Mask />}
             </MainStyled.Content>
 
             <SideTray />
+
+            <Styled.ActionBar className={classNames({ hide: building || sideTrayOpen })}>
+                <div />
+                <Button small onClick={() => history.push('/onboarding/my-documents')} label={'Confirm company structure'} />
+                <Button small type={'secondary'} onClick={() => history.push('/onboarding/my-documents')} label={'Complete later'} />
+            </Styled.ActionBar>
         </MainStyled.MainSt>
     )
 }
 
 const mapStateToProps = (state: any) => ({
+    sideTrayOpen: state.sideTray.open,
     company: state.screening.company,
     companyStructure: state.screening.companyStructure,
     ownershipThreshold: state.screening.ownershipThreshold,

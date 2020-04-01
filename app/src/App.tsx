@@ -33,6 +33,7 @@ import Modal from './containers/Modal';
 import Doc from './containers/Doc';
 
 import MyCompany from './containers/MyCompany';
+import SelectMarkets from './containers/SelectMarkets';
 
 export default () => {
 
@@ -62,6 +63,7 @@ const App = withRouter((props: any) => {
         <Route exact path="/"><Redirect to="/search" /></Route>
 
         <Route exact path="/onboarding/my-company"><MyCompany /></Route>
+        <Route exact path="/onboarding/select-markets"><SelectMarkets /></Route>
 
         <Route exact path="/search"><Search /></Route>
         <Route exact path="/company-structure"><CompanyStructure /></Route>

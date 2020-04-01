@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="41px" height="42px" viewBox="0 0 41 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 62 (91390) - https://sketch.com -->
+    <title>Norway</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M20.09,41.16 C31.1854,41.16 40.18,31.946 40.18,20.58 C40.18,9.214 31.1854,0 20.09,0 C8.9946,0 0,9.214 0,20.58 C0,31.946 8.9946,41.16 20.09,41.16 Z" id="path-1"></path>
+        <rect id="path-3" x="0.06702" y="0.36182" width="61.0993" height="44.7068" rx="3.72557"></rect>
+        <rect id="path-5" x="0.54" y="0.54" width="59.4" height="42.12" rx="3.78"></rect>
+        <rect id="path-7" x="0.25" y="0.25" width="60.5" height="43.5" rx="1.75"></rect>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Norway">
+            <path d="M20.09,41.16 C31.1854,41.16 40.18,31.946 40.18,20.58 C40.18,9.214 31.1854,0 20.09,0 C8.9946,0 0,9.214 0,20.58 C0,31.946 8.9946,41.16 20.09,41.16 Z" id="Path" fill="#D8D8D8"></path>
+            <g id="Clipped">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <g id="Path"></g>
+                <g id="Group" mask="url(#mask-2)">
+                    <g transform="translate(-68.000000, -26.000000)">
+                        <rect id="Rectangle" stroke="none" fill="#FFFFFF" fill-rule="nonzero" x="56.263062" y="23.51367" width="61.0993" height="47.124" rx="3.72557"></rect>
+                        <rect id="Rectangle" stroke="none" fill="#FFFFFF" fill-rule="nonzero" x="58.06702" y="25.36182" width="61.0993" height="44.7068" rx="3.72557"></rect>
+                        <g id="Clipped" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(58.000000, 25.000000)">
+                            <mask id="mask-4" fill="white">
+                                <use xlink:href="#path-3"></use>
+                            </mask>
+                            <g id="Rectangle"></g>
+                            <g id="Group" mask="url(#mask-4)">
+                                <g transform="translate(-9.000000, -5.000000)">
+                                    <rect id="Rectangle" stroke="none" fill="#0A17A7" fill-rule="nonzero" x="9.06702" y="5.36182" width="61.0993" height="44.7068"></rect>
+                                    <polygon id="Path" stroke="none" fill="#FFFFFF" fill-rule="evenodd" points="6.26846 1.07812 32.3429 19.0945 32.3429 2.38158 46.8903 2.38158 46.8903 19.0945 72.9648 1.07813 76.2187 6.01994 55.6034 20.2643 70.1663 20.2643 70.1663 35.1666 55.6034 35.1666 76.2187 49.4109 72.9648 54.3528 46.8903 36.3364 46.8903 53.0493 32.3429 53.0493 32.3429 36.3364 6.26846 54.3528 3.01453 49.4109 23.6299 35.1666 9.06696 35.1666 9.06696 20.2643 23.6299 20.2643 3.01453 6.01994"></polygon>
+                                    <line x1="49.8027" y1="19.5164" x2="77.4401" y2="0.89111" id="Path" stroke="#DB1F35" stroke-width="1.24186" fill="none" stroke-linecap="round"></line>
+                                    <line x1="52.7373" y1="35.9802" x2="77.5127" y2="53.0869" id="Path" stroke="#DB1F35" stroke-width="1.24186" fill="none" stroke-linecap="round"></line>
+                                    <line x1="26.536" y1="19.4677" x2="0.69312" y2="1.62646" id="Path" stroke="#DB1F35" stroke-width="1.24186" fill="none" stroke-linecap="round"></line>
+                                    <line x1="29.3389" y1="35.7735" x2="0.69312" y2="55.2334" id="Path" stroke="#DB1F35" stroke-width="1.24186" fill="none" stroke-linecap="round"></line>
+                                    <polygon id="Path" stroke="none" fill="#E6273E" fill-rule="evenodd" points="9.06702 32.1859 35.2524 32.1859 35.2524 50.0686 43.9809 50.0686 43.9809 32.1859 70.1663 32.1859 70.1663 23.2445 43.9809 23.2445 43.9809 5.36182 35.2524 5.36182 35.2524 23.2445 9.06702 23.2445"></polygon>
+                                </g>
+                            </g>
+                        </g>
+                        <rect id="Rectangle" stroke="#F5F5F5" stroke-width="1.08" fill="#FFFFFF" fill-rule="nonzero" x="59.54" y="25.54" width="59.4" height="42.12" rx="3.78"></rect>
+                        <g id="Clipped" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(59.000000, 25.000000)">
+                            <mask id="mask-6" fill="white">
+                                <use xlink:href="#path-5"></use>
+                            </mask>
+                            <g id="Rectangle"></g>
+                            <polygon id="Path" fill="#0848A6" mask="url(#mask-6)" points="-2.880005 25.9201 17.28 25.9201 17.28 46.0801 25.92 46.0801 25.92 25.9201 63.36 25.9201 63.36 17.2801 25.92 17.2801 25.92 -2.87988 17.28 -2.87988 17.28 17.2801 -2.880005 17.2801"></polygon>
+                        </g>
+                        <rect id="Rectangle" stroke="#F5F5F5" stroke-width="0.5" fill="#FFFFFF" fill-rule="nonzero" x="60.25" y="24.25" width="60.5" height="43.5" rx="1.75"></rect>
+                        <g id="Clipped" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(60.000000, 24.000000)">
+                            <mask id="mask-8" fill="white">
+                                <use xlink:href="#path-7"></use>
+                            </mask>
+                            <g id="Rectangle"></g>
+                            <g id="Group" mask="url(#mask-8)">
+                                <path d="M17.4286,0 L0,0 L0,17.6 L17.4286,17.6 L17.4286,0 Z M26.1429,0 L26.1429,17.6 L61,17.6 L61,0 L26.1429,0 Z M61,26.4 L26.1429,26.4 L26.1429,44 L61,44 L61,26.4 Z M17.4286,44 L17.4286,26.4 L0,26.4 L0,44 L17.4286,44 Z" id="Shape" fill="#F14247"></path>
+                                <polygon id="Path" fill="#0A3A85" points="0 23.4667 20.3333 23.4667 20.3333 44 23.2381 44 23.2381 23.4667 61 23.4667 61 20.5333 23.2381 20.5333 23.2381 0 20.3333 0 20.3333 20.5333 0 20.5333"></polygon>
+                            </g>
+                        </g>
+                        <path d="M45.86,93.1998 C70.7681,93.1998 90.96,72.5154 90.96,46.9998 C90.96,21.48425 70.7681,0.7998 45.86,0.7998 C20.952,0.7998 0.76,21.48425 0.76,46.9998 C0.76,72.5154 20.952,93.1998 45.86,93.1998 Z" id="Path" stroke="none" fill="#E5E5E5" fill-rule="evenodd" opacity="0.290458"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

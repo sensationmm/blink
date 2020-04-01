@@ -3,6 +3,7 @@ import {
     SET_COUNTRY,
     SET_COMPANY_STRUCTURE,
     SET_OWNERSHIP_THRESHOLD,
+    SET_MARKETS,
     SET_COMPLETION,
     SET_ERRORS,
     EDIT_FIELD,
@@ -33,6 +34,13 @@ export const setOwnershipThreshold = (threshold) => {
     return {
         type: SET_OWNERSHIP_THRESHOLD,
         threshold
+    }
+}
+
+export const setMarkets = (markets) => {
+    return {
+        type: SET_MARKETS,
+        markets
     }
 }
 

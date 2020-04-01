@@ -10,6 +10,7 @@ body {
 
   --brand-primary: #44D7B6;
   --brand-secondary: #FF788B;
+  --brand-tertiary: #161e49;
   --brand-company: #D9FFF9;
   --brand-person: #EEEAFF;
   --brand-warning: #FFD521;
@@ -39,4 +40,10 @@ code {
 h1 {
   font-size: 24px;
   font-weight: normal;
+  margin-bottom: 40px;
+}
+
+h1.center {
+  text-align: center;
+  padding: 0 20%;
 }
