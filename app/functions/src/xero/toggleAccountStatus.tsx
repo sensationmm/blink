@@ -7,7 +7,6 @@ const express = require('express');
 const server = express();
 const admin = require('firebase-admin');
 const request = require('request');
-
 const refreshToken = require('./refreshToken');
 
 server.use(cors());

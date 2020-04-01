@@ -31,12 +31,26 @@ server.post('*/', async function (req: any, res: any) {
         if (error) {
             console.log("error", error);
         }
-        let user = {};
+        let user: any = {};
         const parsedBody = JSON.parse(body);
         if (parsedBody.localId) {
             const userDoc = await userCollection.doc(parsedBody.localId).get();
             user = await userDoc.data();
         }
+
+        if (user.xero) {
+            const { expires } = user.xero
+            user.xero = {
+                expires
+            };
+        }
+        if (user.revolut) {
+            const { expires } = user.revolut
+            user.revolut = {
+                expires
+            };
+        }
+
         res.send({ ...user, ...parsedBody });
     });
 })

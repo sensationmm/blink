@@ -91,3 +91,6 @@ yarn-error.log*
 /app/src/doc/wrappers/styles
 /app/src/doc/validators/fonts
 /app/src/doc/validators/styles
+
+/app/functions/*.pem
+/app/functions/*.cer

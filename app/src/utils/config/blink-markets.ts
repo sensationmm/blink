@@ -12,12 +12,12 @@ import FlagFI from '../../svg/flag-FI.svg';
 import FlagNO from '../../svg/flag-NO.svg';
 
 export const blinkMarkets = [
-    { code: 'GB', region: 'europe', name: 'United Kingdom', flag: FlagGB },
+    { code: 'GB', region: 'europe', name: 'United Kingdom', flag: FlagGB, currency: "GBP" },
     { code: 'DE', region: 'europe', name: 'Germany', flag: FlagDE },
     { code: 'FR', region: 'europe', name: 'France', flag: FlagFR },
     { code: 'RO', region: 'europe', name: 'Romania', flag: FlagRO },
     { code: 'IT', region: 'europe', name: 'Italy', flag: FlagIT },
-    { code: 'SE', region: 'europe', name: 'Sweden', flag: FlagSE },
+    { code: 'SE', region: 'europe', name: 'Sweden', flag: FlagSE, currency: "SEK" },
     { code: 'CH', region: 'asia', name: 'Switzerland', flag: FlagCH, disabled: true },
     { code: 'HU', region: 'asia', name: 'Hungary', flag: FlagHU, disabled: true },
     { code: 'ES', region: 'asia', name: 'Spain', flag: FlagES, disabled: true },

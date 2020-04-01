@@ -79,6 +79,8 @@ exports.migrateCompanyStructure = require("./src/generic/migrateCompanyStructure
 exports.migratePersonStructure = require("./src/generic/migratePersonStructure");
 exports.migrateRelationships = require("./src/generic/migrateRelationships");
 
+exports.relationshipCleanup = require("./src/generic/relationshipCleanup");
+
 // validation
 exports.validateCompany = require("./src/validation/validateCompany");
 exports.addRule = require("./src/validation/addRule");
@@ -104,3 +106,7 @@ exports.xeroAddBankAccount = require("./src/xero/addBankAccount");
 exports.xeroGetBankAccounts = require("./src/xero/getBankAccounts");
 exports.xeroDeleteBankAccount = require("./src/xero/deleteBankAccount");
 exports.xeroToggleAccountStatus = require("./src/xero/toggleAccountStatus");
+
+exports.revolutAuthenticateCallback = require("./src/revolut/authenticateCallback");
+exports.revolutGetBankAccounts = require("./src/revolut/getBankAccounts");
+exports.revolutGetBankAccountDetails = require("./src/revolut/getBankAccountDetails");
