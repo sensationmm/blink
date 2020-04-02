@@ -2,7 +2,7 @@
 
 export { }
 
-// const functions = require('firebase-functions');
+const functions = require('firebase-functions');
 const cors = require('cors');
 const express = require('express');
 
