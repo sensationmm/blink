@@ -29,3 +29,10 @@ export const blinkMarkets = [
 export const blinkMarketList = blinkMarkets.map(market => market.code);
 
 export type marketType = 'Core' | 'GB' | 'DE' | 'FR' | 'RO' | 'IT' | 'SE';
+
+export const currencySymbols: any = {
+    "GBP": "£",
+    "EUR": "€",
+    "SEK": "kr"
+  }
+  

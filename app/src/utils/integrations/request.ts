@@ -119,6 +119,41 @@ const revolutGetBankAccountDetails = async (uId: string, accountId: string) => {
     return body;
 }
 
+const revolutGetCounterparties = async (uId: string, accountId: string) => {
+
+    const response = await fetch(`${domain}/revolutGetCounterparties/${uId}`, {
+        method: "GET",
+        mode: "cors",
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    const body = await response.json();
+    return body;
+}
+
+const revolutPostPayment = async (uId: string, accountId: string, pendingPaymentAmount: number, currency: string, selectedCounterparty: object, requestId: string)=> {
+
+    const data = {
+        uId,
+        accountId,
+        pendingPaymentAmount,
+        currency,
+        selectedCounterparty,
+        requestId
+    }
+    
+    const response = await fetch(`${domain}/revolutPostPayment`, {
+        method: 'post',
+        mode: "cors",
+        body: JSON.stringify(data)
+    })
+
+    const body = await response.json();
+    return body;
+}
+
 export { 
     xeroAuthenticate, 
     xeroDisconnectIntegration, 
@@ -127,5 +162,7 @@ export {
     xeroGetInvoices, 
     xeroToggleAccountStatus,
     revolutGetBankAccounts,
-    revolutGetBankAccountDetails
+    revolutGetCounterparties,
+    revolutGetBankAccountDetails,
+    revolutPostPayment
  };

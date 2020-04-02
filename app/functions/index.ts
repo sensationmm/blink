@@ -111,3 +111,6 @@ exports.xeroWebhook = require("./src/xero/webhook");
 exports.revolutAuthenticateCallback = require("./src/revolut/authenticateCallback");
 exports.revolutGetBankAccounts = require("./src/revolut/getBankAccounts");
 exports.revolutGetBankAccountDetails = require("./src/revolut/getBankAccountDetails");
+exports.revolutGetCounterparties = require("./src/revolut/getCounterparties");
+// exports.revolutCreateCounterparty = require("./src/revolut/createCounterparty");
+exports.revolutPostPayment = require("./src/revolut/postPayment");
