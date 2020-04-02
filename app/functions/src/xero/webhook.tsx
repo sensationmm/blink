@@ -26,6 +26,8 @@ server.get('*/', async function (req: any, res: any) {
     // } catch (err) {
     //     res.send("Sorry, something went wrong");
     // }
+
+    res.status(200).send()
 });
 
 module.exports = functions.https.onRequest(server)
