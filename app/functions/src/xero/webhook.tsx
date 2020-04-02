@@ -10,9 +10,13 @@ const server = express();
 
 server.use(cors());
 
-server.get('*/', async function (req: any, res: any) {
+server.post('*/', async function (req: any, res: any) {
 
     console.log("webhook", req);
+
+    console.log("req.params", req.params);
+
+    console.log(JSON.stringify(req.headers));
 
 
     // const XERO_CLIENT_ID = process.env.XERO_CLIENT_ID || functions.config().xero_client_id.key;
