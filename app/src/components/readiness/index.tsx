@@ -106,7 +106,7 @@ const Readiness: React.FC<ReadinessProps> = ({
             <Box title={'In-Country Requirements'} icon={IconLocation} paddedLarge shadowed>
                 <Blocks>
                     {blinkMarketList
-                        // .filter(item => { return completion[item].total })
+                        .filter(market => { return !getByValue(blinkMarkets, 'code', market).disabled })
                         .map((market: any, count: number) => {
                             const { passed = 0, total = 0 } = validation.company.completion[market];
                             const marketInfo = getByValue(blinkMarkets, 'code', market);

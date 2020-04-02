@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="42px" height="42px" viewBox="0 0 42 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 62 (91390) - https://sketch.com -->
+    <title>Spain</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M20.9119,41.8239 C32.4613,41.8239 41.8239,32.4613 41.8239,20.9119 C41.8239,9.3626 32.4613,0 20.9119,0 C9.3626,0 0,9.3626 0,20.9119 C0,32.4613 9.3626,41.8239 20.9119,41.8239 Z" id="path-1"></path>
+        <rect id="path-3" x="0.46448" y="0.14648" width="57.8173" height="43.531" rx="5.08032"></rect>
+        <rect id="path-5" x="0.3846" y="0.09863" width="61.0551" height="43.6108" rx="5.36482"></rect>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Spain">
+            <path d="M20.9119,41.8239 C32.4613,41.8239 41.8239,32.4613 41.8239,20.9119 C41.8239,9.3626 32.4613,0 20.9119,0 C9.3626,0 0,9.3626 0,20.9119 C0,32.4613 9.3626,41.8239 20.9119,41.8239 Z" id="Path" fill="#D8D8D8"></path>
+            <g id="Clipped">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <g id="Path"></g>
+                <g id="Group" mask="url(#mask-2)">
+                    <g transform="translate(-70.000000, -26.000000)">
+                        <rect id="Rectangle" fill="#FFFFFF" fill-rule="nonzero" x="61.46448" y="25.14648" width="57.8173" height="43.531" rx="5.08032"></rect>
+                        <g id="Clipped" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(61.000000, 25.000000)">
+                            <mask id="mask-4" fill="white">
+                                <use xlink:href="#path-3"></use>
+                            </mask>
+                            <g id="Rectangle"></g>
+                            <g id="Group" mask="url(#mask-4)">
+                                <g transform="translate(8.000000, 0.000000)">
+                                    <rect id="Rectangle" fill="#FFFFFF" fill-rule="nonzero" x="0.3846" y="0.09863" width="61.0551" height="43.6108" rx="5.36482"></rect>
+                                    <g id="Clipped" stroke-width="1" fill="none" fill-rule="evenodd">
+                                        <mask id="mask-6" fill="white">
+                                            <use xlink:href="#path-5"></use>
+                                        </mask>
+                                        <g id="Rectangle"></g>
+                                        <g id="Group" mask="url(#mask-6)">
+                                            <polygon id="Path" fill="#DD172C" points="0.3846 11.7282 61.4397 11.7282 61.4397 0.09863 0.3846 0.09863"></polygon>
+                                            <polygon id="Path" fill="#DD172C" points="0.3846 43.7096 61.4397 43.7096 61.4397 32.0801 0.3846 32.0801"></polygon>
+                                            <polygon id="Path" fill="#FFD133" points="0.3846 32.0797 61.4397 32.0797 61.4397 11.728 0.3846 11.728"></polygon>
+                                            <polygon id="Path" fill="#FFEDB1" points="16.3752 20.4502 19.2826 20.4502 19.2826 21.9039 16.3752 21.9039"></polygon>
+                                            <path d="M13.7935,20.8591 C13.7501,20.3378 14.1614,19.8907 14.6846,19.8907 L18.066,19.8907 C18.5891,19.8907 19.0005,20.3378 18.9571,20.8591 L18.6331,24.7471 C18.5352,25.9214 17.5536,26.8246 16.3753,26.8246 C15.197,26.8246 14.2154,25.9214 14.1175,24.7471 L13.7935,20.8591 Z" id="Path" stroke="#A41517" stroke-width="1.78827"></path>
+                                            <polygon id="Path" fill="#A41517" points="13.4679 21.9038 19.2827 21.9038 19.2827 23.3575 17.829 23.3575 16.3753 26.2649 14.9216 23.3575 13.4679 23.3575"></polygon>
+                                            <rect id="Rectangle" fill="#A41517" fill-rule="nonzero" x="9.1068" y="17.543" width="2.90739" height="10.1758" rx="1.45369"></rect>
+                                            <rect id="Rectangle" fill="#A41517" fill-rule="nonzero" x="20.7363" y="17.543" width="2.90739" height="10.1758" rx="1.45369"></rect>
+                                            <path d="M13.4679,16.9617 C13.4679,15.6771 14.5092,14.6357 15.7938,14.6357 L16.9568,14.6357 C18.2413,14.6357 19.2827,15.6771 19.2827,16.9617 C19.2827,17.2828 19.0223,17.5431 18.7012,17.5431 L14.0494,17.5431 C13.7282,17.5431 13.4679,17.2828 13.4679,16.9617 Z" id="Path" fill="#A41517"></path>
+                                        </g>
+                                    </g>
+                                </g>
+                            </g>
+                        </g>
+                        <path d="M46.9542,94.2839 C72.8813,94.2839 93.8994,73.2658 93.8994,47.3387 C93.8994,21.41162 72.8813,0.3936 46.9542,0.3936 C21.0271,0.3936 0.009,21.41162 0.009,47.3387 C0.009,73.2658 21.0271,94.2839 46.9542,94.2839 Z" id="Path" fill="#E5E5E5" fill-rule="evenodd" opacity="0.290458"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

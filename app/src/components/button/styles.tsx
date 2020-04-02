@@ -32,7 +32,7 @@ export const Button = styled.button`
 
   &.secondary {
     color: var(--brand-secondary);
-    background: var(--basic-white);
+    background: none;
     border-color: var(--brand-secondary);
   }
 

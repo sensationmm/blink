@@ -1,11 +1,22 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+
+const zoomIn = keyframes`
+    0% {
+        opacity: 0;
+        transform: scale(0) rotate(180deg);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) rotate(180deg);
+    }
+`;
 
 export const Shareholder = styled.div`
     position: relative;
     display: inline-block;
     width: 120px;
     padding: 15px 20px;
-    transform: rotate(180deg);
     left: 3px;
     border-radius: 3px;
     border: 2px solid transparent;
@@ -13,9 +24,10 @@ export const Shareholder = styled.div`
     background: #fff;
     margin: 0 20px;
     z-index: 1;
-    transition: background 0.1s linear;
+    transition: all 0.2s linear;
     min-height: 166px;
     font-weight: bold;
+    transform: rotate(180deg);
 
     &.heading {
         box-shadow: none;
@@ -25,19 +37,19 @@ export const Shareholder = styled.div`
         cursor: default;
     }
 
-    // &.isCompany:hover {
-    //     background-color: var(--brand-primary-alt);
-    //     transform: rotate(180deg) scale(1.1);
-    // }
-
-    // &.isPerson:hover {
-    //     background-color: var(--brand-secondary-alt);
-    //     transform: rotate(180deg) scale(1.1);
-    // }
-
     &.isWithinShareholderThreshold {
         box-shadow: 0px 0px 10px var(--highlight);
         border: 2px solid var(--highlight);
+    }
+
+    &.animate {
+        opacity: 0;
+        transform: scale(0) rotate(180deg);
+    }
+
+    &.animateReady {
+        opacity: 1;
+        transform: scale(1) rotate(180deg);
     }
 `
 

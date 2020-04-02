@@ -45,8 +45,8 @@ const ShareholderEdit: React.FC<ShareholderEditProps> = ({
     const ShareholderImage = getValue(shareholder.shareholderType) === 'P' ? Styled.ImagePerson : Styled.ImageCompany;
     const ShareholderIcon = getValue(shareholder.shareholderType) === 'P' ? PersonIcon : CompanyIcon;
 
-    const [editPercentage, setPercentage] = useState(shareholder.percentage.value);
-    const [editName, setName] = useState(shareholder.name.value);
+    const [editPercentage, setPercentage] = useState(getValue(shareholder.percentage));
+    const [editName, setName] = useState(getValue(shareholder.name) || getValue(shareholder.fullName));
     const [hackValue, setHackValue] = useState(Math.random());
 
     const [addNode, setAddNode] = useState(false);
@@ -55,7 +55,7 @@ const ShareholderEdit: React.FC<ShareholderEditProps> = ({
     const [addType, setAddType] = useState('persons');
     const [addRole, setAddRole] = useState('');
 
-    const edited = editPercentage !== shareholder.percentage.value || editName !== shareholder.name.value;
+    const edited = editPercentage !== getValue(shareholder.percentage) || editName !== getValue(shareholder.name);
     const editedAdd = addName !== '' && addPercentage !== '';
 
     const saveChanges = async () => {

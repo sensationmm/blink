@@ -20,4 +20,9 @@ export const Main = styled.div`
             flex-grow: 1;
         }
     }
+
+    &.centered {
+        justify-content: center;
+        flex-direction: row;
+    }
 `

@@ -15,7 +15,7 @@ interface ButtonProps {
 }
 
 const Button: React.FC<ButtonProps> = ({
-  label = 'Submit',
+  label = 'Confirm',
   onClick,
   disabled = false,
   fullWidth = false,

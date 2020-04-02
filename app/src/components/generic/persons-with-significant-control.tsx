@@ -4,10 +4,11 @@ import OrgChart from '../org-chart/index';
 import getValue from '../../utils/functions/getValue';
 
 type Props = {
-    companyStructure: any,
-    showOnlyOrdinaryShareTypes: boolean,
-    shareholderThreshold: number,
-    onClick?: (shareholder: any, shares: any) => void
+    companyStructure: any;
+    showOnlyOrdinaryShareTypes: boolean;
+    shareholderThreshold: number;
+    onClick?: (shareholder: any, shares: any) => void;
+    animate?: boolean;
 }
 
 export default function SignificantPersons(props: Props) {
@@ -16,7 +17,8 @@ export default function SignificantPersons(props: Props) {
         companyStructure,
         shareholderThreshold,
         showOnlyOrdinaryShareTypes,
-        onClick
+        onClick,
+        animate = false
     } = props;
 
     const distinctShareholders = companyStructure.distinctShareholders;
@@ -56,6 +58,7 @@ export default function SignificantPersons(props: Props) {
             shareholders={companyStructure.shareholders}
             filter={filterList}
             onClick={onClick}
+            animate={animate}
         />
     </>
 }

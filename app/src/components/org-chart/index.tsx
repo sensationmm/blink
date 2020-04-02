@@ -17,11 +17,12 @@ interface IOrgChartProps {
     companyName: string;
     shareholders: object[];
     filter: (list: object[]) => object[];
-    docId?: string,
-    companyId?: string,
-    officialStatus?: string,
-    shareholderThreshold: number,
-    onClick?: (shareholder: any, shares: any) => void
+    docId?: string;
+    companyId?: string;
+    officialStatus?: string;
+    shareholderThreshold: number;
+    onClick?: (shareholder: any, shares: any) => void;
+    animate: boolean;
 }
 
 interface ITransformWrapperProps {
@@ -34,7 +35,7 @@ interface IOptions {
     defaultScale?: number;
 }
 
-const OrgChart = ({ companyName, filter, shareholders, docId, companyId, officialStatus, onClick }: IOrgChartProps) => {
+const OrgChart = ({ companyName, filter, shareholders, docId, companyId, officialStatus, onClick, animate }: IOrgChartProps) => {
     let chartContainer = useRef(null);
     let chartCanvas = useRef(null);
     let resizeTimeout: ReturnType<typeof setTimeout>;
@@ -44,7 +45,7 @@ const OrgChart = ({ companyName, filter, shareholders, docId, companyId, officia
     const [detail, showDetail] = useState(false);
     const [detailContent, setDetailContent] = useState(<></>);
     const [isFullScreen, setFullScreen] = useState(false);
-    const [defaultScale, setDefaultScale] = useState();
+    const [defaultScale, setDefaultScale] = useState(1);
     const [adjustScale, setAdjustScale] = useState(true);
     const [defaultPos, setDefaultPos] = useState({ top: 0, left: 0 });
 
@@ -64,6 +65,7 @@ const OrgChart = ({ companyName, filter, shareholders, docId, companyId, officia
                         // type={getValue(shareholder.shareholderType)}
                         showDetail={showDetailModal}
                         onClick={onClick}
+                        animate={animate}
                     />
                 }>
                 {shareholder.shareholders && filter(shareholder.shareholders).reverse().map((shareholder2: any, count2: number) => {
@@ -160,9 +162,10 @@ const OrgChart = ({ companyName, filter, shareholders, docId, companyId, officia
                                     <Tree
                                         label={
                                             <Shareholder
-                                                name={`${companyName}`}
+                                                name={companyName}
                                                 officialStatus={officialStatus}
                                                 companyId={companyId}
+                                                animate={animate}
                                             />
                                         }
                                         lineWidth={'2px'} lineBorderRadius={'5px'}

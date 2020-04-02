@@ -20,7 +20,7 @@ const CompanyReadiness = (props: any) => {
 
     if (!company || !companyStructure) {
         return <Redirect to="/search" />;
-    } else if (!validation) {
+    } else if (!validation.company) {
         return <Redirect to="/company-structure" />;
     }
 

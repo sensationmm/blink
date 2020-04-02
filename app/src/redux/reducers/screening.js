@@ -3,6 +3,7 @@ import {
   SET_COMPANY,
   SET_COMPANY_STRUCTURE,
   SET_OWNERSHIP_THRESHOLD,
+  SET_MARKETS,
   SET_COMPLETION,
   SET_ERRORS,
   EDIT_FIELD,
@@ -15,7 +16,8 @@ export const initialState = {
   ownershipThreshold: 10,
   validation: {
     company: null,
-  }
+  },
+  markets: []
 };
 
 export const screening = (state = initialState, action) => {
@@ -42,6 +44,12 @@ export const screening = (state = initialState, action) => {
       return {
         ...state,
         ownershipThreshold: action.threshold,
+      }
+
+    case SET_MARKETS:
+      return {
+        ...state,
+        markets: action.markets,
       }
 
     case SET_COMPLETION:

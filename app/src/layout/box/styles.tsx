@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 export const Main = styled.div`
+    position: relative;
     background: var(--basic-white);
     border: 1px solid var(--basic-shadow);
     border-radius: 10px;

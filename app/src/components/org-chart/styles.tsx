@@ -5,7 +5,6 @@ export const OrgChart = styled.div`
     position: relative;
     text-align: center;
     height: 50vh;
-    background: var(--basic-white);
 
     > div:first-of-type {
         width: 100% !important;
