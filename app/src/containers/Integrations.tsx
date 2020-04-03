@@ -88,17 +88,21 @@ const Integrations = (props: any) => {
 
     const requestId = Math.random() * 10000000;
     const accountToPayFrom = bankAccounts.find((account: any) => account.id === accountId);
-    const currencyToPayIn = accountToPayFrom.currency;
+    let currencyToPayIn = accountToPayFrom.currency;
 
     const { selectedCounterparty, pendingPaymentAmount } = accountToPayFrom.accounts[potIndex];
 
-    const counterPartySplit = selectedCounterparty.split("****");
+    const counterPartySplit = selectedCounterparty.split(".");
     const counterPartyObject: any = {
       counterparty_id: counterPartySplit[0]
     }
 
     if (counterPartySplit[1]) {
       counterPartyObject.account_id = counterPartySplit[1];
+    }
+
+    if (counterPartySplit[2]) {
+      currencyToPayIn = counterPartySplit[2];
     }
 
     const result = await props.revolutPostPayment(accountId, pendingPaymentAmount, currencyToPayIn, counterPartyObject, requestId);
@@ -123,6 +127,14 @@ const Integrations = (props: any) => {
 
               if (potIndex > 0) {
                 return false;
+              }
+
+              let currencyToPayIn = account.currency;
+              if (pot.selectedCounterparty) {
+                const selectedCounterpartySplit = pot.selectedCounterparty.split(".");
+                if (selectedCounterpartySplit[2]) {
+                  currencyToPayIn = selectedCounterpartySplit[2];
+                }
               }
 
               return <Box key={`${account.id}-${pot.iban || pot.sort_code}`} title={''} icon={""} paddedLarge shadowed>
@@ -156,9 +168,9 @@ const Integrations = (props: any) => {
                     <option value="" disabled>Please select</option>
                     {counterparties ?.map((counterparty: any) => {
 
-                      if (counterparty.accounts && counterparty.accounts.length > 1) {
+                      if (counterparty.accounts && counterparty.accounts.length > 0 ) {
                         return counterparty.accounts.map((counterpartyAccount: any) => {
-                          return <option key={counterpartyAccount.id} value={`${counterparty.id}****${counterpartyAccount.id}`}>{counterpartyAccount.name} ({counterpartyAccount.currency})</option>
+                          return <option key={counterpartyAccount.id} value={`${counterparty.id}.${counterpartyAccount.id}.${counterpartyAccount.currency}`}>{counterpartyAccount.name} ({counterpartyAccount.currency})</option>
                         });
                       }
 
@@ -166,7 +178,7 @@ const Integrations = (props: any) => {
                     )}
                   </select>
 
-                  {pot.selectedCounterparty !== "" && <><span style={{ marginLeft: 10 }}>{(currencySymbols[account.currency] || account.currency)} </span>
+                  {pot.selectedCounterparty !== "" && <><span style={{ marginLeft: 10 }}>{(currencySymbols[currencyToPayIn] || currencyToPayIn )} </span>
                     <input style={{ width: 50, padding: 10, lineHeight: "10px"  }} type="text" value={pot.pendingPaymentAmount} onChange={(e: any) => updatePotPendingPaymentAmount(account.id, potIndex, e.target.value)} /></>}
                 
                     {pot.pendingPaymentAmount !== "" && !isNaN(parseFloat(pot.pendingPaymentAmount)) && parseFloat(pot.pendingPaymentAmount) > 0 && <button onClick={() => makePaymentFromAccountPot(account.id, potIndex)} style={{ fontSize: 12, marginLeft: 30}}>Pay!</button>}
