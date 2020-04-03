@@ -5,7 +5,8 @@ export const Main = styled.div`
     background: var(--basic-white);
     border: 1px solid var(--basic-shadow);
     border-radius: 10px;
-    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 
     &.padded {
         padding: 15px 20px;
@@ -17,10 +18,16 @@ export const Main = styled.div`
 
     &.centered {
         text-align: center;
+        align-items: center;
     }
 
     &.shadowed {
         box-shadow: 0 0 5px var(--basic-shadow);
+    }
+
+    &.add {
+        border: 1px dashed var(--brand-secondary);
+        color: var(--basic-shadow);
     }
 
     > div {

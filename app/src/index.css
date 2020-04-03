@@ -16,6 +16,7 @@ body {
   --brand-warning: #FFD521;
   
   --basic-shadow: #ccc;
+  --basic-shadow-light: #F9F9F9;
   --basic-black: #000000;
   --basic-white: #ffffff;
   --basic-text: #505050;
@@ -38,12 +39,25 @@ code {
 }
 
 h1 {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: normal;
   margin-bottom: 40px;
 }
 
 h1.center {
   text-align: center;
-  padding: 0 20%;
+}
+
+h1.noMargin {
+  margin: 0 0 10px 0;
+}
+
+h2 {
+  font-size: 20px;
+  font-weight: normal;
+  margin-bottom: 40px;
+}
+
+h2.center {
+  text-align: center;
 }

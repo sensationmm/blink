@@ -49,7 +49,7 @@ const MissingData = (props: any) => {
 
     if (!company || !companyStructure) {
         return <Redirect to="/search" />;
-    } else if (!validation.company.completion) {
+    } else if (!validation.company || !validation.company.completion) {
         return <Redirect to="/company-structure" />;
     }
 
@@ -168,7 +168,7 @@ const MissingData = (props: any) => {
                                                     const sanitizedKey = key.replace('.value', '');
 
                                                     return {
-                                                        stateKey: key,
+                                                        stateKey: `${key}.value`,
                                                         label: label.replace(' value', ''),
                                                         placeholder: msg,
                                                         onChange: saveEditField,
@@ -239,7 +239,7 @@ const MissingData = (props: any) => {
                                                                             const certificationMissing = sanitizeError(validation.company.errors[marketInfo.code][key].certification, label);
 
                                                                             return {
-                                                                                stateKey: key,
+                                                                                stateKey: `${key}.value`,
                                                                                 label: label.replace(' value', ''),
                                                                                 placeholder: msg,
                                                                                 onChange: saveEditField,
@@ -337,12 +337,12 @@ const MissingData = (props: any) => {
                                                             const certificationMissing = sanitizeError(validation[shareholder.docId].errors.Core[key].certification, label);
 
                                                             return {
-                                                                stateKey: key,
+                                                                stateKey: `${key}.value`,
                                                                 label: label.replace(' value', ''),
                                                                 placeholder: msg,
                                                                 onChange: (field: any, value: any) => saveEditField(field, value, "distinctShareholders", shareholder.docId),
                                                                 onBlur: () => onEditField(
-                                                                    sanitizedKey,
+                                                                    key,
                                                                     shareholder[sanitizedKey],
                                                                     shareholder.docId
                                                                 ),
@@ -409,7 +409,7 @@ const MissingData = (props: any) => {
                                                                                     const certificationMissing = sanitizeError(validation[shareholder.docId].errors[marketInfo.code][key].certification, label);
 
                                                                                     return {
-                                                                                        stateKey: key,
+                                                                                        stateKey: `${key}.value`,
                                                                                         label: label.replace(' value', ''),
                                                                                         placeholder: msg,
                                                                                         onChange: (field: any, value: any) => saveEditField(field, value, "distinctShareholders", shareholder.docId),

@@ -32,8 +32,10 @@ import Loader from './components/loader';
 import Modal from './containers/Modal';
 import Doc from './containers/Doc';
 
-import MyCompany from './containers/MyCompany';
 import SelectMarkets from './containers/SelectMarkets';
+import MyCompany from './containers/MyCompany';
+import MyDocuments from './containers/MyDocuments';
+import MyDocumentsPerson from './containers/MyDocumentsPerson';
 
 export default () => {
 
@@ -62,8 +64,12 @@ const App = withRouter((props: any) => {
       <Switch>
         <Route exact path="/"><Redirect to="/search" /></Route>
 
-        <Route exact path="/onboarding/my-company"><MyCompany /></Route>
         <Route exact path="/onboarding/select-markets"><SelectMarkets /></Route>
+        <Route exact path="/onboarding/my-company"><MyCompany /></Route>
+        <Route exact path="/onboarding/my-documents"><MyDocuments /></Route>
+        <Route exact path="/onboarding/my-documents/:type/:docId" component={
+          (props: any) => (<MyDocumentsPerson docId={props.match.params.docId} type={props.match.params.type} />
+          )} />
 
         <Route exact path="/search"><Search /></Route>
         <Route exact path="/company-structure"><CompanyStructure /></Route>

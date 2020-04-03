@@ -11,15 +11,31 @@ interface BoxProps {
     title?: string;
     icon?: string;
     shadowed?: boolean;
+    add?: boolean;
 }
 
-const Box: React.FC<BoxProps> = ({ children, title, icon, padded = true, paddedLarge = false, centered = false, shadowed = false }) => {
+const Box: React.FC<BoxProps> = ({
+    children,
+    title,
+    icon,
+    padded = true,
+    paddedLarge = false,
+    centered = false,
+    shadowed = false,
+    add = false
+}) => {
     return (
         <div>
             {(title || icon) && (
                 <Styled.Title>{icon && <img src={icon} />} {title}</Styled.Title>
             )}
-            <Styled.Main className={classNames({ padded: padded }, { paddedLarge: paddedLarge }, { centered: centered }, { shadowed: shadowed })}>
+            <Styled.Main className={classNames(
+                { padded: padded },
+                { paddedLarge: paddedLarge },
+                { centered: centered },
+                { shadowed: shadowed },
+                { add: add }
+            )}>
                 {children}
             </Styled.Main>
         </div>

@@ -19,7 +19,7 @@ interface SetupStatusProps extends RouteComponentProps {
 export const steps = [
     { label: 'Select country to open account in', url: '/onboarding/select-markets' },
     { label: 'Confirm company structure', url: '/onboarding/my-company' },
-    { label: 'Data & documents completed', url: '/ondoarding/my-documents' },
+    { label: 'Data & documents completed', url: '/onboarding/my-documents' },
     { label: 'Accounts opened', url: '/onboarding/my-accounts' },
 ];
 
