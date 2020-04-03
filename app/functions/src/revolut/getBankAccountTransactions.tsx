@@ -13,26 +13,6 @@ const refreshToken = require('./refreshToken');
 server.use(cors());
 server.get('*/:uId', async function (req: any, res: any) {
 
-    const getCounterparties = (access_token: string) => {
-        console.log("get counterparties")
-        request.get({
-            headers: {
-                Authorization: `Bearer ${access_token}`,
-                "Content-Type": "application/json",
-            },
-            url: 'https://b2b.revolut.com/api/1.0/counterparties',
-        }, async function (error: any, response: any, body: any) {
-            // console.log("response", body.toJSON())
-            if (error) {
-                console.log("error", error);
-            }
-
-            // console.log(body);
-
-            res.send(body);
-        });
-    }
-
     const { uId } = req.params;
 
     const userCollection = admin.firestore().collection('users');
@@ -45,7 +25,37 @@ server.get('*/:uId', async function (req: any, res: any) {
 
     const revolutDoc = await user.revolut.get();
     const revolutData = revolutDoc.data();
-    
+
+    const getTransactions = (access_token: string) => {
+        console.log("get transactions")
+        request.get({
+            headers: {
+                Authorization: `Bearer ${access_token}`,
+                "Content-Type": "application/json",
+            },
+            url: 'https://b2b.revolut.com/api/1.0/transactions',
+        }, async function (error: any, response: any, body: any) {
+            // console.log("response", body.toJSON())
+            if (error) {
+                console.log("error", error);
+            }
+            const transactions = JSON.parse(body)
+            if (!transactions.message) { // message usually present if there is an error
+                user.revolut.update({
+                    ...revolutData,
+                    transactions: {
+                        items: transactions,
+                        updatedAt: new Date()
+                    }
+                })
+            } else {
+                res.send(transactions)
+            }
+
+            res.send("transactions");
+        });
+    }
+
     let { access_token,
         refresh_token, expires } = revolutData.access;
 
@@ -58,11 +68,11 @@ server.get('*/:uId', async function (req: any, res: any) {
         // return res.send("refreshToken")
         console.log("access_token", access_token)
         if (access_token) {
-            getCounterparties(access_token);
+            getTransactions(access_token);
         }
     } else {
         console.log("not expires", access_token)
-        getCounterparties(access_token);
+        getTransactions(access_token);
     }
 
 });

@@ -105,6 +105,23 @@ const revolutGetBankAccounts = async (uId: string) => {
     return body;
 }
 
+
+const revolutGetBankAccount = async (uId: string, accountId: string) => {
+
+    const response = await fetch(`${domain}/revolutGetBankAccount/${uId}/${accountId}`, {
+        method: "GET",
+        mode: "cors",
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    const body = await response.json();
+    return body;
+}
+
+
+
 const revolutGetBankAccountDetails = async (uId: string, accountId: string) => {
 
     const response = await fetch(`${domain}/revolutGetBankAccountDetails/${uId}/${accountId}`, {
@@ -117,6 +134,20 @@ const revolutGetBankAccountDetails = async (uId: string, accountId: string) => {
 
     const body = await response.json();
     return body;
+}
+
+const revolutGetBankAccountTransactions = async (uId: string) => {
+
+    const response = await fetch(`${domain}/revolutGetBankAccountTransactions/${uId}`, {
+        method: "GET",
+        mode: "cors",
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    // const body = await response.json();
+    return response;
 }
 
 const revolutGetCounterparties = async (uId: string, accountId: string) => {
@@ -161,8 +192,10 @@ export {
     xeroDeleteBankAccount, 
     xeroGetInvoices, 
     xeroToggleAccountStatus,
+    revolutGetBankAccount,
     revolutGetBankAccounts,
     revolutGetCounterparties,
     revolutGetBankAccountDetails,
+    revolutGetBankAccountTransactions,
     revolutPostPayment
  };

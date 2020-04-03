@@ -13,7 +13,7 @@ const refreshToken = require('./refreshToken');
 server.use(cors());
 server.get('*/:uId/:accountId', async function (req: any, res: any) {
 
-    const getAccounts = (access_token: string, accountId?: string) => {
+    const getAccountDetails = (access_token: string, accountId?: string) => {
         console.log("get accounts")
         request.get({
             headers: {
@@ -45,8 +45,11 @@ server.get('*/:uId/:accountId', async function (req: any, res: any) {
         return res.send("not found")
     }
 
+    const revolutDoc = await user.revolut.get();
+    const revolutData = revolutDoc.data();
+    
     let { access_token,
-        refresh_token, expires } = user.revolut;
+        refresh_token, expires } = revolutData.access;
 
     const ref = req.headers.referer;
     console.log("ref", ref);
@@ -57,11 +60,11 @@ server.get('*/:uId/:accountId', async function (req: any, res: any) {
         // return res.send("refreshToken")
         console.log("access_token", access_token)
         if (access_token) {
-            getAccounts(access_token, accountId);
+            getAccountDetails(access_token, accountId);
         }
     } else {
         console.log("not expired", access_token, accountId)
-        getAccounts(access_token, accountId);
+        getAccountDetails(access_token, accountId);
     }
 
 });

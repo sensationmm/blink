@@ -96,7 +96,6 @@ export const revolutGetBankAccounts = () => async (dispatch, getState) => {
     const { localId } = getState().auth.user;
 
     let result = await integrationsUtils.revolutGetBankAccounts(localId);
-    // console.log("result", result)
     dispatch({
         type: HIDE_LOADER,
     });
@@ -104,6 +103,23 @@ export const revolutGetBankAccounts = () => async (dispatch, getState) => {
     return result
 };
 
+
+export const revolutGetBankAccount = (accountId)  => async (dispatch, getState) => {
+
+    dispatch({
+        type: SHOW_LOADER,
+    });
+
+    const { localId } = getState().auth.user;
+
+    let result = await integrationsUtils.revolutGetBankAccount(localId, accountId);
+
+    dispatch({
+        type: HIDE_LOADER,
+    });
+
+    return result
+};
 
 
 export const revolutGetBankAccountDetails = (accountId)  => async (dispatch, getState) => {
@@ -115,7 +131,24 @@ export const revolutGetBankAccountDetails = (accountId)  => async (dispatch, get
     const { localId } = getState().auth.user;
 
     let result = await integrationsUtils.revolutGetBankAccountDetails(localId, accountId);
-    // console.log("result", result)
+
+    dispatch({
+        type: HIDE_LOADER,
+    });
+
+    return result
+};
+
+export const revolutGetBankAccountTransactions = () => async (dispatch, getState) => {
+
+    dispatch({
+        type: SHOW_LOADER,
+    });
+
+    const { localId } = getState().auth.user;
+
+    let result = await integrationsUtils.revolutGetBankAccountTransactions(localId);
+
     dispatch({
         type: HIDE_LOADER,
     });

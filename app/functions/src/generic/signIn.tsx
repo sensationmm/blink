@@ -45,7 +45,9 @@ server.post('*/', async function (req: any, res: any) {
             };
         }
         if (user.revolut) {
-            const { expires } = user.revolut
+            const revolutDoc = await user.revolut.get();
+            const revolutData = revolutDoc.data();
+            const { expires } = revolutData.access
             user.revolut = {
                 expires
             };

@@ -61,8 +61,11 @@ server.post('*/', async function (req: any, res: any) {
         return res.send("not found")
     }
 
+    const revolutDoc = await user.revolut.get();
+    const revolutData = revolutDoc.data();
+    
     let { access_token,
-        refresh_token, expires } = user.revolut;
+        refresh_token, expires } = revolutData.access;
 
     const ref = req.headers.referer;
     console.log("ref", ref);
