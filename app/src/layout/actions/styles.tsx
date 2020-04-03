@@ -7,7 +7,7 @@ export const Main = styled.div`
     padding-top: 50px;
 
     > div, > button {
-        margin-left: 20px;
+        margin: 0 0 0 20px;
 
         &:last-child {
             margin: 0;
@@ -24,5 +24,13 @@ export const Main = styled.div`
     &.centered {
         justify-content: center;
         flex-direction: row;
+
+        > div, > button {
+            margin: 0 20px 0 0;
+
+            &:last-child {
+                margin: 0;
+            }
+        }
     }
 `

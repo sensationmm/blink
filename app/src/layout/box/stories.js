@@ -28,6 +28,7 @@ storiesOf('Layout Elements|box', module)
             padded={boolean('padded', true)}
             centered={boolean('centered', false)}
             shadowed={boolean('shadowed', false)}
+            add={boolean('add', false)}
             title={text('title', '')}
             icon={select('icon', ['', IconSearch, IconLocation, IconTarget], '')}
         />

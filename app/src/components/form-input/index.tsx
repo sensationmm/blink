@@ -14,7 +14,7 @@ export interface FormInputProps {
     onChange: (key: string, val: string) => void
     onBlur?: (key: string, val: string) => void
     value: string;
-    isEdit: boolean;
+    isEdit?: boolean;
     suffix?: string;
 }
 

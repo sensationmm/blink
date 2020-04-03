@@ -9,12 +9,14 @@ import { shareholderAnimLevel, shareholderAnimVariant } from '../components/shar
 import Button from '../components/button';
 import ScreeningStatus from '../components/screening-status';
 import ShareholderList from '../components/shareholder/list';
+import ActionBar from '../components/action-bar';
 import ProgressBar from '../components/progress-bar';
+
 import Actions from '../layout/actions';
 import Box from '../layout/box';
 import FlexRow from '../layout/flex-row';
-import getValue from '../utils/functions/getValue';
 
+import getValue from '../utils/functions/getValue';
 import { validateCompany, CompanyData } from '../utils/validation/request';
 
 import { setOwnershipThreshold, setCompletion, setErrors } from '../redux/actions/screening';
@@ -134,11 +136,13 @@ const MyCompany = (props: any) => {
 
             <SideTray />
 
-            <Styled.ActionBar className={classNames({ hide: building || sideTrayOpen })}>
-                <div />
-                <Button small onClick={() => history.push('/onboarding/my-documents')} label={'Confirm company structure'} />
-                <Button small type={'secondary'} onClick={() => history.push('/onboarding/my-documents')} label={'Complete later'} />
-            </Styled.ActionBar>
+            <ActionBar
+                labelPrimary={'Confirm company structure'}
+                actionPrimary={() => history.push('/onboarding/my-documents')}
+                labelSecondary={'Complete later'}
+                actionSecondary={() => { }}
+                hidden={building || sideTrayOpen}
+            />
         </MainStyled.MainSt>
     )
 }
