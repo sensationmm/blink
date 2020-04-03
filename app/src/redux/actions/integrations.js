@@ -124,4 +124,51 @@ export const revolutGetBankAccountDetails = (accountId)  => async (dispatch, get
 };
 
 
-// 
+export const revolutGetCounterparties = () => async (dispatch, getState) => {
+
+    dispatch({
+        type: SHOW_LOADER,
+    });
+
+    const { localId } = getState().auth.user;
+
+    let result = await integrationsUtils.revolutGetCounterparties(localId);
+    dispatch({
+        type: HIDE_LOADER,
+    });
+
+    return result
+};
+
+export const revolutPostPayment = (accountId, pendingPaymentAmount, currency, selectedCounterparty, requestId) => async (dispatch, getState) => {
+    dispatch({
+        type: SHOW_LOADER,
+    });
+
+    const { localId } = getState().auth.user;
+
+    let result = await integrationsUtils.revolutPostPayment(localId, accountId, parseFloat(pendingPaymentAmount), currency, selectedCounterparty, requestId);
+
+    if (result.state) {
+        dispatch({
+            type: SET_MODAL,
+            heading: "Message",
+            message: "Payment sent"
+        });
+    }
+
+
+    else if (result.message) {
+        dispatch({
+            type: SET_MODAL,
+            heading: "Message",
+            message: result.message
+        });
+    }
+
+    dispatch({
+        type: HIDE_LOADER,
+    });
+
+    return result
+};

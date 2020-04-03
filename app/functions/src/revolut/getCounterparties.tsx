@@ -13,14 +13,14 @@ const refreshToken = require('./refreshToken');
 server.use(cors());
 server.get('*/:uId', async function (req: any, res: any) {
 
-    const getAccounts = (access_token: string) => {
-        console.log("get accounts")
+    const getCounterparties = (access_token: string) => {
+        console.log("get counterparties")
         request.get({
             headers: {
                 Authorization: `Bearer ${access_token}`,
                 "Content-Type": "application/json",
             },
-            url: 'https://b2b.revolut.com/api/1.0/accounts',
+            url: 'https://b2b.revolut.com/api/1.0/counterparties',
         }, async function (error: any, response: any, body: any) {
             // console.log("response", body.toJSON())
             if (error) {
@@ -46,9 +46,6 @@ server.get('*/:uId', async function (req: any, res: any) {
     let { access_token,
         refresh_token, expires } = user.revolut;
 
-
-        console.log("access_token", access_token)
-
     const ref = req.headers.referer;
     console.log("ref", ref);
 
@@ -58,11 +55,11 @@ server.get('*/:uId', async function (req: any, res: any) {
         // return res.send("refreshToken")
         console.log("access_token", access_token)
         if (access_token) {
-            getAccounts(access_token);
+            getCounterparties(access_token);
         }
     } else {
         console.log("not expires", access_token)
-        getAccounts(access_token);
+        getCounterparties(access_token);
     }
 
 });

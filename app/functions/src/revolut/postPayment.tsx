@@ -11,29 +11,47 @@ const request = require('request');
 const refreshToken = require('./refreshToken');
 
 server.use(cors());
-server.get('*/:uId', async function (req: any, res: any) {
+server.post('*/', async function (req: any, res: any) {
 
-    const getAccounts = (access_token: string) => {
-        console.log("get accounts")
-        request.get({
+    const {
+        uId,
+        accountId,
+        pendingPaymentAmount,
+        currency,
+        selectedCounterparty,
+        requestId
+    } = JSON.parse(req.body);
+
+    const body = {
+        "request_id": requestId,
+        "account_id": accountId,
+        "receiver": {
+            ...selectedCounterparty
+        },
+        "amount": pendingPaymentAmount,
+        "currency": currency,
+        "reference": "Test payment"
+    }
+
+    console.log("body", JSON.stringify(body));
+
+    const postPayment = (access_token: string) => {
+        console.log("post payment")
+        request.post({
             headers: {
                 Authorization: `Bearer ${access_token}`,
                 "Content-Type": "application/json",
             },
-            url: 'https://b2b.revolut.com/api/1.0/accounts',
+            body: JSON.stringify(body),
+            url: 'https://b2b.revolut.com/api/1.0/pay',
         }, async function (error: any, response: any, body: any) {
             // console.log("response", body.toJSON())
             if (error) {
                 console.log("error", error);
             }
-
-            // console.log(body);
-
             res.send(body);
         });
     }
-
-    const { uId } = req.params;
 
     const userCollection = admin.firestore().collection('users');
     const userDoc = await userCollection.doc(uId).get();
@@ -46,9 +64,6 @@ server.get('*/:uId', async function (req: any, res: any) {
     let { access_token,
         refresh_token, expires } = user.revolut;
 
-
-        console.log("access_token", access_token)
-
     const ref = req.headers.referer;
     console.log("ref", ref);
 
@@ -58,11 +73,11 @@ server.get('*/:uId', async function (req: any, res: any) {
         // return res.send("refreshToken")
         console.log("access_token", access_token)
         if (access_token) {
-            getAccounts(access_token);
+            postPayment(access_token);
         }
     } else {
         console.log("not expires", access_token)
-        getAccounts(access_token);
+        postPayment(access_token);
     }
 
 });
