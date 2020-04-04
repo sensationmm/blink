@@ -105,9 +105,21 @@
       "function": "revolutGetBankAccounts"
     },
     {
-      "source": "/revolutGetBankAccountDetails/**",
-      "function": "revolutGetBankAccountDetails"
+      "source": "/revolutGetBankAccount/**",
+      "function": "revolutGetBankAccount"
     },
+    {
+      "source": "/revolutGetCounterparties/**",
+      "function": "revolutGetCounterparties"
+    },
+    {
+      "source": "/revolutGetBankAccountTransactions/**",
+      "function": "revolutGetBankAccountTransactions"
+    },
+    {
+      "source": "/revolutPostPayment/",
+      "function": "revolutPostPayment"
+    },  
     {
       "source": "**",
       "destination": "/index.html"
