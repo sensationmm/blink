@@ -93,9 +93,10 @@ const xeroGetInvoices = async (uId: string) => {
 
 const revolutGetBankAccounts = async (uId: string) => {
 
-    const response = await fetch(`${domain}/revolutGetBankAccounts/${uId}`, {
-        method: "GET",
+    const response = await fetch(`${domain}/revolutGetBankAccounts/`, {
+        method: "POST",
         mode: "cors",
+        body: JSON.stringify({ uId }),
         headers: {
             'Content-Type': 'application/json'
         }
@@ -108,9 +109,10 @@ const revolutGetBankAccounts = async (uId: string) => {
 
 const revolutGetBankAccount = async (uId: string, accountId: string) => {
 
-    const response = await fetch(`${domain}/revolutGetBankAccount/${uId}/${accountId}`, {
-        method: "GET",
+    const response = await fetch(`${domain}/revolutGetBankAccount/`, {
+        method: "POST",
         mode: "cors",
+        body: JSON.stringify({ uId, accountId }),
         headers: {
             'Content-Type': 'application/json'
         }
@@ -124,8 +126,9 @@ const revolutGetBankAccount = async (uId: string, accountId: string) => {
 
 const revolutGetBankAccountDetails = async (uId: string, accountId: string) => {
 
-    const response = await fetch(`${domain}/revolutGetBankAccountDetails/${uId}/${accountId}`, {
-        method: "GET",
+    const response = await fetch(`${domain}/revolutGetBankAccountDetails/`, {
+        method: "POST",
+        body: JSON.stringify({ uId, accountId }),
         mode: "cors",
         headers: {
             'Content-Type': 'application/json'
@@ -138,8 +141,9 @@ const revolutGetBankAccountDetails = async (uId: string, accountId: string) => {
 
 const revolutGetBankAccountTransactions = async (uId: string) => {
 
-    const response = await fetch(`${domain}/revolutGetBankAccountTransactions/${uId}`, {
-        method: "GET",
+    const response = await fetch(`${domain}/revolutGetBankAccountTransactions/`, {
+        method: "POST",
+        body: JSON.stringify({ uId }),
         mode: "cors",
         headers: {
             'Content-Type': 'application/json'
@@ -152,8 +156,9 @@ const revolutGetBankAccountTransactions = async (uId: string) => {
 
 const revolutGetCounterparties = async (uId: string, accountId: string) => {
 
-    const response = await fetch(`${domain}/revolutGetCounterparties/${uId}`, {
-        method: "GET",
+    const response = await fetch(`${domain}/revolutGetCounterparties/`, {
+        method: "POST",
+        body: JSON.stringify({ uId, accountId }),
         mode: "cors",
         headers: {
             'Content-Type': 'application/json'
@@ -164,7 +169,7 @@ const revolutGetCounterparties = async (uId: string, accountId: string) => {
     return body;
 }
 
-const revolutPostPayment = async (uId: string, accountId: string, pendingPaymentAmount: number, currency: string, selectedCounterparty: object, requestId: string)=> {
+const revolutPostPayment = async (uId: string, accountId: string, pendingPaymentAmount: number, currency: string, selectedCounterparty: object, requestId: string) => {
 
     const data = {
         uId,
@@ -174,7 +179,7 @@ const revolutPostPayment = async (uId: string, accountId: string, pendingPayment
         selectedCounterparty,
         requestId
     }
-    
+
     const response = await fetch(`${domain}/revolutPostPayment`, {
         method: 'post',
         mode: "cors",
@@ -185,12 +190,12 @@ const revolutPostPayment = async (uId: string, accountId: string, pendingPayment
     return body;
 }
 
-export { 
-    xeroAuthenticate, 
-    xeroDisconnectIntegration, 
-    xeroGetBankAccounts, 
-    xeroDeleteBankAccount, 
-    xeroGetInvoices, 
+export {
+    xeroAuthenticate,
+    xeroDisconnectIntegration,
+    xeroGetBankAccounts,
+    xeroDeleteBankAccount,
+    xeroGetInvoices,
     xeroToggleAccountStatus,
     revolutGetBankAccount,
     revolutGetBankAccounts,
@@ -198,4 +203,4 @@ export {
     revolutGetBankAccountDetails,
     revolutGetBankAccountTransactions,
     revolutPostPayment
- };
+};

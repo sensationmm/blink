@@ -7,13 +7,17 @@ const express = require('express');
 const server = express();
 const admin = require('firebase-admin');
 const request = require('request');
+const refIsGood = require('./refIsGood');
 
 const refreshToken = require('./refreshToken');
 
 server.use(cors());
-server.get('*/:uId', async function (req: any, res: any) {
 
-    const { uId } = req.params;
+server.post('*/', async function (req: any, res: any) {
+
+    const {
+        uId,
+    } = req.body;
 
     const userCollection = admin.firestore().collection('users');
     const userDoc = await userCollection.doc(uId).get();
@@ -71,61 +75,60 @@ server.get('*/:uId', async function (req: any, res: any) {
 
         if (needsRefresh) {
 
-        request.get({
-            headers: {
-                Authorization: `Bearer ${access_token}`,
-                "Content-Type": "application/json",
-            },
-            url: 'https://b2b.revolut.com/api/1.0/accounts',
-        }, async function (error: any, response: any, body: any) {
-            // console.log("response", body.toJSON())
-            if (error) {
-                console.log("error", error);
-            }
-            const accounts = JSON.parse(body);
-            if (!accounts.message) { // message usually present if there is an error
-                const detailedAccounts = await Promise.all(accounts.map(async (account: any) => {
-                    const response: any = await getAccountDetails(access_token, account.id);
-                    const detailedAccounts = JSON.parse(response);
-                    if (detailedAccounts.message) {
-                        console.log(detailedAccounts.message)
-                        return { ...account }
-                    }
-                    return { ...account, updatedAt: (new Date()).toString(), accounts: detailedAccounts };
-                }));
+            request.get({
+                headers: {
+                    Authorization: `Bearer ${access_token}`,
+                    "Content-Type": "application/json",
+                },
+                url: 'https://b2b.revolut.com/api/1.0/accounts',
+            }, async function (error: any, response: any, body: any) {
+                // console.log("response", body.toJSON())
+                if (error) {
+                    console.log("error", error);
+                }
+                const accounts = JSON.parse(body);
+                if (!accounts.message) { // message usually present if there is an error
+                    const detailedAccounts = await Promise.all(accounts.map(async (account: any) => {
+                        const response: any = await getAccountDetails(access_token, account.id);
+                        const detailedAccounts = JSON.parse(response);
+                        if (detailedAccounts.message) {
+                            console.log(detailedAccounts.message)
+                            return { ...account }
+                        }
+                        return { ...account, updatedAt: (new Date()).toString(), accounts: detailedAccounts };
+                    }));
 
-                res.send(detailedAccounts);
+                    res.send(detailedAccounts);
 
-                user.revolut.update({
-                    ...revolutData,
-                    accounts: detailedAccounts
-                })
-            } else {
-                res.send(body);
-            }
-        });
+                    user.revolut.update({
+                        ...revolutData,
+                        accounts: detailedAccounts
+                    })
+                } else {
+                    res.send(body);
+                }
+            });
 
         } else {
             res.send(revolutData.accounts);
         }
     }
 
-    console.log("access_token", access_token)
-
-    const ref = req.headers.referer;
-    console.log("ref", ref);
-
-    if (new Date() > expires) {
-        console.log("refresh the token")
-        const access_token = await refreshToken(refresh_token, uId);
-        // return res.send("refreshToken")
-        console.log("access_token", access_token)
-        if (access_token) {
+    if (refIsGood(req.headers.referer)) {
+        if (new Date() > expires) {
+            console.log("refresh the token")
+            const access_token = await refreshToken(refresh_token, uId);
+            // return res.send("refreshToken")
+            console.log("access_token", access_token)
+            if (access_token) {
+                getAccounts(access_token);
+            }
+        } else {
+            console.log("not expires", access_token)
             getAccounts(access_token);
         }
     } else {
-        console.log("not expires", access_token)
-        getAccounts(access_token);
+        res.status(401).send("naughty naughty");
     }
 
 });

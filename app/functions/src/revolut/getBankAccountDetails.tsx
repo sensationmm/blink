@@ -7,11 +7,12 @@ const express = require('express');
 const server = express();
 const admin = require('firebase-admin');
 const request = require('request');
+const refIsGood = require("./refIsGood");
 
 const refreshToken = require('./refreshToken');
 
 server.use(cors());
-server.get('*/:uId/:accountId', async function (req: any, res: any) {
+server.get('*/', async function (req: any, res: any) {
 
     const getAccountDetails = (access_token: string, accountId?: string) => {
         console.log("get accounts")
@@ -47,24 +48,29 @@ server.get('*/:uId/:accountId', async function (req: any, res: any) {
 
     const revolutDoc = await user.revolut.get();
     const revolutData = revolutDoc.data();
-    
+
     let { access_token,
         refresh_token, expires } = revolutData.access;
 
     const ref = req.headers.referer;
     console.log("ref", ref);
 
-    if (new Date() > expires) {
-        console.log("refresh the token")
-        const access_token = await refreshToken(refresh_token, uId);
-        // return res.send("refreshToken")
-        console.log("access_token", access_token)
-        if (access_token) {
+
+    if (refIsGood(req.headers.referer)) {
+        if (new Date() > expires) {
+            console.log("refresh the token")
+            const access_token = await refreshToken(refresh_token, uId);
+            // return res.send("refreshToken")
+            console.log("access_token", access_token)
+            if (access_token) {
+                getAccountDetails(access_token, accountId);
+            }
+        } else {
+            console.log("not expired", access_token, accountId)
             getAccountDetails(access_token, accountId);
         }
     } else {
-        console.log("not expired", access_token, accountId)
-        getAccountDetails(access_token, accountId);
+        res.status(401).send("naughty naughty");
     }
 
 });

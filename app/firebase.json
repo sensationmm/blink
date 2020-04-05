@@ -101,19 +101,19 @@
       "function": "xeroToggleAccountStatus"
     },
     {
-      "source": "/revolutGetBankAccounts/**",
+      "source": "/revolutGetBankAccounts/",
       "function": "revolutGetBankAccounts"
     },
     {
-      "source": "/revolutGetBankAccount/**",
+      "source": "/revolutGetBankAccount/",
       "function": "revolutGetBankAccount"
     },
     {
-      "source": "/revolutGetCounterparties/**",
+      "source": "/revolutGetCounterparties/",
       "function": "revolutGetCounterparties"
     },
     {
-      "source": "/revolutGetBankAccountTransactions/**",
+      "source": "/revolutGetBankAccountTransactions/",
       "function": "revolutGetBankAccountTransactions"
     },
     {
