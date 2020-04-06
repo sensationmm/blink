@@ -93,13 +93,17 @@ const MyDocumentsPerson = (props: any) => {
         saveEditField
     } = props;
 
-    const shareholder = getByValue(companyStructure.distinctShareholders, 'docId', `${type}/${docId}`);
+    const shareholder = companyStructure && getByValue(companyStructure?.distinctShareholders, 'docId', `${type}/${docId}`);
 
-    const manualPassport = shareholder.verification?.passport?.substring(0, 5) === 'Notif';
-    const manualUtilityBill = shareholder.verification?.utilityBill?.substring(0, 5) === 'Notif';
+    const manualPassport = shareholder?.verification?.passport?.substring(0, 5) === 'Notif';
+    const manualUtilityBill = shareholder?.verification?.utilityBill?.substring(0, 5) === 'Notif';
 
     const [manualID, setManualID] = useState(manualPassport);
     const [manualAddress, setManualAddress] = useState(manualUtilityBill);
+
+    if (!companyStructure) {
+        return <Redirect to="/search" />;
+    }
 
     const saveShareholder = async () => {
         showLoader('Saving');
