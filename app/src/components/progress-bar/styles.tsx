@@ -3,6 +3,14 @@ import styled from 'styled-components';
 export const Label = styled.div`
     width: 150px;
     margin-right: 20px;
+
+    span {
+        font-size: 0.8em;
+        text-transform: uppercase;
+        color: var(--basic-shadow);
+        padding-left: 5px;
+        font-weight: bold;
+    }
 `;
 
 export const Icon = styled.div`

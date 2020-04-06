@@ -56,7 +56,7 @@ const Grid: React.FC<GridProps> = ({ labels, content, rowHeaderWidth }) => {
                                 </Styled.RowHeader> : <div key={`row-${count}-header`} />,
                                 item.values.map((value, iter) => {
                                     if (value === null) {
-                                        return <div />
+                                        return <div key={`row-${count}-val-${iter}`} />
                                     }
                                     return <Checkbox key={`row-${count}-val-${iter}`} checked={value} />;
                                 })

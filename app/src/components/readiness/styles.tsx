@@ -21,3 +21,9 @@ export const Message = styled.div`
     font-size: 0.9em;
     font-weight: bold;
 `;
+
+export const Role = styled.span`
+    text-transform: uppercase;
+    font-size: 0.8em;
+    color: var(--basic-shadow);
+`;
