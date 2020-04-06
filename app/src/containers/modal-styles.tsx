@@ -21,7 +21,7 @@ export const Heading = styled.h3`
 
 export const Message = styled.div`
     width: 400px;
-    position: absolute;
+    position: fixed;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);

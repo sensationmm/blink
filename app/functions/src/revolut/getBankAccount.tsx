@@ -7,7 +7,7 @@ const express = require('express');
 const server = express();
 const admin = require('firebase-admin');
 const request = require('request');
-const refIsGood = require('./refIsGood');
+const refIsGood = require('../generic/refIsGood');
 
 const refreshToken = require('./refreshToken');
 
@@ -78,20 +78,33 @@ server.post('*/', async function (req: any, res: any) {
                     console.log(detailedAccount.message)
                     return { ...account }
                 }
-                const updatedAccount = { ...account, updatedAt: (new Date().toString()), accounts: detailedAccount };
+                let updatedAccount = { ...account, updatedAt: (new Date().toString()), accounts: detailedAccount };
                 // }));
 
-                res.send(updatedAccount);
+                const updatedAccounts = revolutData.accounts.map((account: any) => {
+                        
+                    if (account.id === accountId) {
+                        
+                        updatedAccount.accounts = updatedAccount.accounts.map((pot: any) => {
+                            account.accounts.forEach((currentPot: any) => {
+                                if (((pot.account_no === currentPot.account_no && pot.sort_code === currentPot.sort_code) || 
+                                (pot.iban === currentPot.iban && pot.bic === currentPot.bic) ) && currentPot.connections ) {
+                                    pot.connections = currentPot.connections;
+                                }
+                            });
+                            return pot;
+                        });
+                        return updatedAccount;
+                    }
+                    return account;
+                })
+
+                res.send(updatedAccounts.find((account: any) => account.id === accountId));
 
                 user.revolut.update({
                     ...revolutData,
-                    accounts: revolutData.accounts.map((account: any) => {
-                        if (account.id === accountId) {
-                            return updatedAccount
-                        }
-                        return account;
-                    })
-                })
+                    accounts: updatedAccounts
+                }, { merge: true })
             } else {
                 res.send(body);
             }

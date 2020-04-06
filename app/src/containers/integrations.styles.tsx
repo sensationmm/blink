@@ -43,3 +43,9 @@ export const Refresh = styled.img`
         opacity: 1;
     }
 `
+
+export const LinkAccount = styled.button`
+    position: absolute;
+    bottom: 40px;
+    right: 40px;
+`

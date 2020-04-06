@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 import {
   xeroDisconnect,
   xeroDeleteBankAccount,
+  xeroConnectBankAccount,
   xeroToggleAccountStatus,
   xeroGetBankAccounts,
   revolutGetBankAccount,
@@ -21,7 +22,7 @@ import * as Styled from '../components/styles';
 import Button from "../components/button";
 import Box from '../layout/box';
 import Blocks from '../layout/blocks';
-import { Icon, AccountDetails, AccountName, AccountBalance, Item, TimeStamp, Refresh } from "./integrations.styles";
+import { Icon, AccountDetails, AccountName, AccountBalance, Item, TimeStamp, Refresh, LinkAccount } from "./integrations.styles";
 import { blinkMarkets, currencySymbols } from '../utils/config/blink-markets';
 import refreshIcon from '../svg/refresh_icon.svg'
 
@@ -54,7 +55,7 @@ const Integrations = (props: any) => {
 
   const getRevolutBankAccounts = async () => {
     const accounts = await props.revolutGetBankAccounts();
-    setBankAccounts(accounts?.map((account: any) => {
+    setBankAccounts(accounts ?.map((account: any) => {
       if (account.accounts) {
         return {
           ...account, accounts: account.accounts ?.map((pot: any) => {
@@ -112,7 +113,7 @@ const Integrations = (props: any) => {
     let currencyToPayIn = accountToPayFrom.currency;
 
     const { selectedCounterparty, pendingPaymentAmount } = accountToPayFrom.accounts[potIndex];
-    
+
     const counterPartySplit = selectedCounterparty.split(".");
     const counterPartyObject: any = {
       counterparty_id: counterPartySplit[0]
@@ -137,12 +138,11 @@ const Integrations = (props: any) => {
 
     return <>
 
-      {bankAccounts && <ReactJson collapsed src={bankAccounts} />}<br /><br />
+      {bankAccounts && <div style={{ marginBottom: 50 }}><ReactJson collapsed src={bankAccounts} /></div>}
 
       {bankAccounts && <Blocks>
-
         {bankAccounts ?.filter((account: any) => blinkMarkets.find(market => market.currency === account.currency))
-          .map((account: any) => {
+        .map((account: any) => {
             const country = blinkMarkets.find(market => market.currency === account.currency);
             return account ?.accounts ?.map((pot: any, potIndex: number) => {
 
@@ -172,7 +172,8 @@ const Integrations = (props: any) => {
                 <AccountDetails>
                   <AccountBalance>{(currencySymbols[account.currency] || account.currency)}{account.balance ?.toFixed(2)}</AccountBalance>
                   <Item>BLINK ACCOUNT </Item>
-                  {pot.iban && <>IBAN: {pot.iban}</>}
+                  {pot.iban && <Item>IBAN: {pot.iban}</Item>}
+                  {pot.bic && <>BIC: {pot.bic}</>}
                   {pot.account_no && <Item>Account no: {pot.account_no}</Item>}
                   {pot.sort_code && <>Sort code: {pot.sort_code}</>}
                 </AccountDetails>
@@ -211,6 +212,16 @@ const Integrations = (props: any) => {
 
                 </div>}
 
+                {!pot.connections ?.xero && <LinkAccount onClick={async () => {
+                  const result = await props.xeroConnectBankAccount(account.id,
+                    account.currency,
+                    pot,
+                    account.name);
+
+                  if (result.success) {
+                    refreshAccountDetails(account.id)
+                  }
+                }}>Link</LinkAccount>}
 
               </Box>
             })
@@ -369,6 +380,7 @@ const mapStateToProps = (state: any) => ({
 const actions = {
   xeroDisconnect,
   xeroGetBankAccounts,
+  xeroConnectBankAccount,
   xeroDeleteBankAccount,
   xeroToggleAccountStatus,
   revolutGetBankAccount,

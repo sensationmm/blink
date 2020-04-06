@@ -7,7 +7,7 @@ const express = require('express');
 const server = express();
 const admin = require('firebase-admin');
 const request = require('request');
-const refIsGood = require('./refIsGood');
+const refIsGood = require('../generic/refIsGood');
 
 const refreshToken = require('./refreshToken');
 
