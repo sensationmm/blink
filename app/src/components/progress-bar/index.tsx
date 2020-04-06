@@ -6,6 +6,7 @@ import * as Styled from './styles';
 interface ProgressBarProps {
     large?: boolean;
     label?: string;
+    labelSub?: string;
     value: number;
     total: number;
     icon?: string | JSX.Element;
@@ -13,7 +14,7 @@ interface ProgressBarProps {
     controlled?: boolean;
 }
 
-const ProgressBar: React.FC<ProgressBarProps> = ({ large = false, label, value, total, icon, stacked = false, controlled = false }) => {
+const ProgressBar: React.FC<ProgressBarProps> = ({ large = false, label, labelSub, value, total, icon, stacked = false, controlled = false }) => {
     const fill = (value / total) * 100;
 
     const [fillPercent, setFillPercent] = useState(0);
@@ -33,7 +34,12 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ large = false, label, value, 
             {icon && <Styled.Icon>{typeof icon === 'string' ? <img src={icon} /> : icon}</Styled.Icon>}
 
             <Styled.Stacker className={classNames({ stacked: stacked }, { controlled: controlled })}>
-                {label && <Styled.Label>{label}</Styled.Label>}
+                {label &&
+                    <Styled.Label>
+                        {label}
+                        {labelSub && <span>{labelSub}</span>}
+                    </Styled.Label>
+                }
 
                 <Styled.Bar className={classNames({ hasLabel: label })}>
                     <Styled.Fill

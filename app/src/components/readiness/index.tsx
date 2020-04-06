@@ -49,7 +49,9 @@ const Readiness: React.FC<ReadinessProps> = ({
                                 <Styled.NotRequired>
                                     <Styled.Header>
                                         <Icon icon={PersonIcon} size={'small'} style={'person'} />
-                                        <div>{getValue(shareholder.name)}</div>
+                                        <div>
+                                            {getValue(shareholder.name)}
+                                        </div>
                                     </Styled.Header>
                                     <Styled.Message>UBO Checks not required</Styled.Message>
                                 </Styled.NotRequired>
@@ -60,6 +62,7 @@ const Readiness: React.FC<ReadinessProps> = ({
                             <ProgressBar
                                 key={`shareholder-${count}`}
                                 label={getValue(shareholder.name)}
+                                labelSub={shareholder.type == 'officer' ? (shareholder.title || shareholder.type) : null}
                                 icon={<Icon icon={PersonIcon} size={'small'} style={'person'} />}
                                 value={validation[shareholder.docId].completion['Core'].passed}
                                 total={validation[shareholder.docId].completion['Core'].total}

@@ -1,5 +1,5 @@
 import React from "react";
-import { withRouter } from 'react-router-dom';
+import { Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 
@@ -23,6 +23,10 @@ const MyDocuments = (props: any) => {
         ownershipThreshold,
         history
     } = props;
+
+    if (!company || !companyStructure) {
+        return <Redirect to="/search" />;
+    }
 
     const shareholders = companyStructure.distinctShareholders.filter((shareholder: any) => shareholder.totalShareholding > ownershipThreshold && getValue(shareholder.shareholderType) === 'P');
 

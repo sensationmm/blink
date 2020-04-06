@@ -46,12 +46,12 @@ server.post('*/', async function (req: any, res: any) {
                 const officerDoc = await officerRelationshipDoc.source.get()
                 let officer = { ...officerDoc.data() };
 
-                officer = { ...officer, ...officerRelationshipDoc };
+                officer = { ...officer, ...officerRelationshipDoc, docId: officerRelationshipDoc.source.path };
 
                 delete officer.source;
                 delete officer.target;
 
-                return officer
+                return officer;
             }))
         }
 

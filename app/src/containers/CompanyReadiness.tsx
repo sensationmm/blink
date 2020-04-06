@@ -24,7 +24,23 @@ const CompanyReadiness = (props: any) => {
         return <Redirect to="/company-structure" />;
     }
 
-    const shareholders = companyStructure.distinctShareholders.filter((shareholder: any) => shareholder.totalShareholding > ownershipThreshold && getValue(shareholder.shareholderType) === 'P');
+    let hasShareholderOver25 = false;
+
+    const shareholders = companyStructure.distinctShareholders
+        .filter((shareholder: any) => shareholder.totalShareholding > ownershipThreshold && getValue(shareholder.shareholderType) === 'P')
+        .map((shareholder: any) => {
+            if (shareholder.totalShareholding > 25) {
+                hasShareholderOver25 = true;
+            }
+
+            return shareholder;
+        });
+
+
+    let officers = [];
+    if (!hasShareholderOver25) {
+        officers = companyStructure.officers;
+    }
 
     return (
         <Styled.MainSt>
@@ -37,7 +53,7 @@ const CompanyReadiness = (props: any) => {
                 <Readiness
                     companyStructure={companyStructure}
                     ownershipThreshold={ownershipThreshold}
-                    shareholders={shareholders}
+                    shareholders={shareholders.concat(officers)}
                     validation={validation}
                 />
 

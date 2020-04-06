@@ -71,6 +71,8 @@ const MyCompany = (props: any) => {
         history
     } = props;
 
+    let buildingTimeout: any;
+
     useEffect(() => {
         return () => {
             clearTimeout(buildingTimeout);
@@ -102,7 +104,7 @@ const MyCompany = (props: any) => {
 
     const calculationTime = companyStructure.shareholderDepth * (shareholderAnimLevel + shareholderAnimVariant);
 
-    const buildingTimeout = setTimeout(() => setBuilding(false), calculationTime + 2000);
+    buildingTimeout = setTimeout(() => setBuilding(false), calculationTime + 2000);
 
     return (
         <MainStyled.MainSt>

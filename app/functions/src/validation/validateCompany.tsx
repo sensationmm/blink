@@ -131,6 +131,8 @@ server.post('*/', function (req: any, res: any) {
 
                 const shareholders = company.distinctShareholders.filter((shareholder: any) => shareholder.totalShareholding >= parseInt(ownershipThreshold));
 
+                let hasShareholdersOver25 = false;
+
                 const responsesPeople = shareholders.map((shareholder: any) => {
                     const personMarketValidation = {} as { [key: string]: indexedObject };
 
@@ -139,6 +141,10 @@ server.post('*/', function (req: any, res: any) {
                             return market === 'Core' || !uboChecksRequired.for || (uboChecksRequired.for && uboChecksRequired.for.length > 0 && uboChecksRequired.for.indexOf(market) > -1)
                         })
                         .map((market: market) => {
+                            if (shareholder.totalShareholding > 25) {
+                                hasShareholdersOver25 = true;
+                            }
+
                             validateJS.validate.async(shareholder, personMarketRulesets[market], { cleanAttributes: false, market }).then(() => {
                                 const numRules = Object.keys(personMarketRulesets[market]).length;
 
@@ -190,7 +196,70 @@ server.post('*/', function (req: any, res: any) {
 
                 });
 
-                const responses = responsesCompany.concat(responsesPeople);
+                let responsesOfficers;
+                if (!hasShareholdersOver25) {
+                    //requires fictive UBOs
+                    responsesOfficers = company.officers.map((officer: any) => {
+                        const officerMarketValidation = {} as { [key: string]: indexedObject };
+
+                        personMarketsToValidate
+                            .filter((market: market) => {
+                                return market === 'Core' || !uboChecksRequired.for || (uboChecksRequired.for && uboChecksRequired.for.length > 0 && uboChecksRequired.for.indexOf(market) > -1)
+                            })
+                            .map((market: market) => {
+                                validateJS.validate.async(officer, personMarketRulesets[market], { cleanAttributes: false, market }).then(() => {
+                                    const numRules = Object.keys(personMarketRulesets[market]).length;
+
+                                    const valid = {
+                                        completion: numRules / numRules,
+                                        passed: numRules,
+                                        total: numRules,
+                                    };
+
+                                    return officerMarketValidation[market] = valid;
+                                }, (errors: any) => {
+                                    const failedRules = errors ? Object.keys(errors).length : 0;
+                                    const numRules = Object.keys(personMarketRulesets[market]).length;
+
+                                    const groupedErrors: indexedObject = {};
+
+                                    Object.keys(errors).forEach(item => {
+                                        const error = item.split('.');
+
+                                        const errorType = error.pop();
+                                        const errorField = error.join('.');
+
+                                        if (errorField) {
+                                            if (!groupedErrors[errorField]) {
+                                                groupedErrors[errorField] = {};
+                                            }
+
+                                            if (errorType) {
+                                                groupedErrors[errorField][errorType] = errors[item];
+                                            } else {
+                                                groupedErrors[errorField] = errors[item];
+                                            }
+                                        }
+                                    });
+
+                                    const valid = {
+                                        completion: ((numRules - failedRules) / numRules),
+                                        errors: groupedErrors,
+                                        passed: numRules - failedRules,
+                                        failed: failedRules,
+                                        total: numRules,
+                                    };
+
+                                    return officerMarketValidation[market] = valid;
+                                });
+
+                                peopleMarketValidation[officer.docId] = officerMarketValidation;
+                            });
+
+                    });
+                }
+
+                const responses = responsesCompany.concat(responsesPeople).concat(responsesOfficers);
 
                 await Promise.all(responses);
 
