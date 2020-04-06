@@ -68,7 +68,7 @@ server.post('*/', async function (req: any, res: any) {
 
             const accountBody = {
                 Code: code.substring(0, 9),
-                Name: name,
+                Name: "Blink bank - " + name,
                 Type: "BANK",
                 BankAccountNumber: bankAccountNumber.substring(0, 19),
                 BankAccountType: "BANK",
