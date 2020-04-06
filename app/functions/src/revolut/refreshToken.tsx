@@ -36,12 +36,12 @@ const refreshToken = (refresh_token: string, uId: string) => {
       }
       const t = new Date();
 
-      
+
       const { token_type, access_token, expires_in } = JSON.parse(body);
 
-      const revolut = {
+      const revolutAccess = {
         // id_token,
-        jwt: REVOLUT_TOKEN,
+        // jwt: REVOLUT_TOKEN,
         access_token,
         token_type,
         expires: t.setSeconds(t.getSeconds() + parseInt(expires_in)),
@@ -53,10 +53,14 @@ const refreshToken = (refresh_token: string, uId: string) => {
 
       if (uId) {
         const userCollection = admin.firestore().collection('users');
-        const userDoc = await userCollection.doc(uId);
+        const userDoc = await userCollection.doc(uId).get();
+        const user = await userDoc.data();
+        const revolutDoc = await user.revolut.get();
+        const revolutData = revolutDoc.data();
 
-        await userDoc.update({
-          revolut: revolut
+        await user.revolut.update({
+          ...revolutData,
+          access: {...revolutAccess}
         }, { merge: true });
       }
 

@@ -12,11 +12,11 @@ const refIsGood = require('./refIsGood');
 const refreshToken = require('./refreshToken');
 
 server.use(cors());
-
 server.post('*/', async function (req: any, res: any) {
 
     const {
         uId,
+        accountId
     } = req.body;
 
     const userCollection = admin.firestore().collection('users');
@@ -56,63 +56,52 @@ server.post('*/', async function (req: any, res: any) {
     }
 
 
-    const getAccounts = (access_token: string) => {
-
-        let needsRefresh = true;
-        if (revolutData.accounts) {
-            const now = new Date()
-            revolutData.accounts.forEach((account: any) => {
-                const diff = now.getTime() - new Date(account.updatedAt).getTime();
-                console.log(diff);
-                if (diff < 600000) { // 10 mins
-                    needsRefresh = false
-                }
-            })
-        }
-
-
+    const getAccount = (access_token: string) => {
         console.log("get accounts")
-
-        if (needsRefresh) {
-
-            request.get({
-                headers: {
-                    Authorization: `Bearer ${access_token}`,
-                    "Content-Type": "application/json",
-                },
-                url: 'https://b2b.revolut.com/api/1.0/accounts',
-            }, async function (error: any, response: any, body: any) {
-                // console.log("response", body.toJSON())
-                if (error) {
-                    console.log("error", error);
+        request.get({
+            headers: {
+                Authorization: `Bearer ${access_token}`,
+                "Content-Type": "application/json",
+            },
+            url: `https://b2b.revolut.com/api/1.0/accounts/${accountId}`,
+        }, async function (error: any, response: any, body: any) {
+            // console.log("response", body.toJSON())
+            if (error) {
+                console.log("error", error);
+            }
+            const account = JSON.parse(body);
+            if (!account.message) { // message usually present if there is an error
+                // const detailedAccount = await Promise.all(accounts.map(async (account: any) => {
+                const response: any = await getAccountDetails(access_token, account.id);
+                const detailedAccount = JSON.parse(response);
+                if (detailedAccount.message) {
+                    console.log(detailedAccount.message)
+                    return { ...account }
                 }
-                const accounts = JSON.parse(body);
-                if (!accounts.message) { // message usually present if there is an error
-                    const detailedAccounts = await Promise.all(accounts.map(async (account: any) => {
-                        const response: any = await getAccountDetails(access_token, account.id);
-                        const detailedAccounts = JSON.parse(response);
-                        if (detailedAccounts.message) {
-                            console.log(detailedAccounts.message)
-                            return { ...account }
+                const updatedAccount = { ...account, updatedAt: (new Date().toString()), accounts: detailedAccount };
+                // }));
+
+                res.send(updatedAccount);
+
+                user.revolut.update({
+                    ...revolutData,
+                    accounts: revolutData.accounts.map((account: any) => {
+                        if (account.id === accountId) {
+                            return updatedAccount
                         }
-                        return { ...account, updatedAt: (new Date()).toString(), accounts: detailedAccounts };
-                    }));
-
-                    res.send(detailedAccounts);
-
-                    user.revolut.update({
-                        ...revolutData,
-                        accounts: detailedAccounts
+                        return account;
                     })
-                } else {
-                    res.send(body);
-                }
-            });
-
-        } else {
-            res.send(revolutData.accounts);
-        }
+                })
+            } else {
+                res.send(body);
+            }
+        });
     }
+
+    console.log("access_token", access_token)
+
+    const ref = req.headers.referer;
+    console.log("ref", ref);
 
     if (refIsGood(req.headers.referer)) {
         if (new Date() > expires) {
@@ -121,11 +110,11 @@ server.post('*/', async function (req: any, res: any) {
             // return res.send("refreshToken")
             console.log("access_token", access_token)
             if (access_token) {
-                getAccounts(access_token);
+                getAccount(access_token);
             }
         } else {
             console.log("not expires", access_token)
-            getAccounts(access_token);
+            getAccount(access_token);
         }
     } else {
         res.status(401).send("naughty naughty");
