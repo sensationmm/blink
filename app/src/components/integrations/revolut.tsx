@@ -111,8 +111,8 @@ const Revolut = (props: any) => {
     return <>
 
         {/* {bankAccounts && <div style={{ marginBottom: 50 }}><ReactJson collapsed src={bankAccounts} /></div>} */}
-
-        {bankAccounts && <div style={{ paddingTop: 50 }}><Blocks>
+        <h1 style={{ marginTop: 50 }}>Accounts</h1>
+        {bankAccounts && <Blocks>
             {bankAccounts ?.filter((account: any) => blinkMarkets.find(market => market.currency === account.currency))
                 .map((account: any) => {
                     const country = blinkMarkets.find(market => market.currency === account.currency);
@@ -199,7 +199,7 @@ const Revolut = (props: any) => {
                     })
           })}
 
-        </Blocks></div>}
+        </Blocks>}
 
         {!bankAccounts && <></>}
     </>

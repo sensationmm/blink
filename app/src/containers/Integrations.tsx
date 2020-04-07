@@ -13,6 +13,7 @@ import {
   revolutGetCounterparties,
   revolutPostPayment
 } from '../redux/actions/integrations';
+import { xeroAuthenticate, xeroGetInvoices } from '../utils/integrations/request';
 import { userSignout } from '../redux/actions/auth';
 
 import * as Styled from '../components/styles';
@@ -99,6 +100,8 @@ const Integrations = (props: any) => {
 
         <MainStyled.ContentNarrow>
           <Xero
+            xeroAuthenticate={xeroAuthenticate}
+            xeroGetInvoices={xeroGetInvoices}
             xeroDisconnect={props.xeroDisconnect}
             xeroConnectBankAccount={props.xeroConnectBankAccount}
             xeroGetBankAccounts={props.xeroGetBankAccounts}
