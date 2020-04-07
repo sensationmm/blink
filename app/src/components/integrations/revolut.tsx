@@ -1,18 +1,4 @@
 import React, { useState } from 'react';
-// import classNames from 'classnames';
-
-// import CompanyIcon from '../../svg/company-icon.svg';
-// import PersonIcon from '../../svg/individual-icon.svg';
-
-// import * as Styled from './styles'
-
-// interface IconProps {
-//     icon?: string;
-//     full?: boolean;
-//     style?: 'company' | 'person' | 'button';
-//     size?: 'default' | 'small' | 'large';
-// }
-
 import Box from '../../layout/box';
 import Blocks from '../../layout/blocks';
 import { Icon, AccountDetails, AccountName, AccountBalance, Item, TimeStamp, Refresh, LinkAccount } from "./styles";

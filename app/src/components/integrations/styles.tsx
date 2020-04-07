@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Button } from  '../../components/button/styles';
 
 export const Icon = styled.div`
 margin-right: 30px;
@@ -48,4 +49,16 @@ export const LinkAccount = styled.button`
     position: absolute;
     bottom: 40px;
     right: 40px;
+`
+
+
+export const Actions = styled.div`
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    ${Button} {
+        margin: 10px auto;
+    }
 `

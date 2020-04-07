@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import {
   xeroDisconnect,
   xeroDeleteBankAccount,
@@ -9,172 +9,157 @@ import {
   xeroGetBankAccounts,
   revolutGetBankAccount,
   revolutGetBankAccounts,
-  // revolutGetBankAccountDetails,
   revolutGetBankAccountTransactions,
   revolutGetCounterparties,
   revolutPostPayment
 } from '../redux/actions/integrations';
-import User from './User';
-import { xeroAuthenticate, xeroGetInvoices } from '../utils/integrations/request';
-import { Actions } from './modal-styles';
-import ReactJson from "react-json-view";
-import * as Styled from '../components/styles';
-import Button from "../components/button";
+import { userSignout } from '../redux/actions/auth';
 
+import * as Styled from '../components/styles';
 import Revolut from "../components/integrations/revolut";
+import Xero from "../components/integrations/xero";
+import Menu from "../components/integrations/menu";
+import FlexRowGrid from '../layout/flex-row-grid';
+import Box from '../layout/box'
+import * as MainStyled from "../components/styles";
+import xeroLogo from '../svg/xero-logo.svg';
+import fluxLogo from '../svg/flux-logo.svg';
+import sageLogo from '../svg/sage-logo.svg';
+import stripeLogo from '../svg/stripe-logo.svg';
+import adyenLogo from '../svg/adyen-logo.svg';
+import squareLogo from '../svg/square-logo.svg';
+import blinkLogo from '../svg/blink-logo.svg';
+
+import styled from "styled-components";
+
+const Label = styled.label`
+  width: 100%;
+  padding: 40px 0 20px 0;
+  display: block;
+  font-size: 14px;
+  text-transform: uppercase
+`
+const IntegrationInner = styled.div`
+  height: 150px;
+
+  a {
+    display: block;
+    height: calc(100% + 40px);
+    width: calc(100% + 40px);
+    display: flex;
+    justify-content: center;
+    margin: -20px;
+  }
+  img {
+    width: 80px;
+  }
+`
+
+
+const Integration = (props: any) =>
+  <Box title={''} shadowed>
+    <IntegrationInner>
+      {props.children}
+    </IntegrationInner>
+  </Box>
 
 const Integrations = (props: any) => {
 
-  const initialTabs: any = [
+  const integrations = [
     {
-      name: "Accounts", method: props.xeroGetBankAccounts
+      label: "accountancy",
+      integrations: [
+        { name: "xero", logo: xeroLogo, path: "xero" },
+        { name: "flux", logo: fluxLogo, path: "" },
+        { name: "sage", logo: sageLogo, path: "" }
+      ]
     },
-    { name: "Invoices", method: xeroGetInvoices },
+    {
+      label: "collections",
+      integrations: [
+        { name: "stripe", logo: stripeLogo, path: "" },
+        { name: "adyen", logo: adyenLogo, path: "" },
+        { name: "square", logo: squareLogo, path: "" },
+      ]
+    },
+    {
+      label: "developer integrations",
+      integrations: [
+        { name: "blink", logo: blinkLogo, path: "" }
+      ]
+    }
   ]
-  const [activeTab, setActiveTab] = useState();
-  const [tabs, setTabs] = useState(initialTabs);
-  const [accountIdToDelete, setAccountIdToDelete] = useState("");
-  const [accountIdToToggleStatus, setAccountIdToToggleStatus] = useState("");
-  const [changeAccountStatusToArchived, setChangeAccountStatusToArchived] = useState(true);
-  const [accountFilter, setAccountFilter] = useState("ANY");
-  const [searchString, setSearchString] = useState("");
-  const filterAccountTypes = ["Any", "Bank", "Revenue", "DirectCosts", "Expense", "Current", "Inventory", "Fixed", "Currliab", "termLiab", "Equity"]
-
-  const toggleAccountStatusAndRefreshData = async () => {
-    const result = await props.xeroToggleAccountStatus(accountIdToToggleStatus, changeAccountStatusToArchived ? "ARCHIVED" : "ACTIVE");
-    if (result.refresh) {
-      onSelectTab(tabs.find((a: any) => a.name === "Accounts"))
-    }
-  }
-
-  const renderDeleteAccountInput = () => <>
-    <Styled.Label>Delete acount:</Styled.Label>
-    <Styled.InputWrapper>
-      <div>
-        <Styled.InputSt type="text" placeholder="Account Id" value={accountIdToDelete} onChange={e => setAccountIdToDelete(e.target.value)} style={{ width: "90%" }} />
-      </div>
-      <div>
-        <Button onClick={() => props.xeroDeleteBankAccount(accountIdToDelete)} label="Go" small />
-      </div>
-    </Styled.InputWrapper>
-  </>
-
-  const renderSearchInput = () => <>
-    <Styled.Label>Search:</Styled.Label>
-    <Styled.InputWrapper>
-      <div>
-        <Styled.InputSt type="text" placeholder="Text" value={searchString} onChange={e => setSearchString(e.target.value)} style={{ width: "90%" }} />
-      </div>
-    </Styled.InputWrapper>
-  </>
-
-  const renderToggleAccountStatusInput = () => <>
-    <Styled.Label>Toggle account status - "ARCHIVED?": <input type="checkbox" checked={changeAccountStatusToArchived} onChange={(e: any) => setChangeAccountStatusToArchived(e.target.checked)} /></Styled.Label>
-    <Styled.InputWrapper>
-      <div>
-        <Styled.InputSt type="text" placeholder="Account Id" value={accountIdToToggleStatus} onChange={e => setAccountIdToToggleStatus(e.target.value)} style={{ width: "90%" }} />
-      </div>
-      <div>
-        <Button onClick={() => toggleAccountStatusAndRefreshData()} label="Go" small />
-      </div>
-    </Styled.InputWrapper>
-  </>
-
-  const renderXero = () => {
-    const xeroIntegration = props.auth.user ?.xero;
-    const uId = props.auth.user ?.localId;
-
-    return <>
-      {xeroIntegration && <>
-        <Styled.Tabs>
-          {tabs.map((tab: any) => <li key={tab.name} className={activeTab ?.name === tab.name ? "active" : ""}>
-            <a onClick={() => onSelectTab(tab)}>{tab.name}</a></li>
-          )}
-        </Styled.Tabs>
-
-        {
-          activeTab ?.name === "Accounts" && <>
-            {renderDeleteAccountInput()}
-            <br /><br />
-            {renderToggleAccountStatusInput()}
-            <br /><br />
-            {renderSearchInput()}
-          </>
-        }
-        <>
-          {activeTab ?.data && <>
-            {
-              activeTab ?.name === "Accounts" && <><div>
-                <br /><br />
-                <Styled.Label>Filter Account Type:</Styled.Label>
-                {
-                  filterAccountTypes.map((filterAccountType: any) =>
-                    <span key={filterAccountType}>{filterAccountType} <input style={{ marginRight: 20 }} type="radio" name="accountType" checked={accountFilter === filterAccountType.toUpperCase()} onChange={() => setAccountFilter(filterAccountType.toUpperCase())} /></span>
-                  )
-                }
-
-              </div></>}
-            <ReactJson collapsed src={activeTab ?.data[activeTab ?.name] ?.filter((item: any) => {
-              if (activeTab ?.name === "Accounts" && accountFilter !== "ANY") {
-                return item.Type === accountFilter
-              }
-              return item;
-            }).filter((item: any) => {
-              if (searchString !== "") {
-                return item.Name.toLowerCase().indexOf(searchString.toLowerCase()) > -1
-              }
-              return item
-            })} />
-          </>}
-        </>
-      </>}
-      <Actions style={{ position: "fixed", zIndex: -1 }}>
-        {xeroIntegration && <Button onClick={() => props.xeroDisconnect()} label="Disconnect Xero"></Button>}
-        {!xeroIntegration && <Button onClick={() => xeroAuthenticate(uId)} label="Connect Xero"></Button>}
-      </Actions>
-    </>
-  }
-
-  const onSelectTab = async (newActiveTab: any) => {
-    setActiveTab(newActiveTab);
-    const uId = props.auth.user ?.localId;
-    if (typeof newActiveTab.method === "function") {
-      const result = await newActiveTab.method(uId);
-      setTabs(tabs.map((tab: any) => {
-        if (tab.name === newActiveTab.name) {
-          tab.data = result
-        }
-        return tab
-      }));
-    }
-    setActiveTab(newActiveTab);
-  }
 
   const provider = props.match.params.provider;
 
-
-  if (provider === undefined || provider === "xero") {
-    if (activeTab === undefined) {
-      onSelectTab(tabs[0]);
-    }
-  }
-
   return <Styled.MainSt>
-    <User />
-    <Styled.Content>
-      {(provider === undefined || provider === "xero")
-        && renderXero()}
-      {(provider === undefined || provider === "revolut") &&
-        <Revolut
-          revolutGetBankAccounts={props.revolutGetBankAccounts}
-          revolutGetBankAccount={props.revolutGetBankAccount}
-          // revolutPostPayment={props.revolutPostPayment}
-          revolutGetCounterparties={props.revolutGetCounterparties}
-          revolutGetBankAccountTransactions={props.revolutGetBankAccountTransactions}
-          revolutPostPayment={props.revolutPostPayment} />}
-    </Styled.Content>
+    {(provider === "xero") &&
+      <>
+        <Menu path="integrations" userSignout={props.userSignout} userName={props ?.auth ?.user.displayName || props ?.auth ?.user.email} />
 
-  </Styled.MainSt>
+        <MainStyled.ContentNarrow>
+          <Xero
+            xeroDisconnect={props.xeroDisconnect}
+            xeroConnectBankAccount={props.xeroConnectBankAccount}
+            xeroGetBankAccounts={props.xeroGetBankAccounts}
+            xeroToggleAccountStatus={props.xeroToggleAccountStatus}
+            xeroDeleteBankAccount={props.xeroDeleteBankAccount}
+            auth={props.auth} />
+        </MainStyled.ContentNarrow>
+      </>
+    }
+    {(provider === "accounts") &&
+      <>
+        <Menu path="accounts" userSignout={props.userSignout} userName={props ?.auth ?.user.displayName || props ?.auth ?.user.email} />
+
+        <MainStyled.ContentNarrow>
+          <Revolut
+            revolutGetBankAccounts={props.revolutGetBankAccounts}
+            revolutGetBankAccount={props.revolutGetBankAccount}
+            revolutGetCounterparties={props.revolutGetCounterparties}
+            revolutGetBankAccountTransactions={props.revolutGetBankAccountTransactions}
+            revolutPostPayment={props.revolutPostPayment} />
+        </MainStyled.ContentNarrow>
+      </>
+    }
+
+
+    {(provider === undefined) && <>
+      <Menu path="integrations" userSignout={props.userSignout} userName={props ?.auth ?.user.displayName || props ?.auth ?.user.email} />
+
+      <MainStyled.ContentNarrow>
+        <h1 style={{ marginTop: 50 }}>Integrations</h1>
+
+        Integrate with apps you already use in just a click or build custom integrations according to your business needs.
+        <div style={{ maxWidth: 700 }}>
+
+          {
+            integrations.map((group: any) => <div key={group.label}>
+              <Label>{group.label}</Label>
+              <FlexRowGrid
+                component={Integration}
+                cols={3}
+                content={
+                  group.integrations
+                    .map((integration: any) => {
+                      return {
+                        children: (
+                          <Link to={`/integrations/${integration.path}`}>
+                            <img src={integration.logo} />
+                          </Link>
+                        )
+                      };
+                    })
+                }
+              />
+            </div>)
+          }
+        </div>
+      </MainStyled.ContentNarrow>
+    </>}
+
+
+  </Styled.MainSt >
 };
 
 const mapStateToProps = (state: any) => ({
@@ -189,10 +174,10 @@ const actions = {
   xeroToggleAccountStatus,
   revolutGetBankAccount,
   revolutGetBankAccounts,
-  // revolutGetBankAccountDetails,
   revolutGetCounterparties,
   revolutGetBankAccountTransactions,
-  revolutPostPayment
+  revolutPostPayment,
+  userSignout
 };
 
 export default withRouter(connect(mapStateToProps, actions)(Integrations));
