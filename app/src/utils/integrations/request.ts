@@ -61,6 +61,28 @@ const xeroDeleteBankAccount = async (uId: string, accountId: string) => {
     return body;
 }
 
+const xeroConnectBankAccount = async (uId: string, accountId: string, currency: string, account: any, name: string) => {
+    const response = await fetch(`${domain}/xeroConnectBankAccount/`, {
+        method: "POST",
+        mode: "cors",
+        body: JSON.stringify({
+            uId,
+            name,
+            account,
+            currency,
+            accountId,
+            code: "revolut-" + accountId
+        }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    const body = await response.json();
+
+    return body;
+}
+
 const xeroToggleAccountStatus = async (uId: string, accountId: string, status: string) => {
 
     const response = await fetch(`${domain}/xeroToggleAccountStatus/${uId}/${accountId}/${status}`, {
@@ -193,6 +215,7 @@ const revolutPostPayment = async (uId: string, accountId: string, pendingPayment
 export {
     xeroAuthenticate,
     xeroDisconnectIntegration,
+    xeroConnectBankAccount,
     xeroGetBankAccounts,
     xeroDeleteBankAccount,
     xeroGetInvoices,

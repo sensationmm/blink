@@ -39,6 +39,35 @@ export const xeroGetBankAccounts = () => async (dispatch, getState) => {
     return result
 };
 
+export const xeroConnectBankAccount = (
+    accountId,
+    currency,
+    pot,
+    name
+) => async (dispatch, getState) => {
+
+    dispatch({
+        type: SHOW_LOADER,
+    });
+
+    const { localId } = getState().auth.user;
+
+    let result = await integrationsUtils.xeroConnectBankAccount(localId, accountId, currency, pot, name);
+    dispatch({
+        type: SET_MODAL,
+        heading: "Message",
+        message: result.success ? "Sucessfully added account" : result.message
+    });
+
+
+    dispatch({
+        type: HIDE_LOADER,
+    });
+
+    return result;
+};
+
+
 export const xeroDeleteBankAccount = accountId => async (dispatch, getState) => {
 
     dispatch({
@@ -55,16 +84,12 @@ export const xeroDeleteBankAccount = accountId => async (dispatch, getState) => 
         message: result.message
     })
 
-    dispatch({
-        type: HIDE_LOADER,
-    });
-
 
     return result;
 };
 
 export const xeroToggleAccountStatus = (accountId, status = "ARCHIVED") => async (dispatch, getState) => {
-    
+
     dispatch({
         type: SHOW_LOADER,
     });
@@ -104,7 +129,7 @@ export const revolutGetBankAccounts = () => async (dispatch, getState) => {
 };
 
 
-export const revolutGetBankAccount = (accountId)  => async (dispatch, getState) => {
+export const revolutGetBankAccount = (accountId) => async (dispatch, getState) => {
 
     dispatch({
         type: SHOW_LOADER,
@@ -122,7 +147,7 @@ export const revolutGetBankAccount = (accountId)  => async (dispatch, getState) 
 };
 
 
-export const revolutGetBankAccountDetails = (accountId)  => async (dispatch, getState) => {
+export const revolutGetBankAccountDetails = (accountId) => async (dispatch, getState) => {
 
     dispatch({
         type: SHOW_LOADER,

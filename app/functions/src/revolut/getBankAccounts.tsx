@@ -7,7 +7,7 @@ const express = require('express');
 const server = express();
 const admin = require('firebase-admin');
 const request = require('request');
-const refIsGood = require('./refIsGood');
+const refIsGood = require('../generic/refIsGood');
 
 const refreshToken = require('./refreshToken');
 
@@ -58,20 +58,22 @@ server.post('*/', async function (req: any, res: any) {
 
     const getAccounts = (access_token: string) => {
 
-        let needsRefresh = true;
+        let needsRefresh = false;
         if (revolutData.accounts) {
             const now = new Date()
             revolutData.accounts.forEach((account: any) => {
                 const diff = now.getTime() - new Date(account.updatedAt).getTime();
                 console.log(diff);
-                if (diff < 600000) { // 10 mins
-                    needsRefresh = false
+                if (diff > 600000) { // 10 mins // 739969
+                    needsRefresh = true
                 }
             })
+        } else {
+            needsRefresh = true
         }
 
 
-        console.log("get accounts")
+        console.log("get accounts - refreshing = ", needsRefresh)
 
         if (needsRefresh) {
 
@@ -88,7 +90,7 @@ server.post('*/', async function (req: any, res: any) {
                 }
                 const accounts = JSON.parse(body);
                 if (!accounts.message) { // message usually present if there is an error
-                    const detailedAccounts = await Promise.all(accounts.map(async (account: any) => {
+                    let detailedAccounts: any = await Promise.all(accounts.map(async (account: any) => {
                         const response: any = await getAccountDetails(access_token, account.id);
                         const detailedAccounts = JSON.parse(response);
                         if (detailedAccounts.message) {
@@ -98,12 +100,31 @@ server.post('*/', async function (req: any, res: any) {
                         return { ...account, updatedAt: (new Date()).toString(), accounts: detailedAccounts };
                     }));
 
+                    detailedAccounts = detailedAccounts.map((account: any) => {
+
+                        account.accounts = account.accounts.map((pot: any) => {
+                            revolutData ?.accounts ?.forEach((currentAccount: any) => {
+                                if (currentAccount.id === account.id) {
+                                    currentAccount.accounts ?.forEach((currentPot: any) => {
+                                        if (((pot.account_no === currentPot.account_no && pot.sort_code === currentPot.sort_code) ||
+                                            (pot.iban === currentPot.iban && pot.bic === currentPot.bic)) && currentPot.connections) {
+                                            pot.connections = currentPot.connections;
+                                        }
+                                    });
+                                }
+                            });
+                            return pot;
+                        });
+
+                        return account;
+                    })
+
                     res.send(detailedAccounts);
 
                     user.revolut.update({
                         ...revolutData,
                         accounts: detailedAccounts
-                    })
+                    }, { merge: true })
                 } else {
                     res.send(body);
                 }
