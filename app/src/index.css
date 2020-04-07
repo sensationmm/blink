@@ -12,7 +12,9 @@ body {
   --brand-secondary: #FF788B;
   --brand-tertiary: #161e49;
   --brand-company: #D9FFF9;
+  --brand-company-faded: #f8fffe;
   --brand-person: #EEEAFF;
+  --brand-person-faded:#FCFBFF;
   --brand-warning: #FFD521;
   
   --basic-shadow: #ccc;

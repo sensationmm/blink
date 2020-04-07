@@ -10,9 +10,10 @@ interface TabNavItemProps {
 
 interface TabNavProps {
     items: TabNavItemProps[];
+    onChange?: (activeTabName: string) => void;
 }
 
-const TabNav: React.FC<TabNavProps> = ({ items }) => {
+const TabNav: React.FC<TabNavProps> = ({ items, onChange }) => {
     const [activeTab, setActiveTab] = useState(0);
 
     const prevActiveTabRef = useRef(0);
@@ -29,7 +30,7 @@ const TabNav: React.FC<TabNavProps> = ({ items }) => {
                         <Styled.NavItem
                             key={`tab-${count}`}
                             className={classNames({ active: count === activeTab })}
-                            onClick={() => setActiveTab(count)}
+                            onClick={() => { setActiveTab(count); onChange && onChange(items[count].label); }}
                         >
                             {item.label}
                         </Styled.NavItem>

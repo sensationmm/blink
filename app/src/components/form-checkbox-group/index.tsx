@@ -10,12 +10,13 @@ interface OptionProps {
 }
 
 interface FormCheckboxGroupProps {
+    stateKey: string;
     options: OptionProps[];
-    selected?: number | null;
-    onChange?: (value: any) => void;
+    selected?: any;
+    onChange?: (key: string, val: string) => void
 }
 
-const FormCheckboxGroup: React.FC<FormCheckboxGroupProps> = ({ options, selected, onChange }) => {
+const FormCheckboxGroup: React.FC<FormCheckboxGroupProps> = ({ stateKey, options, selected, onChange }) => {
     const [selectedOption, setSelectedOption] = useState(selected);
 
     return (
@@ -25,8 +26,8 @@ const FormCheckboxGroup: React.FC<FormCheckboxGroupProps> = ({ options, selected
                     key={`option-${count}`}
                     style={'group'}
                     label={option.label}
-                    onChange={() => { setSelectedOption(count); onChange && onChange(options[count].value); }}
-                    checked={selectedOption === count}
+                    onChange={() => { setSelectedOption(options[count].value); onChange && onChange(stateKey, options[count].value); }}
+                    checked={selectedOption === options[count].value}
                 />
             })}
         </Styled.Main>

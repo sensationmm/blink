@@ -4,6 +4,7 @@ import cx from 'classnames';
 import CompanyIcon from '../../svg/company-icon.svg';
 import PersonIcon from '../../svg/individual-icon.svg';
 import getValue from '../../utils/functions/getValue';
+import Icon from '../../components/icon';
 
 import * as Styled from './styles';
 
@@ -36,7 +37,7 @@ const Shareholder = ({
     const isWithinShareholderThreshold = shareholder ? shareholder.isWithinShareholderThreshold : '';
     const shareholderDepth = shareholder && shareholder.depth ? shareholder.depth : 0;
 
-    const ShareholderImage = type === 'P' ? Styled.ImagePerson : Styled.ImageCompany;
+    const ShareholderImage = type === 'P' ? 'person' : 'company';
     const ShareholderLabel = type ? Styled.Label : Styled.Heading;
     const ShareholderIcon = type === 'P' ? PersonIcon : CompanyIcon;
 
@@ -64,7 +65,7 @@ const Shareholder = ({
             )}
             onClick={() => onClick ? onClick(shareholder, shares) : null}
         >
-            <ShareholderImage className={!type ? 'large' : ''} style={{ backgroundImage: `url(${ShareholderIcon})` }} />
+            <Icon icon={ShareholderIcon} size={!type ? 'large' : 'default'} style={ShareholderImage} />
 
             {shares && <Styled.Shares>{shares.toFixed(2)}%</Styled.Shares>}
 

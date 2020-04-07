@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 import Icon from '../icon';
 import TickIcon from '../../svg/tick.svg';
+import FormLabel from '../form-label';
 
 import { InputSt } from '../styles';
 
@@ -16,9 +17,10 @@ export interface FormInputProps {
     value: string;
     isEdit?: boolean;
     suffix?: string;
+    validated?: boolean;
 }
 
-const FormInput: React.FC<FormInputProps> = ({ stateKey, label, placeholder, onChange, onBlur, value = '', isEdit = false, suffix }) => {
+const FormInput: React.FC<FormInputProps> = ({ stateKey, label, placeholder, onChange, onBlur, value = '', isEdit = false, suffix, validated = false }) => {
     const [focused, setFocused] = useState(false);
     const [initVal] = useState(value);
 
@@ -39,18 +41,19 @@ const FormInput: React.FC<FormInputProps> = ({ stateKey, label, placeholder, onC
 
     return (
         <Styled.Field>
-            <Styled.FieldLabel>{label}</Styled.FieldLabel>
+            <FormLabel label={label} alignment={'left'} />
 
             <Styled.FieldHolder>
                 <InputSt
+                    className={isEdit ? 'edit' : ''}
                     placeholder={msg}
                     onChange={(e) => onChange(stateKey, e.target.value)}
                     onFocus={handleOnFocus}
                     onBlur={(e) => handleOnBlur(e.target.value)}
                     type="text"
-                    value={initVal !== value || isEdit ? value : ''}
+                    value={initVal !== value || isEdit ? (value || '') : ''}
                 />
-                {(focused || suffix !== '') &&
+                {(focused || suffix !== '' || validated) &&
                     <Styled.After>
                         {focused &&
                             <Styled.Save onClick={() => handleOnBlur(value)}><Icon icon={TickIcon} size={'small'} style={'button'} /></Styled.Save>
@@ -59,6 +62,8 @@ const FormInput: React.FC<FormInputProps> = ({ stateKey, label, placeholder, onC
                         {suffix !== '' &&
                             <Styled.Suffix>{suffix}</Styled.Suffix>
                         }
+
+                        {validated && <Styled.Valid />}
                     </Styled.After>
                 }
             </Styled.FieldHolder>

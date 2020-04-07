@@ -13,7 +13,7 @@ interface FormCheckboxProps {
 }
 const FormCheckbox: React.FC<FormCheckboxProps> = ({ label, checked = false, onChange, error, disabled = false, style = 'tick' }) => {
   return (
-    <Styled.Main onClick={() => disabled || !onChange ? null : onChange(!checked)}>
+    <Styled.Main onClick={() => disabled || !onChange ? null : onChange(label, !checked)}>
       <Styled.Checkbox
         className={classNames(
           style,

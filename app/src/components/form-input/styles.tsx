@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import IconTick from '../../svg/tick.svg';
 
 export const Field = styled.div`
     position: relative;
@@ -39,4 +40,12 @@ export const After = styled.div`
 
 export const Suffix = styled.div`
     color: var(--basic-shadow);
+`;
+
+export const Valid = styled.div`
+    background: var(--brand-primary);
+    mask: url(${IconTick}) center center no-repeat;
+    mask-size: contain;
+    width: 20px;
+    height: 20px;
 `;

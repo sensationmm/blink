@@ -8,5 +8,15 @@ export const Main = styled.div`
 export const Label = styled.label`
     display: block;
     font-size: 20px;
-    margin: 0 15px;
+    margin-bottom: 10px;
+
+    &.left {
+        width: 100%;
+    }
+
+    &.bold {
+        font-size: 20px !important;
+        width: auto;
+        color: var(--basic-text) !important;
+    }
 `;

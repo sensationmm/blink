@@ -82,7 +82,7 @@ const MyCompany = (props: any) => {
     const [building, setBuilding] = useState(true);
 
     if (!company || !companyStructure) {
-        return <Redirect to="/search" />;
+        return <Redirect to="/onboarding" />;
     }
 
     const editUBO = (shareholder: any, shares: any) => {
@@ -107,7 +107,7 @@ const MyCompany = (props: any) => {
     buildingTimeout = setTimeout(() => setBuilding(false), calculationTime + 2000);
 
     return (
-        <MainStyled.MainSt>
+        <MainStyled.MainSt className="hasActionBar">
             <SetupStatus />
 
             <MainStyled.Content>
