@@ -11,17 +11,14 @@ interface IconProps {
     full?: boolean;
     style?: 'company' | 'person' | 'button';
     size?: 'default' | 'small' | 'large';
+    subIcon?: string;
 }
 
-const Icon: React.FC<IconProps> = ({ icon, full = false, style = 'company', size = 'default' }) => {
-    if (style === 'person') {
-        icon = PersonIcon;
-    } else if (style === 'company') {
-        icon = CompanyIcon;
-    }
-
+const Icon: React.FC<IconProps> = ({ icon, full = false, style = 'company', size = 'default', subIcon }) => {
     return (
-        <Styled.Main style={{ backgroundImage: `url(${icon})` }} className={classNames(style, size)} />
+        <Styled.Main style={{ backgroundImage: `url(${icon})` }} className={classNames(style, size)}>
+            {subIcon && <Styled.Sub style={{ backgroundImage: `url(${subIcon})` }} />}
+        </Styled.Main>
     )
 };
 

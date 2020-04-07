@@ -102,7 +102,7 @@ const MyDocumentsPerson = (props: any) => {
     const [manualAddress, setManualAddress] = useState(manualUtilityBill);
 
     if (!companyStructure) {
-        return <Redirect to="/search" />;
+        return <Redirect to="/onboarding" />;
     }
 
     const saveShareholder = async () => {
@@ -117,7 +117,6 @@ const MyDocumentsPerson = (props: any) => {
         taxId && await apiEditField(shareholder.docId, 'taxId', taxId);
         role && await apiEditField(shareholder.docId, 'role', role);
 
-        console.log(typeof passport)
         passport && await apiEditField(shareholder.docId, 'verification', { passport });
         utilityBill && await apiEditField(shareholder.docId, 'verification', { utilityBill });
 
@@ -130,7 +129,7 @@ const MyDocumentsPerson = (props: any) => {
     }
 
     return (
-        <MainStyled.MainSt>
+        <MainStyled.MainSt className="person">
             <SetupStatus />
 
             <MainStyled.ContentNarrow>
@@ -146,9 +145,10 @@ const MyDocumentsPerson = (props: any) => {
                     <Blocks>
                         <FormLabel label={'Do you have a copy of their passport?'} />
                         <FormCheckboxGroup
+                            stateKey={''}
                             options={[{ label: 'Yes', value: false }, { label: 'No', value: true }]}
-                            selected={manualID ? 1 : 0}
-                            onChange={setManualID}
+                            selected={manualID ? true : false}
+                            onChange={(field: string, value: any) => setManualID(value)}
                         />
 
                         {!manualID
@@ -170,9 +170,10 @@ const MyDocumentsPerson = (props: any) => {
 
                         <FormLabel label={'Do you have a copy of their utility bill?'} />
                         <FormCheckboxGroup
+                            stateKey={''}
                             options={[{ label: 'Yes', value: false }, { label: 'No', value: true }]}
-                            selected={manualAddress ? 1 : 0}
-                            onChange={setManualAddress}
+                            selected={manualAddress ? true : false}
+                            onChange={(field: string, value: any) => setManualAddress(value)}
                         />
 
                         {!manualAddress

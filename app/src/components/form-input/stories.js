@@ -14,5 +14,8 @@ storiesOf('Form|Input', module)
             onChange={action('onChange')}
             onBlur={action('onBlur')}
             value={''}
+            validated={boolean('validated', false)}
+            isEdit={boolean('isEdit', false)}
+            suffix={text('suffix', '')}
         />
     ));

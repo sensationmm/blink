@@ -22,6 +22,8 @@ export const Progress = styled.div`
         &:first-child {
             text-align: left;
             justify-content: flex-start;
+            width: 50%;
+            flex-grow: 0;
         }
 
         &:last-child {
@@ -50,18 +52,18 @@ export const Header = styled.div`
     align-items: center;
 
     > div {
-        margin-right: 20px;
+        margin-right: 30px;
     }
 `;
 
 export const HeaderName = styled.div`
     font-size: 1.4em;
-    margin-bottom: 10px;
 `;
 
 export const HeaderRole = styled.div`
     font-size: 0.8em;
     color: var(--basic-shadow);
+    margin-top: 10px;
 `;
 
 export const TaxBlock = styled.div`
@@ -80,7 +82,10 @@ export const TaxBlock = styled.div`
 `;
 
 export const Inputs = styled.div`
+    width: 100%;
+    max-width: 460px;
     text-align: left;
+    margin: 0 auto;
 
     label {
         text-align: left;
@@ -109,4 +114,8 @@ export const Intro = styled.div`
     ${Icon} {
         margin-bottom: 20px;
     }
+`;
+
+export const SubHeading = styled.h2`
+    color: var(--basic-shadow);
 `;

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 export const Main = styled.div`
     position: relative;
     height: 24px;
+    margin: 0 10px;
 `;
 
 export const MissingIcon = styled.img`

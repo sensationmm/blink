@@ -6,7 +6,7 @@ export const Main = styled.div`
     height: 50px;
     border-radius: 26px;
     border: 2px solid #000;
-    background: center top 10px no-repeat;
+    background: center center no-repeat;
     background-size: contain;
     flex-shrink: 0;
 
@@ -36,4 +36,16 @@ export const Main = styled.div`
         background: var(--brand-primary) center center no-repeat;
         background-size: 60%;
     }
+`;
+
+export const Sub = styled.div`
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 20px;
+    height: 20px;
+    border-radius: 26px;
+    border: 1px solid #000;
+    background: var(--brand-warning) center center no-repeat;
+    background-size: contain;
 `;

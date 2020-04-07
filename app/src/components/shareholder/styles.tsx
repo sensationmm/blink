@@ -1,5 +1,7 @@
 import styled, { keyframes } from 'styled-components';
 
+import { Main as Icon } from '../icon/styles';
+
 const zoomIn = keyframes`
     0% {
         opacity: 0;
@@ -51,6 +53,10 @@ export const Shareholder = styled.div`
         opacity: 1;
         transform: scale(1) rotate(180deg);
     }
+
+    ${Icon} {
+        margin: 0 auto 10px auto;
+    }
 `
 
 export const ShareholderList = styled.div`
@@ -71,30 +77,6 @@ export const ShareholderList = styled.div`
     }
 `;
 
-export const Image = styled.div`
-    width: 50px;
-    height: 50px;
-    border-radius: 26px;
-    border: 2px solid #000;
-    position: relative;
-    margin: 0 auto 10px auto;
-    background: center top 10px no-repeat;
-    background-size: contain;
-
-    &.large {
-        width: 100px;
-        height: 100px;
-        border-radius: 50px;
-    }
-`
-
-export const ImageCompany = styled(Image)`
-    background-color: var(--brand-company);
-`
-
-export const ImagePerson = styled(Image)`
-    background-color: var(--brand-person);
-`
 
 export const Heading = styled.div`
     font-weight: bold;

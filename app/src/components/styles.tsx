@@ -44,6 +44,8 @@ export const Tabs = styled.ul`
 
 export const MainSt = styled.main`
     padding: 0 30px 30px 30px;
+    min-height: calc(100vh - 30px);
+    transition: background 0.2s linear;
 
     .pretty-json-container {
         margin-top: 20px;
@@ -51,6 +53,19 @@ export const MainSt = styled.main`
 
     dl.details {
         display: none;
+    }
+
+    &.hasActionBar {
+        padding-bottom: 120px;
+        min-height: calc(100vh - 30px - 120px);
+    }
+
+    &.person {
+        background: var(--brand-person-faded);
+    }
+
+    &.company {
+        background: var(--brand-company-faded);
     }
 `
 
@@ -75,6 +90,10 @@ export const InputSt = styled.input`
     font-size: inherit;
     outline: none;
     min-height: 30px;
+
+    &.edit {
+        border-color: var(--basic-shadow);
+    }
 `
 
 export const ButtonSt = styled.button`
