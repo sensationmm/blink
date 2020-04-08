@@ -95,11 +95,10 @@ const Integrations = (props: any) => {
 
   return <>
     {
-        // false && 
-        <Styled.Header>
-      <img src={blinkLogo} />
-
-    </Styled.Header>}
+      // false && 
+      <Styled.Header>
+        <img alt="Blink" src={blinkLogo} />
+      </Styled.Header>}
     <Styled.MainSt>
       {(provider === "xero") &&
         <>

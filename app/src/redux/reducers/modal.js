@@ -1,7 +1,7 @@
 import {
   SET_MODAL,
   CLEAR_MODAL,
-  USER_SIGNIN_ERRORS
+  // USER_SIGNIN_ERRORS
 } from '../constants';
 
 export const initialState = null;

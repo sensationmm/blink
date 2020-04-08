@@ -11,7 +11,7 @@ import {
     requestCompanyProfile
 } from '../../utils/kyckr/request';
 import {
-    getCompanyIdFromSearch,
+    // getCompanyIdFromSearch,
     saveCompanyStructure
 } from '../../utils/generic/request';
 import { requestCompanyVitals, requestCompanyIndustries } from '../../utils/duedill/request';
