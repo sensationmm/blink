@@ -5,7 +5,6 @@ import { Icon, AccountDetails, AccountName, AccountBalance, Item, TimeStamp, Ref
 import { blinkMarkets, currencySymbols } from '../../utils/config/blink-markets';
 import refreshIcon from '../../svg/refresh_icon.svg'
 
-
 const Revolut = (props: any) => {
 
     const [bankAccounts, setBankAccounts] = useState();
