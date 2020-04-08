@@ -23,7 +23,7 @@ export const steps = [
     { label: 'Accounts opened', url: '/onboarding/my-accounts' },
 ];
 
-const SetupStatus: React.FC<SetupStatusProps> = ({ company, country, location }) => {
+const SetupStatus: React.FC<SetupStatusProps> = ({ location }) => {
     const path = location.pathname;
     const currentStep = steps.indexOf(getByValue(steps, 'url', path));
     const prevStep = steps[currentStep - 1] || null;
@@ -31,7 +31,7 @@ const SetupStatus: React.FC<SetupStatusProps> = ({ company, country, location })
     return (
         <Styled.Main>
             <Styled.Header>
-                <img src={BlinkLogo} />
+                <img alt="blink" src={BlinkLogo} />
                 <User />
             </Styled.Header>
             <Styled.Nav>
@@ -50,7 +50,7 @@ const SetupStatus: React.FC<SetupStatusProps> = ({ company, country, location })
                 }
             </Styled.Nav>
 
-            {prevStep && <Styled.Back><Link to={prevStep.url}><img src={ArrowBack} /></Link></Styled.Back>}
+            {prevStep && <Styled.Back><Link to={prevStep.url}><img alt="Previous" src={ArrowBack} /></Link></Styled.Back>}
         </Styled.Main >
     );
 };

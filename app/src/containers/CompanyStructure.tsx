@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
@@ -81,7 +81,9 @@ const CompanyStructure = (props: any) => {
         hideLoader,
     } = props;
 
-    const [showOnlyOrdinaryShareTypes, toggleShowOnlyOrdinaryShareTypes] = useState(false)
+    // const [showOnlyOrdinaryShareTypes, 
+    //     toggleShowOnlyOrdinaryShareTypes
+    // ] = useState(false)
 
     if (!company || !companyStructure) {
         return <Redirect to="/search" />;
@@ -141,7 +143,7 @@ const CompanyStructure = (props: any) => {
 
                         <Box padded={false}>
                             <SignificantPersons
-                                showOnlyOrdinaryShareTypes={showOnlyOrdinaryShareTypes}
+                                // showOnlyOrdinaryShareTypes={showOnlyOrdinaryShareTypes}
                                 shareholderThreshold={ownershipThreshold}
                                 companyStructure={companyStructure}
                             />

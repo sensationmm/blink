@@ -43,7 +43,7 @@ const Auth = (props: any) => {
         props.requestUserSignIn(username, password);
     }
 
-    return <><Styled.Header><img src={BlinkLogo} /></Styled.Header>
+    return <><Styled.Header><img alt="blink" src={BlinkLogo} /></Styled.Header>
         <MainStyled.Content>
 
             <Styled.AuthWrapper>

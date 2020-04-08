@@ -41,7 +41,7 @@ const getCompanyIdFromSearch = async (query: string, countryISOCode: string = "G
         const companies = response.companies.map(((c: any) => c.name.toLowerCase()));
 
         const matches = stringSimilarity.findBestMatch(query.toLowerCase(), companies);
-        const bestMatchIndex = matches && matches.bestMatchIndex;
+        // const bestMatchIndex = matches && matches.bestMatchIndex;
         if (matches.bestMatch && matches.bestMatch.rating > 0.8) {
             company = response.companies[matches.bestMatchIndex];
             // console.log(query, matches, company);

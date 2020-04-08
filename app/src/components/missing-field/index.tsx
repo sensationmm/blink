@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
-import classNames from 'classnames';
+import React from 'react';
 import capitalize from '../../utils/functions/capitalize';
 
 import FormInput, { FormInputProps } from '../form-input';
-import Error from '../../svg/error.svg';
 import Tooltip from '../tooltip';
 
 import * as Styled from './styles';
@@ -18,7 +16,6 @@ interface MissingFieldProps extends FormInputProps {
 const MissingField: React.FC<MissingFieldProps> = (props) => {
 
     const metaMissing = props.missingSource !== 'Undefined' || props.missingCertification !== 'Undefined';
-    const [showTooltip, setTooltip] = useState(false);
 
     let errorMsg = [];
 

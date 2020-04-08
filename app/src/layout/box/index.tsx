@@ -29,7 +29,7 @@ const Box: React.FC<BoxProps> = ({
     return (
         <div>
             {(title || icon) && (
-                <Styled.Title>{icon && <img src={icon} />} {title}</Styled.Title>
+                <Styled.Title>{icon && <img alt={title} src={icon} />} {title}</Styled.Title>
             )}
             <Styled.Main className={classNames(
                 { padded: padded },

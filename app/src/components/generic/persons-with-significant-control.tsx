@@ -5,7 +5,7 @@ import getValue from '../../utils/functions/getValue';
 
 type Props = {
     companyStructure: any;
-    showOnlyOrdinaryShareTypes: boolean;
+    // showOnlyOrdinaryShareTypes: boolean;
     shareholderThreshold: number;
     onClick?: (shareholder: any, shares: any) => void;
     animate?: boolean;
@@ -16,7 +16,7 @@ export default function SignificantPersons(props: Props) {
     const {
         companyStructure,
         shareholderThreshold,
-        showOnlyOrdinaryShareTypes,
+        // showOnlyOrdinaryShareTypes,
         onClick,
         animate = false
     } = props;
@@ -34,12 +34,12 @@ export default function SignificantPersons(props: Props) {
                 }
             })
             .filter((item: any) => !item.ceased_on)
-            .filter((item: any) => {
-                if (showOnlyOrdinaryShareTypes) {
-                    return item?.shareType?.toLowerCase().indexOf("ordinary") > -1
-                }
-                return item
-            })
+            // .filter((item: any) => {
+            //     if (showOnlyOrdinaryShareTypes) {
+            //         return item?.shareType?.toLowerCase().indexOf("ordinary") > -1
+            //     }
+            //     return item
+            // })
         // .filter((item: any) => {
         //     if (!item.percentage) {
         //         return item

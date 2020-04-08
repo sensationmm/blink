@@ -19,7 +19,7 @@ const SideTray: React.FC<SideTrayProps> = ({ open, Component, params, clearSideT
     return (
         <Styled.Main className={classNames({ open: open })}>
             <Styled.Content>
-                <Styled.Close onClick={clearSideTray}><img src={ArrowBack} /></Styled.Close>
+                <Styled.Close onClick={clearSideTray}><img alt="Back" src={ArrowBack} /></Styled.Close>
                 {Component !== null && <Component {...params} />}
             </Styled.Content>
         </Styled.Main>

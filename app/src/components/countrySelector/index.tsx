@@ -1,7 +1,5 @@
 import React from "react";
 
-import styled from "styled-components";
-
 import { CountrySelector as ReactCountrySelector } from "../styles";
 
 type Props = {

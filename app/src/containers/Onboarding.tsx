@@ -7,7 +7,6 @@ import { saveCompanyStructure } from '../utils/generic/request';
 import { requestCompanyVitals, requestCompanyIndustries } from '../utils/duedill/request';
 import { requestCompanyUBOStructure } from '../utils/generic/request';
 
-import ScreeningStatus from '../components/screening-status';
 import Button from '../components/button';
 import Actions from '../layout/actions';
 import { setCountry, setCompany, setCompanyStructure } from '../redux/actions/screening';
@@ -31,7 +30,7 @@ const Search = (props: any) => {
     const [ignoreDB, setIgnoreDB] = useState(false);
     const [showDirectors, toggleShowDirectors] = useState(true);
     const [showOnlyOrdinaryShareTypes, toggleShowOnlyOrdinaryShareTypes] = useState(false)
-    const [hackValue, setHackValue] = useState(Math.random());
+    // const [hackValue, setHackValue] = useState(Math.random());
     const [shareholderRange, changeShareholderRange] = useState(10);
 
     useEffect(
@@ -104,13 +103,13 @@ const Search = (props: any) => {
             await getCompanyProfile(companyId, searchCode, countryCode, registrationAuthorityCode, true);
             UBOStructure = await requestCompanyUBOStructure(companyId, countryCode);
             setCompanyStructure(UBOStructure);
-            setHackValue(Math.random())
+            // setHackValue(Math.random())
             hideLoader();
             props.history.push(redirect)
         } else {
             // console.log("UBOStructure", UBOStructure)
             setCompanyStructure(UBOStructure);
-            setHackValue(Math.random());
+            // setHackValue(Math.random());
             hideLoader();
             props.history.push(redirect)
         }

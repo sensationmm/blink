@@ -1,9 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import CompanyIcon from '../../svg/company-icon.svg';
-import PersonIcon from '../../svg/individual-icon.svg';
-
 import * as Styled from './styles'
 
 interface IconProps {

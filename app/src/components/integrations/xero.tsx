@@ -71,7 +71,7 @@ const Xero = (props: any) => {
             {xeroIntegration && <>
                 <Styled.Tabs>
                     {tabs.map((tab: any) => <li key={tab.name} className={activeTab ?.name === tab.name ? "active" : ""}>
-                        <a onClick={() => onSelectTab(tab)}>{tab.name}</a></li>
+                        <button onClick={() => onSelectTab(tab)}>{tab.name}</button></li>
                     )}
                 </Styled.Tabs>
 

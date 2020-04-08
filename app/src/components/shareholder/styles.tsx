@@ -1,18 +1,18 @@
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 
 import { Main as Icon } from '../icon/styles';
 
-const zoomIn = keyframes`
-    0% {
-        opacity: 0;
-        transform: scale(0) rotate(180deg);
-    }
+// const zoomIn = keyframes`
+//     0% {
+//         opacity: 0;
+//         transform: scale(0) rotate(180deg);
+//     }
 
-    100% {
-        opacity: 1;
-        transform: scale(1) rotate(180deg);
-    }
-`;
+//     100% {
+//         opacity: 1;
+//         transform: scale(1) rotate(180deg);
+//     }
+// `;
 
 export const Shareholder = styled.div`
     position: relative;

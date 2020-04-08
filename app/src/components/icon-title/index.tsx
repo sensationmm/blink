@@ -11,7 +11,7 @@ const IconTitle: React.FC<IconTitleProps> = ({ icon, title }) => {
     return (
         <Styled.Main>
             {(title || icon) && (
-                <Styled.Main>{icon && (typeof icon === 'string' ? <img src={icon} /> : icon)} {title}</Styled.Main>
+                <Styled.Main>{icon && (typeof icon === 'string' ? <img alt={title} src={icon} /> : icon)} {title}</Styled.Main>
             )}
         </Styled.Main>
     )

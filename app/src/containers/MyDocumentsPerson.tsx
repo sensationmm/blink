@@ -45,7 +45,7 @@ const ManualApproval = (props: any) => {
             {!done
                 ? <Box paddedLarge centered>
                     <Blocks>
-                        <img src={IconMobile} />
+                        <img alt="Mobile" src={IconMobile} />
                         <p>We need to send a link to either mobile or email to take them through a <b>2-step ID verification process</b>.</p>
 
                         <br />
@@ -73,7 +73,7 @@ const ManualApproval = (props: any) => {
                 </Box>
                 : <Box paddedLarge centered>
                     <Blocks>
-                        <div><img src={IconMobile} /></div>
+                        <div><img alt="Mobile" src={IconMobile} /></div>
                         <div>Notification sent on {moment().format('DD.MM.YY')}</div>
                         <Styled.Mask>{mobile ? maskString(mobile, 3) : email}</Styled.Mask>
                         <div>We will notify you once the verification process is complete.</div>

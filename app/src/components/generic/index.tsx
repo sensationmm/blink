@@ -40,7 +40,7 @@ export default function Kyckr() {
     const [companyStructure, setCompanyStructure] = useState();
     const [showDirectors, toggleShowDirectors] = useState(true);
     const [showOnlyOrdinaryShareTypes, toggleShowOnlyOrdinaryShareTypes] = useState(false)
-    const [hackValue, setHackValue] = useState(Math.random());
+    // const [hackValue, setHackValue] = useState(Math.random());
     const [shareholderThreshold, changeShareholderThreshold] = useState(10);
 
     // const knownPWSC: Array<string> = [];
@@ -109,7 +109,7 @@ export default function Kyckr() {
 
         console.log("UBOStructure", UBOStructure)
         setCompanyStructure(UBOStructure);
-        setHackValue(Math.random())
+        // setHackValue(Math.random())
 
         if (ignoreDB || UBOStructure === "not found") {
             console.log("company structure not found - begin build");
@@ -122,7 +122,7 @@ export default function Kyckr() {
             UBOStructure = await requestCompanyUBOStructure(companyId, countryCode);
             // console.log("UBOStructure", UBOStructure)
             setCompanyStructure(UBOStructure);
-            setHackValue(Math.random())
+            // setHackValue(Math.random())
         }
     }
 
@@ -191,7 +191,7 @@ export default function Kyckr() {
 
             {companyStructure &&
                 <SignificantPersons
-                    showOnlyOrdinaryShareTypes={showOnlyOrdinaryShareTypes}
+                    // showOnlyOrdinaryShareTypes={showOnlyOrdinaryShareTypes}
                     shareholderThreshold={shareholderThreshold}
                     companyStructure={companyStructure}
                 />

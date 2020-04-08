@@ -47,7 +47,7 @@ const ShareholderEdit: React.FC<ShareholderEditProps> = ({
 
     const [editPercentage, setPercentage] = useState(getValue(shareholder.percentage));
     const [editName, setName] = useState(getValue(shareholder.name) || getValue(shareholder.fullName));
-    const [hackValue, setHackValue] = useState(Math.random());
+    // const [hackValue, setHackValue] = useState(Math.random());
 
     const [addNode, setAddNode] = useState(false);
     const [addName, setAddName] = useState('');
@@ -66,7 +66,7 @@ const ShareholderEdit: React.FC<ShareholderEditProps> = ({
         const UBOStructure = await requestCompanyUBOStructure(companyId, countryCode);
 
         setCompanyStructure(UBOStructure);
-        setHackValue(Math.random());
+        // setHackValue(Math.random());
         clearSideTray();
         hideLoader();
     };
@@ -78,7 +78,7 @@ const ShareholderEdit: React.FC<ShareholderEditProps> = ({
         const UBOStructure = await requestCompanyUBOStructure(companyId, countryCode);
 
         setCompanyStructure(UBOStructure);
-        setHackValue(Math.random());
+        // setHackValue(Math.random());
         clearSideTray();
         hideLoader();
     };
@@ -90,7 +90,7 @@ const ShareholderEdit: React.FC<ShareholderEditProps> = ({
         const UBOStructure = await requestCompanyUBOStructure(companyId, countryCode);
 
         setCompanyStructure(UBOStructure);
-        setHackValue(Math.random());
+        // setHackValue(Math.random());
         clearSideTray();
         hideLoader();
     };
@@ -102,7 +102,7 @@ const ShareholderEdit: React.FC<ShareholderEditProps> = ({
                 onClick={() => setAddNode(true)}
             >
                 {!addNode
-                    ? <div><img src={IconAdd} />Add new beneficial owner</div>
+                    ? <div><img alt="Add" src={IconAdd} />Add new beneficial owner</div>
                     : <Blocks gutter={'small'}>
                         <FormSelect
                             stateKey={'addType'}

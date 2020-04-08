@@ -31,8 +31,7 @@ const Revolut = (props: any) => {
     }
 
     const getRevolutBankAccountTransactions = async () => {
-        const transactions = await props.revolutGetBankAccountTransactions();
-        // console.log(transactions)
+        props.revolutGetBankAccountTransactions();
         setBankAccountTransactions("transactions");
     }
 
@@ -136,7 +135,7 @@ const Revolut = (props: any) => {
                                 <Refresh onClick={() => refreshAccountDetails(account.id)} src={refreshIcon} />
                             </TimeStamp>
 
-                            <Icon><img src={country ?.flag} /></Icon>
+                            <Icon><img alt={country ?.code} src={country ?.flag} /></Icon>
 
                             <AccountName>{account.name}</AccountName>
 
