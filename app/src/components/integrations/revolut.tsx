@@ -38,7 +38,7 @@ const Revolut = (props: any) => {
     }
 
     const updateSelectedAccountCounterparty = (accountId: string, potIndex: number, counterPartyId: string) => {
-        setBankAccounts(bankAccounts ?.map((bankAccount: any) => {
+        setBankAccounts(bankAccounts.map && bankAccounts ?.map((bankAccount: any) => {
             if (bankAccount.id === accountId) {
                 bankAccount.accounts[potIndex].selectedCounterparty = counterPartyId
             }
@@ -161,10 +161,12 @@ const Revolut = (props: any) => {
                   </>
                 )}
                 */}
-                            {counterparties && <div>
+                            {
+                                // false && 
+                                counterparties && <div>
                                 Make a payment to:  <select value={pot.selectedCounterparty} onChange={e => updateSelectedAccountCounterparty(account.id, potIndex, e.target.value)}>
                                     <option value="" disabled>Please select</option>
-                                    {counterparties ?.map((counterparty: any) => {
+                                    {counterparties.map && counterparties ?.map((counterparty: any) => {
 
                                         if (counterparty.accounts && counterparty.accounts.length > 0) {
                                             return counterparty.accounts.map((counterpartyAccount: any) => {

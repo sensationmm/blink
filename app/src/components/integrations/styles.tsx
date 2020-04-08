@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+import xeroIntegrationImage from "../../svg/xero-integration.png";
+import xeroLogo from '../../svg/xero-logo.svg';
 import { Button } from  '../../components/button/styles';
 
 export const Icon = styled.div`
@@ -47,18 +49,73 @@ export const Refresh = styled.img`
 
 export const LinkAccount = styled.button`
     position: absolute;
-    bottom: 40px;
-    right: 40px;
+    bottom: 50%;
+    right: -80px;
+    transform: translateY(50%);
+    font-size: 24px;
+    background: none;
+    border: none;
+    &:hover {
+        text-decoration: underline;
+    }
 `
 
 
 export const Actions = styled.div`
     position: absolute;
-    bottom: 10px;
-    left: 0;
+    bottom: -10px;
+    left: 20px;
     width: 100%;
-    text-align: center;
+    text-align: left;
     ${Button} {
-        margin: 10px auto;
+        margin: 10px;
+    }
+`
+export const Banner = styled.div`
+    height: 500px;
+    width: 650px;
+    margin: auto;
+    position: relative;
+    line-height: 24px;
+
+    ul {
+        border: 1px solid #ddd;
+        width: 300px;
+        padding: 30px 40px 20px 40px;
+        margin: 60px 0 0 0;
+        position: relative;
+        border-radius: 10px;
+
+        li {
+            margin: 20px 10px;
+        }
+
+        ::before {
+            height: 70px;
+            width: 70px;
+            left: 20px;
+            background: url(${xeroLogo});
+            top: -40px;
+        }
+
+        ::after {
+            height: 380px;
+            width: 400px;
+            background: url(${xeroIntegrationImage});
+            top: -70px;
+            right: calc(-100% + 50px);
+        }
+
+        ::before, ::after {
+            content: "";
+            position: absolute;
+            background-repeat: no-repeat;
+            background-position: 0;
+            background-size: contain;
+        }
+    }
+
+    h1 {
+        margin-top: 50px;
     }
 `

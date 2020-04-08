@@ -1,6 +1,12 @@
 import styled from 'styled-components';
 import Select from "react-select";
 
+export const Header = styled.header`
+    text-align: center;
+    background: var(--basic-white);
+    padding-bottom: 20px;
+`;
+
 export const Tabs = styled.ul`
     padding: 0;
     margin: 50px auto;
@@ -370,3 +376,4 @@ export const DocNav = styled.div`
         }
     }
 `;
+

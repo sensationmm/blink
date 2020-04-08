@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { Actions } from './styles';
+import { Actions, Banner } from './styles';
 import Button from "../../components/button";
 import * as Styled from '../../components/styles';
 import ReactJson from "react-json-view";
-import xeroIntegrationImage from "../../svg/xero-integration.jpg";
 
 const Xero = (props: any) => {
 
@@ -113,18 +112,25 @@ const Xero = (props: any) => {
                 </>
             </>}
             {
-                !xeroIntegration && <>
-                    <h1 style={{ marginTop: 50 }}>Integrations</h1>
+                !xeroIntegration && <Banner>
+                    <h1>Integrations</h1>
 
                     Connecting your blink account to Xero takes seconds,
-                    and makes accounting simpler than ever;
-              <img style={{ width: 400, margin: 100 }} src={xeroIntegrationImage} />
-                </>
+                    and makes accounting simpler than ever
+
+                    <ul>
+                        <li>Link accounts</li>    
+                        <li>Approve or reject transactions</li>    
+                        <li>Categorise expenses</li>    
+                        <li>Reconcile</li>    
+                    </ul> 
+                    <Actions>
+                        {xeroIntegration && <Button onClick={() => props.xeroDisconnect()} label="Disconnect Xero"></Button>}
+                        {!xeroIntegration && <Button onClick={() => props.xeroAuthenticate(uId)} label="Connect Xero"></Button>}
+                    </Actions>
+                </Banner>
             }
-            <Actions style={{ position: "fixed" }}>
-                {xeroIntegration && <Button onClick={() => props.xeroDisconnect()} label="Disconnect Xero"></Button>}
-                {!xeroIntegration && <Button onClick={() => props.xeroAuthenticate(uId)} label="Connect Xero"></Button>}
-            </Actions>
+
         </>
     }
 

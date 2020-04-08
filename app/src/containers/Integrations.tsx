@@ -58,7 +58,7 @@ const IntegrationInner = styled.div`
 
 
 const Integration = (props: any) =>
-  <Box title={''} shadowed>
+  <Box hoverStyling title={''} shadowed>
     <IntegrationInner>
       {props.children}
     </IntegrationInner>
@@ -70,99 +70,108 @@ const Integrations = (props: any) => {
     {
       label: "accountancy",
       integrations: [
-        { name: "xero", logo: xeroLogo, path: "xero" },
-        { name: "flux", logo: fluxLogo, path: "" },
-        { name: "sage", logo: sageLogo, path: "" }
+        { name: "Xero", logo: xeroLogo, path: "xero" },
+        { name: "Flux", logo: fluxLogo, path: "" },
+        { name: "Sage", logo: sageLogo, path: "" }
       ]
     },
     {
       label: "collections",
       integrations: [
-        { name: "stripe", logo: stripeLogo, path: "" },
-        { name: "adyen", logo: adyenLogo, path: "" },
-        { name: "square", logo: squareLogo, path: "" },
+        { name: "Stripe", logo: stripeLogo, path: "" },
+        { name: "Adyen", logo: adyenLogo, path: "" },
+        { name: "Square", logo: squareLogo, path: "" },
       ]
     },
     {
       label: "developer integrations",
       integrations: [
-        { name: "blink", logo: blinkLogo, path: "" }
+        { name: "Blink", logo: blinkLogo, path: "" }
       ]
     }
   ]
 
   const provider = props.match.params.provider;
 
-  return <Styled.MainSt>
-    {(provider === "xero") &&
-      <>
+  return <>
+    {
+        // false && 
+        <Styled.Header>
+      <img src={blinkLogo} />
+
+    </Styled.Header>}
+    <Styled.MainSt>
+      {(provider === "xero") &&
+        <>
+          <Menu path="integrations" userSignout={props.userSignout} userName={props ?.auth ?.user.displayName || props ?.auth ?.user.email} />
+
+          <MainStyled.ContentNarrow>
+            <Xero
+              xeroAuthenticate={xeroAuthenticate}
+              xeroGetInvoices={xeroGetInvoices}
+              xeroDisconnect={props.xeroDisconnect}
+              xeroConnectBankAccount={props.xeroConnectBankAccount}
+              xeroGetBankAccounts={props.xeroGetBankAccounts}
+              xeroToggleAccountStatus={props.xeroToggleAccountStatus}
+              xeroDeleteBankAccount={props.xeroDeleteBankAccount}
+              auth={props.auth} />
+          </MainStyled.ContentNarrow>
+        </>
+      }
+      {(provider === "accounts") &&
+        <>
+          <Menu path="accounts" userSignout={props.userSignout} userName={props ?.auth ?.user.displayName || props ?.auth ?.user.email} />
+
+          <MainStyled.ContentNarrow>
+            <Revolut
+              revolutGetBankAccounts={props.revolutGetBankAccounts}
+              xeroConnectBankAccount={props.xeroConnectBankAccount}
+              revolutGetBankAccount={props.revolutGetBankAccount}
+              revolutGetCounterparties={props.revolutGetCounterparties}
+              revolutGetBankAccountTransactions={props.revolutGetBankAccountTransactions}
+              revolutPostPayment={props.revolutPostPayment} />
+          </MainStyled.ContentNarrow>
+        </>
+      }
+
+
+      {(provider === undefined) && <>
         <Menu path="integrations" userSignout={props.userSignout} userName={props ?.auth ?.user.displayName || props ?.auth ?.user.email} />
 
         <MainStyled.ContentNarrow>
-          <Xero
-            xeroAuthenticate={xeroAuthenticate}
-            xeroGetInvoices={xeroGetInvoices}
-            xeroDisconnect={props.xeroDisconnect}
-            xeroConnectBankAccount={props.xeroConnectBankAccount}
-            xeroGetBankAccounts={props.xeroGetBankAccounts}
-            xeroToggleAccountStatus={props.xeroToggleAccountStatus}
-            xeroDeleteBankAccount={props.xeroDeleteBankAccount}
-            auth={props.auth} />
-        </MainStyled.ContentNarrow>
-      </>
-    }
-    {(provider === "accounts") &&
-      <>
-        <Menu path="accounts" userSignout={props.userSignout} userName={props ?.auth ?.user.displayName || props ?.auth ?.user.email} />
+          <h1 style={{ marginTop: 50 }}>Integrations</h1>
 
-        <MainStyled.ContentNarrow>
-          <Revolut
-            revolutGetBankAccounts={props.revolutGetBankAccounts}
-            revolutGetBankAccount={props.revolutGetBankAccount}
-            revolutGetCounterparties={props.revolutGetCounterparties}
-            revolutGetBankAccountTransactions={props.revolutGetBankAccountTransactions}
-            revolutPostPayment={props.revolutPostPayment} />
-        </MainStyled.ContentNarrow>
-      </>
-    }
-
-
-    {(provider === undefined) && <>
-      <Menu path="integrations" userSignout={props.userSignout} userName={props ?.auth ?.user.displayName || props ?.auth ?.user.email} />
-
-      <MainStyled.ContentNarrow>
-        <h1 style={{ marginTop: 50 }}>Integrations</h1>
-
-        Integrate with apps you already use in just a click or build custom integrations according to your business needs.
+          Integrate with apps you already use in just a click or build custom integrations according to your business needs.
         <div style={{ maxWidth: 700 }}>
 
-          {
-            integrations.map((group: any) => <div key={group.label}>
-              <Label>{group.label}</Label>
-              <FlexRowGrid
-                component={Integration}
-                cols={3}
-                content={
-                  group.integrations
-                    .map((integration: any) => {
-                      return {
-                        children: (
-                          <Link to={`/integrations/${integration.path}`}>
-                            <img src={integration.logo} />
-                          </Link>
-                        )
-                      };
-                    })
-                }
-              />
-            </div>)
-          }
-        </div>
-      </MainStyled.ContentNarrow>
-    </>}
+            {
+              integrations.map((group: any) => <div key={group.label}>
+                <Label>{group.label}</Label>
+                <FlexRowGrid
+                  component={Integration}
+                  cols={3}
+                  content={
+                    group.integrations
+                      .map((integration: any) => {
+                        return {
+                          children: (
+                            <Link title={integration.name} to={`/integrations/${integration.path}`}>
+                              <img alt={integration.name} src={integration.logo} />
+                            </Link>
+                          )
+                        };
+                      })
+                  }
+                />
+              </div>)
+            }
+          </div>
+        </MainStyled.ContentNarrow>
+      </>}
 
 
-  </Styled.MainSt >
+    </Styled.MainSt >
+  </>
 };
 
 const mapStateToProps = (state: any) => ({

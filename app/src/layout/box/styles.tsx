@@ -8,6 +8,10 @@ export const Main = styled.div`
     display: flex;
     flex-direction: column;
 
+    &.hoverStyling:hover {
+        border: 1px solid var(--brand-secondary);
+    }
+
     &.padded {
         padding: 15px 20px;
     }
@@ -23,6 +27,9 @@ export const Main = styled.div`
 
     &.shadowed {
         box-shadow: 0 0 5px var(--basic-shadow);
+        &.hoverStyling:hover {
+            box-shadow: 0 0 5px var(--brand-secondary);
+        }
     }
 
     &.add {
