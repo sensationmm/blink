@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import SetupStatus from '../components/setup-status';
 import Button from '../components/button';
 import Actions from '../layout/actions';
-import Box from '../layout/box';
+// import Box from '../layout/box';
 import FlexRowGrid from '../layout/flex-row-grid';
 import capitalize from '../utils/functions/capitalize';
 
