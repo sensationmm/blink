@@ -44,12 +44,16 @@ export const Controls = styled.div`
     top: 0;
     left: 0;
     background: rgba(255, 255, 255, 0.7);
-    padding: 20px 0 20px 20px;
+    padding: 20px 20px 20px 20px;
 
     img {
         max-width: 30px;
         margin-right: 15px;
         cursor: pointer;
+
+        &:last-of-type {
+            margin-right: 0;
+        }
     }
 `
 

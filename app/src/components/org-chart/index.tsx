@@ -121,8 +121,8 @@ const OrgChart = ({ companyName, filter, shareholders, docId, companyId, officia
         }
         let newRatio = Math.round((ratio + Number.EPSILON) * 10) / 10;
 
-        const defaultLeft = ((containerSize.width - (canvasSize.width * newRatio)) / 2) + (ratio !== 1 ? 0 : 50);
-        const defaultTop = ((containerSize.height - (canvasSize.height * newRatio)) / 2) + (ratio !== 1 ? 0 : 50);
+        const defaultLeft = ((containerSize.width - (canvasSize.width * newRatio)) / 2) + 50;// + (ratio !== 1 ? 0 : 50);
+        const defaultTop = ((containerSize.height - (canvasSize.height * newRatio)) / 2) + 50;// + (ratio !== 1 ? 0 : 50);
 
         setDefaultScale(ratio);
         setDefaultPos({ top: defaultTop, left: defaultLeft });

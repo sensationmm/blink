@@ -119,7 +119,6 @@ const MyCompany = (props: any) => {
                 <Styled.MyCompanyStructure>
                     {companyStructure &&
                         <SignificantPersons
-                            showOnlyOrdinaryShareTypes={false}
                             shareholderThreshold={ownershipThreshold}
                             companyStructure={companyStructure}
                             onClick={editUBO}

@@ -39,7 +39,7 @@ export const ActionBar = styled.div`
 
 export const MyCompanyStructure = styled.div`
     ${OrgChartControls} {
-        right: 0;
+        right: 20px;
         left: auto;
     }
 

@@ -23,6 +23,7 @@ import IconUpload from '../svg/icon-upload.svg';
 import IconDownload from '../svg/icon-download.svg';
 import IconVideo from '../svg/icon-video.svg';
 import IconTick from '../svg/tick.svg';
+import IconSchedule from '../svg/icon-schedule.svg';
 
 import * as MainStyled from "../components/styles";
 import * as Styled from './my-documents.styles';
