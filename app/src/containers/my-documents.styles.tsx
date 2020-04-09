@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { Main as Actions } from '../layout/actions/styles';
 import { Main as Icon } from '../components/icon/styles';
 
+import IconTick from '../svg/tick.svg';
+
 export const Entry = styled.div`
     cursor: pointer;
 `;
@@ -33,20 +35,6 @@ export const Progress = styled.div`
     }
 `;
 
-export const Bubble = styled.div`
-    width: 60px;
-    height: 60px;
-    border-radius: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--basic-shadow-light);
-
-    &.complete {
-        background: var(--brand-primary);
-    }
-`;
-
 export const Header = styled.div`
     display: flex;
     align-items: center;
@@ -63,7 +51,6 @@ export const HeaderName = styled.div`
 export const HeaderRole = styled.div`
     font-size: 0.8em;
     color: var(--basic-shadow);
-    margin-top: 10px;
 `;
 
 export const TaxBlock = styled.div`
@@ -118,4 +105,24 @@ export const Intro = styled.div`
 
 export const SubHeading = styled.h2`
     color: var(--basic-shadow);
+`;
+
+export const Status = styled.div`
+    color: var(--basic-shadow);
+`;
+
+export const StatusComplete = styled.div`
+    display: flex;
+    color: var(--basic-text);
+
+    &:after {
+        content: '';
+        width: 20px;
+        height: 20px;
+        display: inline-block;
+        margin-left: 10px;
+        background: var(--brand-primary);
+        mask: url(${IconTick}) center right no-repeat;
+        mask-size: contain;
+    }
 `;

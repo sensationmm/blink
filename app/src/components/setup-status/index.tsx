@@ -9,11 +9,13 @@ import BlinkLogo from '../../svg/blink-logo.svg';
 
 import User from '../../containers/User';
 
+import { blinkMarkets } from '../../utils/config/blink-markets';
+
 import * as Styled from './styles';
 
 interface SetupStatusProps extends RouteComponentProps {
     company?: string;
-    country?: string;
+    markets?: string[];
 }
 
 export const steps = [
@@ -23,7 +25,7 @@ export const steps = [
     { label: 'Accounts opened', url: '/onboarding/my-accounts' },
 ];
 
-const SetupStatus: React.FC<SetupStatusProps> = ({ company, country, location }) => {
+const SetupStatus: React.FC<SetupStatusProps> = ({ company, markets, location }) => {
     const path = location.pathname;
     const currentStep = steps.indexOf(getByValue(steps, 'url', path));
     const prevStep = steps[currentStep - 1] || null;
@@ -44,6 +46,15 @@ const SetupStatus: React.FC<SetupStatusProps> = ({ company, country, location })
                             onClick={(e) => { if (count > currentStep) { e.preventDefault(); return false; } }}
                         >
                             {step.label}
+
+                            {step.url === '/onboarding/my-accounts' && markets &&
+                                <Styled.Flags>
+                                    {markets.map((market: any, count: number) => {
+                                        const flag = getByValue(blinkMarkets, 'code', market).flag;
+                                        return <img key={`market-${count}`} src={flag} alt={market.name} />
+                                    })}
+                                </Styled.Flags>
+                            }
                         </Styled.NavItem>
                     )
                 })

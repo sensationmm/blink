@@ -1,8 +1,6 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  font-family: Avenir, Times;
   letter-spacing: 1px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -16,6 +14,7 @@ body {
   --brand-person: #EEEAFF;
   --brand-person-faded:#FCFBFF;
   --brand-warning: #FFD521;
+  --brand-other: #fef6ef;
   
   --basic-shadow: #ccc;
   --basic-shadow-light: #F9F9F9;

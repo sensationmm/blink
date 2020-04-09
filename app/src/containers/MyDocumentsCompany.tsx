@@ -146,7 +146,7 @@ const MyDocumentsPerson = (props: any) => {
                 value = companyStructure[sourceString[0]] ? companyStructure[sourceString[0]][sourceString[1]] : null;
             }
 
-            value && await apiEditField(companyStructure.docId, fieldToUpdate, value);
+            await apiEditField(companyStructure.docId, fieldToUpdate, value || '');
         })
 
         hideLoader();

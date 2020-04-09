@@ -28,7 +28,6 @@ export const Shareholder = styled.div`
     z-index: 1;
     transition: all 0.2s linear;
     min-height: 166px;
-    font-weight: bold;
     transform: rotate(180deg);
 
     &.heading {
@@ -85,6 +84,7 @@ export const Heading = styled.div`
 `
 
 export const Label = styled.div`
+    font-family: 'Avenir Next Condensed';
     position: relative;
     border-radius: 20px;
     
@@ -94,12 +94,18 @@ export const Label = styled.div`
 `
 
 export const Shares = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Lato;
+    font-weight: bold;
     padding-left: 10px;
     margin-bottom: 10px;
+    font-size: 1.6em;
 
     > span {
         font-weight: bold;
-        font-size: 1.4em;
+        font-size: 0.8em;
         margin-right: 5px;
     }
 `

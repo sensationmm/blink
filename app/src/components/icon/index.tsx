@@ -9,7 +9,7 @@ import * as Styled from './styles'
 interface IconProps {
     icon?: string;
     full?: boolean;
-    style?: 'company' | 'person' | 'button';
+    style?: 'company' | 'person' | 'button' | 'other';
     size?: 'default' | 'small' | 'large';
     subIcon?: string;
 }

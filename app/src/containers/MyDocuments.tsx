@@ -12,14 +12,19 @@ import ActionBar from '../components/action-bar';
 import TabNav from '../components/tab-nav';
 import Box from '../layout/box';
 import Blocks from '../layout/blocks';
+import ProgressBubble from '../components/progress-bubble';
 
 import IconDocuments from '../svg/icon-documents.svg';
+import IconTaxDocuments from '../svg/icon-tax-documents.svg';
 import IconBusiness from '../svg/icon-business.svg';
 import IconPerson from '../svg/individual-icon.svg';
 import IconCompany from '../svg/company-icon.svg';
 import IconEdit from '../svg/icon-edit.svg';
 import IconSchedule from '../svg/icon-schedule.svg';
 import IconUpload from '../svg/icon-upload.svg';
+import IconDownload from '../svg/icon-download.svg';
+import IconVideo from '../svg/icon-video.svg';
+import IconTick from '../svg/tick.svg';
 
 import * as MainStyled from "../components/styles";
 import * as Styled from './my-documents.styles';
@@ -79,7 +84,7 @@ const Entry = (props: any) => {
         <Styled.Entry
             onClick={props.onClick}
         >
-            <Box paddedLarge shadowed>
+            <Box shadowed>
                 <Styled.Progress>
                     <Styled.Header>
                         <Icon icon={props.icon} style={props.type} subIcon={props.subIcon} />
@@ -89,12 +94,10 @@ const Entry = (props: any) => {
                         </div>
                     </Styled.Header>
 
-                    <div>{props.status}</div>
+                    <Styled.Status>{props.status}</Styled.Status>
 
                     <div>
-                        <Styled.Bubble className={classNames({ complete: props.completed === props.total })}>
-                            {props.completed}/{props.total}
-                        </Styled.Bubble>
+                        <ProgressBubble type={props.type} completed={props.completed} total={props.total} />
                     </div>
                 </Styled.Progress>
             </Box>
@@ -107,12 +110,15 @@ const MyDocuments = (props: any) => {
         company,
         companyStructure,
         ownershipThreshold,
-        history
+        history,
+        markets
     } = props;
 
     const [section, setSection] = useState('People');
 
-    if (!company || !companyStructure) {
+    if (markets.length === 0) {
+        return <Redirect to="/onboarding/select-markets" />;
+    } else if (!company || !companyStructure) {
         return <Redirect to="/onboarding" />;
     }
 
@@ -132,8 +138,9 @@ const MyDocuments = (props: any) => {
             if (
                 value
                 && (
-                    (value.value !== null && value.value !== undefined) ||
+                    (value.value !== '' && value.value !== null && value.value !== undefined) ||
                     (
+                        value !== '' &&
                         value !== null &&
                         value !== undefined &&
                         (typeof value === 'string' && value.substring(0, 5) !== 'Notif')
@@ -146,9 +153,28 @@ const MyDocuments = (props: any) => {
         return completed;
     }
 
+    const shareholdersDone = shareholders.filter((shareholder: any) => confirmDone(shareholder, Person) === 5);
+
+    let companyDone = 2;
+    if (confirmDone(companyStructure, CompanyDetails) == CompanyDetails.length) {
+        companyDone++;
+    }
+    if (confirmDone(companyStructure, BusinessDetails) == BusinessDetails.length) {
+        companyDone++;
+    }
+    if (confirmDone(companyStructure.verification, CompanyDocuments) === CompanyDocuments.length) {
+        companyDone++;
+    }
+
+    const setStatus = (done: boolean, notificationSent?: string | boolean) => {
+        return done
+            ? <Styled.StatusComplete>Completed</Styled.StatusComplete>
+            : (!notificationSent ? 'Needs completing' : notificationSent)
+    }
+
     return (
         <MainStyled.MainSt className={classNames('hasActionBar', { person: section === 'People' }, { company: section === 'Company' })}>
-            <SetupStatus />
+            <SetupStatus markets={markets} />
 
             <MainStyled.ContentNarrow>
                 <h1 className="center">Please complete all company and personal information to open the accounts</h1>
@@ -158,8 +184,9 @@ const MyDocuments = (props: any) => {
                     items={[
                         {
                             label: 'People',
+                            stat: `${shareholdersDone.length} / ${shareholders.length}`,
                             content: (
-                                <Blocks gutter={'small'}>
+                                <Blocks>
                                     <h2 className="center">
                                         We have identified {shareholders.length} {shareholders.length === 1 ? 'UBO' : 'UBOs'} from {company.name} company structure which require ID checks
                                 </h2>
@@ -183,27 +210,24 @@ const MyDocuments = (props: any) => {
                                                 type={'person'}
                                                 title={getValue(shareholder.name)}
                                                 subTitle={'UBO'}
-                                                status={
-                                                    completed !== 5
-                                                        ? (!notificationSent ? 'Needs completing' : notificationSent)
-                                                        : 'Completed'
-                                                }
+                                                status={setStatus(completed === 5, notificationSent)}
                                                 total={5}
                                                 completed={completed}
                                             />
                                         )
                                     })}
 
-                                    <Box add centered paddedLarge shadowed>
-                                        Add additional people such as CEOs or CFOs of {company.name}
+                                    <Box add centered paddedLarge>
+                                        + Add additional people such as CEOs or CFOs of {company.name}
                                     </Box>
                                 </Blocks>
                             )
                         },
                         {
                             label: 'Company',
+                            stat: `${companyDone} / 5`,
                             content: (
-                                <Blocks gutter={'small'}>
+                                <Blocks>
                                     <h2 className="center">We have auto filled most of the company information required to make it as easy as possible for you to complete this step</h2>
                                     <Entry
                                         icon={IconCompany}
@@ -211,11 +235,7 @@ const MyDocuments = (props: any) => {
                                         onClick={() => history.push('/onboarding/my-documents/company/company-details')}
                                         type={'company'}
                                         title={'Company details'}
-                                        status={
-                                            confirmDone(companyStructure, CompanyDetails) !== CompanyDetails.length
-                                                ? 'Needs completing'
-                                                : 'Completed'
-                                        }
+                                        status={setStatus(confirmDone(companyStructure, CompanyDetails) === CompanyDetails.length)}
                                         total={CompanyDetails.length}
                                         completed={confirmDone(companyStructure, CompanyDetails)}
                                     />
@@ -224,12 +244,9 @@ const MyDocuments = (props: any) => {
                                         icon={IconBusiness}
                                         subIcon={IconEdit}
                                         onClick={() => history.push('/onboarding/my-documents/company/business-details')}
+                                        type={'company'}
                                         title={'Business details'}
-                                        status={
-                                            confirmDone(companyStructure, BusinessDetails) !== BusinessDetails.length
-                                                ? 'Needs completing'
-                                                : 'Completed'
-                                        }
+                                        status={setStatus(confirmDone(companyStructure, BusinessDetails) === BusinessDetails.length)}
                                         total={BusinessDetails.length}
                                         completed={confirmDone(companyStructure, BusinessDetails)}
                                     />
@@ -240,13 +257,29 @@ const MyDocuments = (props: any) => {
                                         onClick={() => history.push('/onboarding/my-documents/company/company-documents')}
                                         type={'company'}
                                         title={'Documents to upload'}
-                                        status={
-                                            confirmDone(companyStructure.verification, CompanyDocuments) !== CompanyDocuments.length
-                                                ? 'Needs completing'
-                                                : 'Completed'
-                                        }
+                                        status={setStatus(confirmDone(companyStructure.verification, CompanyDocuments) === CompanyDocuments.length)}
                                         total={CompanyDocuments.length}
                                         completed={confirmDone(companyStructure.verification, CompanyDocuments)}
+                                    />
+
+                                    <Entry
+                                        icon={IconTaxDocuments}
+                                        subIcon={IconDownload}
+                                        type={'company'}
+                                        title={'Tax documents to upload'}
+                                        status={setStatus(true)}
+                                        total={3}
+                                        completed={3}
+                                    />
+
+                                    <Entry
+                                        icon={IconVideo}
+                                        subIcon={IconSchedule}
+                                        type={'other'}
+                                        title={'Schedule video call'}
+                                        status={setStatus(true)}
+                                        total={3}
+                                        completed={3}
                                     />
                                 </Blocks>
                             )
@@ -272,6 +305,7 @@ const mapStateToProps = (state: any) => ({
     company: state.screening.company,
     companyStructure: state.screening.companyStructure,
     ownershipThreshold: state.screening.ownershipThreshold,
+    markets: state.screening.markets
 });
 
 export const RawComponent = MyDocuments;

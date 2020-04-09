@@ -9,7 +9,7 @@ export const Main = styled.div`
     flex-direction: column;
 
     &.padded {
-        padding: 15px 20px;
+        padding: 20px;
     }
 
     &.paddedLarge {

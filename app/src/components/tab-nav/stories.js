@@ -10,6 +10,7 @@ storiesOf('Components|TabNav', module)
             items={object('items', [
                 {
                     label: 'Label 1',
+                    stat: '1/2',
                     content: 'Content 1'
                 },
                 {

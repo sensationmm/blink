@@ -113,9 +113,9 @@ const MyDocumentsPerson = (props: any) => {
         const passport = shareholder.verification?.passport;
         const utilityBill = shareholder.verification?.utilityBill;
 
-        countryOfTaxResidence && await apiEditField(shareholder.docId, 'countryOfTaxResidence', countryOfTaxResidence);
-        taxId && await apiEditField(shareholder.docId, 'taxId', taxId);
-        role && await apiEditField(shareholder.docId, 'role', role);
+        await apiEditField(shareholder.docId, 'countryOfTaxResidence', countryOfTaxResidence || '');
+        await apiEditField(shareholder.docId, 'taxId', taxId || '');
+        await apiEditField(shareholder.docId, 'role', role || '');
 
         passport && await apiEditField(shareholder.docId, 'verification', { passport });
         utilityBill && await apiEditField(shareholder.docId, 'verification', { utilityBill });

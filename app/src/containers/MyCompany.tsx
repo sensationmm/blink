@@ -68,7 +68,8 @@ const MyCompany = (props: any) => {
         // hideLoader,
         setSideTray,
         sideTrayOpen,
-        history
+        history,
+        markets
     } = props;
 
     let buildingTimeout: any;
@@ -81,7 +82,9 @@ const MyCompany = (props: any) => {
 
     const [building, setBuilding] = useState(true);
 
-    if (!company || !companyStructure) {
+    if (markets.length === 0) {
+        return <Redirect to="/onboarding/select-markets" />;
+    } else if (!company || !companyStructure) {
         return <Redirect to="/onboarding" />;
     }
 
@@ -108,7 +111,7 @@ const MyCompany = (props: any) => {
 
     return (
         <MainStyled.MainSt className="hasActionBar">
-            <SetupStatus />
+            <SetupStatus markets={markets} />
 
             <MainStyled.Content>
                 {building
@@ -124,15 +127,18 @@ const MyCompany = (props: any) => {
                     </Styled.Progress>
                 }
 
-                {companyStructure &&
-                    <SignificantPersons
-                        showOnlyOrdinaryShareTypes={false}
-                        shareholderThreshold={ownershipThreshold}
-                        companyStructure={companyStructure}
-                        onClick={editUBO}
-                        animate={building}
-                    />
-                }
+                <Styled.MyCompanyStructure>
+                    {companyStructure &&
+                        <SignificantPersons
+                            showOnlyOrdinaryShareTypes={false}
+                            shareholderThreshold={ownershipThreshold}
+                            companyStructure={companyStructure}
+                            onClick={editUBO}
+                            animate={building}
+                        />
+                    }
+                </Styled.MyCompanyStructure>
+
                 {building && <Styled.Mask />}
             </MainStyled.Content>
 
@@ -154,6 +160,7 @@ const mapStateToProps = (state: any) => ({
     company: state.screening.company,
     companyStructure: state.screening.companyStructure,
     ownershipThreshold: state.screening.ownershipThreshold,
+    markets: state.screening.markets
 });
 
 const actions = { setOwnershipThreshold, setCompletion, setErrors, showLoader, hideLoader, setSideTray };

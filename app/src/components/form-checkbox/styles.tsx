@@ -37,7 +37,8 @@ export const Checkbox = styled.div`
   }
 
   &.group {
-    border: 2px solid var(--brand-secondary);
+    border: 2px solid var(--basic-shadow);
+    background: var(--basic-shadow);
 
     &.checked:before {
       content: '';

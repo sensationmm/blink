@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
+import { OrgChart, Controls as OrgChartControls } from '../components/org-chart/styles';
+
 export const Progress = styled.div`
     width: 300px;
     margin: 0 auto;
@@ -32,5 +34,19 @@ export const ActionBar = styled.div`
 
     &.hide {
         transform: translateY(100%);
+    }
+`;
+
+export const MyCompanyStructure = styled.div`
+    ${OrgChartControls} {
+        right: 0;
+        left: auto;
+    }
+
+    ${OrgChart} {
+        position: absolute;
+        width: 100vw;
+        left: 50%;
+        transform: translateX(-50%);
     }
 `;

@@ -5,7 +5,7 @@ export const Main = styled.div`
     width: 50px;
     height: 50px;
     border-radius: 26px;
-    border: 2px solid #000;
+    border: 1px solid #000;
     background: center center no-repeat;
     background-size: contain;
     flex-shrink: 0;
@@ -29,6 +29,10 @@ export const Main = styled.div`
 
     &.person {
         background-color: var(--brand-person);
+    }
+
+    &.other {
+        background-color: var(--brand-other);
     }
 
     &.button {

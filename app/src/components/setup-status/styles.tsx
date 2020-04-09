@@ -21,6 +21,7 @@ export const Nav = styled.nav`
 `;
 
 export const NavItem = styled(Link)`
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -89,4 +90,14 @@ export const CompanyInfo = styled.div`
 export const Back = styled.div`
     padding-left: 20px;
     position: absolute;
+`;
+
+export const Flags = styled.div`
+    position: absolute;
+    top: -20px;
+
+    img {
+        width: 20px;
+        margin: 0 5px;
+    }
 `;

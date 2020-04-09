@@ -7,8 +7,9 @@ const hasValue = (base: { [key: string]: any }, key: string = 'value') => {
     if (
         value
         && (
-            (value.value !== null && value.value !== undefined) ||
+            (value.value !== '' && value.value !== null && value.value !== undefined) ||
             (
+                value !== '' &&
                 value !== null &&
                 value !== undefined &&
                 (typeof value === 'string' && value.substring(0, 5) !== 'Notif')

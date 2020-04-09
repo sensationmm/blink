@@ -5,6 +5,7 @@ import * as Styled from './styles';
 
 interface TabNavItemProps {
     label: string;
+    stat?: string;
     content: JSX.Element | string;
 }
 
@@ -24,7 +25,7 @@ const TabNav: React.FC<TabNavProps> = ({ items, onChange }) => {
 
     return (
         <Styled.Main>
-            <Styled.Nav>
+            <Styled.Nav className={classNames({ hasStats: items.filter((item: any) => item.stat).length > 0 })}>
                 {items.map((item: any, count: number) => {
                     return (
                         <Styled.NavItem
@@ -33,6 +34,8 @@ const TabNav: React.FC<TabNavProps> = ({ items, onChange }) => {
                             onClick={() => { setActiveTab(count); onChange && onChange(items[count].label); }}
                         >
                             {item.label}
+
+                            {item.stat && <Styled.Stat>{item.stat}</Styled.Stat>}
                         </Styled.NavItem>
                     )
                 })}

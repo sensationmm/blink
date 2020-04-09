@@ -67,7 +67,7 @@ const Shareholder = ({
         >
             <Icon icon={ShareholderIcon} size={!type ? 'large' : 'default'} style={ShareholderImage} />
 
-            {shares && <Styled.Shares>{shares.toFixed(2)}%</Styled.Shares>}
+            {shares && <Styled.Shares>{shares.toFixed(2)}<span>%</span></Styled.Shares>}
 
             <ShareholderLabel className={type}>{name}
                 {companyId && <span style={{ fontSize: 14, display: "block" }}>({companyId})</span>}
