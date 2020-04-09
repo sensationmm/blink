@@ -31,7 +31,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ large = false, label, labelSu
 
     return (
         <Styled.ProgressBar className={classNames({ large: large })}>
-            {icon && <Styled.Icon>{typeof icon === 'string' ? <img src={icon} /> : icon}</Styled.Icon>}
+            {icon && <Styled.Icon>{typeof icon === 'string' ? <img alt="" src={icon} /> : icon}</Styled.Icon>}
 
             <Styled.Stacker className={classNames({ stacked: stacked }, { controlled: controlled })}>
                 {label &&

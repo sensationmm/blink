@@ -5,9 +5,9 @@ export interface CompanyData {
     name: any;
 }
 
-class Rule {
-    [key: string]: any;
-}
+// class Rule {
+//     [key: string]: any;
+// }
 
 const validateCompany = async (company: CompanyData, ownershipThreshold: string) => {
     const response = await fetch(`${domain}/validateCompany`, {

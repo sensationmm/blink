@@ -12,6 +12,7 @@ interface BoxProps {
     icon?: string;
     shadowed?: boolean;
     add?: boolean;
+    hoverStyling?: boolean
 }
 
 const Box: React.FC<BoxProps> = ({
@@ -22,19 +23,21 @@ const Box: React.FC<BoxProps> = ({
     paddedLarge = false,
     centered = false,
     shadowed = false,
-    add = false
+    add = false,
+    hoverStyling = false
 }) => {
     return (
         <div>
             {(title || icon) && (
-                <Styled.Title>{icon && <img src={icon} />} {title}</Styled.Title>
+                <Styled.Title>{icon && <img alt={title} src={icon} />} {title}</Styled.Title>
             )}
             <Styled.Main className={classNames(
                 { padded: padded },
                 { paddedLarge: paddedLarge },
                 { centered: centered },
                 { shadowed: shadowed },
-                { add: add }
+                { add: add },
+                { hoverStyling: hoverStyling}
             )}>
                 {children}
             </Styled.Main>

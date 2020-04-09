@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { withRouter } from 'react-router-dom';
 import { userSignout } from '../redux/actions/auth';
 import { connect } from 'react-redux';

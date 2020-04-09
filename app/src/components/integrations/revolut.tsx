@@ -1,24 +1,9 @@
 import React, { useState } from 'react';
-// import classNames from 'classnames';
-
-// import CompanyIcon from '../../svg/company-icon.svg';
-// import PersonIcon from '../../svg/individual-icon.svg';
-
-// import * as Styled from './styles'
-
-// interface IconProps {
-//     icon?: string;
-//     full?: boolean;
-//     style?: 'company' | 'person' | 'button';
-//     size?: 'default' | 'small' | 'large';
-// }
-
 import Box from '../../layout/box';
 import Blocks from '../../layout/blocks';
 import { Icon, AccountDetails, AccountName, AccountBalance, Item, TimeStamp, Refresh, LinkAccount } from "./styles";
 import { blinkMarkets, currencySymbols } from '../../utils/config/blink-markets';
 import refreshIcon from '../../svg/refresh_icon.svg'
-
 
 const Revolut = (props: any) => {
 
@@ -46,13 +31,12 @@ const Revolut = (props: any) => {
     }
 
     const getRevolutBankAccountTransactions = async () => {
-        const transactions = await props.revolutGetBankAccountTransactions();
-        // console.log(transactions)
+        props.revolutGetBankAccountTransactions();
         setBankAccountTransactions("transactions");
     }
 
     const updateSelectedAccountCounterparty = (accountId: string, potIndex: number, counterPartyId: string) => {
-        setBankAccounts(bankAccounts ?.map((bankAccount: any) => {
+        setBankAccounts(bankAccounts.map && bankAccounts ?.map((bankAccount: any) => {
             if (bankAccount.id === accountId) {
                 bankAccount.accounts[potIndex].selectedCounterparty = counterPartyId
             }
@@ -125,8 +109,8 @@ const Revolut = (props: any) => {
     return <>
 
         {/* {bankAccounts && <div style={{ marginBottom: 50 }}><ReactJson collapsed src={bankAccounts} /></div>} */}
-
-        {bankAccounts && <div style={{ paddingTop: 50 }}><Blocks>
+        <h1 style={{ marginTop: 50 }}>Accounts</h1>
+        {bankAccounts && <Blocks>
             {bankAccounts ?.filter((account: any) => blinkMarkets.find(market => market.currency === account.currency))
                 .map((account: any) => {
                     const country = blinkMarkets.find(market => market.currency === account.currency);
@@ -151,7 +135,7 @@ const Revolut = (props: any) => {
                                 <Refresh onClick={() => refreshAccountDetails(account.id)} src={refreshIcon} />
                             </TimeStamp>
 
-                            <Icon><img src={country ?.flag} /></Icon>
+                            <Icon><img alt={country ?.code} src={country ?.flag} /></Icon>
 
                             <AccountName>{account.name}</AccountName>
 
@@ -175,10 +159,12 @@ const Revolut = (props: any) => {
                   </>
                 )}
                 */}
-                            {counterparties && <div>
+                            {
+                                // false && 
+                                counterparties && <div>
                                 Make a payment to:  <select value={pot.selectedCounterparty} onChange={e => updateSelectedAccountCounterparty(account.id, potIndex, e.target.value)}>
                                     <option value="" disabled>Please select</option>
-                                    {counterparties ?.map((counterparty: any) => {
+                                    {counterparties.map && counterparties ?.map((counterparty: any) => {
 
                                         if (counterparty.accounts && counterparty.accounts.length > 0) {
                                             return counterparty.accounts.map((counterpartyAccount: any) => {
@@ -213,7 +199,7 @@ const Revolut = (props: any) => {
                     })
           })}
 
-        </Blocks></div>}
+        </Blocks>}
 
         {!bankAccounts && <></>}
     </>

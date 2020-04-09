@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React  from "react";
 import { Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import moment from 'moment';
 
 import { editField as saveEditField } from '../redux/actions/screening';
 import { editField as apiEditField } from '../utils/validation/request';
@@ -25,7 +24,6 @@ import IconDocuments from '../svg/icon-documents.svg';
 import IconBusiness from '../svg/icon-business.svg';
 import IconCompany from '../svg/company-icon.svg';
 import IconEdit from '../svg/icon-edit.svg';
-import IconSchedule from '../svg/icon-schedule.svg';
 import IconUpload from '../svg/icon-upload.svg';
 
 import * as MainStyled from "../components/styles";

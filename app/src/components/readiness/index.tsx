@@ -62,7 +62,7 @@ const Readiness: React.FC<ReadinessProps> = ({
                             <ProgressBar
                                 key={`shareholder-${count}`}
                                 label={getValue(shareholder.name)}
-                                labelSub={shareholder.type == 'officer' ? (shareholder.title || shareholder.type) : null}
+                                labelSub={shareholder.type === 'officer' ? (shareholder.title || shareholder.type) : null}
                                 icon={<Icon icon={PersonIcon} size={'small'} style={'person'} />}
                                 value={validation[shareholder.docId].completion['Core'].passed}
                                 total={validation[shareholder.docId].completion['Core'].total}

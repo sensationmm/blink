@@ -26,14 +26,14 @@ const Shareholder = ({
     shareholder,
     name,
     shares,
-    showDetail,
+    // showDetail,
     companyId,
     officialStatus,
     onClick,
     animate = false
 }: IShareholderProps) => {
     const type = shareholder ? getValue(shareholder.shareholderType) : '';
-    const docId = shareholder ? shareholder.docId : '';
+    // const docId = shareholder ? shareholder.docId : '';
     const isWithinShareholderThreshold = shareholder ? shareholder.isWithinShareholderThreshold : '';
     const shareholderDepth = shareholder && shareholder.depth ? shareholder.depth : 0;
 

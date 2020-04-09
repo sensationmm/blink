@@ -35,7 +35,7 @@ const ScreeningStatus: React.FC<ScreeningStatusProps> = ({ company, country, loc
     return (
         <Styled.Main>
             <Styled.Header>
-                <img src={BlinkLogo} />
+                <img alt="blink" src={BlinkLogo} />
                 <User />
             </Styled.Header>
             <Styled.Nav>
@@ -56,7 +56,7 @@ const ScreeningStatus: React.FC<ScreeningStatusProps> = ({ company, country, loc
 
             <Styled.Info>
                 {prevStep ? <Styled.Title>
-                    <Link to={prevStep.url}><img src={ArrowBack} /></Link>
+                    <Link to={prevStep.url}><img alt="" src={ArrowBack} /></Link>
                     <h1>{steps[currentStep].label}</h1>
                 </Styled.Title> : <div />}
 

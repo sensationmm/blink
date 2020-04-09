@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import classNames from 'classnames';
 
 import getValue from '../utils/functions/getValue';
-import hasValue from '../utils/functions/hasValue';
 
 import SetupStatus from '../components/setup-status';
 import Icon from '../components/icon';
@@ -20,7 +19,6 @@ import IconBusiness from '../svg/icon-business.svg';
 import IconPerson from '../svg/individual-icon.svg';
 import IconCompany from '../svg/company-icon.svg';
 import IconEdit from '../svg/icon-edit.svg';
-import IconSchedule from '../svg/icon-schedule.svg';
 import IconUpload from '../svg/icon-upload.svg';
 import IconDownload from '../svg/icon-download.svg';
 import IconVideo from '../svg/icon-video.svg';

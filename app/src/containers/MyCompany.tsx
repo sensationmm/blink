@@ -1,23 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import classNames from 'classnames';
+
 
 import SetupStatus from '../components/setup-status';
 import SignificantPersons from "../components/generic/persons-with-significant-control";
 import { shareholderAnimLevel, shareholderAnimVariant } from '../components/shareholder';
-import Button from '../components/button';
-import ScreeningStatus from '../components/screening-status';
-import ShareholderList from '../components/shareholder/list';
 import ActionBar from '../components/action-bar';
 import ProgressBar from '../components/progress-bar';
-
-import Actions from '../layout/actions';
-import Box from '../layout/box';
-import FlexRow from '../layout/flex-row';
-
-import getValue from '../utils/functions/getValue';
-import { validateCompany, CompanyData } from '../utils/validation/request';
 
 import { setOwnershipThreshold, setCompletion, setErrors } from '../redux/actions/screening';
 import { showLoader, hideLoader } from '../redux/actions/loader';
@@ -25,7 +15,6 @@ import { setSideTray } from '../redux/actions/side-tray';
 
 import SideTray from '../components/side-tray';
 import ShareholderEdit from '../components/shareholder-edit';
-import ArrowRight from '../svg/arrow-right.svg';
 import * as MainStyled from "../components/styles";
 import * as Styled from './my-company.styles';
 

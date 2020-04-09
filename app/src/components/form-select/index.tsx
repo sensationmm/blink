@@ -31,7 +31,7 @@ const FormSelect: React.FC<FormSelectProps> = ({
             <Styled.Field>
                 {selectedIcon &&
                     <Styled.Icon>
-                        {typeof selectedIcon === 'object' ? selectedIcon : <img src={selectedIcon} />}
+                        {typeof selectedIcon === 'object' ? selectedIcon : <img alt="" src={selectedIcon} />}
                     </Styled.Icon>
                 }
 

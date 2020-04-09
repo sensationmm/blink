@@ -8,11 +8,7 @@ import {
   withRouter
 } from "react-router-dom";
 
-
-import Kyckr from "./components/kyckr"
 import KyckrFilingSearch from "./components/kyckr/filing-search";
-import DueDill from "./components/duedill"
-import Trulioo from "./components/trulioo"
 import Generic from "./components/generic"
 import Graph from "./components/graph"
 import SetupProgress from "./components/setup-progress";
@@ -87,17 +83,8 @@ const App = withRouter((props: any) => {
 
         <Route exact path="/doc"><Doc /></Route>
 
-        <Route path="/kyckr">
-          <Kyckr />
-        </Route>
         <Route path="/kyckr-filing-search">
           <KyckrFilingSearch />
-        </Route>
-        <Route path="/duedill">
-          <DueDill />
-        </Route>
-        <Route path="/trulioo">
-          <Trulioo />
         </Route>
         <Route path="/combined">
           <Generic />

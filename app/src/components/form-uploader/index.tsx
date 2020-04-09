@@ -38,7 +38,7 @@ const FormUploader: React.FC<FormUploaderProps> = ({ id, onUpload, uploaded, onC
             <Box add centered padded={false}>
                 {uploaded
                     ? <Styled.Preview>
-                        <img src={uploaded} />
+                        <img alt="" src={uploaded} />
                         <Styled.Delete onClick={onClearUpload} src={IconAdd} alt={'Delete'} />
                     </Styled.Preview>
                     : <Dropzone

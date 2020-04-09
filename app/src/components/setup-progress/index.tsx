@@ -1,6 +1,8 @@
 
 import React, { useState, useEffect } from "react";
-import { addRule, validateCompany } from '../../utils/validation/request';
+import { 
+    // addRule, 
+    validateCompany } from '../../utils/validation/request';
 import { MainSt } from "../styles";
 import ReactJson, { InteractionProps } from 'react-json-view'
 import { withRouter } from "react-router-dom";
@@ -19,83 +21,85 @@ type market = 'Core' | 'GB' | 'DE' | 'FR' | 'RO' | 'IT' | 'SE';
 type indexedObject = { [key: string]: any };
 
 const SetupProgress = (props: any) => {
-    const company = {
-        name: null,
-        adverseMediaCheckPassed: null,
-        AMLRedFlagsListPassed: null,
-        AMLWatchListPassed: null,
-        auditedFinancialStatementsProvided: null,
-        bankMandatePassed: null,
-        bearerShareClientAttestation: null,
-        bearerShareEvidenceLink: null,
-        bearerShareRiskMitigationMethod: null,
-        bearerSharesOutstanding: null,
-        boardOfDirectors: null,
-        companyId: null,
-        constitutiveDocumentPassed: null,
-        contactEmail: null,
-        contactFax: null,
-        countriesOfPrimaryBusinessOperations: null,
-        countryCode: null,
-        companyAllowsBearerShares: null,
-        doingBusinessAsName: null,
-        emailAddress: null,
-        financialConditionsPassed: null,
-        fundingSources: null,
-        holdClientFunds: null,
-        homeBasedBusiness: null,
-        incorporationAddress: {
-            fullAddress: null,
-        },
-        incorporationCountry: null,
-        incorporationDate: null,
-        industryType: null,
-        isInternetOnlyBusiness: null,
-        isListed: null,
-        isListedCitiCoveredExchange: null,
-        isSpecialPurposeVehicle: null,
-        isSubsidiaryOfListedEntity: null,
-        italianTaxId: null,
-        lawSubjectTo: null,
-        materialChangeInBusinessActivity: null,
-        materialChangeInBusinessActivityDetails: null,
-        materialMergerDetails: null,
-        materialMergers: null,
-        NAICSCode: null,
-        natureOfBusiness: null,
-        nonCoopTaxJurisdictionsforFrance: null,
-        numberOfEmployees: null,
-        numberofLocationsOrBranches: null,
-        paymentIntermediaryCheckPassed: null,
-        phoneNumber: null,
-        primaryAddress: {
-            fullAddress: null,
-        },
-        primaryWebsite: null,
-        primaryWebsiteCheckPassed: null,
-        prohibitedAccountUseCheckPassed: null,
-        prohibitedRevenueSourceCheckPassed: null,
-        registeredAddress: {
-            fullAddress: null,
-        },
-        revenueCurrency: null,
-        revenueSources: null,
-        romanianFiscalRegistrationCertificatePassed: null,
-        sanctionsCountryChecksPassed: null,
-        sanctionsScreeningPassed: null,
-        siteVisitCompleted: null,
-        taxId: null,
-        taxResidenceCountry: null,
-        type: null,
-        vatId: null,
-    };
+    // const company = {
+    //     name: null,
+    //     adverseMediaCheckPassed: null,
+    //     AMLRedFlagsListPassed: null,
+    //     AMLWatchListPassed: null,
+    //     auditedFinancialStatementsProvided: null,
+    //     bankMandatePassed: null,
+    //     bearerShareClientAttestation: null,
+    //     bearerShareEvidenceLink: null,
+    //     bearerShareRiskMitigationMethod: null,
+    //     bearerSharesOutstanding: null,
+    //     boardOfDirectors: null,
+    //     companyId: null,
+    //     constitutiveDocumentPassed: null,
+    //     contactEmail: null,
+    //     contactFax: null,
+    //     countriesOfPrimaryBusinessOperations: null,
+    //     countryCode: null,
+    //     companyAllowsBearerShares: null,
+    //     doingBusinessAsName: null,
+    //     emailAddress: null,
+    //     financialConditionsPassed: null,
+    //     fundingSources: null,
+    //     holdClientFunds: null,
+    //     homeBasedBusiness: null,
+    //     incorporationAddress: {
+    //         fullAddress: null,
+    //     },
+    //     incorporationCountry: null,
+    //     incorporationDate: null,
+    //     industryType: null,
+    //     isInternetOnlyBusiness: null,
+    //     isListed: null,
+    //     isListedCitiCoveredExchange: null,
+    //     isSpecialPurposeVehicle: null,
+    //     isSubsidiaryOfListedEntity: null,
+    //     italianTaxId: null,
+    //     lawSubjectTo: null,
+    //     materialChangeInBusinessActivity: null,
+    //     materialChangeInBusinessActivityDetails: null,
+    //     materialMergerDetails: null,
+    //     materialMergers: null,
+    //     NAICSCode: null,
+    //     natureOfBusiness: null,
+    //     nonCoopTaxJurisdictionsforFrance: null,
+    //     numberOfEmployees: null,
+    //     numberofLocationsOrBranches: null,
+    //     paymentIntermediaryCheckPassed: null,
+    //     phoneNumber: null,
+    //     primaryAddress: {
+    //         fullAddress: null,
+    //     },
+    //     primaryWebsite: null,
+    //     primaryWebsiteCheckPassed: null,
+    //     prohibitedAccountUseCheckPassed: null,
+    //     prohibitedRevenueSourceCheckPassed: null,
+    //     registeredAddress: {
+    //         fullAddress: null,
+    //     },
+    //     revenueCurrency: null,
+    //     revenueSources: null,
+    //     romanianFiscalRegistrationCertificatePassed: null,
+    //     sanctionsCountryChecksPassed: null,
+    //     sanctionsScreeningPassed: null,
+    //     siteVisitCompleted: null,
+    //     taxId: null,
+    //     taxResidenceCountry: null,
+    //     type: null,
+    //     vatId: null,
+    // };
 
     const [completion, setCompletion] = useState({} as { [key: string]: indexedObject });
     const [errors, setErrors] = useState({} as { [key: string]: string });
     const [structure, setStructure] = useState();
 
     const go = async () => {
-        const { match: { params: { companyId, countryCode } } } = props;
+        const { match: { params: { companyId, 
+            // countryCode 
+        } } } = props;
         const requestedCompany = await requestCompanyUBOStructure(companyId || "10103078", 'GB');
         setStructure(requestedCompany);
     }

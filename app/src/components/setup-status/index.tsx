@@ -33,7 +33,7 @@ const SetupStatus: React.FC<SetupStatusProps> = ({ company, markets, location })
     return (
         <Styled.Main>
             <Styled.Header>
-                <img src={BlinkLogo} />
+                <img alt="blink" src={BlinkLogo} />
                 <User />
             </Styled.Header>
             <Styled.Nav>
@@ -61,7 +61,7 @@ const SetupStatus: React.FC<SetupStatusProps> = ({ company, markets, location })
                 }
             </Styled.Nav>
 
-            {prevStep && <Styled.Back><Link to={prevStep.url}><img src={ArrowBack} /></Link></Styled.Back>}
+            {prevStep && <Styled.Back><Link to={prevStep.url}><img alt="Previous" src={ArrowBack} /></Link></Styled.Back>}
         </Styled.Main >
     );
 };
