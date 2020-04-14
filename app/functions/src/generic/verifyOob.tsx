@@ -24,7 +24,6 @@ server.post('*/', async function (req: any, res: any) {
         if (user.oob && user.oob.expires && new Date() > user.oob.expires) {
             res.send({ expired: true })
         }
-
         await userRef.update({
             verified: true
         })
