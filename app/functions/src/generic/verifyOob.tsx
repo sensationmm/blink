@@ -27,7 +27,7 @@ server.post('*/', async function (req: any, res: any) {
 
         delete user.oob;
 
-        await userRef.update({...user, 
+        await userRef.set({...user, 
             verified: true
         })
         res.send({ verified: true })

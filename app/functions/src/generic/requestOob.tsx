@@ -18,7 +18,7 @@ server.post('*/', async function (req: any, res: any) {
     const userRef = await userCollection.doc(localId);
     const userDoc = await userRef.get();
     const user = userDoc.data();
-    const oob = Math.round((Math.random() * 100000)) + 1;
+    const oob = Math.round((Math.random() * 1000000)) + 1;
 
     const CLICKSEND_EMAIL = process.env.CLICKSEND_EMAIL || functions.config().clicksend_email.key;
     const CLICKSEND_API_KEY = process.env.CLICKSEND_API_KEY || functions.config().clicksend_api.key;
