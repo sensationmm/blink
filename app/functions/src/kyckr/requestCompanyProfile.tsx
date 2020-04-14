@@ -11,6 +11,7 @@ const dueDilCompanySearch = require('../duedill/searchCompany').searchCompany;
 const dueDilCompanyVitals = require('../duedill/requestCompanyVitals').requestCompanyVitals;
 const bloombergSearchCompany = require('../bloomberg/searchCompany').searchCompany;
 const compositeExchangeCodes = require('../bloomberg/compositeExchangeCodes');
+const { doCompanyEnrichment } = require('../enrichment/companyEnrichment');
 
 server.use(cors());
 
@@ -54,6 +55,7 @@ const isCompanyByName = (name: string) => {
         name?.indexOf("limited") > -1 ||
         name?.indexOf("corporation") > -1 ||
         name?.slice(name.length - 3) === " ag" ||  // bit weak?
+        name?.slice(name.length - 3) === " ug" ||  // similar to ag in Germany
         name?.indexOf("ltd") > -1 ||
         name?.indexOf("s.r.l") > -1
 }
@@ -269,6 +271,9 @@ const requestCompanyProfile = async (
                                 // updatedAt: new Date(),
                                 citiCoveredExchange
                             }, { merge: true });
+
+                            // Other company enrichments
+                            doCompanyEnrichment(targetCompanyRef);
                         }
 
                         if (directorAndShareDetails) {
@@ -289,14 +294,14 @@ const requestCompanyProfile = async (
                                             shareholder[key] = valueToObject(sourceShareholder[key])
                                         })
 
-                                        if (!shareholder.shareholderType.value) {
+                                        if (!shareholder.shareholderType && !shareholder.shareholderType.value) {
                                             const shareholderName = shareholder.name.value;
                                             if (
                                                 isCompanyByName(shareholderName?.toLowerCase())
                                             ) {
-                                                shareholder.shareholderType.value = "C";
+                                                shareholder.shareholderType = valueToObject("C");
                                             } else {
-                                                shareholder.shareholderType.value = "P";
+                                                shareholder.shareholderType = valueToObject("P");
                                             }
                                         }
                                         // console.log("shareholder", shareholder);

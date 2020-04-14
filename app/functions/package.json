@@ -26,6 +26,7 @@
     "google-spreadsheet": "^3.0.7",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.24.0",
+    "node-cache": "^5.1.0",
     "request": "^2.88.0",
     "soap": "^0.30.0",
     "src": "^1.1.2",
