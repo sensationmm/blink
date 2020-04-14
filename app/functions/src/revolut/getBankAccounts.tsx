@@ -64,7 +64,7 @@ server.post('*/', async function (req: any, res: any) {
             revolutData.accounts.forEach((account: any) => {
                 const diff = now.getTime() - new Date(account.updatedAt).getTime();
                 console.log(diff);
-                if (diff > 600000) { // 10 mins // 739969
+                if (diff > 600000) { // 10 mins
                     needsRefresh = true
                 }
             })

@@ -70,16 +70,8 @@ exports.truliooDocumentVerification = require("./src/trulioo/documentVerificatio
 exports.truliooBusinessSearch = require("./src/trulioo/businessSearch");
 
 // generic 
-
 exports.requestCompanyUBOStructure = require("./src/generic/requestCompanyUBOStructure");
-
 exports.saveCompanyUBOStructure = require("./src/generic/saveCompanyUBOStructure");
-
-exports.migrateCompanyStructure = require("./src/generic/migrateCompanyStructure");
-exports.migratePersonStructure = require("./src/generic/migratePersonStructure");
-exports.migrateRelationships = require("./src/generic/migrateRelationships");
-
-exports.relationshipCleanup = require("./src/generic/relationshipCleanup");
 
 exports.backupAllData = require("./src/generic/backupAllData");
 exports.restoreAllData = require("./src/generic/restoreAllData");
@@ -102,12 +94,21 @@ exports.deleteUBO = require('./src/validation/deleteUBO');
 // google
 exports.googleFetchSheet = require("./src/google/fetchSheet");
 
+// utility
 exports.getIP = require("./src/generic/getIP");
+exports.migrateCompanyStructure = require("./src/generic/migrateCompanyStructure");
+exports.migratePersonStructure = require("./src/generic/migratePersonStructure");
+exports.migrateRelationships = require("./src/generic/migrateRelationships");
+exports.relationshipCleanup = require("./src/generic/relationshipCleanup");
+
+// auth
 exports.signIn = require("./src/generic/signIn");
+exports.signUp = require("./src/generic/signUp");
 exports.signInWithToken = require("./src/generic/signInWithToken");
+exports.requestOob = require("./src/generic/requestOob");
+exports.verifyOob = require("./src/generic/verifyOob");
 
 // integrations 
-
 exports.xeroAuthenticateCallback = require("./src/xero/authenticateCallback");
 exports.xeroDisconnect = require("./src/xero/disconnect");
 exports.xeroAuthenticate = require("./src/xero/authenticate");

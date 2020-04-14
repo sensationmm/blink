@@ -18,6 +18,7 @@ import store from "./redux/store";
 
 import Search from './containers/Search';
 import Auth from './containers/Auth';
+import SignUp from './containers/SignUp'
 import CompanyStructure from './containers/CompanyStructure';
 import CompanyReadiness from './containers/CompanyReadiness';
 import MissingData from './containers/MissingData';
@@ -50,15 +51,16 @@ const App = withRouter((props: any) => {
 
   store.subscribe(() => {
     const auth = store.getState().auth;
-    setIsAuthed(auth.user);
+    // console.log("auth", auth)
+    setAuthedUser(auth.user);
   })
 
-  const [isAuthed, setIsAuthed] = useState(false) // useState(window.location.href.indexOf("localhost:") > -1);
+  const [authedUser, setAuthedUser] = useState() // useState(window.location.href.indexOf("localhost:") > -1);
 
-  return !isAuthed ?
+  return !authedUser ?
 
     <Auth />
-    : <div>
+    : (!authedUser.verified ? <SignUp /> : <div>
       <Switch>
         <Route exact path="/"><Redirect to="/search" /></Route>
 
@@ -106,4 +108,4 @@ const App = withRouter((props: any) => {
         </Route>
       </Switch>
     </div>
-})
+)});
