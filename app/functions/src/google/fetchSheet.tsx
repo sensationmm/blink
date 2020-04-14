@@ -4,9 +4,25 @@ const functions = require('firebase-functions');
 const cors = require('cors');
 const express = require('express');
 const server = express();
+const NodeCache = require('node-cache');
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 
+const nodeDataCache = new NodeCache(); //({ stdTTL: 120 * 60 })
+
 server.use(cors());
+
+const fetchGoogleSheetCached = async (sheetID: string, tabID: string = '0') => {
+
+    const cacheKey = sheetID+':'+tabID
+    let sheetJSON = await nodeDataCache.get(cacheKey);
+    if ( sheetJSON == undefined ){
+        sheetJSON = await fetchGoogleSheet (sheetID, tabID);
+        nodeDataCache.set(cacheKey, sheetJSON);
+    }
+    else console.log('Returning NodeCached data');
+    console.log(nodeDataCache.getStats());
+    return sheetJSON;
+}
 
 const fetchGoogleSheet = async (sheetID: string, tabID: string = '0') => {
     
@@ -49,3 +65,4 @@ server.post('*/', async function (req: any, res: any) {
 module.exports = functions.https.onRequest(server);
 
 module.exports.fetchGoogleSheet = fetchGoogleSheet;
+module.exports.fetchGoogleSheetCached = fetchGoogleSheetCached;

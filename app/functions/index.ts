@@ -81,6 +81,16 @@ exports.migrateRelationships = require("./src/generic/migrateRelationships");
 
 exports.relationshipCleanup = require("./src/generic/relationshipCleanup");
 
+exports.backupAllData = require("./src/generic/backupAllData");
+exports.restoreAllData = require("./src/generic/restoreAllData");
+exports.backupManager = require("./src/generic/backupManager");
+
+
+// enrichment
+exports.checkFATFCountry = require("./src/enrichment/checkFATFCountry");
+exports.checkFRNonCoopCountry = require("./src/enrichment/checkFRNonCoopCountry");
+exports.companyEnrichment = require("./src/enrichment/companyEnrichment");
+
 // validation
 exports.validateCompany = require("./src/validation/validateCompany");
 exports.addRule = require("./src/validation/addRule");
