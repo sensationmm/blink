@@ -121,6 +121,10 @@
       "function": "revolutPostPayment"
     }, 
     {
+      "source": "/signUp",
+      "function": "signUp"
+    }, 
+    {
       "source": "/requestOob",
       "function": "requestOob"
     },  
