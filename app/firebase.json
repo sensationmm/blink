@@ -119,6 +119,18 @@
     {
       "source": "/revolutPostPayment/",
       "function": "revolutPostPayment"
+    }, 
+    {
+      "source": "/signUp",
+      "function": "signUp"
+    }, 
+    {
+      "source": "/requestOob",
+      "function": "requestOob"
+    },  
+    {
+      "source": "/verifyOob",
+      "function": "verifyOob"
     },  
     {
       "source": "**",

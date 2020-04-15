@@ -20,6 +20,20 @@ const userSignIn = async (username: string, password: string) => {
 };
 
 
+const userSignUp = async (emails: Array<string>) => {
+
+    const data = {
+        users: emails
+    }
+    const response = await fetch(`${domain}/signUp`, {
+        method: 'post',
+        body: JSON.stringify(data)
+    })
+    const body = response.json();
+    return body;
+};
+
+
 const userSignInWithToken = async (token: string) => {
 
     const data = {
@@ -36,4 +50,54 @@ const userSignInWithToken = async (token: string) => {
     return body;
 };
 
-export { userSignIn, userSignInWithToken };
+const userSignInWithInvite = async (uId: string) => {
+
+    const data = {
+        uId
+    }
+
+    const response = await fetch(`${domain}/userSignInWithInvite`, {
+        method: 'post',
+        body: JSON.stringify(data)
+    })
+
+    const body = response.json();
+
+    return body;
+};
+
+const userRequestOob = async (localId: string) => {
+
+    const data = {
+        localId
+    }
+
+    const response = await fetch(`${domain}/requestOob`, {
+        method: 'post',
+        body: JSON.stringify(data)
+    })
+
+    const body = response.json();
+
+    return body;
+};
+
+const userVerifyOob = async (localId: string, oob: string) => {
+
+    const data = {
+        oob,
+        localId
+    }
+
+    const response = await fetch(`${domain}/verifyOob`, {
+        method: 'post',
+        body: JSON.stringify(data)
+    })
+
+    const body = response.json();
+
+    return body;
+};
+
+
+export { userSignIn, userSignInWithToken, userSignUp, userSignInWithInvite, userRequestOob, userVerifyOob };
