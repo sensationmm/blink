@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { withRouter } from 'react-router-dom';
 import styled from "styled-components";
 import { requestUserOob, requestUserVerifyOob } from '../redux/actions/auth';
+import User from './User';
 import { connect } from 'react-redux';
 import * as MainStyled from "../components/styles";
 import Button from '../components/button';
@@ -28,6 +29,8 @@ const SignUp = (props: any) => {
 
 
     return <><Styled.Header><img alt="blink" src={BlinkLogo} /></Styled.Header>
+
+        <User showDisplayName={false} />
         <MainStyled.Content>
 
             {hasRequestedOOb && <Styled.AuthWrapper>

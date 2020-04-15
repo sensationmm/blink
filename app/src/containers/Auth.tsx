@@ -78,7 +78,7 @@ const Auth = (props: any) => {
                     }
 
                 </Styled.AuthWrapper>
-                <button onClick={() => setshowSignUp(true)}>Show sign up</button>
+                {window.location.href.startsWith("http://localhost:3000") && <button onClick={() => setshowSignUp(true)}>Show sign up</button>}
             </>
             <Actions>
                 {

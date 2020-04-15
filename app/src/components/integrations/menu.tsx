@@ -87,7 +87,7 @@ const Menu = (props: any) => {
                 to="/integrations">Integrations</Link></li>
             <li><Link to="/integrations">Funding</Link></li>
             <li><Link to="/integrations">Settings</Link></li>
-            <li><Link onClick={props.userSignout} to="/integrations">Logout</Link></li>
+            <li><Link onClick={props.userSignout} to="/">Logout</Link></li>
         </ul>
     </MenuSt>
 
