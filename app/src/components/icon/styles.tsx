@@ -20,7 +20,6 @@ export const Main = styled.div`
         width: 30px;
         height: 30px;
         border-radius: 15px;
-        background-position: center top 5px;
     }
 
     &.company {

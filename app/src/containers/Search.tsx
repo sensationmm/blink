@@ -10,7 +10,7 @@ import { requestCompanyUBOStructure } from '../utils/generic/request';
 import ScreeningStatus from '../components/screening-status';
 import Button from '../components/button';
 import Actions from '../layout/actions';
-import { setCountry, setCompany, setCompanyStructure } from '../redux/actions/screening';
+import { setCountry, setCompany, setCompanyStructure, setMarkets } from '../redux/actions/screening';
 import { showLoader, hideLoader } from '../redux/actions/loader';
 
 import * as Styled from "../components/styles";
@@ -25,7 +25,8 @@ const Search = (props: any) => {
         hideLoader,
         setCompanyStructure,
         selectedCountry,
-        selectedCompany
+        selectedCompany,
+        setMarkets
     } = props;
 
     const [ignoreDB, setIgnoreDB] = useState(false);
@@ -105,12 +106,14 @@ const Search = (props: any) => {
             UBOStructure = await requestCompanyUBOStructure(companyId, countryCode);
             setCompanyStructure(UBOStructure);
             // setHackValue(Math.random())
+            setMarkets(['GB', 'DE', 'FR', 'IT', 'SE', 'RO']);
             hideLoader();
             props.history.push(redirect)
         } else {
             // console.log("UBOStructure", UBOStructure)
             setCompanyStructure(UBOStructure);
             // setHackValue(Math.random());
+            setMarkets(['GB', 'DE', 'FR', 'IT', 'SE', 'RO']);
             hideLoader();
             props.history.push(redirect)
         }
@@ -171,7 +174,6 @@ const Search = (props: any) => {
 
                 <Actions>
                     <Button onClick={() => getStructure('/company-structure')} disabled={!(selectedCompany && selectedCompany.companyId && selectedCountry)} />
-                    <Button label="My Company" onClick={() => getStructure('/onboarding/my-company')} disabled={!(selectedCompany && selectedCompany.companyId && selectedCountry)} />
                 </Actions>
             </Styled.Content>
         </Styled.MainSt>
@@ -183,7 +185,7 @@ const mapStateToProps = (state: any) => ({
     selectedCountry: state.screening.country,
 });
 
-const actions = { setCompany, setCountry, setCompanyStructure, showLoader, hideLoader };
+const actions = { setCompany, setCountry, setMarkets, setCompanyStructure, showLoader, hideLoader };
 
 export const RawComponent = Search;
 

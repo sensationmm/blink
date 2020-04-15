@@ -15,10 +15,11 @@ const CompanyReadiness = (props: any) => {
         company,
         companyStructure,
         validation,
-        ownershipThreshold
+        ownershipThreshold,
+        markets
     } = props;
 
-    if (!company || !companyStructure) {
+    if (!company || !companyStructure || markets.length === 0) {
         return <Redirect to="/search" />;
     } else if (!validation.company) {
         return <Redirect to="/company-structure" />;
@@ -55,6 +56,7 @@ const CompanyReadiness = (props: any) => {
                     ownershipThreshold={ownershipThreshold}
                     shareholders={shareholders.concat(officers)}
                     validation={validation}
+                    markets={markets}
                 />
 
                 <Actions>
@@ -66,6 +68,7 @@ const CompanyReadiness = (props: any) => {
 }
 
 const mapStateToProps = (state: any) => ({
+    markets: state.screening.markets,
     company: state.screening.company,
     companyStructure: state.screening.companyStructure,
     ownershipThreshold: state.screening.ownershipThreshold,

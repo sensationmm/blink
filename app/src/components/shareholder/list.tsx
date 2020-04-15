@@ -2,6 +2,7 @@ import React from 'react';
 import cx from 'classnames';
 
 import Icon from '../icon';
+import PersonIcon from '../../svg/individual-icon.svg';
 
 import * as Styled from './styles';
 
@@ -12,14 +13,11 @@ interface IShareholderListProps {
 }
 
 const Shareholder: React.FC<IShareholderListProps> = ({ name, shares, type }) => {
-    const ShareholderLabel = type ? Styled.Label : Styled.Heading;
-    const ShareholderIcon = type === 'P' ? 'person' : 'company';
-
     return (
         <Styled.ShareholderList className={cx({ 'isCompany': type === 'C' }, { 'isPerson': type === 'P' })}>
-            <Icon style={ShareholderIcon} />
+            <Icon icon={PersonIcon} style={'person'} />
 
-            <ShareholderLabel className={type}>{name}</ShareholderLabel>
+            <Styled.ListLabel className={type}>{name}</Styled.ListLabel>
 
             {shares && <Styled.Shares><span>{shares.toFixed(2)}</span>%</Styled.Shares>}
         </Styled.ShareholderList >

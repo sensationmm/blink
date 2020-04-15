@@ -16,10 +16,11 @@ const ContactClient = (props: any) => {
         companyStructure,
         validation,
         ownershipThreshold,
-        history
+        history,
+        markets
     } = props;
 
-    if (!company || !companyStructure) {
+    if (!company || !companyStructure || markets.length === 0) {
         return <Redirect to="/search" />;
     } else if (!validation) {
         return <Redirect to="/company-structure" />;
@@ -40,6 +41,7 @@ const ContactClient = (props: any) => {
                     ownershipThreshold={ownershipThreshold}
                     shareholders={shareholders}
                     validation={validation}
+                    markets={markets}
                 />
 
                 <Actions>
@@ -52,6 +54,7 @@ const ContactClient = (props: any) => {
 }
 
 const mapStateToProps = (state: any) => ({
+    markets: state.screening.markets,
     company: state.screening.company,
     companyStructure: state.screening.companyStructure,
     ownershipThreshold: state.screening.ownershipThreshold,

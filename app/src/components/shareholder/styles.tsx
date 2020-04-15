@@ -65,6 +65,7 @@ export const ShareholderList = styled.div`
     padding-bottom: 20px;
     border-bottom: 1px solid var(--basic-shadow);
     margin-bottom: 20px;
+    width: 100%;
 
     &:last-of-type {
         border: 0;
@@ -74,6 +75,7 @@ export const ShareholderList = styled.div`
     > div {
         margin: 0 !important;
     }
+    
 `;
 
 
@@ -91,7 +93,12 @@ export const Label = styled.div`
     &.P {
         text-transform: capitalize;
     }
-`
+`;
+
+export const ListLabel = styled.div`
+    text-align: left;
+    padding-left: 20px;
+`;
 
 export const Shares = styled.div`
     display: flex;

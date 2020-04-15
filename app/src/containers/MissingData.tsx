@@ -10,6 +10,7 @@ import Box from '../layout/box';
 import Blocks from '../layout/blocks';
 import Accordion from '../components/accordion';
 import capitalize from '../utils/functions/capitalize';
+import getByValue from '../utils/functions/getByValue';
 import getValue from '../utils/functions/getValue';
 import IconTitle from '../components/icon-title';
 import Grid from '../layout/grid';
@@ -45,9 +46,10 @@ const MissingData = (props: any) => {
         hideLoader,
         setCompletion,
         setErrors,
+        markets
     } = props;
 
-    if (!company || !companyStructure) {
+    if (!company || !companyStructure || markets.length === 0) {
         return <Redirect to="/search" />;
     } else if (!validation.company || !validation.company.completion) {
         return <Redirect to="/company-structure" />;
@@ -93,7 +95,8 @@ const MissingData = (props: any) => {
             hideLoader,
             props.history.push,
             '/contact-client',
-            ownershipThreshold
+            ownershipThreshold,
+            markets
         );
     };
 
@@ -110,6 +113,8 @@ const MissingData = (props: any) => {
 
         return error;
     }
+
+    const shAndOff = shareholders.concat(companyStructure.officers);
 
     return (
         <MainStyled.MainSt>
@@ -208,13 +213,13 @@ const MissingData = (props: any) => {
                                     {companyInCountryRequirements > 0 &&
                                         <Blocks gutter={'small'}>
                                             <IconTitle title={'In-Country requirements'} icon={IconLocation} />
-                                            {Object.keys(blinkMarketList)
-                                                .filter(market => {
-                                                    const marketInfo = blinkMarkets[market as any];
+                                            {markets
+                                                .filter((market: string) => {
+                                                    const marketInfo = getByValue(blinkMarkets, 'code', market);
                                                     return validation.company.errors[marketInfo.code] && Object.keys(validation.company.errors[marketInfo.code]).length > 0;
                                                 })
-                                                .map((market, count) => {
-                                                    const marketInfo = blinkMarkets[market as any];
+                                                .map((market: string, count: number) => {
+                                                    const marketInfo = getByValue(blinkMarkets, 'code', market);
                                                     return (
                                                         <Accordion
                                                             key={`accordion-${count}`}
@@ -267,7 +272,7 @@ const MissingData = (props: any) => {
                         />
                     </Box>
 
-                    {shareholders.filter((shareholder: any) => validation[shareholder.docId]).map((shareholder: any, count: number) => {
+                    {shAndOff.filter((shareholder: any) => validation[shareholder.docId]).map((shareholder: any, count: number) => {
                         const marketCompletion = Object.keys(validation[shareholder.docId].completion)
                             .filter((x, i, a) => a.indexOf(x) === i)
                             .map((item: any) => validation[shareholder.docId].completion[item].passed)
@@ -378,13 +383,13 @@ const MissingData = (props: any) => {
                                             {countInCountryRequirements > 0 &&
                                                 <Blocks gutter={'small'}>
                                                     <IconTitle title={'In-Country requirements'} icon={IconLocation} />
-                                                    {Object.keys(blinkMarketList)
-                                                        .filter(market => {
-                                                            const marketInfo = blinkMarkets[market as any];
+                                                    {markets
+                                                        .filter((market: string) => {
+                                                            const marketInfo = getByValue(blinkMarkets, 'code', market);
                                                             return validation[shareholder.docId].errors[marketInfo.code] && Object.keys(validation[shareholder.docId].errors[marketInfo.code]).length > 0;
                                                         })
-                                                        .map((market, count) => {
-                                                            const marketInfo = blinkMarkets[market as any];
+                                                        .map((market: string, count: number) => {
+                                                            const marketInfo = getByValue(blinkMarkets, 'code', market);
                                                             return (
                                                                 <Accordion
                                                                     key={`accordion-${count}`}
@@ -449,6 +454,7 @@ const MissingData = (props: any) => {
 }
 
 const mapStateToProps = (state: any) => ({
+    markets: state.screening.markets,
     company: state.screening.company,
     companyStructure: state.screening.companyStructure,
     ownershipThreshold: state.screening.ownershipThreshold,
