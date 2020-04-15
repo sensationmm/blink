@@ -31,7 +31,6 @@ const Auth = (props: any) => {
     const [hasRequestedSignInWithToken, setHasRequestedSignInWithToken] = useState(false);
     const [showSignUp, setshowSignUp] = useState(false);
 
-
     const token = window.localStorage.getItem("firebase-token");
     if (token && !hasRequestedSignInWithToken) {
         setHasRequestedSignInWithToken(true);
@@ -78,7 +77,7 @@ const Auth = (props: any) => {
                     }
 
                 </Styled.AuthWrapper>
-                {!showSignUp && window.location.href.startsWith("http://localhost:3000") && <button onClick={() => setshowSignUp(true)}>Show sign up</button>}
+                {!showSignUp && (window.location.href.startsWith("http://localhost:3000" || window.location.href.startsWith("https://blink-staging-20006.firebaseapp.com/")) && <button onClick={() => setshowSignUp(true)}>Show sign up</button>}
             </>
             <Actions>
                 {
