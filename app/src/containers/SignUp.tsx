@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { withRouter } from 'react-router-dom';
 import styled from "styled-components";
-import { requestUserOob, requestUserVerifyOob } from '../redux/actions/auth';
+import { requestUserOob, requestUserVerifyOob, requestUserSignInWithToken } from '../redux/actions/auth';
 import User from './User';
 import { connect } from 'react-redux';
 import * as MainStyled from "../components/styles";
@@ -24,7 +24,13 @@ const SignUp = (props: any) => {
     }
 
     const verifyOob = async () => {
-        await props.requestUserVerifyOob(oobCode);
+        const result = await props.requestUserVerifyOob(oobCode);
+        if (result.verified) {
+            const token = window.localStorage.getItem("firebase-token");
+            if (token) {
+                props.requestUserSignInWithToken(token);
+            }
+        }
     }
 
 
@@ -52,7 +58,8 @@ const mapStateToProps = () => ({});
 
 const actions = {
     requestUserOob,
-    requestUserVerifyOob
+    requestUserVerifyOob,
+    requestUserSignInWithToken
 };
 
 export const RawComponent = SignUp;
