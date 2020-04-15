@@ -31,10 +31,11 @@ export const onGetValidation = async (
     hideLoader: () => void,
     push: (target: string) => void,
     redirect: string,
-    ownershipThreshold: string
+    ownershipThreshold: string,
+    markets: Array<market>
 ) => {
     showLoader();
-    const rules = await validateCompany(companyStructure, ownershipThreshold)
+    const rules = await validateCompany(companyStructure, ownershipThreshold, markets)
 
     Object.keys(rules).forEach(entity => {
         const marketCompletion = {
@@ -79,13 +80,14 @@ const CompanyStructure = (props: any) => {
         setErrors,
         showLoader,
         hideLoader,
+        markets
     } = props;
 
     // const [showOnlyOrdinaryShareTypes, 
     //     toggleShowOnlyOrdinaryShareTypes
     // ] = useState(false)
 
-    if (!company || !companyStructure) {
+    if (!company || !companyStructure || markets.length === 0) {
         return <Redirect to="/search" />;
     }
 
@@ -100,7 +102,8 @@ const CompanyStructure = (props: any) => {
             hideLoader,
             props.history.push,
             '/company-readiness',
-            ownershipThreshold
+            ownershipThreshold,
+            markets
         );
     };
 
@@ -160,6 +163,7 @@ const CompanyStructure = (props: any) => {
 }
 
 const mapStateToProps = (state: any) => ({
+    markets: state.screening.markets,
     company: state.screening.company,
     companyStructure: state.screening.companyStructure,
     ownershipThreshold: state.screening.ownershipThreshold,

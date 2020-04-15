@@ -3,6 +3,7 @@ import capitalize from '../../utils/functions/capitalize';
 
 import FormInput, { FormInputProps } from '../form-input';
 import Tooltip from '../tooltip';
+import FormLabel from '../form-label';
 
 import * as Styled from './styles';
 import * as FormStyled from '../form-input/styles';
@@ -31,7 +32,7 @@ const MissingField: React.FC<MissingFieldProps> = (props) => {
             {props.missingValue
                 ? (!metaMissing ? <FormInput {...props} /> : <Styled.HasError><FormInput {...props} /></Styled.HasError>)
                 : <div>
-                    <FormStyled.FieldLabel>{props.label}</FormStyled.FieldLabel>
+                    <FormLabel label={props.label} alignment={'left'} />
                     <FormStyled.MissingLabel>Meta data errors</FormStyled.MissingLabel>
                 </div>
             }

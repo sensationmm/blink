@@ -11,7 +11,6 @@ import {
 import KyckrFilingSearch from "./components/kyckr/filing-search";
 import Generic from "./components/generic"
 import Graph from "./components/graph"
-import SetupProgress from "./components/setup-progress";
 import Import from "./components/google-import";
 import { Provider } from "react-redux";
 import store from "./redux/store";
@@ -93,9 +92,6 @@ const App = withRouter((props: any) => {
         </Route>
         <Route path="/graph/:companyId?/:countryCode?">
           <Graph />
-        </Route>
-        <Route path="/progress/:companyId?">
-          <SetupProgress />
         </Route>
         <Route path="/import">
           <Import />

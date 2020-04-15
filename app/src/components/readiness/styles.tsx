@@ -22,6 +22,11 @@ export const Message = styled.div`
     font-weight: bold;
 `;
 
+export const Alert = styled(Message)`
+    color: var(--brand-secondary);
+    text-align: center;
+`;
+
 export const Role = styled.span`
     text-transform: uppercase;
     font-size: 0.8em;

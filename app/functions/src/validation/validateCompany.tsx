@@ -22,7 +22,7 @@ type market = 'Core' | 'GB' | 'DE' | 'FR' | 'RO' | 'IT' | 'SE';
 type indexedObject = { [key: string]: any };
 
 server.post('*/', function (req: any, res: any) {
-    const { company, ownershipThreshold } = req.body;
+    const { company, ownershipThreshold, markets } = req.body;
 
     const rulesCompany = admin.firestore().collection('companyRules');
     const rulesetCompany = {} as indexedObject;
@@ -35,7 +35,7 @@ server.post('*/', function (req: any, res: any) {
         IT: {} as indexedObject,
         SE: {} as indexedObject,
     };
-    const companyMarketsToValidate = Object.keys(companyMarketRulesets) as Array<market>;
+    const companyMarketsToValidate = ['Core', ...markets] as Array<market>;
     const companyMarketValidation = {} as { [key: string]: indexedObject };
 
     const rulesPerson = admin.firestore().collection('personRules');
@@ -49,7 +49,7 @@ server.post('*/', function (req: any, res: any) {
         IT: {} as indexedObject,
         SE: {} as indexedObject,
     };
-    const personMarketsToValidate = Object.keys(personMarketRulesets) as Array<market>;
+    const personMarketsToValidate = ['Core', ...markets] as Array<market>;
     const peopleMarketValidation = {} as { [key: string]: indexedObject };
 
     rulesCompany.get().then(async (rulesCompanyItem: any) => {
@@ -59,7 +59,7 @@ server.post('*/', function (req: any, res: any) {
             delete rule.marketRuleMapping;
             const ruleName = Object.keys(rule)[0] as string;
 
-            rulesMarkets.forEach((market: market) => {
+            rulesMarkets.filter((market: market) => companyMarketsToValidate.indexOf(market) > -1).forEach((market: market) => {
                 companyMarketRulesets[market][ruleName] = rule[ruleName]
             });
             rulesetCompany[ruleName] = rule[ruleName];
@@ -123,7 +123,7 @@ server.post('*/', function (req: any, res: any) {
                     delete rule.marketRuleMapping;
                     const ruleName = Object.keys(rule)[0] as string;
 
-                    rulesMarkets.forEach((market: market) => {
+                    rulesMarkets.filter((market: market) => personMarketsToValidate.indexOf(market) > -1).forEach((market: market) => {
                         personMarketRulesets[market][ruleName] = rule[ruleName]
                     });
                     rulesetPerson[ruleName] = rule[ruleName];
@@ -199,78 +199,100 @@ server.post('*/', function (req: any, res: any) {
                 let responsesOfficers;
                 if (!hasShareholdersOver25) {
                     //requires fictive UBOs
-                    responsesOfficers = company.officers.map((officer: any) => {
-                        const officerMarketValidation = {} as { [key: string]: indexedObject };
+                    const officerRanking = [
+                        'Chairperson',
+                        'President',
+                        'CFO',
+                        'CEO',
+                        'Managing Director',
+                    ];
+                    let highestRanking = { rank: -1 } as indexedObject;
+                    responsesOfficers = company.officers
+                        .map((officer: any) => {
+                            if (officer.title && officerRanking.indexOf(officer.title) > highestRanking.rank) {
+                                highestRanking = {
+                                    id: officer.docId,
+                                    rank: officerRanking.indexOf(officer.title)
+                                };
+                            }
 
-                        personMarketsToValidate
-                            .filter((market: market) => {
-                                return market === 'Core' || !uboChecksRequired.for || (uboChecksRequired.for && uboChecksRequired.for.length > 0 && uboChecksRequired.for.indexOf(market) > -1)
-                            })
-                            .map((market: market) => {
-                                validateJS.validate.async(officer, personMarketRulesets[market], { cleanAttributes: false, market }).then(() => {
-                                    const numRules = Object.keys(personMarketRulesets[market]).length;
+                            return officer;
+                        })
+                        .filter((officer: any) => {
+                            if (officer.title) {
+                                if (markets.indexOf('DE') > -1 && company.riskRating.value === 5) {
+                                    return true;
+                                } else {
+                                    return highestRanking.id === officer.docId;
+                                }
+                            }
 
-                                    const valid = {
-                                        completion: numRules / numRules,
-                                        passed: numRules,
-                                        total: numRules,
-                                    };
+                            return false;
+                        }).map((officer: any) => {
+                            const officerMarketValidation = {} as { [key: string]: indexedObject };
 
-                                    return officerMarketValidation[market] = valid;
-                                }, (errors: any) => {
-                                    const failedRules = errors ? Object.keys(errors).length : 0;
-                                    const numRules = Object.keys(personMarketRulesets[market]).length;
+                            personMarketsToValidate
+                                .filter((market: market) => {
+                                    return market === 'Core' || !uboChecksRequired.for || (uboChecksRequired.for && uboChecksRequired.for.length > 0 && uboChecksRequired.for.indexOf(market) > -1)
+                                })
+                                .map((market: market) => {
+                                    validateJS.validate.async(officer, personMarketRulesets[market], { cleanAttributes: false, market }).then(() => {
+                                        const numRules = Object.keys(personMarketRulesets[market]).length;
 
-                                    const groupedErrors: indexedObject = {};
+                                        const valid = {
+                                            completion: numRules / numRules,
+                                            passed: numRules,
+                                            total: numRules,
+                                        };
 
-                                    Object.keys(errors).forEach(item => {
-                                        const error = item.split('.');
+                                        return officerMarketValidation[market] = valid;
+                                    }, (errors: any) => {
+                                        const failedRules = errors ? Object.keys(errors).length : 0;
+                                        const numRules = Object.keys(personMarketRulesets[market]).length;
 
-                                        const errorType = error.pop();
-                                        const errorField = error.join('.');
+                                        const groupedErrors: indexedObject = {};
 
-                                        if (errorField) {
-                                            if (!groupedErrors[errorField]) {
-                                                groupedErrors[errorField] = {};
+                                        Object.keys(errors).forEach(item => {
+                                            const error = item.split('.');
+
+                                            const errorType = error.pop();
+                                            const errorField = error.join('.');
+
+                                            if (errorField) {
+                                                if (!groupedErrors[errorField]) {
+                                                    groupedErrors[errorField] = {};
+                                                }
+
+                                                if (errorType) {
+                                                    groupedErrors[errorField][errorType] = errors[item];
+                                                } else {
+                                                    groupedErrors[errorField] = errors[item];
+                                                }
                                             }
+                                        });
 
-                                            if (errorType) {
-                                                groupedErrors[errorField][errorType] = errors[item];
-                                            } else {
-                                                groupedErrors[errorField] = errors[item];
-                                            }
-                                        }
+                                        const valid = {
+                                            completion: ((numRules - failedRules) / numRules),
+                                            errors: groupedErrors,
+                                            passed: numRules - failedRules,
+                                            failed: failedRules,
+                                            total: numRules,
+                                        };
+
+                                        return officerMarketValidation[market] = valid;
                                     });
 
-                                    const valid = {
-                                        completion: ((numRules - failedRules) / numRules),
-                                        errors: groupedErrors,
-                                        passed: numRules - failedRules,
-                                        failed: failedRules,
-                                        total: numRules,
-                                    };
-
-                                    return officerMarketValidation[market] = valid;
+                                    peopleMarketValidation[officer.docId] = officerMarketValidation;
                                 });
 
-                                peopleMarketValidation[officer.docId] = officerMarketValidation;
-                            });
-
-                    });
+                        });
                 }
 
                 const responses = responsesCompany.concat(responsesPeople).concat(responsesOfficers);
 
                 await Promise.all(responses);
 
-                let returnedPeopleMarketValidation: any = peopleMarketValidation;
-                // Object.keys(returnedPeopleMarketValidation).forEach((docId: string) => {
-                //     if (Object.keys(returnedPeopleMarketValidation[docId]).length === 0) {
-                //         delete returnedPeopleMarketValidation[docId];
-                //     }
-                // });
-
-                return res.send({ company: companyMarketValidation, ...returnedPeopleMarketValidation });
+                return res.send({ company: companyMarketValidation, ...peopleMarketValidation });
             });
         } else {
             await Promise.all(responsesCompany);

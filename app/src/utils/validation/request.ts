@@ -9,7 +9,7 @@ export interface CompanyData {
 //     [key: string]: any;
 // }
 
-const validateCompany = async (company: CompanyData, ownershipThreshold: string) => {
+const validateCompany = async (company: CompanyData, ownershipThreshold: string, markets: Array<string>) => {
     const response = await fetch(`${domain}/validateCompany`, {
         method: "POST",
         mode: "cors",
@@ -18,7 +18,8 @@ const validateCompany = async (company: CompanyData, ownershipThreshold: string)
         },
         body: JSON.stringify({
             company,
-            ownershipThreshold
+            ownershipThreshold,
+            markets
         })
     });
     const body = await response.json();
