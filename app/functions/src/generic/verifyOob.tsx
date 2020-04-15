@@ -22,7 +22,7 @@ server.post('*/', async function (req: any, res: any) {
     if (user.oob && user.oob.code && user.oob.code == oob) {
 
         if (user.oob && user.oob.expires && new Date() > user.oob.expires) {
-            res.send({ expired: true })
+            return res.send({ expired: true })
         }
 
         delete user.oob;

@@ -16,7 +16,6 @@ const SignUp = (props: any) => {
     const [hasRequestedOOb, sethasRequestedOOb] = useState(false);
 
     const requestOOb = async () => {
-
         const result = await props.requestUserOob();
         if (!result.error) {
             sethasRequestedOOb(true);
@@ -30,6 +29,9 @@ const SignUp = (props: any) => {
             if (token) {
                 props.requestUserSignInWithToken(token);
             }
+        }
+        if (result.expired) {
+            sethasRequestedOOb(false);
         }
     }
 
@@ -47,7 +49,7 @@ const SignUp = (props: any) => {
             <Actions centered>
                 {
                     hasRequestedOOb ? <Button onClick={verifyOob} /> :
-                        <Button onClick={requestOOb} label="Request code" disabled={oobCode.length > 3} />
+                        <Button onClick={requestOOb} label="Request code" />
                 }
             </Actions>
         </MainStyled.Content>

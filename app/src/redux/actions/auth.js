@@ -134,11 +134,19 @@ export const requestUserVerifyOob = oob => async (dispatch, getState) => {
         type: HIDE_LOADER,
     }), 1000);
 
-    if (result.error) {
+    if (!result.verified) {
         dispatch({
             type: SET_MODAL,
-            heading: "Error",
-            message: result.error.errors[0].message
+            heading: "Invalid code",
+            message: "Please try again"
+        })
+    }
+
+    if (result.expired) {
+        dispatch({
+            type: SET_MODAL,
+            heading: "Code has expired",
+            message: "Please request a new code"
         })
     }
 
