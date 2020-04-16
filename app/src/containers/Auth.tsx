@@ -56,21 +56,23 @@ const Auth = (props: any) => {
     }
 
     const useTokens = async () => {
-        const loginToken = window.location.search;
-        if (!hasRequestedSignInFromInvite && loginToken.startsWith("?login=")) {
-            setHasRequestedSignInFromInvite(true);
-            const response = await props.requestUserSignInFromInvite(loginToken.replace("?login=", ""));
-            if (response.localId) {
-                props.history.push({
-                    pathname: props.location.pathname,
-                    search: ''
-                  })
-            }
-        } else {
-            const token = window.localStorage.getItem("firebase-token");
-            if (token && token !== "undefined" && !hasRequestedSignInWithToken) {
-                setHasRequestedSignInWithToken(true);
-                props.requestUserSignInWithToken(token);
+        if (!hasRequestedSignInFromInvite && !hasRequestedSignInWithToken) {
+            const loginToken = window.location.search;
+            if (!hasRequestedSignInFromInvite && loginToken.startsWith("?login=")) {
+                setHasRequestedSignInFromInvite(true);
+                const response = await props.requestUserSignInFromInvite(loginToken.replace("?login=", ""));
+                if (response.localId) {
+                    props.history.push({
+                        pathname: props.location.pathname,
+                        search: ''
+                    })
+                }
+            } else {
+                const token = window.localStorage.getItem("firebase-token");
+                if (token && token !== "undefined" && !hasRequestedSignInWithToken) {
+                    setHasRequestedSignInWithToken(true);
+                    props.requestUserSignInWithToken(token);
+                }
             }
         }
     }
