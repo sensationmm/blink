@@ -105,6 +105,7 @@ exports.relationshipCleanup = require("./src/generic/relationshipCleanup");
 exports.signIn = require("./src/generic/signIn");
 exports.signUp = require("./src/generic/signUp");
 exports.signInWithToken = require("./src/generic/signInWithToken");
+exports.signInFromInvite = require("./src/generic/signInFromInvite");
 exports.requestOob = require("./src/generic/requestOob");
 exports.verifyOob = require("./src/generic/verifyOob");
 exports.changePassword = require("./src/generic/changePassword");

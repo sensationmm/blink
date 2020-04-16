@@ -84,6 +84,22 @@ const userRequestOob = async (localId: string) => {
 
 
 
+const userRequestSignInFromInvite = async (hashedToken: string) => {
+
+    const data = {
+        hashedToken
+    }
+
+    const response = await fetch(`${domain}/signInFromInvite`, {
+        method: 'post',
+        body: JSON.stringify(data)
+    });
+
+    const body = response.json();
+
+    return body;
+};
+
 const userRequestChangePassword = async (idToken: string, localId: string, newPassword: string) => {
 
     const data = {
@@ -121,4 +137,4 @@ const userVerifyOob = async (localId: string, oob: string) => {
 };
 
 
-export { userSignIn, userSignInWithToken, userSignUp, userSignInWithInvite, userRequestOob, userVerifyOob, userRequestChangePassword };
+export { userSignIn, userSignInWithToken, userSignUp, userSignInWithInvite, userRequestOob, userVerifyOob, userRequestChangePassword, userRequestSignInFromInvite };

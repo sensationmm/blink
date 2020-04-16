@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import { withRouter } from 'react-router-dom';
 import styled from "styled-components";
-import { requestUserSignIn, requestUserSignInWithToken, requestUserSignUp } from '../redux/actions/auth';
+import {
+    requestUserSignIn,
+    requestUserSignInWithToken,
+    requestUserSignUp,
+    requestUserSignInFromInvite
+} from '../redux/actions/auth';
 import { connect } from 'react-redux';
 import * as MainStyled from "../components/styles";
 import Button from '../components/button';
@@ -29,13 +34,8 @@ const Auth = (props: any) => {
     const [email, setEmail] = useState("");
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [hasRequestedSignInWithToken, setHasRequestedSignInWithToken] = useState(false);
+    const [hasRequestedSignInFromInvite, setHasRequestedSignInFromInvite] = useState(false);
     const [showSignUp, setshowSignUp] = useState(false);
-
-    const token = window.localStorage.getItem("firebase-token");
-    if (token && !hasRequestedSignInWithToken) {
-        setHasRequestedSignInWithToken(true);
-        props.requestUserSignInWithToken(token);
-    }
 
     const validCredentials = () => username === "" || password === "";
 
@@ -54,6 +54,28 @@ const Auth = (props: any) => {
         const isValid = re.test(email);
         return !isValid;
     }
+
+    const useTokens = async () => {
+        const loginToken = window.location.search;
+        if (!hasRequestedSignInFromInvite && loginToken.startsWith("?login=")) {
+            setHasRequestedSignInFromInvite(true);
+            const response = await props.requestUserSignInFromInvite(loginToken.replace("?login=", ""));
+            if (response.localId) {
+                props.history.push({
+                    pathname: props.location.pathname,
+                    search: ''
+                  })
+            }
+        } else {
+            const token = window.localStorage.getItem("firebase-token");
+            if (token && token !== "undefined" && !hasRequestedSignInWithToken) {
+                setHasRequestedSignInWithToken(true);
+                props.requestUserSignInWithToken(token);
+            }
+        }
+    }
+
+    useTokens();
 
     return <><Styled.Header><img alt="blink" src={BlinkLogo} /></Styled.Header>
         <MainStyled.Content>
@@ -94,6 +116,7 @@ const mapStateToProps = () => ({});
 const actions = {
     requestUserSignIn,
     requestUserSignInWithToken,
+    requestUserSignInFromInvite,
     requestUserSignUp
 };
 

@@ -3,7 +3,12 @@ import {
     SHOW_LOADER, HIDE_LOADER, USER_SIGNOUT, SET_MODAL
 } from '../constants';
 
-import { userSignIn, userSignUp, userSignInWithToken, userRequestOob, userVerifyOob, userRequestChangePassword } from "../../utils/auth/request"
+import { 
+    userSignIn, 
+    userSignUp, 
+    userSignInWithToken, 
+    userRequestOob, 
+    userVerifyOob, userRequestSignInFromInvite, userRequestChangePassword } from "../../utils/auth/request"
 
 export const requestUserSignIn = (user, password) => async (dispatch) => {
 
@@ -152,6 +157,32 @@ export const requestUserVerifyOob = oob => async (dispatch, getState) => {
 
     return result;
 };
+
+
+export const requestUserSignInFromInvite = token => async (dispatch) => {
+
+    dispatch({
+        type: SHOW_LOADER,
+    })
+
+    const result = await userRequestSignInFromInvite(token);
+
+    setTimeout(() => dispatch({
+        type: HIDE_LOADER,
+    }), 1000);
+
+    if (result.error) {
+        return dispatch({
+            type: SET_MODAL,
+            heading: "Error",
+            message: result.error
+        });
+    }
+
+    dispatch(userSignInSuccess(result))
+
+    return result;
+}
 
 
 export const requestUserChangePassword = (newPassword, repeatNewPassword, idToken) => async (dispatch, getState) => {
