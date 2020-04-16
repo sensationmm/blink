@@ -82,6 +82,27 @@ const userRequestOob = async (localId: string) => {
     return body;
 };
 
+
+
+const userRequestChangePassword = async (idToken: string, localId: string, newPassword: string) => {
+
+    const data = {
+        idToken,
+        localId,
+        newPassword
+    }
+
+    const response = await fetch(`${domain}/changePassword`, {
+        method: 'post',
+        body: JSON.stringify(data)
+    })
+
+    const body = response.json();
+
+    return body;
+};
+
+
 const userVerifyOob = async (localId: string, oob: string) => {
 
     const data = {
@@ -100,4 +121,4 @@ const userVerifyOob = async (localId: string, oob: string) => {
 };
 
 
-export { userSignIn, userSignInWithToken, userSignUp, userSignInWithInvite, userRequestOob, userVerifyOob };
+export { userSignIn, userSignInWithToken, userSignUp, userSignInWithInvite, userRequestOob, userVerifyOob, userRequestChangePassword };

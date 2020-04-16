@@ -14,6 +14,10 @@ const CLICKSEND_EMAIL = process.env.CLICKSEND_EMAIL || functions.config().clicks
 const CLICKSEND_API_KEY = process.env.CLICKSEND_API_KEY || functions.config().clicksend_api.key;
 const BLINK_WEB_ADDRESS = process.env.BLINK_WEB_ADDRESS || functions.config().blink_web_address.key;
 
+const cryptrKey = process.env.CRYPTR_KEY || functions.config().cryptr.key;
+const Cryptr = require('cryptr');
+const cryptr = new Cryptr(cryptrKey);
+
 function randomPassword() {
     let result = '';
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -72,7 +76,8 @@ server.post('*/', async function (req: any, res: any) {
                             generatedBy: generatedBy || "z73PTfu2PmeUQFSNS5JiNVaHOXO2",
                             role: "",
                             mobile: "+447793964975",
-                            personRef: ""
+                            personRef: "",
+                            tempPassword: true
                         });
 
                         successfullyCreatedUsers.push({
@@ -97,8 +102,12 @@ server.post('*/', async function (req: any, res: any) {
     }
 
     if (successfullyCreatedUsers.length > 0) {
-        // send emails
+        // send email
+
         await Promise.all(successfullyCreatedUsers.map((user: any) => {
+
+            const credentials = cryptr.encrypt(`${user.email}:${user.password}`);
+
             request.post({
                 url: `https://rest.clicksend.com/v3/email/send`,
                 headers: {
@@ -115,7 +124,7 @@ server.post('*/', async function (req: any, res: any) {
                         name: "Blink",
                     },
                     subject: "You have been invited to join Blink bank",
-                    "body": `<p>You have been invited to join Blink bank</p><p>Your username and password are ${user.email} / ${user.password} </p><p>Click <a href='${BLINK_WEB_ADDRESS}'>here</a></p>`
+                    "body": `<p>You have been invited to join Blink bank</p><p>Your username is ${user.email}</p><p>Click <a href='${BLINK_WEB_ADDRESS}?login=${credentials}'>here</a></p>`
                 })
             }, async function (error: any, response: any, body: any) {
                 if (error) {

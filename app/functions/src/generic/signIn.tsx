@@ -34,8 +34,10 @@ server.post('*/', async function (req: any, res: any) {
         let user: any = {};
         const parsedBody = JSON.parse(body);
         if (parsedBody.localId) {
-            const userDoc = await userCollection.doc(parsedBody.localId).get();
+            const userRef = await userCollection.doc(parsedBody.localId)
+            const userDoc = await userRef.get();
             user = await userDoc.data();
+            userRef.update({ ...user, refreshToken: parsedBody.refreshToken })
         }
 
         if (user.xero) {
@@ -52,6 +54,9 @@ server.post('*/', async function (req: any, res: any) {
                 expires
             };
         }
+
+        delete parsedBody.refreshToken
+        delete user.refreshToken
 
         res.send({ ...user, ...parsedBody });
     });
