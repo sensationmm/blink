@@ -30,6 +30,7 @@ import stripeLogo from '../svg/stripe-logo.svg';
 import adyenLogo from '../svg/adyen-logo.svg';
 import squareLogo from '../svg/square-logo.svg';
 import blinkLogo from '../svg/blink-logo.svg';
+import taxPartnersImg from '../svg/screens/tax-partners.jpg';
 
 import styled from "styled-components";
 
@@ -56,6 +57,12 @@ const IntegrationInner = styled.div`
   }
 `
 
+const Screen = styled.div`
+  background-size: contain;
+  height: 500px;
+  background-repeat: no-repeat;
+  background-position: 0;
+`
 
 const Integration = (props: any) =>
   <Box hoverStyling title={''} shadowed>
@@ -129,6 +136,15 @@ const Integrations = (props: any) => {
               revolutGetCounterparties={props.revolutGetCounterparties}
               revolutGetBankAccountTransactions={props.revolutGetBankAccountTransactions}
               revolutPostPayment={props.revolutPostPayment} />
+          </MainStyled.ContentNarrow>
+        </>
+      }
+      {(provider === "tax") &&
+        <>
+          <Menu path="tax" userSignout={props.userSignout} userName={props ?.auth ?.user.displayName || props ?.auth ?.user.email} />
+          <MainStyled.ContentNarrow>
+            <h2>We recommend these tax experts based on your business needs </h2>
+            <Screen style={{backgroundImage: `url(${taxPartnersImg})`}} />
           </MainStyled.ContentNarrow>
         </>
       }

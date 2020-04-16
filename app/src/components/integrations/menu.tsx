@@ -81,7 +81,7 @@ const Menu = (props: any) => {
             <li><Link 
                 className={props.path === "accounts" ? "active" : ""} 
                 to="/integrations/accounts">Accounts</Link></li>
-            <li><Link to="/integrations">Tax</Link></li>
+            <li><Link to="/integrations/tax">Tax</Link></li>
             <li><Link 
                 className={props.path === "integrations" ? "active" : ""} 
                 to="/integrations">Integrations</Link></li>
