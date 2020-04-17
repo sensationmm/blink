@@ -15,7 +15,6 @@ import { showLoader, hideLoader } from '../redux/actions/loader';
 
 import * as Styled from "../components/styles";
 
-
 const Search = (props: any) => {
 
     const {
