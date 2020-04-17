@@ -171,6 +171,7 @@ const requestCompanyProfile = async (
                         }
 
                         console.log("result", result);
+                        
 
                         const directorAndShareDetails = result?.CompanyProfileResult?.CompanyProfile?.directorAndShareDetails;
 
