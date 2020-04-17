@@ -25,6 +25,8 @@ jobs:
       - name: Build
         working-directory: ./app
         run: yarn run build
+        env:
+          CI: false
       - name: Deploy hosting to Firebase (production)
         working-directory: ./app
         run: ./node_modules/.bin/firebase deploy --only hosting -P production --token $FIREBASE_TOKEN
