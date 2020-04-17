@@ -97,27 +97,31 @@
       "function": "xeroDeleteBankAccount"
     },
     {
+      "source": "/xeroConnectBankAccount",
+      "function": "xeroDeleteBankAccount"
+    },
+    {
       "source": "/xeroToggleAccountStatus/**/**/**",
       "function": "xeroToggleAccountStatus"
     },
     {
-      "source": "/revolutGetBankAccounts/",
+      "source": "/revolutGetBankAccounts",
       "function": "revolutGetBankAccounts"
     },
     {
-      "source": "/revolutGetBankAccount/",
+      "source": "/revolutGetBankAccount",
       "function": "revolutGetBankAccount"
     },
     {
-      "source": "/revolutGetCounterparties/",
+      "source": "/revolutGetCounterparties",
       "function": "revolutGetCounterparties"
     },
     {
-      "source": "/revolutGetBankAccountTransactions/",
+      "source": "/revolutGetBankAccountTransactions",
       "function": "revolutGetBankAccountTransactions"
     },
     {
-      "source": "/revolutPostPayment/",
+      "source": "/revolutPostPayment",
       "function": "revolutPostPayment"
     }, 
     {
