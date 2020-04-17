@@ -164,6 +164,7 @@ export const requestUserSignInFromInvite = token => async (dispatch) => {
     dispatch({
         type: SHOW_LOADER,
     })
+    
 
     const result = await userRequestSignInFromInvite(token);
 

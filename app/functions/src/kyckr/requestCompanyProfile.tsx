@@ -170,6 +170,8 @@ const requestCompanyProfile = async (
                             console.log(err);
                         }
 
+                        console.log("result", result);
+
                         const directorAndShareDetails = result?.CompanyProfileResult?.CompanyProfile?.directorAndShareDetails;
 
                         let shareholders: any = [];
