@@ -98,7 +98,7 @@
     },
     {
       "source": "/xeroConnectBankAccount",
-      "function": "xeroDeleteBankAccount"
+      "function": "xeroConnectBankAccount"
     },
     {
       "source": "/xeroToggleAccountStatus/**/**/**",
