@@ -20,6 +20,7 @@ jobs:
       - name: Set functions secrets
         working-directory: ./app
         run: ./node_modules/.bin/firebase functions:config:set 
+          cryptr.key=${CRYPTR_KEY} 
           blink_web_address.key=${BLINK_WEB_ADDRESS} 
           clicksend_api.key=${CLICKSEND_API_KEY} 
           clicksend_email.key=${CLICKSEND_EMAIL} 
@@ -71,6 +72,7 @@ jobs:
           CLICKSEND_EMAIL: ${{ secrets.CLICKSEND_EMAIL }}
           CLICKSEND_API_KEY: ${{ secrets.CLICKSEND_API_KEY }}
           BLINK_WEB_ADDRESS: ${{ secrets.STAGING_BLINK_WEB_ADDRESS }}
+          CRYPTR_KEY: ${{ secrets.CRYPTR_KEY }}
           
       - name: Install function dependencies
         working-directory: ./app/functions
