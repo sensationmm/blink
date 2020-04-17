@@ -62,7 +62,7 @@ const xeroDeleteBankAccount = async (uId: string, accountId: string) => {
 }
 
 const xeroConnectBankAccount = async (uId: string, accountId: string, currency: string, account: any, name: string) => {
-    const response = await fetch(`${domain}/xeroConnectBankAccount/`, {
+    const response = await fetch(`${domain}/xeroConnectBankAccount`, {
         method: "POST",
         mode: "cors",
         body: JSON.stringify({
@@ -115,7 +115,7 @@ const xeroGetInvoices = async (uId: string) => {
 
 const revolutGetBankAccounts = async (uId: string) => {
 
-    const response = await fetch(`${domain}/revolutGetBankAccounts/`, {
+    const response = await fetch(`${domain}/revolutGetBankAccounts`, {
         method: "POST",
         mode: "cors",
         body: JSON.stringify({ uId }),
@@ -131,7 +131,7 @@ const revolutGetBankAccounts = async (uId: string) => {
 
 const revolutGetBankAccount = async (uId: string, accountId: string) => {
 
-    const response = await fetch(`${domain}/revolutGetBankAccount/`, {
+    const response = await fetch(`${domain}/revolutGetBankAccount`, {
         method: "POST",
         mode: "cors",
         body: JSON.stringify({ uId, accountId }),
@@ -148,7 +148,7 @@ const revolutGetBankAccount = async (uId: string, accountId: string) => {
 
 const revolutGetBankAccountDetails = async (uId: string, accountId: string) => {
 
-    const response = await fetch(`${domain}/revolutGetBankAccountDetails/`, {
+    const response = await fetch(`${domain}/revolutGetBankAccountDetails`, {
         method: "POST",
         body: JSON.stringify({ uId, accountId }),
         mode: "cors",
@@ -163,7 +163,7 @@ const revolutGetBankAccountDetails = async (uId: string, accountId: string) => {
 
 const revolutGetBankAccountTransactions = async (uId: string) => {
 
-    const response = await fetch(`${domain}/revolutGetBankAccountTransactions/`, {
+    const response = await fetch(`${domain}/revolutGetBankAccountTransactions`, {
         method: "POST",
         body: JSON.stringify({ uId }),
         mode: "cors",
@@ -178,7 +178,7 @@ const revolutGetBankAccountTransactions = async (uId: string) => {
 
 const revolutGetCounterparties = async (uId: string, accountId: string) => {
 
-    const response = await fetch(`${domain}/revolutGetCounterparties/`, {
+    const response = await fetch(`${domain}/revolutGetCounterparties`, {
         method: "POST",
         body: JSON.stringify({ uId, accountId }),
         mode: "cors",
