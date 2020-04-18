@@ -20,10 +20,10 @@ const userSignIn = async (username: string, password: string) => {
 };
 
 
-const userSignUp = async (emails: Array<string>) => {
+const userSignUp = async (users: Array<any>) => {
 
     const data = {
-        users: emails
+        users
     }
     const response = await fetch(`${domain}/signUp`, {
         method: 'post',

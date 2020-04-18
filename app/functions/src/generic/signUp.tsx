@@ -9,6 +9,9 @@ const server = express();
 server.use(cors());
 
 const userCollection = admin.firestore().collection('users');
+const personCollection = admin.firestore().collection('persons');
+const companiesCollection = admin.firestore().collection('companies');
+const profilesCollection = admin.firestore().collection('profiles');
 
 const CLICKSEND_EMAIL = process.env.CLICKSEND_EMAIL || functions.config().clicksend_email.key;
 const CLICKSEND_API_KEY = process.env.CLICKSEND_API_KEY || functions.config().clicksend_api.key;
@@ -42,10 +45,39 @@ server.post('*/', async function (req: any, res: any) {
 
         const user = users[i];
 
+        const personRef = personCollection.doc(user.personDocId);
+        const companyRef = companiesCollection.doc(user.companyDocId);
+
+        // check if there is a profile connected to this company already
+
+        const companyDoc = await companyRef.get();
+        if (!companyDoc.exists) {
+            return res.send({ error: { errors: [{ message: `Company document ${user.companyDocId} does not exist` }] } })
+        }
+
+        const personDoc = await personRef.get();
+        if (!personDoc.exists) {
+            return res.send({ error: { errors: [{ message: `Person document ${user.personDocId} does not exist` }] } })
+        } else {
+            // check that there isnt already a user account for this person
+            const users = await userCollection.where('person', '==', personRef).get();
+            if (users.docs[0]) {
+                return res.send({ error: { errors: [{ message: `User account for person ${user.personDocId} already exists` }] } })
+            }
+        }
+
+        const profiles = await profilesCollection.where('company', '==', companyRef).get();
+        let profileRef: any;
+
+        if (profiles.docs[0]) {
+            profileRef = await profiles.docs[0].ref;
+            console.log("profileRef", profileRef);
+        }
+
         const password = randomPassword();
 
         const payload = {
-            email: user,
+            email: user.email,
             password,
             returnSecureToken: true
         }
@@ -59,38 +91,42 @@ server.post('*/', async function (req: any, res: any) {
                     console.log("error", error);
                 }
                 const parsedBody = JSON.parse(body);
-                // console.log("parsedBody", parsedBody)
 
                 if (parsedBody.error) {
-                    // console.log("error", parsedBody.error)
-
                     errors.push({
-                        [user]: parsedBody.error.message
+                        [user.email]: parsedBody.error.message
                     })
                     next();
                 } else {
                     if (parsedBody.localId) {
                         // add the profile in users collection
 
-                        // look for a profile with the company Id
+                        if (!profileRef) {
+                            profileRef =  await profilesCollection.add({
+                                company: companyRef
+                            });
+                            // profileRef = profile.ref;
+                        } 
+
+                        console.log("profile", profileRef)
 
                         await userCollection.doc(parsedBody.localId).set({
                             verified: false,
                             generatedBy: generatedBy || "z73PTfu2PmeUQFSNS5JiNVaHOXO2",
-                            role: "",
-                            mobile: "+447793964975",
-                            personRef: "",
+                            profile: profileRef,
+                            mobile: user.mobile || "+447793964975",
+                            person: personRef,
                             tempPassword: true
                         });
 
                         successfullyCreatedUsers.push({
-                            email: user,
+                            email: user.email,
                             password
                         });
                         next();
                     } else {
                         errors.push({
-                            [user]: "Unknown Error"
+                            [user.email]: "Unknown Error"
                         })
                         next();
                     }
@@ -98,7 +134,6 @@ server.post('*/', async function (req: any, res: any) {
             });
         })
     }
-
 
     if (users.length === successfullyCreatedUsers.length) {
         console.log("all good")

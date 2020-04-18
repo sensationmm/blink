@@ -31,7 +31,9 @@ const Auth = (props: any) => {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [email, setEmail] = useState("");
+    const [email, setEmail] = useState("nickprocopiou@aol.com");
+    const [personDocId, setPersonDocId] = useState("2sPQDtGQ334NMBRf27Vw");
+    const [companyDocId, setCompanyDocId] = useState("vbTiNUuJFKnrJ1NfQoCo");
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [hasRequestedSignInWithToken, setHasRequestedSignInWithToken] = useState(false);
     const [hasRequestedSignInFromInvite, setHasRequestedSignInFromInvite] = useState(false);
@@ -46,13 +48,17 @@ const Auth = (props: any) => {
     }
 
     const userSignUp = () => {
-        props.requestUserSignUp([email]);
+        props.requestUserSignUp([{ email, personDocId, companyDocId }]);
     }
 
     const validateEmail = () => {
         var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         const isValid = re.test(email);
-        return !isValid;
+        return isValid;
+    }
+
+    const validateNewUser = () => {
+        return !(personDocId !== "" && companyDocId !== "" && validateEmail())
     }
 
     const useTokens = async () => {
@@ -85,7 +91,13 @@ const Auth = (props: any) => {
                 <Styled.AuthWrapper>
                     {
                         showSignUp ?
-                            <>   <div><MainStyled.InputSt autoComplete="off" type="text" value={email} placeholder="Email" onChange={(e: any) => setEmail(e.target.value)} /></div>
+                            <>
+                                <div>
+                                    <MainStyled.InputSt autoComplete="off" type="text" value={email} placeholder="Email" onChange={(e: any) => setEmail(e.target.value)} />
+                                    <MainStyled.InputSt autoComplete="off" type="text" value={personDocId} placeholder="Person Doc Id" onChange={(e: any) => setPersonDocId(e.target.value)} />
+                                    <MainStyled.InputSt autoComplete="off" type="text" value={companyDocId} placeholder="Company Doc Id" onChange={(e: any) => setCompanyDocId(e.target.value)} />
+
+                                </div>
                             </> :
                             <>
                                 <div>
@@ -105,7 +117,7 @@ const Auth = (props: any) => {
             </>
             <Actions>
                 {
-                    showSignUp ? <Button onClick={userSignUp} disabled={validateEmail()} /> :
+                    showSignUp ? <Button onClick={userSignUp} disabled={validateNewUser()} /> :
                         <Button onClick={userSignIn} disabled={validCredentials()} />
                 }
             </Actions>

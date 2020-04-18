@@ -9,7 +9,7 @@ const User = (props: any) => {
         return <div></div>
     }
     return <Styled.User>
-        {props.showDisplayName !== false && props?.auth?.user.name || props?.auth?.user.email} - 
+        {props.showDisplayName !== false && (props?.auth?.user.name || props?.auth?.user.email)} - 
         <Styled.Button onClick={props.userSignout}>Signout</Styled.Button>
     </Styled.User>
 

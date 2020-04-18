@@ -58,7 +58,9 @@ const SignUp = (props: any) => {
 
     return <><Styled.Header><img alt="blink" src={BlinkLogo} /></Styled.Header>
 
-        <User showDisplayName={false} />
+        <User 
+        // showDisplayName={false} 
+        />
         <MainStyled.ContentNarrow>
             {user.tempPassword ?
                 <>

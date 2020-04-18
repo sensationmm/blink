@@ -53,13 +53,13 @@ export const requestUserSignInWithToken = token => async (dispatch) => {
     }
 };
 
-export const requestUserSignUp = emails => async (dispatch) => {
+export const requestUserSignUp = users => async (dispatch) => {
 
     dispatch({
         type: SHOW_LOADER,
     })
 
-    const result = await userSignUp(emails);
+    const result = await userSignUp(users);
 
     setTimeout(() => dispatch({
         type: HIDE_LOADER,

@@ -68,6 +68,7 @@ server.post('*/', async function (req: any, res: any) {
             const userDoc = await userRef.get();
             user = await userDoc.data();
             await userRef.update({ ...user, tempPassword: FieldValue.delete(), refreshToken: parsedBody.refreshToken });
+            delete user.tempPassword;
         }
 
         const profile = await (await user.profile.get()).data();
