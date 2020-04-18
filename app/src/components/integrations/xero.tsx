@@ -111,26 +111,29 @@ const Xero = (props: any) => {
                     </>}
                 </>
             </>}
-            {
-                !xeroIntegration && <Banner>
-                    <h1>Integrations</h1>
+            <>
+                {
+                    !xeroIntegration && <Banner>
+                        <h1>Integrations</h1>
 
-                    Connecting your blink account to Xero takes seconds,
-                    and makes accounting simpler than ever
-
+                        Connecting your blink account to Xero takes seconds,
+                        and makes accounting simpler than ever
+    
                     <ul>
-                        <li>Link accounts</li>    
-                        <li>Approve or reject transactions</li>    
-                        <li>Categorise expenses</li>    
-                        <li>Reconcile</li>    
-                    </ul> 
-                    <Actions>
-                        {xeroIntegration && <Button onClick={() => props.xeroDisconnect()} label="Disconnect Xero"></Button>}
-                        {!xeroIntegration && <Button onClick={() => props.xeroAuthenticate(uId)} label="Connect Xero"></Button>}
-                    </Actions>
-                </Banner>
-            }
+                            <li>Link accounts</li>
+                            <li>Approve or reject transactions</li>
+                            <li>Categorise expenses</li>
+                            <li>Reconcile</li>
+                        </ul>
 
+                    </Banner>
+                }
+
+                <Actions>
+                    {xeroIntegration && <Button onClick={() => props.xeroDisconnect()} label="Disconnect Xero"></Button>}
+                    {!xeroIntegration && <Button onClick={() => props.xeroAuthenticate(uId)} label="Connect Xero"></Button>}
+                </Actions>
+            </>
         </>
     }
 

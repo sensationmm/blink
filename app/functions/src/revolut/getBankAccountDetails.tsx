@@ -36,24 +36,23 @@ server.get('*/', async function (req: any, res: any) {
 
     const { uId, accountId } = req.params;
 
-    console.log("req.params", req.params)
-
     const userCollection = admin.firestore().collection('users');
     const userDoc = await userCollection.doc(uId).get();
     const user = userDoc.data();
+    const profileDoc = await user.profile.get();
+    const profile = await profileDoc.data();
 
-    if (!user.revolut) {
+    if (!profile.account) {
         return res.send("not found")
     }
 
-    const revolutDoc = await user.revolut.get();
-    const revolutData = revolutDoc.data();
+    const accountDoc = await profile.account;
+    const accountData = await (await accountDoc.get()).data();
 
     let { access_token,
-        refresh_token, expires } = revolutData.access;
-
-    const ref = req.headers.referer;
-    console.log("ref", ref);
+        refresh_token,
+        expires
+    } = accountData.access;
 
 
     if (refIsGood(req.headers.referer)) {

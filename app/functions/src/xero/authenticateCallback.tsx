@@ -47,9 +47,11 @@ server.get('*/', async function (req: any, res: any) {
     }
 
     const userCollection = admin.firestore().collection('users');
-    const userDoc = await userCollection.doc(state);
+    const userDoc = await(await userCollection.doc(state).get());
+    const user = await userDoc.data()
+    const profileDoc = user.profile;
 
-    await userDoc.update({
+    await profileDoc.update({
       xero: xero
     }, {merge: true});
 

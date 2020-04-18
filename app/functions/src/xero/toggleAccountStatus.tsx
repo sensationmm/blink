@@ -77,15 +77,16 @@ server.get('*/:uId/:accountId/:status', async function (req: any, res: any) {
     }
 
     const userCollection = admin.firestore().collection('users');
-    const userDoc = await userCollection.doc(uId).get();
-    const user = userDoc.data();
+    const userDoc = await (await userCollection.doc(uId).get());
+    const user = await userDoc.data()
+    const profileDoc = user.profile;
+    const profile = await (await profileDoc.get()).data()
 
-    if (!user.xero) {
+    if (!profile.xero) {
         return res.send("not found")
     }
+    let { access_token, refresh_token } = profile.xero;
 
-    let { access_token,
-        refresh_token } = user.xero;
 
     const ref = req.headers.referer;
     console.log("ref", ref);

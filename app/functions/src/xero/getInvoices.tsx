@@ -16,9 +16,15 @@ server.get('*/:uId', async function (req: any, res: any) {
     const { uId } = req.params;
     
     const userCollection = admin.firestore().collection('users');
-    const userDoc = await userCollection.doc(uId).get();
-    const user = userDoc.data();
-    let { access_token, expires, refresh_token } = user.xero;
+    const userDoc = await (await userCollection.doc(uId).get());
+    const user = await userDoc.data()
+    const profileDoc = user.profile;
+    const profile = await (await profileDoc.get()).data()
+
+    if (!profile.xero) {
+        return res.send("not found")
+    }
+    let { access_token, expires, refresh_token } = profile.xero;
 
     const t: any = new Date();
     

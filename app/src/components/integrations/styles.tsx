@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import xeroIntegrationImage from "../../svg/xero-integration.png";
 import xeroLogo from '../../svg/xero-logo.svg';
-import { Button } from  '../../components/button/styles';
+import { Button } from '../../components/button/styles';
 
 export const Icon = styled.div`
 margin-right: 30px;
@@ -62,14 +62,18 @@ export const LinkAccount = styled.button`
 
 
 export const Actions = styled.div`
+    margin: 50px;
+    ${(props: any) => props.connect && `
     position: absolute;
     bottom: -10px;
     left: 20px;
     width: 100%;
     text-align: left;
+    margin: 0;
     ${Button} {
         margin: 10px;
     }
+    `}
 `
 export const Banner = styled.div`
     height: 500px;

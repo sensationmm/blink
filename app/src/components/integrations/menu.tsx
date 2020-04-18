@@ -2,7 +2,7 @@ import React from 'react';
 import styled from "styled-components";
 import arrow from '../../svg/Menu-select.png'
 import { Link } from 'react-router-dom';
-import re from '../../svg/re.jpg';
+import david from '../../svg/david_brear.jpg';
 
 const Avatar = styled.div`
     height: 80px;
@@ -11,7 +11,7 @@ const Avatar = styled.div`
     border: 1px solid #333;
     background-color: #ccc;
     margin: 0 auto 10px;
-    background: url(${re});
+    background: url(${david});
     background-position: 0;
     background-size: cover;
     background-repeat: no-repeat;

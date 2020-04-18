@@ -39,12 +39,14 @@ const refreshToken = (refresh_Token: string, uId: string) => {
       }
 
       const userCollection = admin.firestore().collection('users');
-      const userDoc = await userCollection.doc(uId);
-      console.log("xero", xero);
-      await userDoc.update({
+      const userDoc = await(await userCollection.doc(uId).get());
+      const user = await userDoc.data()
+      const profile = user.profile;
+      // console.log("access_token", access_token)
+      await profile.update({
         xero: xero
-      }, { merge: true });
-      // console.log("refresh_token", refresh_token)
+      }, {merge: true});
+
       resolve(access_token)
     })
   )

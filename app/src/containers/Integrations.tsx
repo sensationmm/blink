@@ -109,7 +109,7 @@ const Integrations = (props: any) => {
     <Styled.MainSt>
       {(provider === "xero") &&
         <>
-          <Menu path="integrations" userSignout={props.userSignout} userName={props ?.auth ?.user.displayName || props ?.auth ?.user.email} />
+          <Menu path="integrations" userSignout={props.userSignout} userName={props ?.auth ?.user.name || props ?.auth ?.user.email} />
 
           <MainStyled.ContentNarrow>
             <Xero
@@ -126,7 +126,7 @@ const Integrations = (props: any) => {
       }
       {(provider === "accounts") &&
         <>
-          <Menu path="accounts" userSignout={props.userSignout} userName={props ?.auth ?.user.displayName || props ?.auth ?.user.email} />
+          <Menu path="accounts" userSignout={props.userSignout} userName={props ?.auth ?.user.name || props ?.auth ?.user.email} />
 
           <MainStyled.ContentNarrow>
             <Revolut
@@ -141,7 +141,7 @@ const Integrations = (props: any) => {
       }
       {(provider === "tax") &&
         <>
-          <Menu path="tax" userSignout={props.userSignout} userName={props ?.auth ?.user.displayName || props ?.auth ?.user.email} />
+          <Menu path="tax" userSignout={props.userSignout} userName={props ?.auth ?.user.name || props ?.auth ?.user.email} />
           <MainStyled.ContentNarrow>
             <h2>We recommend these tax experts based on your business needs </h2>
             <Screen style={{backgroundImage: `url(${taxPartnersImg})`}} />
@@ -151,7 +151,7 @@ const Integrations = (props: any) => {
 
 
       {(provider === undefined) && <>
-        <Menu path="integrations" userSignout={props.userSignout} userName={props ?.auth ?.user.displayName || props ?.auth ?.user.email} />
+        <Menu path="integrations" userSignout={props.userSignout} userName={props ?.auth ?.user.name || props ?.auth ?.user.email} />
 
         <MainStyled.ContentNarrow>
           <h1 style={{ marginTop: 50 }}>Integrations</h1>

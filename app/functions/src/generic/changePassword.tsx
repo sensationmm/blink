@@ -27,15 +27,16 @@ server.post('*/', async function (req: any, res: any) {
         const refreshToken = user.refreshToken;
 
         return request.post({
-        url: `https://identitytoolkit.googleapis.com/v1/token?key=${apiKey}`,
-        body: JSON.stringify({
-            refresh_token: refreshToken,
-            grant_type: "refresh_token"
+            url: `https://identitytoolkit.googleapis.com/v1/token?key=${apiKey}`,
+            body: JSON.stringify({
+                refresh_token: refreshToken,
+                grant_type: "refresh_token"
+            })
+        }, async function (error: any, response: any, body: any) {
+            const parsedRefreshTokenBody = JSON.parse(body);
+            console.log("parsedRefreshTokenBody", parsedRefreshTokenBody)
         })
-    }, async function (error: any, response: any, body: any) {
-        const parsedRefreshTokenBody = JSON.parse(body);
-        console.log("parsedRefreshTokenBody", parsedRefreshTokenBody)
-    })};
+    };
 
     const changePassword = async (token?: string) => request.post({
         url: `https://identitytoolkit.googleapis.com/v1/accounts:update?key=${apiKey}`,
@@ -69,21 +70,37 @@ server.post('*/', async function (req: any, res: any) {
             await userRef.update({ ...user, tempPassword: FieldValue.delete(), refreshToken: parsedBody.refreshToken });
         }
 
-        if (user.xero) {
-            const { expires } = user.xero
+        const profile = await (await user.profile.get()).data();
+        // const company = await(await user.company.get()).data();
+
+        if (profile.xero) {
+            const { expires } = profile.xero
             user.xero = {
                 expires
             };
         }
-        if (user.revolut) {
-            const revolutDoc = await user.revolut.get();
-            const revolutData = revolutDoc.data();
-            const { expires } = revolutData.access
-            user.revolut = {
+        if (profile.account) {
+            const accountData = await (await profile.account.get()).data();
+            const { expires } = accountData.access
+            user.account = {
                 expires
             };
         }
+        if (user.person) {
+            const personData = await (await user.person.get()).data();
+            const person: any = {};
+            Object.keys(personData).forEach((key: any) => {
+                person[key] = personData[key].value
+            })
+            // const { expires } = accountData.access
+            user = { ...user, ...person };
+        }
 
+        // delete user.xero;
+        delete user.person;
+        delete user.profile;
+        delete user.generatedBy;
+        delete user.providerUserInfo;
         delete parsedBody.refreshToken
 
         res.send({ ...parsedBody, ...user, success: true })

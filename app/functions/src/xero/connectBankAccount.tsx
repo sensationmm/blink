@@ -13,19 +13,20 @@ const refreshToken = require('./refreshToken');
 server.use(cors());
 server.post('*/', async function (req: any, res: any) {
 
-    const { uId, name, accountId, account, code, 
-        currency 
+    const { uId, name, accountId, account, code,
+        currency
     } = req.body;
 
     const userCollection = admin.firestore().collection('users');
-    const userDoc = await userCollection.doc(uId).get();
-    // const accountsCollection = admin.firestore().collection('users');
-    const user = userDoc.data();
+    const userDoc = await (await userCollection.doc(uId).get());
+    const user = await userDoc.data()
+    const profileDoc = user.profile;
+    const profile = await (await profileDoc.get()).data()
 
-    if (!user.xero || !user.revolut) {
+    if (!profile.xero || !profile.account) {
         return res.send("not found")
     }
-    let { access_token, expires, refresh_token } = user.xero;
+    let { access_token, expires, refresh_token } = profile.xero;
 
     const t: any = new Date();
 
@@ -33,11 +34,11 @@ server.post('*/', async function (req: any, res: any) {
         access_token = await refreshToken(refresh_token, uId)
     }
 
-    const revolutDoc = await user.revolut.get();
-    const revolutData = revolutDoc.data();
+    const accountDoc = profile.account;
+    const accountData = await(await accountDoc.get()).data();
 
     let { accounts
-    } = revolutData;
+    } = accountData;
 
     const accountToConnect = accounts.find((acc: any) => acc.id === accountId);
 
@@ -106,13 +107,13 @@ server.post('*/', async function (req: any, res: any) {
                             return res.send({ message: parsedBody.Elements && parsedBody.Elements[0] ?.ValidationErrors[0].Message });
                         } else if (parsedBody.Message) {
                             return res.send({ message: parsedBody.Message });
-                        } 
-                        await user.revolut.update({
-                            ...revolutData,
+                        }
+                        await accountDoc.update({
+                            ...accountData,
                             accounts: accounts.map((acc: any) => {
                                 if (acc.id === accountId) {
                                     acc.accounts = acc.accounts.map((pot: any) => {
-    
+
                                         if ((pot.sort_code === account.sort_code && pot.account_no === account.account_no) ||
                                             (pot.iban === account.iban && pot.bic === account.bic)) {
                                             pot.connections = {
@@ -126,15 +127,13 @@ server.post('*/', async function (req: any, res: any) {
                                 return acc
                             })
                         }, { merge: true })
-    
-    
+
+
                         // return res.send({ success: true });
-    
+
                     } catch (e) {
                         return res.send({ message: body });
                     }
-
-                   
 
                     console.log(body);
 

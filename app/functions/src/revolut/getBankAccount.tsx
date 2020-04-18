@@ -22,18 +22,21 @@ server.post('*/', async function (req: any, res: any) {
     const userCollection = admin.firestore().collection('users');
     const userDoc = await userCollection.doc(uId).get();
     const user = userDoc.data();
+    const profileDoc = await user.profile.get();
+    const profile = await profileDoc.data();
 
-    if (!user.revolut) {
+    if (!profile.account) {
         return res.send("not found")
     }
 
-    const revolutDoc = await user.revolut.get();
-    const revolutData = revolutDoc.data();
+    const accountDoc = await profile.account;
+    const accountData = await (await accountDoc.get()).data();
 
     let { access_token,
         refresh_token,
         expires
-    } = revolutData.access;
+    } = accountData.access;
+
 
 
     const getAccountDetails = (access_token: string, accountId: string) => {
@@ -81,7 +84,7 @@ server.post('*/', async function (req: any, res: any) {
                 let updatedAccount = { ...account, updatedAt: (new Date().toString()), accounts: detailedAccount };
                 // }));
 
-                const updatedAccounts = revolutData.accounts.map((account: any) => {
+                const updatedAccounts = accountData.accounts.map((account: any) => {
                         
                     if (account.id === accountId) {
                         
@@ -101,8 +104,8 @@ server.post('*/', async function (req: any, res: any) {
 
                 res.send(updatedAccounts.find((account: any) => account.id === accountId));
 
-                user.revolut.update({
-                    ...revolutData,
+                accountDoc.update({
+                    ...accountData,
                     accounts: updatedAccounts
                 }, { merge: true })
             } else {

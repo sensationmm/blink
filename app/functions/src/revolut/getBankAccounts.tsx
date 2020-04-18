@@ -22,18 +22,20 @@ server.post('*/', async function (req: any, res: any) {
     const userCollection = admin.firestore().collection('users');
     const userDoc = await userCollection.doc(uId).get();
     const user = userDoc.data();
+    const profileDoc = await user.profile.get();
+    const profile = await profileDoc.data();
 
-    if (!user.revolut) {
+    if (!profile.account) {
         return res.send("not found")
     }
 
-    const revolutDoc = await user.revolut.get();
-    const revolutData = revolutDoc.data();
+    const accountDoc = await profile.account;
+    const accountData = await (await accountDoc.get()).data();
 
     let { access_token,
         refresh_token,
         expires
-    } = revolutData.access;
+    } = accountData.access;
 
 
     const getAccountDetails = (access_token: string, accountId: string) => {
@@ -59,9 +61,9 @@ server.post('*/', async function (req: any, res: any) {
     const getAccounts = (access_token: string) => {
 
         let needsRefresh = false;
-        if (revolutData.accounts) {
+        if (accountData.accounts) {
             const now = new Date()
-            revolutData.accounts.forEach((account: any) => {
+            accountData.accounts.forEach((account: any) => {
                 const diff = now.getTime() - new Date(account.updatedAt).getTime();
                 console.log(diff);
                 if (diff > 600000) { // 10 mins
@@ -103,7 +105,7 @@ server.post('*/', async function (req: any, res: any) {
                     detailedAccounts = detailedAccounts.map((account: any) => {
 
                         account.accounts = account.accounts.map((pot: any) => {
-                            revolutData ?.accounts ?.forEach((currentAccount: any) => {
+                            accountData ?.accounts ?.forEach((currentAccount: any) => {
                                 if (currentAccount.id === account.id) {
                                     currentAccount.accounts ?.forEach((currentPot: any) => {
                                         if (((pot.account_no === currentPot.account_no && pot.sort_code === currentPot.sort_code) ||
@@ -121,8 +123,8 @@ server.post('*/', async function (req: any, res: any) {
 
                     res.send(detailedAccounts);
 
-                    user.revolut.update({
-                        ...revolutData,
+                    accountDoc.update({
+                        ...accountData,
                         accounts: detailedAccounts
                     }, { merge: true })
                 } else {
@@ -131,7 +133,7 @@ server.post('*/', async function (req: any, res: any) {
             });
 
         } else {
-            res.send(revolutData.accounts);
+            res.send(accountData.accounts);
         }
     }
 

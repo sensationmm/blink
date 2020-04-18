@@ -22,7 +22,7 @@ server.get('*/', async function (req: any, res: any) {
     const REVOLUT_CLIENT_ID = process.env.REVOLUT_CLIENT_ID || functions.config().revolut_client_id.key;
     const REVOLUT_TOKEN = generateJWT();
     const REVOLUT_AUTHENTICATE_REDIRECT_URL = process.env.REVOLUT_PRIVATE_KEY || functions.config().revolut_authenticate_redirect_url.key;
-    
+
     request.post({
         headers: {
             // authorization: `Basic ${base64auth}`,
@@ -39,7 +39,7 @@ server.get('*/', async function (req: any, res: any) {
 
         const { token_type, access_token, expires_in, refresh_token } = JSON.parse(body);
 
-        const revolut = {
+        const accountData = {
             // id_token,
             jwt: REVOLUT_TOKEN,
             access_token,
@@ -52,11 +52,19 @@ server.get('*/', async function (req: any, res: any) {
         // console.log("revolut - ", revolut)
 
         if (uId) {
-            const userCollection = admin.firestore().collection('users');
-            const userDoc = await userCollection.doc(uId);
 
-            await userDoc.update({
-                revolut: revolut
+            const userCollection = admin.firestore().collection('users');
+            const userDoc = await userCollection.doc(uId).get();
+            const user = userDoc.data();
+            const profileDoc = await user.profile.get();
+            const profile = await profileDoc.data();
+
+            if (!profile.account) {
+                return res.send("not found")
+            }
+
+            await user.profile.update({
+                account: accountData
             }, { merge: true });
         }
 

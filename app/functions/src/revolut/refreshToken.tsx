@@ -52,15 +52,19 @@ const refreshToken = (refresh_token: string, uId: string) => {
       // console.log("revolut refresh- ", revolut)
 
       if (uId) {
+
         const userCollection = admin.firestore().collection('users');
         const userDoc = await userCollection.doc(uId).get();
-        const user = await userDoc.data();
-        const revolutDoc = await user.revolut.get();
-        const revolutData = revolutDoc.data();
+        const user = userDoc.data();
+        const profileDoc = await user.profile.get();
+        const profile = await profileDoc.data();
 
-        await user.revolut.update({
-          ...revolutData,
-          access: {...revolutAccess}
+        const accountDoc = profile.account;
+        const accountData = await (await accountDoc.get()).data();
+
+        await accountDoc.update({
+          ...accountData,
+          access: { ...revolutAccess }
         }, { merge: true });
       }
 

@@ -23,7 +23,7 @@ server.post('*/', async function (req: any, res: any) {
         credentials = cryptr.decrypt(hashedToken).split(":");
     }
     catch (e) {
-        res.send({ error: "Invalid token "});
+        res.send({ error: "Invalid token " });
     }
 
     const apiKey = process.env.FIREBASE_AUTH_API_KEY || functions.config().auth_api.key;
@@ -59,23 +59,51 @@ server.post('*/', async function (req: any, res: any) {
             userRef.update({ ...user, refreshToken: parsedBody.refreshToken })
         }
 
-        if (user.xero) {
-            const { expires } = user.xero
+        const profile = await (await user.profile.get()).data();
+        // const company = await(await user.company.get()).data();
+
+        if (profile.xero) {
+            const { expires } = profile.xero
             user.xero = {
                 expires
             };
         }
-        if (user.revolut) {
-            const revolutDoc = await user.revolut.get();
-            const revolutData = revolutDoc.data();
-            const { expires } = revolutData.access
-            user.revolut = {
+        if (profile.account) {
+            const accountData = await (await profile.account.get()).data();
+            const { expires } = accountData.access
+            user.account = {
                 expires
             };
         }
 
-        delete parsedBody.refreshToken
+        if (profile.company) {
+            const companyData = await(await profile.company.get()).data();
+            // const { expires } = accountData.access
+            user.company = {
+                companyId: companyData?.companyId.value,
+                countryCode: companyData?.countryCode.value,
+                name: companyData?.name.value
+            }
+        }
+
+        if (user.person) {
+            const personData = await (await user.person.get()).data();
+            const person: any = {};
+            Object.keys(personData).forEach((key: any) => {
+                person[key] = personData[key].value
+            })
+            // const { expires } = accountData.access
+            user = { ...user, ...person };
+        }
+
+        // delete user.xero;
+        delete user.person;
+        delete user.profile;
+        delete user.generatedBy;
+        delete user.providerUserInfo;
         delete user.refreshToken
+
+        delete parsedBody.refreshToken
 
         res.send({ ...user, ...parsedBody });
     });

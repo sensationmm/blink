@@ -71,6 +71,9 @@ server.post('*/', async function (req: any, res: any) {
                 } else {
                     if (parsedBody.localId) {
                         // add the profile in users collection
+
+                        // look for a profile with the company Id
+
                         await userCollection.doc(parsedBody.localId).set({
                             verified: false,
                             generatedBy: generatedBy || "z73PTfu2PmeUQFSNS5JiNVaHOXO2",

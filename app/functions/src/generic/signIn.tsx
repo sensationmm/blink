@@ -40,20 +40,49 @@ server.post('*/', async function (req: any, res: any) {
             userRef.update({ ...user, refreshToken: parsedBody.refreshToken })
         }
 
-        if (user.xero) {
-            const { expires } = user.xero
+        const profile = await(await user.profile.get()).data();
+        console.log("profile", profile);
+
+        if (profile.xero) {
+            const { expires } = profile.xero
             user.xero = {
                 expires
             };
         }
-        if (user.revolut) {
-            const revolutDoc = await user.revolut.get();
-            const revolutData = revolutDoc.data();
-            const { expires } = revolutData.access
-            user.revolut = {
+        if (profile.account) {
+            const accountData = await(await profile.account.get()).data();
+            const { expires } = accountData.access
+            user.account = {
                 expires
             };
         }
+
+        if (profile.company) {
+            const companyData = await(await profile.company.get()).data();
+            // const { expires } = accountData.access
+            user.company = {
+                companyId: companyData?.companyId.value,
+                countryCode: companyData?.countryCode.value,
+                name: companyData?.name.value
+            }
+        }
+
+        if (user.person) {
+            const personData = await(await user.person.get()).data();
+            const person: any = {};
+            Object.keys(personData).forEach((key: any) => {
+                person[key] = personData[key].value
+            })
+            // const { expires } = accountData.access
+            user = { ...user, ...person };
+        }
+
+        // delete user.xero;
+        delete user.person;
+        delete user.profile;
+        delete user.generatedBy;
+        delete user.providerUserInfo;
+
 
         delete parsedBody.refreshToken
         delete user.refreshToken

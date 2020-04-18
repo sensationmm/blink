@@ -38,16 +38,18 @@ server.post('*/', async function (req: any, res: any) {
     const userCollection = admin.firestore().collection('users');
     const userDoc = await userCollection.doc(uId).get();
     const user = userDoc.data();
+    const profileDoc = await user.profile.get();
+    const profile = await profileDoc.data();
 
-    if (!user.revolut) {
+    if (!profile.account) {
         return res.send("not found")
     }
 
-    const revolutDoc = await user.revolut.get();
-    const revolutData = revolutDoc.data();
+    const accountDoc = profile.account;
+    const accountData = await (await accountDoc.get()).data();
 
     let { access_token,
-        refresh_token, expires } = revolutData.access;
+        refresh_token, expires } = accountData.access;
 
     const ref = req.headers.referer;
     console.log("ref", ref);

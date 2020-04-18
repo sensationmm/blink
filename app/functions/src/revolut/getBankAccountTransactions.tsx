@@ -19,13 +19,15 @@ server.post('*/', async function (req: any, res: any) {
     const userCollection = admin.firestore().collection('users');
     const userDoc = await userCollection.doc(uId).get();
     const user = userDoc.data();
+    const profileDoc = await user.profile.get();
+    const profile = await profileDoc.data();
 
-    if (!user.revolut) {
+    if (!profile.account) {
         return res.send("not found")
     }
 
-    const revolutDoc = await user.revolut.get();
-    const revolutData = revolutDoc.data();
+    const accountDoc = profile.account;
+    const accountData = await (await accountDoc.get()).data();
 
     const getTransactions = (access_token: string) => {
         console.log("get transactions")
@@ -42,8 +44,8 @@ server.post('*/', async function (req: any, res: any) {
             }
             const transactions = JSON.parse(body)
             if (!transactions.message) { // message usually present if there is an error
-                user.revolut.update({
-                    ...revolutData,
+                accountDoc.update({
+                    ...accountData,
                     transactions: {
                         items: transactions,
                         updatedAt: new Date()
@@ -58,7 +60,7 @@ server.post('*/', async function (req: any, res: any) {
     }
 
     let { access_token,
-        refresh_token, expires } = revolutData.access;
+        refresh_token, expires } = accountData.access;
 
     if (refIsGood(req.headers.referer)) {
         if (new Date() > expires) {

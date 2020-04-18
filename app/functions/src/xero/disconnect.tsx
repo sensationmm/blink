@@ -17,17 +17,18 @@ server.get('*/:uId', async function (req: any, res: any) {
     const { uId } = req.params;
 
     const db = admin.firestore();
-
     const userCollection = db.collection('users');
-    const userRef = await userCollection.doc(uId);
-    const userDoc = await userRef.get();
+    const userDoc = await (await userCollection.doc(uId).get());
     const user = await userDoc.data();
+    
+    const profileDoc = user.profile;
+    const profile = await(await profileDoc.get()).data();
 
-    if (!user.xero) {
+    if (!profile.xero) {
         return res.send("not found")
     }
 
-    let { access_token, expires, refresh_token } = user.xero;
+    let { access_token, expires, refresh_token } = profile.xero;
 
     const t: any = new Date();
 
@@ -56,7 +57,7 @@ server.get('*/:uId', async function (req: any, res: any) {
         console.log("connection", connection)
         console.log("access_token", access_token)
 
-        if (connection?.tenantId) {
+        if (connection ?.tenantId) {
 
             request.delete({
                 headers: {
@@ -70,7 +71,11 @@ server.get('*/:uId', async function (req: any, res: any) {
                 if (error) {
                     console.log("error", error);
                 }
-                await userRef.update({ ...user, xero: FieldValue.delete() });
+
+                await profileDoc.update({
+                    xero: FieldValue.delete()
+                }, { merge: true });
+                // await userRef.update({ ...user, xero: FieldValue.delete() });
                 res.send({ success: true });
             });
         }
