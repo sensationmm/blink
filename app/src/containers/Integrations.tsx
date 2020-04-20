@@ -31,6 +31,9 @@ import adyenLogo from '../svg/adyen-logo.svg';
 import squareLogo from '../svg/square-logo.svg';
 import blinkLogo from '../svg/blink-logo.svg';
 import taxPartnersImg from '../svg/screens/tax-partners.jpg';
+import dashboardImg from '../svg/screens/dashboard.jpg';
+import settingsImg from '../svg/screens/settings.jpg';
+import fundingImg from '../svg/screens/funding.jpg';
 
 import styled from "styled-components";
 
@@ -144,10 +147,47 @@ const Integrations = (props: any) => {
           <Menu path="tax" userSignout={props.userSignout} userName={props ?.auth ?.user.name || props ?.auth ?.user.email} />
           <MainStyled.ContentNarrow>
             <h2>We recommend these tax experts based on your business needs </h2>
-            <Screen style={{backgroundImage: `url(${taxPartnersImg})`}} />
+            <Screen style={{ backgroundImage: `url(${taxPartnersImg})` }} />
           </MainStyled.ContentNarrow>
         </>
       }
+
+      {(provider === "dashboard") &&
+        <>
+          <Menu path="dashboard" userSignout={props.userSignout} userName={props ?.auth ?.user.name || props ?.auth ?.user.email} />
+          <MainStyled.ContentNarrow>
+            <h1>Dashboard </h1>
+            <Screen style={{ height: 700, backgroundImage: `url(${dashboardImg})` }} />
+          </MainStyled.ContentNarrow>
+        </>
+      }
+
+      {(provider === "settings") &&
+        <>
+          <Menu path="settings" userSignout={props.userSignout} userName={props ?.auth ?.user.name || props ?.auth ?.user.email} />
+          <MainStyled.ContentNarrow>
+            <h1>Settings </h1>
+            <Screen style={{ backgroundImage: `url(${settingsImg})` }} />
+          </MainStyled.ContentNarrow>
+        </>
+      }
+
+      {(provider === "funding") &&
+        <>
+          <Menu path="funding" userSignout={props.userSignout} userName={props ?.auth ?.user.name || props ?.auth ?.user.email} />
+          <MainStyled.ContentNarrow>
+            <h1>Blink Funding </h1>
+
+            <h2>Based on your monthly sales history, our chosen providers can lend you up to €80,000</h2>
+
+            <p>
+              Connecting an additional bank account may allow us to increase the amount we can lend
+            </p>
+            <Screen style={{ height: 1000, backgroundImage: `url(${fundingImg})` }} />
+          </MainStyled.ContentNarrow>
+        </>
+      }
+
 
 
       {(provider === undefined) && <>
@@ -186,6 +226,7 @@ const Integrations = (props: any) => {
 
 
     </Styled.MainSt >
+
   </>
 };
 

@@ -94,7 +94,7 @@ server.post('*/', async function (req: any, res: any) {
             delete user.profile;
             delete user.generatedBy;
             delete user.refreshToken;
-            delete user.providerUserInfo;
+            delete parsedBody.users[0].providerUserInfo;
 
             res.send({ ...user, ...parsedBody.users[0] });
         }

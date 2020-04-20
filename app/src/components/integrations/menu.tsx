@@ -71,26 +71,27 @@ const MenuSt = styled.div`
 }
 `
 const Menu = (props: any) => {
-    return <MenuSt>
-        <ul>
-            <li className="user">
-                <Avatar />
-                {props.userName}
-            </li>
-            <li><Link to="/integrations">Dashboard</Link></li>
-            <li><Link 
-                className={props.path === "accounts" ? "active" : ""} 
-                to="/integrations/accounts">Accounts</Link></li>
-            <li><Link className={props.path === "tax" ? "active" : ""} 
-            to="/integrations/tax">Tax</Link></li>
-            <li><Link 
-                className={props.path === "integrations" ? "active" : ""} 
-                to="/integrations">Integrations</Link></li>
-            <li><Link to="/integrations">Funding</Link></li>
-            <li><Link to="/integrations">Settings</Link></li>
-            <li><Link onClick={props.userSignout} to="/">Logout</Link></li>
-        </ul>
-    </MenuSt>
+  return <MenuSt>
+    <ul>
+      <li className="user">
+        <Avatar />
+        {props.userName}
+      </li>
+      <li><Link className={props.path === "dashboard" ? "active" : ""}
+        to="/integrations/dashboard">Dashboard</Link></li>
+      <li><Link
+        className={props.path === "accounts" ? "active" : ""}
+        to="/integrations/accounts">Accounts</Link></li>
+      <li><Link className={props.path === "tax" ? "active" : ""}
+        to="/integrations/tax">Tax</Link></li>
+      <li><Link
+        className={props.path === "integrations" ? "active" : ""}
+        to="/integrations">Integrations</Link></li>
+      <li><Link to="/integrations/funding" className={props.path === "funding" ? "active" : ""}>Funding</Link></li>
+      <li><Link to="/integrations/settings" className={props.path === "settings" ? "active" : ""} >Settings</Link></li>
+      <li><Link onClick={props.userSignout} to="/">Logout</Link></li>
+    </ul>
+  </MenuSt>
 
 }
 
