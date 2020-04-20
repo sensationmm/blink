@@ -46,8 +46,11 @@ server.post('*/', async function (req: any, res: any) {
 
         const user = users[i];
 
-        const personRef = personCollection.doc(user.personDocId);
-        const companyRef = companiesCollection.doc(user.companyDocId);
+        // const personRef = personCollection.doc(user.personDocId);
+        // const companyRef = companiesCollection.doc(user.companyDocId);
+
+        const personRef = admin.firestore().document(user.personDocId)
+        const companyRef = admin.firestore().document(user.companyDocId)
 
         // check if there is a profile connected to this company already
 
