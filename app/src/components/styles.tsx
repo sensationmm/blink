@@ -85,6 +85,11 @@ export const ContentNarrow = styled.div`
     margin: 0 auto;
 `;
 
+export const ContentMini = styled.div`
+    max-width: var(--max-content-mini);
+    margin: 0 auto;
+`;
+
 export const InputSt = styled.input`
     padding: 0 0 10px 0;
     margin: 0;
@@ -99,6 +104,11 @@ export const InputSt = styled.input`
 
     &.edit {
         border-color: var(--basic-shadow);
+    }
+
+    &.disabled {
+        border-color: transparent;
+        cursor: not-allowed;
     }
 `
 

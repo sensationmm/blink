@@ -94,7 +94,7 @@ const MissingData = (props: any) => {
             setCompletion,
             hideLoader,
             props.history.push,
-            '/contact-client',
+            '/company-completion',
             ownershipThreshold,
             markets
         );

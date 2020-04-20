@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import classNames from 'classnames';
 
 import Icon from '../icon';
 import TickIcon from '../../svg/tick.svg';
@@ -9,6 +10,7 @@ import { InputSt } from '../styles';
 import * as Styled from './styles';
 
 export interface FormInputProps {
+    type?: 'text' | 'password';
     stateKey: string;
     label: string;
     placeholder?: string;
@@ -18,9 +20,22 @@ export interface FormInputProps {
     isEdit?: boolean;
     suffix?: string;
     validated?: boolean;
+    disabled?: boolean;
 }
 
-const FormInput: React.FC<FormInputProps> = ({ stateKey, label, placeholder, onChange, onBlur, value = '', isEdit = false, suffix, validated = false }) => {
+const FormInput: React.FC<FormInputProps> = ({
+    type = 'text',
+    stateKey,
+    label,
+    placeholder,
+    onChange,
+    onBlur,
+    value = '',
+    isEdit = false,
+    suffix,
+    validated = false,
+    disabled = false
+}) => {
     const [focused, setFocused] = useState(false);
     const [initVal] = useState(value);
 
@@ -45,13 +60,14 @@ const FormInput: React.FC<FormInputProps> = ({ stateKey, label, placeholder, onC
 
             <Styled.FieldHolder>
                 <InputSt
-                    className={isEdit ? 'edit' : ''}
+                    className={classNames({ edit: isEdit }, { disabled: disabled })}
                     placeholder={msg}
                     onChange={(e) => onChange(stateKey, e.target.value)}
                     onFocus={handleOnFocus}
                     onBlur={(e) => handleOnBlur(e.target.value)}
-                    type="text"
+                    type={type}
                     value={initVal !== value || isEdit ? (value || '') : ''}
+                    disabled={disabled}
                 />
                 {(focused || suffix !== '' || validated) &&
                     <Styled.After>

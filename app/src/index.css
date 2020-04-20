@@ -25,6 +25,7 @@ body {
 
   --max-content: 1200px;
   --max-content-narrow: 920px;
+  --max-content-mini: 400px;
 }
 
 code {

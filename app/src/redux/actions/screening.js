@@ -4,9 +4,11 @@ import {
     SET_COMPANY_STRUCTURE,
     SET_OWNERSHIP_THRESHOLD,
     SET_MARKETS,
+    SET_COMPANY_CONTACT,
     SET_COMPLETION,
     SET_ERRORS,
     EDIT_FIELD,
+    RESET_SCREENING
 } from '../constants';
 
 export const setCompany = (company) => {
@@ -44,6 +46,13 @@ export const setMarkets = (markets) => {
     }
 }
 
+export const setCompanyContact = (contact) => {
+    return {
+        type: SET_COMPANY_CONTACT,
+        contact
+    }
+}
+
 export const setCompletion = (target, completion) => {
     return {
         type: SET_COMPLETION,
@@ -67,5 +76,11 @@ export const editField = (field, value, collection, docId) => {
         value,
         collection,
         docId
+    }
+}
+
+export const resetScreening = () => {
+    return {
+        type: RESET_SCREENING
     }
 }

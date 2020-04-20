@@ -5,7 +5,7 @@ const domain = window.location.href.indexOf("localhost") > -1 ? "http://localhos
 const userSignIn = async (username: string, password: string) => {
 
     const data = {
-        username, 
+        username,
         password
     }
 
@@ -20,10 +20,11 @@ const userSignIn = async (username: string, password: string) => {
 };
 
 
-const userSignUp = async (users: Array<any>) => {
+const userSignUp = async (users: Array<any>, generatedBy: string) => {
 
     const data = {
-        users
+        users,
+        generatedBy
     }
     const response = await fetch(`${domain}/signUp`, {
         method: 'post',

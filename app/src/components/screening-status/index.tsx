@@ -24,6 +24,7 @@ export const steps = [
     { label: 'Company structure', url: '/company-structure' },
     { label: 'Company readiness', url: '/company-readiness' },
     { label: 'Missing data', url: '/missing-data' },
+    { label: 'Company readiness', url: '/company-completion' },
     { label: 'Contact client', url: '/contact-client' },
 ];
 

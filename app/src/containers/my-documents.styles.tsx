@@ -51,6 +51,8 @@ export const HeaderName = styled.div`
 export const HeaderRole = styled.div`
     font-size: 0.8em;
     color: var(--basic-shadow);
+    text-transform: uppercase;
+    font-weight: bold;
 `;
 
 export const TaxBlock = styled.div`

@@ -21,6 +21,7 @@ import SignUp from './containers/SignUp'
 import CompanyStructure from './containers/CompanyStructure';
 import CompanyReadiness from './containers/CompanyReadiness';
 import MissingData from './containers/MissingData';
+import CompanyCompletion from './containers/CompanyCompletion';
 import ContactClient from './containers/ContactClient';
 import ScreeningComplete from './containers/ScreeningComplete';
 import Integrations from './containers/Integrations';
@@ -79,6 +80,7 @@ const App = withRouter((props: any) => {
         <Route exact path="/company-structure"><CompanyStructure /></Route>
         <Route exact path="/company-readiness"><CompanyReadiness /></Route>
         <Route exact path="/missing-data"><MissingData /></Route>
+        <Route exact path="/company-completion"><CompanyCompletion /></Route>
         <Route exact path="/contact-client"><ContactClient /></Route>
         <Route exact path="/screening-complete"><ScreeningComplete /></Route>
 
@@ -104,4 +106,5 @@ const App = withRouter((props: any) => {
         </Route>
       </Switch>
     </div>
-)});
+    )
+});

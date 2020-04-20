@@ -4,9 +4,11 @@ import {
   SET_COMPANY_STRUCTURE,
   SET_OWNERSHIP_THRESHOLD,
   SET_MARKETS,
+  SET_COMPANY_CONTACT,
   SET_COMPLETION,
   SET_ERRORS,
   EDIT_FIELD,
+  RESET_SCREENING
 } from '../constants';
 
 export const initialState = {
@@ -50,6 +52,12 @@ export const screening = (state = initialState, action) => {
       return {
         ...state,
         markets: action.markets,
+      }
+
+    case SET_COMPANY_CONTACT:
+      return {
+        ...state,
+        contact: action.contact
       }
 
     case SET_COMPLETION:
@@ -111,6 +119,9 @@ export const screening = (state = initialState, action) => {
           }
         }
       }
+
+    case RESET_SCREENING:
+      return initialState;
 
     default:
       return state;

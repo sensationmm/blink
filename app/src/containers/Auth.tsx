@@ -15,16 +15,21 @@ import BlinkLogo from '../svg/blink-logo.svg';
 import hidePasswordImg from '../svg/hidePassword.svg';
 import showPasswordImg from '../svg/showPassword.svg';
 import * as Styled from "./auth-styles";
-
+import TemplateUser from '../templates/user';
+import HeaderLock from '../svg/header-lock.svg';
+import FormInput from '../components/form-input';
+import Blocks from '../layout/blocks';
 
 const ShowPasswordToggle = styled.img`
-    position: absolute;
+    position: relative;
     right: 10px;
-    top: 50%; 
+    top: -20px; 
     transform: translateY(-50%);
     height: 20px;
     width: 20px;
+    float: right;
     z-index: 1;
+    cursor: pointer;
 `
 
 const Auth = (props: any) => {
@@ -85,22 +90,42 @@ const Auth = (props: any) => {
 
     useTokens();
 
-    return <><Styled.Header><img alt="blink" src={BlinkLogo} /></Styled.Header>
-        <MainStyled.Content>
+    return <TemplateUser headerIcon={HeaderLock}>
+        <MainStyled.ContentMini>
             <>
-                <Styled.AuthWrapper>
-                    {
-                        showSignUp ?
-                            <>
-                                <div>
-                                    <MainStyled.InputSt autoComplete="off" type="text" value={email} placeholder="Email" onChange={(e: any) => setEmail(e.target.value)} />
-                                    <MainStyled.InputSt autoComplete="off" type="text" value={personDocId} placeholder="Person Doc Id" onChange={(e: any) => setPersonDocId(e.target.value)} />
-                                    <MainStyled.InputSt autoComplete="off" type="text" value={companyDocId} placeholder="Company Doc Id" onChange={(e: any) => setCompanyDocId(e.target.value)} />
+                {
+                    showSignUp ?
+                        <>
+                            <div>
+                                <MainStyled.InputSt autoComplete="off" type="text" value={email} placeholder="Email" onChange={(e: any) => setEmail(e.target.value)} />
+                                <MainStyled.InputSt autoComplete="off" type="text" value={personDocId} placeholder="Person Doc Id" onChange={(e: any) => setPersonDocId(e.target.value)} />
+                                <MainStyled.InputSt autoComplete="off" type="text" value={companyDocId} placeholder="Company Doc Id" onChange={(e: any) => setCompanyDocId(e.target.value)} />
 
-                                </div>
-                            </> :
-                            <>
-                                <div>
+                            </div>
+                        </> :
+                        <Blocks>
+                            <h1 className={'center'}>Please enter your username and password</h1>
+
+                            <FormInput
+                                stateKey={'username'}
+                                label={'Username'}
+                                onChange={(field: any, value: any) => setUsername(value)}
+                                value={username}
+                                isEdit
+                            />
+
+                            <div>
+                                <FormInput
+                                    type={passwordVisible ? "text" : "password"}
+                                    stateKey={'password'}
+                                    label={'Password'}
+                                    onChange={(field: any, value: any) => setPassword(value)}
+                                    value={password}
+                                    isEdit
+                                />
+                                <ShowPasswordToggle src={passwordVisible ? hidePasswordImg : showPasswordImg} onClick={toggleShowPassword} />
+                            </div>
+                            {/* <div>
                                     <MainStyled.InputSt autoComplete="off" type="text" value={username} placeholder="Username" onChange={(e: any) => setUsername(e.target.value)} />
                                 </div>
                                 <div>
@@ -108,21 +133,20 @@ const Auth = (props: any) => {
                                         <MainStyled.InputSt type={passwordVisible ? "text" : "password"} value={password} placeholder="Password" onChange={(e: any) => setPassword(e.target.value)} />
                                         <ShowPasswordToggle src={passwordVisible ? hidePasswordImg : showPasswordImg} onClick={toggleShowPassword} />
                                     </MainStyled.InputWrapper>
-                                </div>
-                            </>
-                    }
-
-                </Styled.AuthWrapper>
-                {!showSignUp && (window.location.href.startsWith("http://localhost:3000") || window.location.href.startsWith("https://blink-staging-20006.firebaseapp.com/")) && <button onClick={() => setshowSignUp(true)}>Show sign up</button>}
+                                </div> */}
+                        </Blocks>
+                }
             </>
-            <Actions>
+            <Actions centered>
                 {
                     showSignUp ? <Button onClick={userSignUp} disabled={validateNewUser()} /> :
                         <Button onClick={userSignIn} disabled={validCredentials()} />
                 }
             </Actions>
-        </MainStyled.Content>
-    </>
+
+            {!showSignUp && (window.location.href.startsWith("http://localhost:3000") || window.location.href.startsWith("https://blink-staging-20006.firebaseapp.com/")) && <button onClick={() => setshowSignUp(true)}>Show sign up</button>}
+        </MainStyled.ContentMini>
+    </TemplateUser>
 }
 
 const mapStateToProps = () => ({});

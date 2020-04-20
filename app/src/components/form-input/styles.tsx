@@ -3,6 +3,7 @@ import IconTick from '../../svg/tick.svg';
 
 export const Field = styled.div`
     position: relative;
+    width: 100%;
 `;
 
 export const FieldHolder = styled.div`
