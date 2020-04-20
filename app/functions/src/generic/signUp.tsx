@@ -9,8 +9,8 @@ const server = express();
 server.use(cors());
 
 const userCollection = admin.firestore().collection('users');
-const personCollection = admin.firestore().collection('persons');
-const companiesCollection = admin.firestore().collection('companies');
+// const personCollection = admin.firestore().collection('persons');
+// const companiesCollection = admin.firestore().collection('companies');
 const profilesCollection = admin.firestore().collection('profiles');
 const relationshipsCollection = admin.firestore().collection('relationships');
 
