@@ -9,6 +9,7 @@ const server = express();
 server.use(cors());
 
 const userCollection = admin.firestore().collection('users');
+const relationshipsCollection = admin.firestore().collection('relationships');
 
 server.post('*/', async function (req: any, res: any) {
     const {
@@ -33,6 +34,12 @@ server.post('*/', async function (req: any, res: any) {
         }
         let user: any = {};
         const parsedBody = JSON.parse(body);
+
+        if (parsedBody.error) {
+            return res.status(parsedBody.error.code).send({ error: { errors: [{ message: parsedBody.error.message }] } })
+        }
+
+
         if (parsedBody.localId) {
             const userRef = await userCollection.doc(parsedBody.localId)
             const userDoc = await userRef.get();
@@ -40,41 +47,52 @@ server.post('*/', async function (req: any, res: any) {
             userRef.update({ ...user, refreshToken: parsedBody.refreshToken })
         }
 
-        const profile = await(await user.profile.get()).data();
-        console.log("profile", profile);
+        if (user.admin) {
 
-        if (profile.xero) {
-            const { expires } = profile.xero
-            user.xero = {
-                expires
-            };
-        }
-        if (profile.account) {
-            const accountData = await(await profile.account.get()).data();
-            const { expires } = accountData.access
-            user.account = {
-                expires
-            };
-        }
-
-        if (profile.company) {
-            const companyData = await(await profile.company.get()).data();
-            // const { expires } = accountData.access
-            user.company = {
-                companyId: companyData?.companyId.value,
-                countryCode: companyData?.countryCode.value,
-                name: companyData?.name.value
+        } else {
+            const profile = await (await user.profile.get()).data();
+            if (profile.xero) {
+                const { expires } = profile.xero
+                user.xero = {
+                    expires
+                };
             }
-        }
-
-        if (user.person) {
-            const personData = await(await user.person.get()).data();
-            const person: any = {};
-            Object.keys(personData).forEach((key: any) => {
-                person[key] = personData[key].value
-            })
-            // const { expires } = accountData.access
-            user = { ...user, ...person };
+            if (profile.account) {
+                const accountData = await (await profile.account.get()).data();
+                const { expires } = accountData.access
+                user.account = {
+                    expires
+                };
+            }
+            if (profile.company) {
+                const companyData = await (await profile.company.get()).data();
+                // const { expires } = accountData.access
+                user.company = {
+                    companyId: companyData ?.companyId.value,
+                    countryCode: companyData ?.countryCode.value,
+                    name: companyData ?.name.value
+                }
+    
+                const relationships = await relationshipsCollection
+                    .where('target', '==', profile.company)
+                    .where('source', '==', user.person).get();
+    
+                if (relationships.docs[0]) {
+                    const relationship = await relationships.docs[0].data();
+                    if (relationship.type) {
+                        user.type = relationship.type;
+                    }
+                }
+            }
+            if (user.person) {
+                const personData = await (await user.person.get()).data();
+                const person: any = {};
+                Object.keys(personData).forEach((key: any) => {
+                    person[key] = personData[key].value
+                })
+                // const { expires } = accountData.access
+                user = { ...user, ...person };
+            }
         }
 
         // delete user.xero;
@@ -82,8 +100,6 @@ server.post('*/', async function (req: any, res: any) {
         delete user.profile;
         delete user.generatedBy;
         delete user.providerUserInfo;
-
-
         delete parsedBody.refreshToken
         delete user.refreshToken
 

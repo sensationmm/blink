@@ -9,6 +9,7 @@ const server = express();
 server.use(cors());
 
 const userCollection = admin.firestore().collection('users');
+const relationshipsCollection = admin.firestore().collection('relationships');
 
 server.post('*/', async function (req: any, res: any) {
     const {
@@ -35,41 +36,57 @@ server.post('*/', async function (req: any, res: any) {
                 user = await userDoc.data();
             }
 
-            const profile = await (await user.profile.get()).data();
             // const company = await(await user.company.get()).data();
 
-            if (profile.xero) {
-                const { expires } = profile.xero
-                user.xero = {
-                    expires
-                };
-            }
-            if (profile.account) {
-                const accountData = await (await profile.account.get()).data();
-                const { expires } = accountData.access
-                user.account = {
-                    expires
-                };
+            if (user.admin) {
+
             }
 
-            if (profile.company) {
-                const companyData = await (await profile.company.get()).data();
-                // const { expires } = accountData.access
-                user.company = {
-                    companyId: companyData?.companyId.value,
-                    countryCode: companyData?.countryCode.value,
-                    name: companyData?.name.value
+            else {
+                const profile = await (await user.profile.get()).data();
+
+                if (profile.xero) {
+                    const { expires } = profile.xero
+                    user.xero = {
+                        expires
+                    };
                 }
-            }
+                if (profile.account) {
+                    const accountData = await (await profile.account.get()).data();
+                    const { expires } = accountData.access
+                    user.account = {
+                        expires
+                    };
+                }
+                if (profile.company) {
+                    const companyData = await (await profile.company.get()).data();
+                    // const { expires } = accountData.access
+                    user.company = {
+                        companyId: companyData ?.companyId.value,
+                        countryCode: companyData ?.countryCode.value,
+                        name: companyData ?.name.value
+                    }
 
-            if (user.person) {
-                const personData = await (await user.person.get()).data();
-                const person: any = {};
-                Object.keys(personData).forEach((key: any) => {
-                    person[key] = personData[key].value
-                })
-                // const { expires } = accountData.access
-                user = { ...user, ...person };
+                    const relationships = await relationshipsCollection
+                        .where('target', '==', profile.company)
+                        .where('source', '==', user.person).get();
+
+                    if (relationships.docs[0]) {
+                        const relationship = await relationships.docs[0].data();
+                        if (relationship.type) {
+                            user.type = relationship.type;
+                        }
+                    }
+                }
+                if (user.person) {
+                    const personData = await (await user.person.get()).data();
+                    const person: any = {};
+                    Object.keys(personData).forEach((key: any) => {
+                        person[key] = personData[key].value
+                    })
+                    // const { expires } = accountData.access
+                    user = { ...user, ...person };
+                }
             }
 
             // delete user.xero;

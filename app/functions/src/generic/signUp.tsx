@@ -12,6 +12,7 @@ const userCollection = admin.firestore().collection('users');
 const personCollection = admin.firestore().collection('persons');
 const companiesCollection = admin.firestore().collection('companies');
 const profilesCollection = admin.firestore().collection('profiles');
+const relationshipsCollection = admin.firestore().collection('relationships');
 
 const CLICKSEND_EMAIL = process.env.CLICKSEND_EMAIL || functions.config().clicksend_email.key;
 const CLICKSEND_API_KEY = process.env.CLICKSEND_API_KEY || functions.config().clicksend_api.key;
@@ -66,6 +67,15 @@ server.post('*/', async function (req: any, res: any) {
             }
         }
 
+        // check there is a relationship between the person and the company
+        const relationships = await relationshipsCollection
+            .where('target', '==', companyRef)
+            .where('source', '==', personRef).get();
+
+        if (!relationships.docs[0]) {
+            return res.send({ error: { errors: [{ message: `Person ${user.personDocId} doesn't have a relationship with company id ${user.companyDocId}` }] } })
+        }
+
         const profiles = await profilesCollection.where('company', '==', companyRef).get();
         let profileRef: any;
 
@@ -102,13 +112,11 @@ server.post('*/', async function (req: any, res: any) {
                         // add the profile in users collection
 
                         if (!profileRef) {
-                            profileRef =  await profilesCollection.add({
+                            profileRef = await profilesCollection.add({
                                 company: companyRef
                             });
                             // profileRef = profile.ref;
-                        } 
-
-                        console.log("profile", profileRef)
+                        }
 
                         await userCollection.doc(parsedBody.localId).set({
                             verified: false,

@@ -9,6 +9,8 @@ const server = express();
 server.use(cors());
 
 const userCollection = admin.firestore().collection('users');
+const relationshipsCollection = admin.firestore().collection('relationship');
+
 const cryptrKey = process.env.CRYPTR_KEY || functions.config().cryptr.key;
 const Cryptr = require('cryptr');
 const cryptr = new Cryptr(cryptrKey);
@@ -59,41 +61,54 @@ server.post('*/', async function (req: any, res: any) {
             userRef.update({ ...user, refreshToken: parsedBody.refreshToken })
         }
 
-        const profile = await (await user.profile.get()).data();
-        // const company = await(await user.company.get()).data();
-
-        if (profile.xero) {
-            const { expires } = profile.xero
-            user.xero = {
-                expires
-            };
-        }
-        if (profile.account) {
-            const accountData = await (await profile.account.get()).data();
-            const { expires } = accountData.access
-            user.account = {
-                expires
-            };
-        }
-
-        if (profile.company) {
-            const companyData = await(await profile.company.get()).data();
-            // const { expires } = accountData.access
-            user.company = {
-                companyId: companyData?.companyId.value,
-                countryCode: companyData?.countryCode.value,
-                name: companyData?.name.value
+        if (user.admin) {
+            // should never happen from an invite?
+        } else {
+            const profile = await (await user.profile.get()).data();
+            // const company = await(await user.company.get()).data();
+    
+            if (profile.xero) {
+                const { expires } = profile.xero
+                user.xero = {
+                    expires
+                };
             }
-        }
-
-        if (user.person) {
-            const personData = await (await user.person.get()).data();
-            const person: any = {};
-            Object.keys(personData).forEach((key: any) => {
-                person[key] = personData[key].value
-            })
-            // const { expires } = accountData.access
-            user = { ...user, ...person };
+            if (profile.account) {
+                const accountData = await (await profile.account.get()).data();
+                const { expires } = accountData.access
+                user.account = {
+                    expires
+                };
+            }
+            if (profile.company) {
+                const companyData = await(await profile.company.get()).data();
+                // const { expires } = accountData.access
+                user.company = {
+                    companyId: companyData?.companyId.value,
+                    countryCode: companyData?.countryCode.value,
+                    name: companyData?.name.value
+                }
+    
+                const relationships = await relationshipsCollection
+                .where('target', '==', profile.company)
+                .where('source', '==', user.person).get();
+    
+                if (relationships.docs[0]) {
+                    const relationship = await relationships.docs[0].data();
+                    if (relationship.type) {
+                        user.type = relationship.type;
+                    }
+                }
+            }
+            if (user.person) {
+                const personData = await (await user.person.get()).data();
+                const person: any = {};
+                Object.keys(personData).forEach((key: any) => {
+                    person[key] = personData[key].value
+                })
+                // const { expires } = accountData.access
+                user = { ...user, ...person };
+            }
         }
 
         // delete user.xero;

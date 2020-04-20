@@ -31,9 +31,9 @@ const Auth = (props: any) => {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [email, setEmail] = useState("nickprocopiou@aol.com");
-    const [personDocId, setPersonDocId] = useState("2sPQDtGQ334NMBRf27Vw");
-    const [companyDocId, setCompanyDocId] = useState("vbTiNUuJFKnrJ1NfQoCo");
+    const [email, setEmail] = useState("");
+    const [personDocId, setPersonDocId] = useState("");
+    const [companyDocId, setCompanyDocId] = useState("");
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [hasRequestedSignInWithToken, setHasRequestedSignInWithToken] = useState(false);
     const [hasRequestedSignInFromInvite, setHasRequestedSignInFromInvite] = useState(false);
