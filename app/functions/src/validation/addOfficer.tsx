@@ -42,7 +42,7 @@ server.post('*/', function (req: any, res: any) {
             const newRelationship = {
                 source: admin.firestore().doc(`/persons/${docRef.id}`),
                 target: admin.firestore().doc(`/companies/${parentId}`),
-                type: 'officer',
+                type: 'authorisedSigner',
                 title: role
             }
 

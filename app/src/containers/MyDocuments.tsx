@@ -214,10 +214,6 @@ const MyDocuments = (props: any) => {
                                             />
                                         )
                                     })}
-
-                                    <Box add centered paddedLarge>
-                                        + Add additional people such as CEOs or CFOs of {company.name}
-                                    </Box>
                                 </Blocks>
                             )
                         },

@@ -15,7 +15,7 @@ const TemplateUser: React.FC<TemplateUserProps> = ({ headerIcon, children }) => 
         <Styled.Main>
             <Styled.Header>
                 <Styled.Logo><img src={Logo} /></Styled.Logo>
-                <User showDisplayName={false} />
+                <User />
             </Styled.Header>
 
             <Styled.Banner>

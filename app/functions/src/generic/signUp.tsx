@@ -122,10 +122,11 @@ server.post('*/', async function (req: any, res: any) {
                         }
 
                         await userCollection.doc(parsedBody.localId).set({
+                            screened: false,
                             verified: false,
                             generatedBy: generatedBy || "z73PTfu2PmeUQFSNS5JiNVaHOXO2",
                             profile: profileRef,
-                            mobile: user.mobile || "+447793964975",
+                            mobile: user.mobile || "+447492667072",
                             person: personRef,
                             tempPassword: true
                         });

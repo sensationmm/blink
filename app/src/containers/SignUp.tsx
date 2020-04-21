@@ -74,9 +74,6 @@ const SignUp = (props: any) => {
 
     return <TemplateUser headerIcon={headerIcon}>
 
-        <User
-        // showDisplayName={false} 
-        />
         <MainStyled.ContentMini>
             {user.tempPassword ?
                 <Blocks>

@@ -26,6 +26,10 @@ export const Loader = styled.div`
   background: rgba(0, 0, 0, 0.4);
   width: 100vw;
   height: 100vh;
+
+  &.manual {
+    background: none;
+  }
   
   .lds-ripple {
     width: 150px !important;
