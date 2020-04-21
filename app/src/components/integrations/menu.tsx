@@ -112,7 +112,7 @@ const Menu = (props: any) => {
 
       </li>
       <li><Link
-        className={props.path === "integrations" ? "active" : ""}
+        className={(props.path === "integrations" || props.path === "xero") ? "active" : ""}
         to="/integrations">Integrations</Link></li>
       <li><Link to="/integrations/funding" className={props.path === "funding" ? "active" : ""}>Funding</Link></li>
       <li><Link to="/integrations/settings" className={props.path === "settings" ? "active" : ""} >Settings</Link></li>

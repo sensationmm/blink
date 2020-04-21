@@ -49,8 +49,9 @@ server.post('*/', async function (req: any, res: any) {
         // const personRef = personCollection.doc(user.personDocId);
         // const companyRef = companiesCollection.doc(user.companyDocId);
 
-        const personRef = admin.firestore().doc(`/${user.personDocId}`)
-        const companyRef = admin.firestore().doc(`/${user.companyDocId}`)
+        const personRef = admin.firestore().doc(`/${user.personDocId}`);
+        const companyRef = admin.firestore().doc(`/${user.companyDocId}`);
+        const account = admin.firestore().doc('accounts/7desnAIVHZKPq9FzAdgn');
 
         // check if there is a profile connected to this company already
 
@@ -116,6 +117,7 @@ server.post('*/', async function (req: any, res: any) {
 
                         if (!profileRef) {
                             profileRef = await profilesCollection.add({
+                                account,
                                 company: companyRef
                             });
                             // profileRef = profile.ref;

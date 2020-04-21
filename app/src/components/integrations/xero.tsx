@@ -3,6 +3,13 @@ import { Actions, Banner } from './styles';
 import Button from "../../components/button";
 import * as Styled from '../../components/styles';
 import ReactJson from "react-json-view";
+import styled from "styled-components";
+
+const ConnectXero = styled.div`
+    position: relative;
+    top: -100px;
+    left: 100px;
+`
 
 const Xero = (props: any) => {
 
@@ -131,7 +138,7 @@ const Xero = (props: any) => {
 
                 <Actions>
                     {xeroIntegration && <Button onClick={() => props.xeroDisconnect()} label="Disconnect Xero"></Button>}
-                    {!xeroIntegration && <Button onClick={() => props.xeroAuthenticate(uId)} label="Connect Xero"></Button>}
+                    {!xeroIntegration && <ConnectXero><Button onClick={() => props.xeroAuthenticate(uId)} label="Connect Xero" /></ConnectXero>}
                 </Actions>
             </>
         </>

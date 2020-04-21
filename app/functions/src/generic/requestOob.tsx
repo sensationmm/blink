@@ -18,7 +18,11 @@ server.post('*/', async function (req: any, res: any) {
     const userRef = await userCollection.doc(localId);
     const userDoc = await userRef.get();
     const user = userDoc.data();
-    const oob = Math.round((Math.random() * 1000000)) + 1;
+    let oob: any = Math.round((Math.random() * 1000000)) + 1;
+
+    if (oob.toString().length === 5) {
+        oob = "0" + oob.toString()
+    }
 
     const CLICKSEND_EMAIL = process.env.CLICKSEND_EMAIL || functions.config().clicksend_email.key;
     const CLICKSEND_API_KEY = process.env.CLICKSEND_API_KEY || functions.config().clicksend_api.key;
@@ -35,7 +39,7 @@ server.post('*/', async function (req: any, res: any) {
                     "to": user.mobile,
                     "from": "Blink",
                     "source": "Blink",
-                    "body": `Blink Verification Code (${oob}) - This code is valid for 10 minutes`
+                    "body": `Blink Verification Code (${parseInt(oob)}) - This code is valid for 10 minutes`
                 }
             ]
         })
