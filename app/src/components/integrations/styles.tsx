@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import xeroIntegrationImage from "../../svg/xero-integration.png";
 import xeroLogo from '../../svg/xero-logo.svg';
+import linkAccountIcon from '../../svg/link.png';
 import { Button } from '../../components/button/styles';
 
 export const Icon = styled.div`
@@ -47,17 +48,27 @@ export const Refresh = styled.img`
     }
 `
 
-export const LinkAccount = styled.button`
+export const LinkAccount: any = styled.button`
     position: absolute;
     bottom: 50%;
     right: -80px;
     transform: translateY(50%);
     font-size: 24px;
-    background: none;
+    background: url(${linkAccountIcon});
+    background-repeat: no-repeat;
+    background-position: bottom;
     border: none;
-    &:hover {
-        text-decoration: underline;
-    }
+    outline: none;
+    font-size: 12px;
+    padding-bottom: 40px;
+    width: 65px;
+    cursor: pointer;
+
+    ${(props: any) => props.linked && `
+        background: none;
+        padding: 0;
+        cursor: auto;
+    `}
 `
 
 
