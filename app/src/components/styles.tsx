@@ -86,6 +86,7 @@ export const ContentNarrow = styled.div`
 `;
 
 export const ContentMini = styled.div`
+    width: 100%;
     max-width: var(--max-content-mini);
     margin: 0 auto;
 `;
@@ -101,6 +102,7 @@ export const InputSt = styled.input`
     font-size: inherit;
     outline: none;
     min-height: 30px;
+    color: var(--basic-text);
 
     &.edit {
         border-color: var(--basic-shadow);

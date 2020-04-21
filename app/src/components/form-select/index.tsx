@@ -1,5 +1,6 @@
 import React from 'react';
 
+import FormLabel from '../form-label';
 import getByValue from '../../utils/functions/getByValue';
 
 import * as Styled from './styles';
@@ -20,13 +21,11 @@ const FormSelect: React.FC<FormSelectProps> = ({
     value,
 }) => {
 
-    const selectedIcon = getByValue(options, 'value', value).icon;
-
-    console.log(typeof selectedIcon)
+    const selectedIcon = getByValue(options, 'value', value)?.icon || null;
 
     return (
         <Styled.Main>
-            <Styled.Label>{label}</Styled.Label>
+            <FormLabel label={label} alignment={'left'} />
 
             <Styled.Field>
                 {selectedIcon &&

@@ -90,6 +90,7 @@ exports.deleteAllRules = require("./src/validation/deleteAllRules");
 exports.editField = require('./src/validation/editField');
 exports.addUBO = require('./src/validation/addUBO');
 exports.deleteUBO = require('./src/validation/deleteUBO');
+exports.addOfficer = require('./src/validation/addOfficer');
 
 // google
 exports.googleFetchSheet = require("./src/google/fetchSheet");

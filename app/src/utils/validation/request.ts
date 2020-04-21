@@ -104,6 +104,21 @@ const deleteUBO = async (relationshipDocId: string) => {
     return body.msg;
 }
 
+const addOfficer = async (parentDocId: string, name: string, emailAddress: string, role: string) => {
+    const response = await fetch(`${domain}/addOfficer`, {
+        method: "POST",
+        mode: "cors",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            parentDocId, name, emailAddress, role
+        })
+    });
+    const body = await response.json();
+    return body.msg;
+}
 
 
-export { validateCompany, addRule, deleteAllRules, editField, addUBO, deleteUBO };
+
+export { validateCompany, addRule, deleteAllRules, editField, addUBO, deleteUBO, addOfficer };

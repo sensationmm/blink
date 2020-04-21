@@ -43,3 +43,7 @@ export const Item = styled.div`
         }
     }
 `;
+
+export const Add = styled(Box)`
+    cursor: pointer;
+`;

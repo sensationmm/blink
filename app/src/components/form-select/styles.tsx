@@ -3,6 +3,7 @@ import ArrowDown from '../../svg/arrow-down.svg';
 
 export const Main = styled.div`
     position: relative;
+    border-bottom: 2px solid var(--basic-shadow);
     
     label {
     }
@@ -16,9 +17,9 @@ export const Main = styled.div`
       height: 43px;
       background: none;
       z-index: 10;
-      font-size: 14px;
       color: var(--basic-text);
       outline: 0;
+      font-size: inherit;
     }
 `;
 

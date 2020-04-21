@@ -14,9 +14,12 @@ import Blocks from '../layout/blocks';
 import capitalize from '../utils/functions/capitalize';
 import Icon from '../components/icon';
 import FormInput from '../components/form-input';
+import FormSelect from '../components/form-select';
 
 import { editField as saveEditField, setCompanyContact } from '../redux/actions/screening';
-import { editField as apiEditField } from '../utils/validation/request';
+import { editField as apiEditField, addOfficer as apiAddOfficer } from '../utils/validation/request';
+import { setCompanyStructure } from '../redux/actions/screening';
+import { requestCompanyUBOStructure } from '../utils/generic/request';
 import { showLoader, hideLoader } from '../redux/actions/loader';
 import { userSignUp } from '../utils/auth/request';
 
@@ -41,10 +44,16 @@ const ContactClient = (props: any) => {
         showLoader,
         hideLoader,
         setCompanyContact,
-        currentUser
+        currentUser,
+        setCompanyStructure
     } = props;
 
     const [selectedOfficer, setSelectedOfficer] = useState(null);
+    const [addNew, setAddNew] = useState(false);
+
+    const [newName, setNewName] = useState('');
+    const [newEmail, setNewEmail] = useState('');
+    const [newRole, setNewRole] = useState('');
 
     const contact: SelectedOfficer | null = selectedOfficer;
 
@@ -71,6 +80,24 @@ const ContactClient = (props: any) => {
         history.push('/screening-complete');
     }
 
+    const addNewOfficer = async () => {
+        showLoader();
+
+        await apiAddOfficer(companyStructure.docId, newName, newEmail, newRole);
+        const UBOStructure = await requestCompanyUBOStructure(company.companyId, company.countryCode);
+
+        setCompanyStructure(UBOStructure);
+
+        setAddNew(false);
+        setNewName('');
+        setNewEmail('');
+        setNewRole('');
+
+        hideLoader();
+    }
+
+    const allowAddNew = newName !== '' && newEmail !== '' && newRole !== '';
+
     return (
         <MainStyled.MainSt>
             <ScreeningStatus
@@ -93,6 +120,46 @@ const ContactClient = (props: any) => {
                             />
                         );
                     })}
+
+                    <ClientStyled.Add className={'add centered paddedLarge'} onClick={() => setAddNew(true)}>
+                        {!addNew
+                            ? <span>+ Add additional people such as CEOs or CFOs of {company.name}</span>
+                            : <MainStyled.ContentMini>
+                                <Blocks>
+                                    <FormInput
+                                        stateKey={'newName'}
+                                        label={'Name'}
+                                        onChange={(field: any, value: any) => setNewName(value)}
+                                        value={newName}
+                                        isEdit
+                                    />
+                                    <FormInput
+                                        stateKey={'newEmail'}
+                                        label={'Email address'}
+                                        onChange={(field: any, value: any) => setNewEmail(value)}
+                                        value={newEmail}
+                                        isEdit
+                                    />
+
+                                    <FormSelect
+                                        stateKey={'newRole'}
+                                        label={'Role'}
+                                        onChange={(key, value) => setNewRole(value)}
+                                        options={[
+                                            { value: 'Managing Director', label: 'Managing Director', },
+                                            { value: 'CEO', label: 'CEO', },
+                                            { value: 'CFO', label: 'CFO', },
+                                            { value: 'President', label: 'President', },
+                                            { value: 'Chairperson', label: 'Chairperson', },
+                                        ]}
+                                        value={newRole}
+                                    />
+
+                                    <Actions centered><Button small onClick={addNewOfficer} label={'Add Officer'} disabled={!allowAddNew} /></Actions>
+                                </Blocks>
+                            </MainStyled.ContentMini>
+                        }
+                    </ClientStyled.Add>
                 </Blocks>
 
                 <Actions>
@@ -168,7 +235,7 @@ const mapStateToProps = (state: any) => ({
     validation: state.screening.validation,
 });
 
-const actions = { showLoader, hideLoader, setCompanyContact, saveEditField };
+const actions = { showLoader, hideLoader, setCompanyContact, saveEditField, setCompanyStructure };
 
 export const RawComponent = ContactClient;
 
