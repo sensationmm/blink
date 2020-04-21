@@ -184,7 +184,7 @@ const Revolut = (props: any) => {
 
                             </div>}
 
-                            {!pot.connections ?.xero && <LinkAccount onClick={async () => {
+                            {!pot.connections ?.xero ? <LinkAccount onClick={async () => {
                                 const result = await props.xeroConnectBankAccount(account.id,
                                     account.currency,
                                     pot,
@@ -193,7 +193,9 @@ const Revolut = (props: any) => {
                                 if (result.success) {
                                     refreshAccountDetails(account.id)
                                 }
-                            }}>Link</LinkAccount>}
+                            }}>Link</LinkAccount> : 
+                            <LinkAccount linked={true}>Linked</LinkAccount>
+                            }
 
                         </Box>
                     })
