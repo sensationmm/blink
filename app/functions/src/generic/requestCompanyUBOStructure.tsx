@@ -35,7 +35,7 @@ server.post('*/', async function (req: any, res: any) {
         const officerRelationships =
             await relationshipsCollection
                 .where("target", "==", companyRef)
-                .where("type", "==", "officer").get()
+                .where("type", "in", ["officer", "authorisedSigner"]).get()
 
         if (officerRelationships.empty) {
             console.log("officers empty")
@@ -46,7 +46,7 @@ server.post('*/', async function (req: any, res: any) {
                 const officerDoc = await officerRelationshipDoc.source.get()
                 let officer = { ...officerDoc.data() };
 
-                officer = { ...officer, ...officerRelationshipDoc, docId: officerRelationshipDoc.source.path };
+                officer = { ...officer, ...officerRelationshipDoc, docId: officerRelationshipDoc.source.path, relId: officerRelationship.ref.path };
 
                 delete officer.source;
                 delete officer.target;

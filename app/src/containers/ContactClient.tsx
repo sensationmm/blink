@@ -14,7 +14,6 @@ import Blocks from '../layout/blocks';
 import capitalize from '../utils/functions/capitalize';
 import Icon from '../components/icon';
 import FormInput from '../components/form-input';
-import FormSelect from '../components/form-select';
 
 import { editField as saveEditField, setCompanyContact } from '../redux/actions/screening';
 import { editField as apiEditField, addOfficer as apiAddOfficer } from '../utils/validation/request';
@@ -71,7 +70,8 @@ const ContactClient = (props: any) => {
         const user = {
             personDocId: contact!.id,
             companyDocId: companyStructure.docId,
-            email: contact!.email
+            email: contact!.email,
+            name: capitalize(contact!.name)
         }
 
         await userSignUp([user], currentUser);
@@ -141,21 +141,15 @@ const ContactClient = (props: any) => {
                                         isEdit
                                     />
 
-                                    <FormSelect
+                                    <FormInput
                                         stateKey={'newRole'}
                                         label={'Role'}
                                         onChange={(key, value) => setNewRole(value)}
-                                        options={[
-                                            { value: 'Managing Director', label: 'Managing Director', },
-                                            { value: 'CEO', label: 'CEO', },
-                                            { value: 'CFO', label: 'CFO', },
-                                            { value: 'President', label: 'President', },
-                                            { value: 'Chairperson', label: 'Chairperson', },
-                                        ]}
                                         value={newRole}
+                                        isEdit
                                     />
 
-                                    <Actions centered><Button small onClick={addNewOfficer} label={'Add Officer'} disabled={!allowAddNew} /></Actions>
+                                    <Actions centered><Button small onClick={addNewOfficer} label={'Add Person'} disabled={!allowAddNew} /></Actions>
                                 </Blocks>
                             </MainStyled.ContentMini>
                         }
