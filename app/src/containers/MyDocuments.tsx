@@ -301,7 +301,7 @@ const mapStateToProps = (state: any) => ({
     company: state.screening.company,
     companyStructure: state.screening.companyStructure,
     ownershipThreshold: state.screening.ownershipThreshold,
-    markets: state.screening.markets
+    markets: state.auth.user.markets,
 });
 
 export const RawComponent = MyDocuments;

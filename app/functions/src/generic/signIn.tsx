@@ -33,6 +33,7 @@ server.post('*/', async function (req: any, res: any) {
             console.log("error", error);
         }
         let user: any = {};
+        let profileDocId: any;
         const parsedBody = JSON.parse(body);
 
         if (parsedBody.error) {
@@ -50,7 +51,9 @@ server.post('*/', async function (req: any, res: any) {
         if (user.admin) {
 
         } else {
-            const profile = await (await user.profile.get()).data();
+            const profileObject = await user.profile.get();
+            const profile = await (profileObject).data();
+            profileDocId = profileObject.ref?.path;
             if (profile.xero) {
                 const { expires } = profile.xero
                 user.xero = {
@@ -93,7 +96,7 @@ server.post('*/', async function (req: any, res: any) {
                     person[key] = personData[key].value
                 })
                 // const { expires } = accountData.access
-                user = { ...user, ...person, personDocId: personObject.ref?.path };
+                user = { ...user, ...person, personDocId: personObject.ref?.path, profileDocId, markets: profile.markets };
             }
         }
 

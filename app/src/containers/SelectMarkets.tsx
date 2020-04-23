@@ -12,23 +12,26 @@ import capitalize from '../utils/functions/capitalize';
 
 import { setMarkets } from '../redux/actions/screening';
 import { showLoader, hideLoader } from '../redux/actions/loader';
+import { editField as apiEditField } from '../utils/validation/request';
 
 import * as MainStyled from "../components/styles";
 import * as Styled from './select-markets.styles';
 
 import { requestCompanyUBOStructure } from '../utils/generic/request';
-import { setCompanyStructure } from '../redux/actions/screening';
+import { setCompany, setCompanyStructure } from '../redux/actions/screening';
 
 import { blinkMarkets } from '../utils/config/blink-markets';
 
 const SelectMarkets = (props: any) => {
     const {
         currentUser,
+        company,
         markets,
         setMarkets,
         history,
         showLoader,
         hideLoader,
+        setCompany,
         setCompanyStructure
     } = props;
 
@@ -36,6 +39,10 @@ const SelectMarkets = (props: any) => {
 
     if (!currentUser.screened) {
         return <Redirect to="/onboarding" />;
+    }
+
+    if (!company) {
+        setCompany(currentUser.company);
     }
 
     const regions = [...new Set(blinkMarkets.map(market => market.region))];
@@ -58,6 +65,8 @@ const SelectMarkets = (props: any) => {
     const getCompany = async () => {
         showLoader();
         let UBOStructure = await requestCompanyUBOStructure(currentUser.company.companyId, currentUser.company.countryCode);
+
+        await apiEditField(currentUser.profileDocId, 'markets', props.markets.slice());
 
         setCompanyStructure(UBOStructure);
         hideLoader();
@@ -123,11 +132,12 @@ const SelectMarkets = (props: any) => {
 }
 
 const mapStateToProps = (state: any) => ({
+    company: state.screening.company,
     currentUser: state.auth.user,
-    markets: state.screening.markets,
+    markets: state.auth.user.markets,
 });
 
-const actions = { setMarkets, showLoader, hideLoader, setCompanyStructure };
+const actions = { setMarkets, showLoader, hideLoader, setCompany, setCompanyStructure };
 
 export const RawComponent = SelectMarkets;
 

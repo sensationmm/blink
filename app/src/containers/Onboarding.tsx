@@ -102,7 +102,7 @@ const mapStateToProps = (state: any) => ({
     currentUser: state.auth.user,
     selectedCompany: state.screening.company,
     selectedCountry: state.screening.country,
-    markets: state.screening.markets,
+    markets: state.auth.user.markets,
 });
 
 const actions = { showLoader, hideLoader, setCompany, setCompanyStructure, editUser };

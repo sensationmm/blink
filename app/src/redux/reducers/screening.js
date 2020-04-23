@@ -19,7 +19,7 @@ export const initialState = {
   validation: {
     company: null,
   },
-  markets: ['GB', 'DE', 'FR', 'IT', 'SE', 'RO'],
+  markets: [],
   contact: null
 };
 
