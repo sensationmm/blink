@@ -132,9 +132,12 @@ const Search = (props: any) => {
 
                         const nextCompanyId = companyProfile.shareholders[i].companyId?.value;
                         const nextCompanySearchCode = companyProfile.shareholders[i].code?.value || companyProfile.shareholders[i].companyId?.value;
+                        // added to ensure we use correct country code & registration authority code
+                        const nextCountryCode = companyProfile.shareholders[i].countryCode?.value || countryCode;
+                        const nextRegistrationAuthorityCode = companyProfile.shareholders[i].registrationAuthorityCode?.value || registrationAuthorityCode;
 
                         await new Promise(async (next) => {
-                            await getCompanyProfile(nextCompanyId, nextCompanySearchCode, countryCode, registrationAuthorityCode, isNewSearch);
+                            await getCompanyProfile(nextCompanyId, nextCompanySearchCode, nextCountryCode, nextRegistrationAuthorityCode, isNewSearch);
                             next()
                         })
                     }

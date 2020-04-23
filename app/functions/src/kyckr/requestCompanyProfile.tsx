@@ -9,6 +9,7 @@ var soap = require('soap');
 const fetchGoogleSheet = require('../google/fetchSheet').fetchGoogleSheet;
 const dueDilCompanySearch = require('../duedill/searchCompany').searchCompany;
 const dueDilCompanyVitals = require('../duedill/requestCompanyVitals').requestCompanyVitals;
+const getKyckrSearchResults = require('./searchCompany').getKyckrSearchResults;
 const bloombergSearchCompany = require('../bloomberg/searchCompany').searchCompany;
 const compositeExchangeCodes = require('../bloomberg/compositeExchangeCodes');
 const { doCompanyEnrichment } = require('../enrichment/companyEnrichment');
@@ -57,7 +58,9 @@ const isCompanyByName = (name: string) => {
         name?.slice(name.length - 3) === " ag" ||  // bit weak?
         name?.slice(name.length - 3) === " ug" ||  // similar to ag in Germany
         name?.indexOf("ltd") > -1 ||
-        name?.indexOf("s.r.l") > -1
+        name?.indexOf("s.r.l") > -1 ||
+        name?.indexOf("inc.") > -1 ||
+        name?.indexOf("incorporated") > -1
 }
 
 // -------------------------------------
@@ -294,7 +297,7 @@ const requestCompanyProfile = async (
                                             shareholder[key] = valueToObject(sourceShareholder[key])
                                         })
 
-                                        if (!shareholder.shareholderType && !shareholder.shareholderType.value) {
+                                        if (!(shareholder.shareholderType && shareholder.shareholderType.value)) {
                                             const shareholderName = shareholder.name.value;
                                             if (
                                                 isCompanyByName(shareholderName?.toLowerCase())
@@ -359,22 +362,63 @@ const requestCompanyProfile = async (
                                                             searchName,
                                                             name
                                                         }
+                                                        //Fix for DE company IDs so that the lookup works for Kyckr
+                                                        //e.g. 'Hannover HRB 58272' should be 'HRB 58272'
+                                                        if(company && company.countryCode && company.countryCode == 'DE') {
+                                                            if(company.companyId && !company.companyId.startsWith('HRB')) {
+                                                                company.companyId = company.companyId.replace(/^.*?HRB/g,'HRB');
+                                                                console.log('DE company', company.companyId);
+                                                            }
+                                                        }
                                                     }
 
                                                 }
                                                 catch (e) {
                                                     console.log(e)
                                                 }
+                                                
+                                                try {
+                                                    if (searchResponse) {
+                                                        const results = await JSON.parse(searchResponse)
+                                                        company = results?.companies?.find((c: any) => c.name?.toLowerCase() === searchName);
+                                                        obj = {
+                                                            searchName,
+                                                            name
+                                                        }
+                                                    }
+                                                }
+                                                catch (e) {
+                                                    console.log(e)
+                                                }
+
+                                                //for DE, IT, RO companies, need to use Kyckr to get searchCode
+                                                //for IT, we also need registration authority
+                                                if(company && company.countryCode && ['DE', 'IT', 'RO'].includes(company.countryCode)) {
+                                                    // for DE, IT, RO will need to go to kyckr for the vitals and 'code' as they have their own proprietary code
+                                                    const kyckrSearchResults = await getKyckrSearchResults(searchName, company.countryCode, orderReference);
+                                                    try {
+                                                        if (kyckrSearchResults) {
+                                                            const kyckrCompany = kyckrSearchResults?.CompanySearchResult?.Companies?.CompanyDTO?.find((c: any) => c.Name.toLowerCase() === searchName);
+                                                            //console.log(kyckrCompany.Name, kyckrCompany.Code);
+                                                            shareholder.code = valueToObject(kyckrCompany.Code);
+                                                            obj.code = kyckrCompany.Code;
+                                                            shareholder.registrationAuthorityCode = valueToObject(kyckrCompany.RegistrationAuthorityCode);
+                                                            obj.registrationAuthorityCode = kyckrCompany.RegistrationAuthorityCode;
+                                                        }
+                                                    }
+                                                    catch (e) {
+                                                        console.log(e)
+                                                    }
+                                                }
                                                 if (company && company.companyId) {
                                                     obj.companyId = company.companyId;
                                                     shareholder.companyId = valueToObject(company.companyId);
 
+                                                    // required in order for next iteration of search to work when triggered from front end
+                                                    if (company.countryCode) shareholder.countryCode = valueToObject(company.countryCode);
+                                                    
                                                     // get the vitals too.. 
                                                     // preserve the original name so the "where 'name' == name" still works
-
-
-                                                    // for DE will need to go to kyckr for the vitals and 'code' as they have their own proprietary code
-
                                                     const vitalsResponse = await dueDilCompanyVitals(company.companyId, company?.countryCode.toLowerCase());
                                                     try {
                                                         if (vitalsResponse && vitalsResponse.httpCode !== 400 && vitalsResponse.httpCode !== 404) {
@@ -384,6 +428,15 @@ const requestCompanyProfile = async (
                                                     catch (e) {
                                                         console.log(e)
                                                     }
+                                                }
+
+                                                //Fix for DE company IDs so that the lookup works for Kyckr
+                                                //e.g. 'Hannover HRB 58272' should be 'HRB 58272'
+                                                console.log(obj.countryCode, obj.companyId);
+                                                if(obj.countryCode && obj.countryCode == 'DE' && obj.companyId && !obj.companyId.startsWith('HRB')) {
+
+                                                    obj.companyId = obj.companyId.replace(/^.*?HRB/g,'HRB'); // for storing with the company
+                                                    shareholder.companyId = valueToObject(obj.companyId);  // for storing in the relationship / returning to the FE
                                                 }
 
                                                 const companyEnrichmentProperties: any = {};
