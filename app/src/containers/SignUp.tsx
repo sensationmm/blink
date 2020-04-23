@@ -18,6 +18,8 @@ import HeaderSMS from '../svg/header-sms.svg';
 import HeaderLock from '../svg/header-lock.svg';
 import HeaderProfile from '../svg/header-profile.svg';
 
+import Landing from './Landing';
+
 const SignUp = (props: any) => {
 
     // const [oldPassword, setOldPassword] = useState("");
@@ -25,6 +27,7 @@ const SignUp = (props: any) => {
     const [newPasswordRepeat, setNewPasswordRepeat] = useState("");
     // const [hasRequestedOOb, sethasRequestedOOb] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
+    const [showLanding, setShowLanding] = useState(true);
 
     const user = props.auth.user;
 
@@ -70,6 +73,10 @@ const SignUp = (props: any) => {
         headerIcon = HeaderProfile;
     } else {
         headerIcon = HeaderSMS;
+    }
+
+    if (showLanding) {
+        return <Landing onClick={() => setShowLanding(false)} />
     }
 
     return <TemplateUser headerIcon={headerIcon}>

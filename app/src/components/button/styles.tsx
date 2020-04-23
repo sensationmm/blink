@@ -41,6 +41,13 @@ export const Button = styled.button`
     border-color: var(--basic-shadow);
   }
 
+  &.landing {
+    min-width: 0;
+    background: var(--brand-secondary);
+    border-color: var(--brand-secondary);
+    box-shadow: 0px 10px 10px #e13b3c;
+  }
+
   &:hover:not(.disabled) {
     color: var(--basic-white);
     background: var(--brand-primary);

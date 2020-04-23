@@ -11,7 +11,7 @@ interface ButtonProps {
   hidden?: boolean;
   small?: boolean;
   icon?: string;
-  type?: 'primary' | 'secondary' | 'tertiary';
+  type?: 'primary' | 'secondary' | 'tertiary' | 'landing';
 }
 
 const Button: React.FC<ButtonProps> = ({
