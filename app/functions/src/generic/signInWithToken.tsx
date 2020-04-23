@@ -31,7 +31,7 @@ server.post('*/', async function (req: any, res: any) {
         let user: any = {};
         const parsedBody = JSON.parse(body);
         if (parsedBody.users && parsedBody.users[0] && parsedBody.users[0].localId) {
-            const userDoc = await userCollection.doc(parsedBody.users[0] ?.localId).get();
+            const userDoc = await userCollection.doc(parsedBody.users[0]?.localId).get();
             if (userDoc) {
                 user = await userDoc.data();
             }
@@ -62,9 +62,9 @@ server.post('*/', async function (req: any, res: any) {
                     const companyData = await (await profile.company.get()).data();
                     // const { expires } = accountData.access
                     user.company = {
-                        companyId: companyData ?.companyId.value,
-                        countryCode: companyData ?.countryCode.value,
-                        name: companyData ?.name.value
+                        companyId: companyData?.companyId.value,
+                        countryCode: companyData?.countryCode.value,
+                        name: companyData?.name.value
                     }
 
                     const relationships = await relationshipsCollection
@@ -78,14 +78,18 @@ server.post('*/', async function (req: any, res: any) {
                         }
                     }
                 }
+
+
                 if (user.person) {
-                    const personData = await (await user.person.get()).data();
+                    const personObject = await user.person.get();
+                    const personData = await (personObject).data();
+
                     const person: any = {};
                     Object.keys(personData).forEach((key: any) => {
                         person[key] = personData[key].value
                     })
                     // const { expires } = accountData.access
-                    user = { ...user, ...person };
+                    user = { ...user, ...person, personDocId: personObject.ref?.path };
                 }
             }
 

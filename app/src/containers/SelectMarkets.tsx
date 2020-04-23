@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { withRouter } from 'react-router-dom';
+import { Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 
@@ -16,16 +16,27 @@ import { showLoader, hideLoader } from '../redux/actions/loader';
 import * as MainStyled from "../components/styles";
 import * as Styled from './select-markets.styles';
 
+import { requestCompanyUBOStructure } from '../utils/generic/request';
+import { setCompanyStructure } from '../redux/actions/screening';
+
 import { blinkMarkets } from '../utils/config/blink-markets';
 
 const SelectMarkets = (props: any) => {
     const {
+        currentUser,
         markets,
         setMarkets,
-        history
+        history,
+        showLoader,
+        hideLoader,
+        setCompanyStructure
     } = props;
 
     const [filter, setFilter] = useState('all');
+
+    if (!currentUser.screened) {
+        return <Redirect to="/onboarding" />;
+    }
 
     const regions = [...new Set(blinkMarkets.map(market => market.region))];
 
@@ -42,6 +53,16 @@ const SelectMarkets = (props: any) => {
 
         setMarkets(marketsHold);
     };
+
+
+    const getCompany = async () => {
+        showLoader();
+        let UBOStructure = await requestCompanyUBOStructure(currentUser.company.companyId, currentUser.company.countryCode);
+
+        setCompanyStructure(UBOStructure);
+        hideLoader();
+        history.push('/onboarding/my-company')
+    }
 
     return (
         <MainStyled.MainSt>
@@ -93,7 +114,7 @@ const SelectMarkets = (props: any) => {
                 />
 
                 <Actions centered>
-                    <Button onClick={() => history.push('/onboarding/my-company')} disabled={markets.length === 0} />
+                    <Button onClick={getCompany} disabled={markets.length === 0} />
                 </Actions>
 
             </MainStyled.ContentNarrow>
@@ -102,10 +123,11 @@ const SelectMarkets = (props: any) => {
 }
 
 const mapStateToProps = (state: any) => ({
+    currentUser: state.auth.user,
     markets: state.screening.markets,
 });
 
-const actions = { setMarkets, showLoader, hideLoader };
+const actions = { setMarkets, showLoader, hideLoader, setCompanyStructure };
 
 export const RawComponent = SelectMarkets;
 

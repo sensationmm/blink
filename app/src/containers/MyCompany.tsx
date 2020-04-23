@@ -47,6 +47,7 @@ const MyCompanyProgress: React.FC<MyCompanyProgressProps> = ({ duration }) => {
 
 const MyCompany = (props: any) => {
     const {
+        currentUser,
         company,
         companyStructure,
         ownershipThreshold,
@@ -71,10 +72,10 @@ const MyCompany = (props: any) => {
 
     const [building, setBuilding] = useState(true);
 
-    if (markets.length === 0) {
-        return <Redirect to="/onboarding/select-markets" />;
-    } else if (!company || !companyStructure) {
+    if (!currentUser.screened) {
         return <Redirect to="/onboarding" />;
+    } else if (markets.length === 0 || !company || !companyStructure) {
+        return <Redirect to="/onboarding/select-markets" />;
     }
 
     const editUBO = (shareholder: any, shares: any) => {
@@ -144,6 +145,7 @@ const MyCompany = (props: any) => {
 }
 
 const mapStateToProps = (state: any) => ({
+    currentUser: state.auth.user,
     sideTrayOpen: state.sideTray.open,
     company: state.screening.company,
     companyStructure: state.screening.companyStructure,

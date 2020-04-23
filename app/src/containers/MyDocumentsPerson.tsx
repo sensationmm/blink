@@ -86,6 +86,7 @@ const ManualApproval = (props: any) => {
 
 const MyDocumentsPerson = (props: any) => {
     const {
+        currentUser,
         docId,
         type,
         companyStructure,
@@ -101,8 +102,8 @@ const MyDocumentsPerson = (props: any) => {
     const [manualID, setManualID] = useState(manualPassport);
     const [manualAddress, setManualAddress] = useState(manualUtilityBill);
 
-    if (!companyStructure) {
-        return <Redirect to="/onboarding" />;
+    if (!currentUser.screened || !companyStructure) {
+        return <Redirect to="/onboarding/select-markets" />;
     }
 
     const saveShareholder = async () => {
@@ -240,6 +241,7 @@ const MyDocumentsPerson = (props: any) => {
 }
 
 const mapStateToProps = (state: any) => ({
+    currentUser: state.auth.user,
     companyStructure: state.screening.companyStructure,
 });
 

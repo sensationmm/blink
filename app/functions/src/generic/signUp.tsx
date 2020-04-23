@@ -163,9 +163,6 @@ server.post('*/', async function (req: any, res: any) {
 
             const credentials = cryptr.encrypt(`${user.email}:${user.password}`);
 
-            const name = user.name;
-            const firstName = name.substr(0, name.indexOf(' '));
-
             request.post({
                 url: `https://rest.clicksend.com/v3/email/send`,
                 headers: {

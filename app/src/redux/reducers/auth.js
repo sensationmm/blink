@@ -1,6 +1,7 @@
 import {
     USER_SIGNIN_SUCCESS,
-    USER_SIGNOUT
+    USER_SIGNOUT,
+    EDIT_USER
 } from '../constants';
 
 export const initialState = {
@@ -33,6 +34,31 @@ export const auth = (state = initialState, action) => {
                 ...initialState,
                 user: null
             }
+
+        case EDIT_USER:
+            const field = action.field.split('.');
+
+            if (field.length > 1) {
+                return {
+                    ...state,
+                    user: {
+                        ...state.user,
+                        [field[0]]: {
+                            ...state.user[field[0]],
+                            [field[1]]: action.value
+                        }
+                    }
+                }
+            }
+
+            return {
+                ...state,
+                user: {
+                    ...state.user,
+                    [action.field]: action.value,
+                }
+            }
+
         default:
             return state;
     }
