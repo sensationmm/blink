@@ -19,7 +19,8 @@ export const initialState = {
   validation: {
     company: null,
   },
-  markets: []
+  markets: ['GB', 'DE', 'FR', 'IT', 'SE', 'RO'],
+  contact: null
 };
 
 export const screening = (state = initialState, action) => {

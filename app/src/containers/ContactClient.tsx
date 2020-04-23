@@ -20,7 +20,6 @@ import { editField as apiEditField, addOfficer as apiAddOfficer } from '../utils
 import { setCompanyStructure } from '../redux/actions/screening';
 import { requestCompanyUBOStructure } from '../utils/generic/request';
 import { showLoader, hideLoader } from '../redux/actions/loader';
-import { userSignUp } from '../utils/auth/request';
 
 import IconPerson from '../svg/individual-icon.svg';
 import * as Styled from './my-documents.styles';
@@ -43,7 +42,6 @@ const ContactClient = (props: any) => {
         showLoader,
         hideLoader,
         setCompanyContact,
-        currentUser,
         setCompanyStructure
     } = props;
 
@@ -63,21 +61,8 @@ const ContactClient = (props: any) => {
     }
 
     const sendEmail = async () => {
-        showLoader();
-
-        setCompanyContact(contact!.name);
-
-        const user = {
-            personDocId: contact!.id,
-            companyDocId: companyStructure.docId,
-            email: contact!.email,
-            name: capitalize(contact!.name)
-        }
-
-        await userSignUp([user], currentUser);
-
-        hideLoader();
-        history.push('/screening-complete');
+        setCompanyContact(contact);
+        history.push('/contact-email');
     }
 
     const addNewOfficer = async () => {
@@ -157,7 +142,7 @@ const ContactClient = (props: any) => {
                 </Blocks>
 
                 <Actions>
-                    <Button onClick={sendEmail} label={'Send email to client'} icon={IconEmail} disabled={selectedOfficer === null} />
+                    <Button onClick={sendEmail} label={'Preview email'} disabled={selectedOfficer === null} />
                     <Button type={'tertiary'} onClick={() => history.push('/company-readiness')} label={'Back to edit'} />
                 </Actions>
             </MainStyled.ContentNarrow>

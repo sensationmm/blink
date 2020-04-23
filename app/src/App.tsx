@@ -23,6 +23,7 @@ import CompanyReadiness from './containers/CompanyReadiness';
 import MissingData from './containers/MissingData';
 import CompanyCompletion from './containers/CompanyCompletion';
 import ContactClient from './containers/ContactClient';
+import ContactEmail from './containers/ContactEmail';
 import ScreeningComplete from './containers/ScreeningComplete';
 import Integrations from './containers/Integrations';
 import Loader from './components/loader';
@@ -82,6 +83,7 @@ const App = withRouter((props: any) => {
         <Route exact path="/missing-data"><MissingData /></Route>
         <Route exact path="/company-completion"><CompanyCompletion /></Route>
         <Route exact path="/contact-client"><ContactClient /></Route>
+        <Route exact path="/contact-email"><ContactEmail /></Route>
         <Route exact path="/screening-complete"><ScreeningComplete /></Route>
 
         <Route exact path="/doc"><Doc /></Route>

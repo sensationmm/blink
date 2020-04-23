@@ -26,6 +26,7 @@ export const steps = [
     { label: 'Missing data', url: '/missing-data' },
     { label: 'Company readiness', url: '/company-completion' },
     { label: 'Contact client', url: '/contact-client' },
+    { label: 'Email template', url: '/contact-email' },
 ];
 
 const ScreeningStatus: React.FC<ScreeningStatusProps> = ({ company, country, location }) => {

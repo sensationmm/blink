@@ -20,10 +20,11 @@ const userSignIn = async (username: string, password: string) => {
 };
 
 
-const userSignUp = async (users: Array<any>, generatedBy: string) => {
+const userSignUp = async (users: Array<any>, text: string, generatedBy: string) => {
 
     const data = {
         users,
+        text,
         generatedBy
     }
     const response = await fetch(`${domain}/signUp`, {

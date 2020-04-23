@@ -43,7 +43,7 @@ const ScreeningComplete = (props: any) => {
                 <Styled.Main>
                     <Styled.Image />
 
-                    <h1>Email sent to {capitalize(screeningContact)} at {getValue(companyStructure.name)}</h1>
+                    <h1>Email sent to {capitalize(screeningContact.name)} at {getValue(companyStructure.name)}</h1>
 
                     <Actions centered>
                         <Button onClick={reset} label={'Back to search'} />
