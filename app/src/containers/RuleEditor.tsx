@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { requestAllRules } from '../redux/actions/rules';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import * as Styled from "../components/styles";
 import styled from "styled-components";
 import Icon from "../components/icon"
@@ -79,11 +79,21 @@ const Actions = styled.div`
   justify-content: space-between;
 `
 
+const Info = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  span {
+    margin: 20px 0;
+  }
+`
+
 const collectionOptions = ["Person", "Company"];
 
 const RuleEditor = (props: any) => {
 
-  const [collections, setCollections] = useState([collectionOptions[0]]);
+  const [collections, setCollections] = useState(collectionOptions);
   const [rules, setRules] = useState();
   const [hasRequestRules, setHasRequestRules] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -144,12 +154,12 @@ const RuleEditor = (props: any) => {
     const regEx = new RegExp(searchTerm, "ig");
     const valueParts = value.split(regEx);
     const matches = value.match(regEx);
-    // console.log(matches)
+
     return valueParts.map((part: string, index: number) => <span key={part}>
-        {part}
-        {index < (valueParts.length - 1) && <b>
-          {matches && matches[index]}
-        </b> }</span>)
+      {part}
+      {index < (valueParts.length - 1) && <b>
+        {matches && matches[index]}
+      </b>}</span>)
   }
 
   const changeCollection = (value: string, checked: boolean) => {
@@ -170,47 +180,68 @@ const RuleEditor = (props: any) => {
   }
 
   const { ruleId } = props.match.params;
+  const rule = ruleId && rules ?.find((r: any) => r.id === ruleId);
 
   return (
     <Styled.MainSt>
       <Styled.ContentNarrow>
         {rules && <ContentNarrowInner>
-          <Actions>
-            <Search value={searchTerm} onChange={(e: any) => setSearchTerm(e.target.value)} placeholder="Search" />
-            <CollectionFilter>
-              {collectionOptions.map((option: string) => {
-                return <span key={option}>
-                  <label >{option} <input type="checkbox" onChange={e => changeCollection(option, e.target.checked)} checked={!!collections.find(c => c === option)} /></label>
-                </span>
-              })}
-            </CollectionFilter>
-          </Actions>
 
-          {ruleId ? <div>Rule: {ruleId}</div> : <RulesList>{rules.filter((r: any) => {
-            const term = searchTerm.toLowerCase();
-            return (term === "" || (r.name ?.toLowerCase().indexOf(term) > -1 || r.title ?.toLowerCase().indexOf(term)))
-          }).map((rule: any) => {
-            return <li key={rule.id} onClick={() => props.history.push(`/ruleEditor/${rule.id}`)}>
-              <label>
-                <Icon size="small" icon={rule.type === "person" ? PersonIcon : CompanyIcon} style={rule.type} />
-                <Title>{highlightSearch(rule.title || rule.name)}</Title>
-              </label></li>
-          })}
-          </RulesList>}
+          {(ruleId && rule) ?
+            <>
+              <Actions><Link to="/ruleEditor">&lt; Back</Link></Actions>
+              <div>
+                <Info>
+                  <span>{rule.id}</span>
+                  <Icon size="small" icon={rule.type === "person" ? PersonIcon : CompanyIcon} style={rule.type} />
+                  <span>{rule.name}</span>
+
+                  <span>MARKETS</span>
+
+                  <ul>
+                  {rule.marketRuleMapping.map((market: any) => <li>{market}</li>)}
+                  </ul>
+                </Info>
+              </div>
+            </>
+              :
+  
+            <>
+                <Actions>
+                  <Search value={searchTerm} onChange={(e: any) => setSearchTerm(e.target.value)} placeholder="Search" />
+                  <CollectionFilter>
+                    {collectionOptions.map((option: string) => {
+                      return <span key={option}>
+                        <label >{option} <input type="checkbox" onChange={e => changeCollection(option, e.target.checked)} checked={!!collections.find(c => c === option)} /></label>
+                      </span>
+                    })}
+                  </CollectionFilter>
+                </Actions>
+                <RulesList>{rules.filter((r: any) => {
+                  const term = searchTerm.toLowerCase();
+                  return (term === "" || (r.name ?.toLowerCase().indexOf(term) > -1 || r.title ?.toLowerCase().indexOf(term)))
+                }).map((rule: any) => {
+                  return <li key={rule.id} onClick={() => props.history.push(`/ruleEditor/${rule.id}`)}>
+                    <label>
+                      <Icon size="small" icon={rule.type === "person" ? PersonIcon : CompanyIcon} style={rule.type} />
+                      <Title>{highlightSearch(rule.title || rule.name)}</Title>
+                    </label></li>
+                })}
+                </RulesList></>}
 
         </ContentNarrowInner>
         }
       </Styled.ContentNarrow>
     </Styled.MainSt>
-  );
-};
-
+      );
+    };
+    
 const mapStateToProps = (state: any) => ({
-  modal: state.modal,
-});
-
+        modal: state.modal,
+    });
+    
 const actions = {
-  requestAllRules
-}
+        requestAllRules
+      }
 
-export default withRouter(connect(mapStateToProps, actions)(RuleEditor));
+      export default withRouter(connect(mapStateToProps, actions)(RuleEditor));
