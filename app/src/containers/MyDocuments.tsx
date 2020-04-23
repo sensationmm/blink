@@ -109,15 +109,14 @@ const MyDocuments = (props: any) => {
         company,
         companyStructure,
         ownershipThreshold,
-        history,
-        markets
+        history
     } = props;
 
     const [section, setSection] = useState('People');
 
     if (!currentUser.screened) {
         return <Redirect to="/onboarding" />;
-    } else if (markets.length === 0 || !company || !companyStructure) {
+    } else if (currentUser.markets.length === 0 || !company || !companyStructure) {
         return <Redirect to="/onboarding/select-markets" />;
     }
 
@@ -173,7 +172,7 @@ const MyDocuments = (props: any) => {
 
     return (
         <MainStyled.MainSt className={classNames('hasActionBar', { person: section === 'People' }, { company: section === 'Company' })}>
-            <SetupStatus markets={markets} />
+            <SetupStatus markets={currentUser.markets} />
 
             <MainStyled.ContentNarrow>
                 <h1 className="center">Please complete all company and personal information to open the accounts</h1>
@@ -301,7 +300,6 @@ const mapStateToProps = (state: any) => ({
     company: state.screening.company,
     companyStructure: state.screening.companyStructure,
     ownershipThreshold: state.screening.ownershipThreshold,
-    markets: state.auth.user.markets,
 });
 
 export const RawComponent = MyDocuments;

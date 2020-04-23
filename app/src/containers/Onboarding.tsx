@@ -28,7 +28,6 @@ const Onboarding = (props: any) => {
         editUser,
         showLoader,
         hideLoader,
-        markets
     } = props;
 
     useEffect(() => {
@@ -37,7 +36,7 @@ const Onboarding = (props: any) => {
 
     if (company && companyStructure) {
         return <Redirect to="/onboarding/my-documents" />;
-    } else if (markets.length > 0) {
+    } else if (currentUser.markets.length > 0) {
         return <Redirect to="/onboarding/my-company" />;
     } else if (currentUser.screened) {
         return <Redirect to="/onboarding/select-markets" />;
@@ -102,7 +101,6 @@ const mapStateToProps = (state: any) => ({
     currentUser: state.auth.user,
     selectedCompany: state.screening.company,
     selectedCountry: state.screening.country,
-    markets: state.auth.user.markets,
 });
 
 const actions = { showLoader, hideLoader, setCompany, setCompanyStructure, editUser };

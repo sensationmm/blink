@@ -26,7 +26,6 @@ const SelectMarkets = (props: any) => {
     const {
         currentUser,
         company,
-        markets,
         setMarkets,
         history,
         showLoader,
@@ -66,7 +65,7 @@ const SelectMarkets = (props: any) => {
         showLoader();
         let UBOStructure = await requestCompanyUBOStructure(currentUser.company.companyId, currentUser.company.countryCode);
 
-        await apiEditField(currentUser.profileDocId, 'markets', props.markets.slice());
+        await apiEditField(currentUser.profileDocId, 'markets', currentUser.markets.slice());
 
         setCompanyStructure(UBOStructure);
         hideLoader();
@@ -114,7 +113,7 @@ const SelectMarkets = (props: any) => {
                                         </Styled.Inner>
                                     ),
                                     className: classNames(
-                                        { active: markets.indexOf(market.code) > -1 },
+                                        { active: currentUser.markets.indexOf(market.code) > -1 },
                                         { disabled: market.disabled },
                                     ),
                                 };
@@ -123,7 +122,7 @@ const SelectMarkets = (props: any) => {
                 />
 
                 <Actions centered>
-                    <Button onClick={getCompany} disabled={markets.length === 0} />
+                    <Button onClick={getCompany} disabled={currentUser.markets.length === 0} />
                 </Actions>
 
             </MainStyled.ContentNarrow>
@@ -134,7 +133,6 @@ const SelectMarkets = (props: any) => {
 const mapStateToProps = (state: any) => ({
     company: state.screening.company,
     currentUser: state.auth.user,
-    markets: state.auth.user.markets,
 });
 
 const actions = { setMarkets, showLoader, hideLoader, setCompany, setCompanyStructure };

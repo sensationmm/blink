@@ -58,8 +58,7 @@ const MyCompany = (props: any) => {
         // hideLoader,
         setSideTray,
         sideTrayOpen,
-        history,
-        markets
+        history
     } = props;
 
     let buildingTimeout: any;
@@ -74,7 +73,7 @@ const MyCompany = (props: any) => {
 
     if (!currentUser.screened) {
         return <Redirect to="/onboarding" />;
-    } else if (markets.length === 0 || !company || !companyStructure) {
+    } else if (currentUser.markets.length === 0 || !company || !companyStructure) {
         return <Redirect to="/onboarding/select-markets" />;
     }
 
@@ -101,7 +100,7 @@ const MyCompany = (props: any) => {
 
     return (
         <MainStyled.MainSt className="hasActionBar">
-            <SetupStatus markets={markets} />
+            <SetupStatus markets={currentUser.markets} />
 
             <MainStyled.Content>
                 {building
@@ -150,7 +149,6 @@ const mapStateToProps = (state: any) => ({
     company: state.screening.company,
     companyStructure: state.screening.companyStructure,
     ownershipThreshold: state.screening.ownershipThreshold,
-    markets: state.auth.user.markets,
 });
 
 const actions = { setOwnershipThreshold, setCompletion, setErrors, showLoader, hideLoader, setSideTray };
