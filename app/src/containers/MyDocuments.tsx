@@ -114,10 +114,8 @@ const MyDocuments = (props: any) => {
 
     const [section, setSection] = useState('People');
 
-    if (!currentUser.screened) {
+    if (!currentUser.screened || currentUser.markets.length === 0 || !company || !companyStructure) {
         return <Redirect to="/onboarding" />;
-    } else if (currentUser.markets.length === 0 || !company || !companyStructure) {
-        return <Redirect to="/onboarding/select-markets" />;
     }
 
     const shareholders = companyStructure.distinctShareholders.filter((shareholder: any) => shareholder.totalShareholding > ownershipThreshold && getValue(shareholder.shareholderType) === 'P');

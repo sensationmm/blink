@@ -103,7 +103,7 @@ const MyDocumentsPerson = (props: any) => {
     const [manualAddress, setManualAddress] = useState(manualUtilityBill);
 
     if (!currentUser.screened || !companyStructure) {
-        return <Redirect to="/onboarding/select-markets" />;
+        return <Redirect to="/onboarding" />;
     }
 
     const saveShareholder = async () => {

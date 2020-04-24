@@ -12,6 +12,8 @@ import ProgressBar from '../components/progress-bar';
 import { setOwnershipThreshold, setCompletion, setErrors } from '../redux/actions/screening';
 import { showLoader, hideLoader } from '../redux/actions/loader';
 import { setSideTray } from '../redux/actions/side-tray';
+import { editField as apiEditField } from '../utils/validation/request';
+import { editUser } from '../redux/actions/auth';
 
 import SideTray from '../components/side-tray';
 import ShareholderEdit from '../components/shareholder-edit';
@@ -54,11 +56,12 @@ const MyCompany = (props: any) => {
         // setOwnershipThreshold,
         // setCompletion,
         // setErrors,
-        // showLoader,
-        // hideLoader,
+        showLoader,
+        hideLoader,
         setSideTray,
         sideTrayOpen,
-        history
+        history,
+        editUser
     } = props;
 
     let buildingTimeout: any;
@@ -71,10 +74,8 @@ const MyCompany = (props: any) => {
 
     const [building, setBuilding] = useState(true);
 
-    if (!currentUser.screened) {
+    if (!currentUser.screened || currentUser.markets.length === 0 || !company || !companyStructure) {
         return <Redirect to="/onboarding" />;
-    } else if (currentUser.markets.length === 0 || !company || !companyStructure) {
-        return <Redirect to="/onboarding/select-markets" />;
     }
 
     const editUBO = (shareholder: any, shares: any) => {
@@ -93,6 +94,17 @@ const MyCompany = (props: any) => {
     //         ownershipThreshold
     //     );
     // };
+
+    const confirmStructure = async () => {
+        showLoader();
+        history.push('/onboarding/my-documents');
+
+        await apiEditField(currentUser.profileDocId, 'structureConfirmed', true);
+
+        editUser('structureConfirmed', true)
+
+        hideLoader();
+    }
 
     const calculationTime = companyStructure.shareholderDepth * (shareholderAnimLevel + shareholderAnimVariant);
 
@@ -134,7 +146,7 @@ const MyCompany = (props: any) => {
 
             <ActionBar
                 labelPrimary={'Confirm company structure'}
-                actionPrimary={() => history.push('/onboarding/my-documents')}
+                actionPrimary={confirmStructure}
                 labelSecondary={'Complete later'}
                 actionSecondary={() => { }}
                 hidden={building || sideTrayOpen}
@@ -151,7 +163,7 @@ const mapStateToProps = (state: any) => ({
     ownershipThreshold: state.screening.ownershipThreshold,
 });
 
-const actions = { setOwnershipThreshold, setCompletion, setErrors, showLoader, hideLoader, setSideTray };
+const actions = { setOwnershipThreshold, setCompletion, setErrors, showLoader, hideLoader, setSideTray, editUser };
 
 export const RawComponent = MyCompany;
 
