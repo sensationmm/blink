@@ -4,9 +4,13 @@ import { requestAllRules } from '../redux/actions/rules';
 import { withRouter, Link } from 'react-router-dom';
 import * as Styled from "../components/styles";
 import styled from "styled-components";
+import Box from '../layout/box';
 import Icon from "../components/icon"
 import CompanyIcon from '../svg/company-icon.svg';
 import PersonIcon from '../svg/individual-icon.svg';
+import { InputSt } from '../components/styles';
+import { editField } from "../utils/validation/request";
+import { blinkMarkets } from "../utils/config/blink-markets";
 
 const RulesList = styled.ul`
   
@@ -49,7 +53,7 @@ const ContentNarrowInner = styled.div`
   padding: 20px;
 `
 
-const Title = styled.span`
+const Name = styled.span`
   display: block;
   font-size: 12px;
   margin-left: 50px;
@@ -57,8 +61,11 @@ const Title = styled.span`
 
 const CollectionFilter = styled.div`
 font-size: 12px;
-
+  display: flex;
   label {
+    display: flex;
+align-items: center;
+
     padding-left: 30px;
   }
 `
@@ -89,11 +96,85 @@ const Info = styled.div`
   }
 `
 
+const Markets = styled.ul`
+  display: flex;
+  margin: 0;
+
+  li {
+    list-style-type: none;
+    padding: 0 10px;
+
+    label {
+      display: flex;
+      align-items: center;
+
+      input {
+        margin: 0 5px;
+      }
+    }
+
+    &.coreSelected {
+      opacity: 0.3;
+      &:hover {
+        opacity: 1;
+      }
+    }
+
+    img {
+      height: 15px;
+      width: 15px;
+      margin: 0 5px;
+    }
+  }
+`
+
+const CheckBox = styled.input`
+  appearance: unset;
+  border: 1px solid var(--brand-secondary);
+  padding: 8px;
+  border-radius: 50%;
+  position: relative;
+  outline: none;
+
+  &:checked::after {
+    content: "";
+    position: absolute;
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    background-color: var(--brand-secondary);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+`
+
+const Title = styled(InputSt)`
+  max-width: 500px;
+  border-color: transparent;
+  text-align: center;
+  margin-bottom: 0px;
+  &:focus {
+    border-color: var(--basic-shadow);
+  }
+`
+
+const Description = styled(Title)`
+  color: #979797;
+  font-size: 14px;
+`;
+
+const Heading = styled.span`
+  font-size: 12px;
+  font-weight: bold;
+`
+
+
 const collectionOptions = ["Person", "Company"];
 
 const RuleEditor = (props: any) => {
 
-  const [collections, setCollections] = useState(collectionOptions);
+  const [collections, setCollections] = useState([...collectionOptions]);
   const [rules, setRules] = useState();
   const [hasRequestRules, setHasRequestRules] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -115,6 +196,55 @@ const RuleEditor = (props: any) => {
       .sort(sort)
   }
 
+  const editRuleField = async (path: string, field: string, value: string) => {
+    const newRules = rules.map((rule: any) => {
+      if (rule.path === path) {
+        return { ...rule, [field]: value, isEdited: true };
+      }
+      return rule
+    });
+    setRules(newRules);
+  }
+
+  const saveEditRuleField = async (path: string, field: string, value: string) => {
+    const result = await editField(path, field, value);
+    console.log(result);
+  }
+
+  const editMarkets = async (id: string, market: string, checked: boolean) => {
+
+    const rule = rules.find((rule: any) => rule.id === id);
+    let markets = rule.marketRuleMapping;
+    const index = rule.marketRuleMapping.indexOf(market);
+
+    if (market === "Core") {
+      if (checked && index === -1) {
+        markets = ["Core"];
+      }
+    } else if (checked && index === -1) {
+      const coreIndex = markets.indexOf("Core");
+      if (coreIndex > -1) {
+        markets.splice(coreIndex, 1);
+      }
+      markets.push(market);
+    }
+
+
+    if (!checked && index > -1) {
+      markets.splice(index, 1);
+    }
+
+    const newRules = rules.map((rule: any) => {
+      if (rule.id === id) {
+        return { ...rule, marketRuleMapping: markets }
+      }
+      return rule;
+    });
+
+    setRules(newRules);
+
+  }
+
   const getRules = async (newCollections?: Array<string>) => {
     let allRules: Array<string> = [];
 
@@ -126,12 +256,19 @@ const RuleEditor = (props: any) => {
           const name = Object.keys(rule).find((key: string) =>
             key !== "type" &&
             key !== "description" &&
+            key !== "isEdited" &&
             key !== "title" &&
             key !== "marketRuleMapping" &&
             key !== "id"
             && key !== "path")
 
-          return { ...rule, type: collection.toLowerCase(), name }
+          return {
+            ...rule,
+            type: collection.toLowerCase(),
+            name,
+            description: rule.description || "",
+            title: rule.title || ""
+          }
 
         }));
         next();
@@ -180,68 +317,108 @@ const RuleEditor = (props: any) => {
   }
 
   const { ruleId } = props.match.params;
-  const rule = ruleId && rules ?.find((r: any) => r.id === ruleId);
+  const selectedRule = ruleId && rules ?.find((r: any) => r.id === ruleId);
+  const coreSelected = selectedRule && selectedRule.marketRuleMapping ?.indexOf("Core") > -1;
 
   return (
     <Styled.MainSt>
       <Styled.ContentNarrow>
         {rules && <ContentNarrowInner>
 
-          {(ruleId && rule) ?
+          {(ruleId && selectedRule) ?
             <>
               <Actions><Link to="/ruleEditor">&lt; Back</Link></Actions>
               <div>
                 <Info>
-                  <span>{rule.id}</span>
-                  <Icon size="small" icon={rule.type === "person" ? PersonIcon : CompanyIcon} style={rule.type} />
-                  <span>{rule.name}</span>
+                  <Icon size="small" icon={selectedRule.type === "person" ? PersonIcon : CompanyIcon} style={selectedRule.type} />
+                  <span>{selectedRule.name}</span>
 
-                  <span>MARKETS</span>
+                  <Title
+                    onBlur={(e: any) => saveEditRuleField(selectedRule.path, "title", e.target.value)}
+                    onChange={(e: any) => editRuleField(selectedRule.path, "title", e.target.value)}
+                    placeholder="Add a title"
+                    value={selectedRule.title}
+                  />
 
-                  <ul>
-                  {rule.marketRuleMapping.map((market: any) => <li>{market}</li>)}
-                  </ul>
+                  <Description
+                    onBlur={(e: any) => saveEditRuleField(selectedRule.path, "description", e.target.value)}
+                    onChange={(e: any) => editRuleField(selectedRule.path, "description", e.target.value)}
+                    placeholder="Add a description"
+                    value={selectedRule.description}
+                  />
+
+                  <Heading>MARKETS</Heading>
+
+                  <Box>
+                    <Markets>
+
+                      <li key="Core">
+                        <label htmlFor={`${selectedRule.id}-Core`}>
+                          Core
+                      <CheckBox id={`${selectedRule.id}-Core`}
+                            checked={selectedRule.marketRuleMapping.indexOf("Core") > -1}
+                            onChange={e => editMarkets(selectedRule.id, "Core", e.target.checked)}
+                            type="checkbox"></CheckBox></label>
+                      </li>
+                      {blinkMarkets
+                        .filter((market: any) => !market.disabled)
+                        .map((market: any) => <li className={coreSelected ? "coreSelected" : ""} key={market.code}>
+                          <label htmlFor={`${selectedRule.id}-${market.code}`}>
+                            <img src={market.flag} alt={market.name} />
+                            {market.code}
+                            <CheckBox id={`${selectedRule.id}-${market.code}`}
+                              checked={selectedRule.marketRuleMapping.indexOf(market.code) > -1}
+                              onChange={e => editMarkets(selectedRule.id, market.code, e.target.checked)}
+                              type="checkbox"></CheckBox></label>
+                        </li>)}
+                    </Markets>
+                  </Box>
+
+
+                  <Heading>POLICY</Heading>
+
+                  <Box>
+
+                  </Box>
                 </Info>
               </div>
             </>
-              :
-  
+            :
+
             <>
-                <Actions>
-                  <Search value={searchTerm} onChange={(e: any) => setSearchTerm(e.target.value)} placeholder="Search" />
-                  <CollectionFilter>
-                    {collectionOptions.map((option: string) => {
-                      return <span key={option}>
-                        <label >{option} <input type="checkbox" onChange={e => changeCollection(option, e.target.checked)} checked={!!collections.find(c => c === option)} /></label>
-                      </span>
-                    })}
-                  </CollectionFilter>
-                </Actions>
-                <RulesList>{rules.filter((r: any) => {
-                  const term = searchTerm.toLowerCase();
-                  return (term === "" || (r.name ?.toLowerCase().indexOf(term) > -1 || r.title ?.toLowerCase().indexOf(term)))
-                }).map((rule: any) => {
-                  return <li key={rule.id} onClick={() => props.history.push(`/ruleEditor/${rule.id}`)}>
-                    <label>
-                      <Icon size="small" icon={rule.type === "person" ? PersonIcon : CompanyIcon} style={rule.type} />
-                      <Title>{highlightSearch(rule.title || rule.name)}</Title>
-                    </label></li>
-                })}
-                </RulesList></>}
+              <Actions>
+                <Search value={searchTerm} onChange={(e: any) => setSearchTerm(e.target.value)} placeholder="Search" />
+                <CollectionFilter>
+                  {collectionOptions.map((option: string) => <label key={option}>{option} <CheckBox type="checkbox" onChange={e => changeCollection(option, e.target.checked)} checked={!!collections.find(c => c === option)} /></label>
+
+                  )}
+                </CollectionFilter>
+              </Actions>
+              <RulesList>{rules.filter((r: any) => {
+                const term = searchTerm.toLowerCase();
+                return (term === "" || (r.name ? r.name.toLowerCase().indexOf(term) > -1 : r.title ?.toLowerCase().indexOf(term) > -1))
+              }).map((rule: any) => {
+                return <li key={rule.id} onClick={() => props.history.push(`/ruleEditor/${rule.id}`)}>
+                  <label>
+                    <Icon size="small" icon={rule.type === "person" ? PersonIcon : CompanyIcon} style={rule.type} />
+                    <Name>{highlightSearch(rule.title || rule.name)}</Name>
+                  </label></li>
+              })}
+              </RulesList></>}
 
         </ContentNarrowInner>
         }
       </Styled.ContentNarrow>
-    </Styled.MainSt>
-      );
-    };
-    
-const mapStateToProps = (state: any) => ({
-        modal: state.modal,
-    });
-    
-const actions = {
-        requestAllRules
-      }
+    </Styled.MainSt >
+  );
+};
 
-      export default withRouter(connect(mapStateToProps, actions)(RuleEditor));
+const mapStateToProps = (state: any) => ({
+  modal: state.modal,
+});
+
+const actions = {
+  requestAllRules
+}
+
+export default withRouter(connect(mapStateToProps, actions)(RuleEditor));
