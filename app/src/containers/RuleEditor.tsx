@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { requestAllRules } from '../redux/actions/rules';
 import { withRouter } from 'react-router-dom';
 import * as Styled from "../components/styles";
-import { editField } from "../utils/validation/request";
+import { editMultipleFields } from "../redux/actions/validation";
 
 import RuleDetails from "../components/ruleEditor/details";
 import List from "../components/ruleEditor/list";
@@ -107,7 +107,7 @@ const RuleEditor = (props: any) => {
                 rules={rules} 
                 selectedRule={selectedRule} 
                 setRules={setRules}
-                editField={editField} />
+                editMultipleFields={props.editMultipleFields} />
               :
 
               <List 
@@ -133,7 +133,8 @@ const mapStateToProps = (state: any) => ({
 });
 
 const actions = {
-  requestAllRules
+  requestAllRules,
+  editMultipleFields
 }
 
 export default withRouter(connect(mapStateToProps, actions)(RuleEditor));
