@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
@@ -9,6 +9,7 @@ import Blocks from '../layout/blocks';
 import FormLabel from '../components/form-label';
 import FormUploader from '../components/form-uploader';
 import { setCompany, setCompanyStructure } from '../redux/actions/screening';
+import { requestCompanyUBOStructure } from '../utils/generic/request';
 import { editField as apiEditField } from '../utils/validation/request';
 import { editUser } from '../redux/actions/auth';
 import { showLoader, hideLoader } from '../redux/actions/loader';
@@ -22,6 +23,7 @@ const Onboarding = (props: any) => {
     const {
         company,
         companyStructure,
+        setCompanyStructure,
         setCompany,
         currentUser,
         history,
@@ -30,16 +32,34 @@ const Onboarding = (props: any) => {
         hideLoader,
     } = props;
 
+    const [isPaused, setIsPaused] = useState(true);
+
     useEffect(() => {
         setCompany(currentUser.company);
+
+        if (currentUser.screened) {
+            preloadCompany();
+        } else {
+            setIsPaused(false);
+        }
     }, []);
 
-    if (company && companyStructure) {
-        return <Redirect to="/onboarding/my-documents" />;
-    } else if (currentUser.markets.length > 0) {
-        return <Redirect to="/onboarding/my-company" />;
-    } else if (currentUser.screened) {
-        return <Redirect to="/onboarding/select-markets" />;
+    const preloadCompany = async () => {
+        showLoader();
+        let UBOStructure = await requestCompanyUBOStructure(currentUser.company.companyId, currentUser.company.countryCode);
+        setCompanyStructure(UBOStructure);
+        setIsPaused(false);
+        hideLoader();
+    }
+
+    if (!isPaused) {
+        if (currentUser.structureConfirmed) {
+            return <Redirect to="/onboarding/my-documents" />;
+        } else if (currentUser.markets.length > 0) {
+            return <Redirect to="/onboarding/my-company" />;
+        } else if (currentUser.screened) {
+            return <Redirect to="/onboarding/select-markets" />;
+        }
     }
 
     const loadCompany = async () => {
@@ -59,6 +79,10 @@ const Onboarding = (props: any) => {
     }
 
     const allowProgress = currentUser.verification?.passport && (currentUser.type === 'officer' || currentUser.verification?.boardMandate);
+
+    if (isPaused) {
+        return <div />;
+    }
 
     return (
         <TemplateUser headerIcon={HeaderPassport}>

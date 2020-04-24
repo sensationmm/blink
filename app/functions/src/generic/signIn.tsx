@@ -96,7 +96,14 @@ server.post('*/', async function (req: any, res: any) {
                     person[key] = personData[key].value
                 })
                 // const { expires } = accountData.access
-                user = { ...user, ...person, personDocId: personObject.ref?.path, profileDocId, markets: profile.markets };
+                user = {
+                    ...user,
+                    ...person,
+                    personDocId: personObject.ref?.path,
+                    profileDocId,
+                    markets: profile.markets,
+                    structureConfirmed: profile.structureConfirmed
+                };
             }
         }
 

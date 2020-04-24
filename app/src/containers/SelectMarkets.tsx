@@ -47,7 +47,7 @@ const SelectMarkets = (props: any) => {
     const regions = [...new Set(blinkMarkets.map(market => market.region))];
 
     const setMarket = (market: any) => {
-        const marketsHold = props.markets.slice();
+        const marketsHold = currentUser.markets.slice();
 
         const currentIndex = marketsHold.indexOf(market);
 

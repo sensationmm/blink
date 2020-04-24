@@ -40,12 +40,10 @@ const MyDocumentsPerson = (props: any) => {
         section
     } = props;
 
-    if (!currentUser.screened) {
+    if (!currentUser.screened || !companyStructure) {
         return <Redirect to="/onboarding" />;
     } else if (!section) {
         return <Redirect to="/onboarding/my-documents" />;
-    } else if (!companyStructure) {
-        return <Redirect to="/onboarding/select-markets" />;
     }
 
     let title;

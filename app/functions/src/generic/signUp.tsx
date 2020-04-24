@@ -120,7 +120,9 @@ server.post('*/', async function (req: any, res: any) {
                         if (!profileRef) {
                             profileRef = await profilesCollection.add({
                                 account,
-                                company: companyRef
+                                company: companyRef,
+                                markets: [],
+                                structureConfirmed: false
                             });
                             // profileRef = profile.ref;
                         }

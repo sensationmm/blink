@@ -1,7 +1,8 @@
 import {
     USER_SIGNIN_SUCCESS,
     USER_SIGNOUT,
-    EDIT_USER
+    EDIT_USER,
+    SET_MARKETS,
 } from '../constants';
 
 export const initialState = {
@@ -56,6 +57,15 @@ export const auth = (state = initialState, action) => {
                 user: {
                     ...state.user,
                     [action.field]: action.value,
+                }
+            }
+
+        case SET_MARKETS:
+            return {
+                ...state,
+                user: {
+                    ...state.user,
+                    markets: action.markets,
                 }
             }
 
