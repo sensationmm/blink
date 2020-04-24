@@ -11,21 +11,21 @@ const List = (props: any) => {
 
     const highlightSearch = (value: string) => {
         if (searchTerm == '') {
-          return value;
+            return value;
         }
-    
+
         const regEx = new RegExp(searchTerm, "ig");
         const valueParts = value.split(regEx);
         const matches = value.match(regEx);
-    
-        return valueParts.map((part: string, index: number) => <span key={part}>
-          {part}
-          {index < (valueParts.length - 1) && <b>
-            {matches && matches[index]}
-          </b>}</span>)
-      }
 
-      
+        return valueParts.map((part: string, index: number) => <span key={index}>
+            {part}
+            {index < (valueParts.length - 1) && <b>
+                {matches && matches[index]}
+            </b>}</span>)
+    }
+
+
     return <styled.ContentNarrowInner>
         <styled.Actions>
             <styled.Search value={searchTerm} onChange={(e: any) => setSearchTerm(e.target.value)} placeholder="Search" />
@@ -38,14 +38,22 @@ const List = (props: any) => {
         </styled.Actions>
         <styled.RulesList>{rules.filter((r: any) => {
             const term = searchTerm.toLowerCase();
-            return (term === "" || (r.name ? r.name.toLowerCase().indexOf(term) > -1 : r.title ?.toLowerCase().indexOf(term) > -1))
+            if (term === "") {
+                return true
+            }
+            if (r.title) {
+                return r.title.toLowerCase().indexOf(term) > -1
+            }
+            return r.name ?.toLowerCase().indexOf(term) > -1
         }).map((rule: any) => {
-            return <li key={rule.id} onClick={() => history.push(`/ruleEditor/${rule.id}`)}>
-                <label>
-                    <Icon size="small" icon={rule.type === "person" ? PersonIcon : CompanyIcon} style={rule.type} />
-                    <styled.Name>{highlightSearch(rule.title || rule.name)}</styled.Name>
-                </label></li>
-        })}
+                return <li key={rule.id} onClick={() => {
+                    history.push(`/ruleEditor/${rule.id}`)
+                }}>
+                    <label>
+                        <Icon size="small" icon={rule.type === "person" ? PersonIcon : CompanyIcon} style={rule.type} />
+                        <styled.Name>{highlightSearch(rule.title || rule.name)}</styled.Name>
+                    </label></li>
+            })}
         </styled.RulesList>
     </styled.ContentNarrowInner>
 }

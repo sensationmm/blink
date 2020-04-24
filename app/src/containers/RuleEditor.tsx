@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { requestAllRules } from '../redux/actions/rules';
+import { setModal } from '../redux/actions/modal';
 import { withRouter } from 'react-router-dom';
 import * as Styled from "../components/styles";
 import { editMultipleFields } from "../redux/actions/validation";
@@ -18,7 +19,7 @@ const RuleEditor = (props: any) => {
   const [hasRequestRules, setHasRequestRules] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filterAndSort = (rules: any) => {
+  const sort = (rules: any) => {
 
     const sort: (a: any, b: any) => any = (a: any, b: any) => {
 
@@ -28,11 +29,7 @@ const RuleEditor = (props: any) => {
       return b.name.toLowerCase() > a.name.toLowerCase() ? -1 : 1
     }
 
-    const term = searchTerm.toLowerCase();
-    return rules.filter((r: any) => {
-      return (term === "" || (r.name.toLowerCase().indexOf(term) > -1 || r.title.toLowerCase().indexOf(term)))
-    })
-      .sort(sort)
+    return rules.sort(sort)
   }
 
   const getRules = async (newCollections?: Array<string>) => {
@@ -65,7 +62,7 @@ const RuleEditor = (props: any) => {
       })
     }
 
-    setRules(filterAndSort(allRules));
+    setRules(sort(allRules));
   }
 
   if (!hasRequestRules) {
@@ -107,7 +104,8 @@ const RuleEditor = (props: any) => {
                 rules={rules} 
                 selectedRule={selectedRule} 
                 setRules={setRules}
-                editMultipleFields={props.editMultipleFields} />
+                editMultipleFields={props.editMultipleFields}
+                setModal={props.setModal} />
               :
 
               <List 
@@ -134,7 +132,8 @@ const mapStateToProps = (state: any) => ({
 
 const actions = {
   requestAllRules,
-  editMultipleFields
+  editMultipleFields,
+  setModal
 }
 
 export default withRouter(connect(mapStateToProps, actions)(RuleEditor));
