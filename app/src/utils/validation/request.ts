@@ -42,6 +42,20 @@ const addRule = async (rule: any, collection: string) => {
     return body;
 }
 
+
+const requestAllRules = async (collection: string) => {
+    const response = await fetch(`${domain}/getAllRules/${collection}`, {
+        method: "GET",
+        mode: "cors",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    });
+    const body = await response.json();
+    return body;
+}
+
+
 const deleteAllRules = async (collection: string) => {
     const response = await fetch(`${domain}/deleteAllRules`, {
         method: "POST",
@@ -121,4 +135,4 @@ const addOfficer = async (parentDocId: string, name: string, emailAddress: strin
 
 
 
-export { validateCompany, addRule, deleteAllRules, editField, addUBO, deleteUBO, addOfficer };
+export { validateCompany, addRule, deleteAllRules, requestAllRules, editField, addUBO, deleteUBO, addOfficer };

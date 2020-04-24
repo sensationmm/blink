@@ -36,6 +36,7 @@ import MyCompany from './containers/MyCompany';
 import MyDocuments from './containers/MyDocuments';
 import MyDocumentsPerson from './containers/MyDocumentsPerson';
 import MyDocumentsCompany from './containers/MyDocumentsCompany';
+import RuleEditor from './containers/RuleEditor';
 
 export default () => {
 
@@ -96,6 +97,9 @@ const App = withRouter((props: any) => {
         </Route>
         <Route path="/graph/:companyId?/:countryCode?">
           <Graph />
+        </Route>
+        <Route path="/ruleEditor/:ruleId?">
+          <RuleEditor />
         </Route>
         <Route path="/import">
           <Import />
