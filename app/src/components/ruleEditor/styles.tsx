@@ -35,7 +35,7 @@ clear: both;
   }
 
   b {
-    background-color: var(--brand-secondary);
+    color: var(--brand-secondary); 
   }
 `
 

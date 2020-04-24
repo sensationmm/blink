@@ -135,7 +135,11 @@
     {
       "source": "/verifyOob",
       "function": "verifyOob"
-    },  
+    },
+    {
+      "source": "/getAllRules/**",
+      "function": "getAllRules"
+    },
     {
       "source": "**",
       "destination": "/index.html"

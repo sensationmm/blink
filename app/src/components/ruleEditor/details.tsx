@@ -12,7 +12,7 @@ import Button from '../button';
 
 const RuleDetails = (props: any) => {
 
-    const { rules, selectedRule, editMultipleFields, setRules } = props;
+    const { rules, selectedRule, editMultipleFields, setRules, setModal } = props;
 
     const coreSelected = selectedRule && selectedRule.marketRuleMapping ?.indexOf("Core") > -1;
 
@@ -46,9 +46,10 @@ const RuleDetails = (props: any) => {
         const newRules = rules.map((rule: any) => {
             if (rule.path === path) {
                 const originalData = rule.originalData || {};
-                if (!originalData[field]) {
+                if (!originalData[field] && originalData[field] !== "") {
                     originalData[field] = rule[field];
                 }
+
                 return { ...rule, [field]: value, isEdited: true, originalData };
             }
             return rule
@@ -65,7 +66,7 @@ const RuleDetails = (props: any) => {
             });
 
             await editMultipleFields(selectedRule.path, dataToSave)
-            
+
             const newRules = rules.map((rule: any) => {
                 if (rule.path === selectedRule.path) {
                     delete rule.originalData;
@@ -79,7 +80,7 @@ const RuleDetails = (props: any) => {
     const undoEdits = () => {
         const newRules = rules.map((rule: any) => {
             if (rule.path === selectedRule.path) {
-                rule = {...rule, ...rule.originalData}
+                rule = { ...rule, ...rule.originalData }
                 delete rule.originalData;
             }
             return rule
@@ -89,7 +90,12 @@ const RuleDetails = (props: any) => {
 
     return <styled.ContentNarrowInner>
 
-        <Link style={{ textDecoration: "none" }} to="/ruleEditor">&lt; Back</Link>
+        <Link style={{ textDecoration: "none" }} onClick={e => {
+            if (selectedRule.originalData) {
+                e.preventDefault();
+                setModal("Unsaved changes", "You have unsaved changes. Please confirm or undo", null)
+            }
+        }} to="/ruleEditor">&lt; Back</Link>
 
         <styled.ContentNarrowInner>
             <styled.Info>
