@@ -12,6 +12,8 @@ import TabNav from '../components/tab-nav';
 import Box from '../layout/box';
 import Blocks from '../layout/blocks';
 import ProgressBubble from '../components/progress-bubble';
+import Button from '../components/button';
+import Actions from '../layout/actions';
 
 import IconDocuments from '../svg/icon-documents.svg';
 import IconTaxDocuments from '../svg/icon-tax-documents.svg';
@@ -23,9 +25,16 @@ import IconUpload from '../svg/icon-upload.svg';
 import IconDownload from '../svg/icon-download.svg';
 import IconVideo from '../svg/icon-video.svg';
 import IconSchedule from '../svg/icon-schedule.svg';
+import FormCheckbox from '../components/form-checkbox';
+
+import { showLoader, hideLoader } from '../redux/actions/loader';
+import { editUser } from '../redux/actions/auth';
+import { editField as apiEditField } from '../utils/validation/request';
 
 import * as MainStyled from "../components/styles";
 import * as Styled from './my-documents.styles';
+
+import Terms from '../terms';
 
 const Person = [
     'verification.passport',
@@ -77,48 +86,30 @@ export const CompanyDocuments = [
     'romanianFiscalCertificate',
 ];
 
-const Entry = (props: any) => {
-    return (
-        <Styled.Entry
-            onClick={props.onClick}
-        >
-            <Box shadowed>
-                <Styled.Progress>
-                    <Styled.Header>
-                        <Icon icon={props.icon} style={props.type} subIcon={props.subIcon} />
-                        <div>
-                            <Styled.HeaderName>{props.title}</Styled.HeaderName>
-                            {props.subTitle && <Styled.HeaderRole>{props.subTitle}</Styled.HeaderRole>}
-                        </div>
-                    </Styled.Header>
-
-                    <Styled.Status>{props.status}</Styled.Status>
-
-                    <div>
-                        <ProgressBubble type={props.type} completed={props.completed} total={props.total} />
-                    </div>
-                </Styled.Progress>
-            </Box>
-        </Styled.Entry>
-    )
-}
-
 const MyDocuments = (props: any) => {
     const {
         currentUser,
         company,
         companyStructure,
         ownershipThreshold,
-        history
+        history,
+        showLoader,
+        hideLoader,
+        editUser
     } = props;
 
     const [section, setSection] = useState('People');
+    const [showTerms, setShowTerms] = useState(false);
+    const [acceptTerms, setAcceptTerms] = useState(false);
 
     if (!currentUser.screened || currentUser.markets.length === 0 || !company || !companyStructure) {
         return <Redirect to="/onboarding" />;
     }
 
-    const shareholders = companyStructure.distinctShareholders.filter((shareholder: any) => shareholder.totalShareholding > ownershipThreshold && getValue(shareholder.shareholderType) === 'P');
+    const shareholders = companyStructure.distinctShareholders.filter((shareholder: any) =>
+        shareholder.totalShareholding > ownershipThreshold &&
+        getValue(shareholder.shareholderType) === 'P'
+    );
 
     const confirmDone = (object: any, sources: any) => {
         let completed = 0;
@@ -168,127 +159,188 @@ const MyDocuments = (props: any) => {
             : (!notificationSent ? 'Needs completing' : notificationSent)
     }
 
+    const completeOnboarding = async () => {
+        showLoader();
+
+        await apiEditField(currentUser.profileDocId, 'onboardingCompleted', true);
+
+        editUser('onboardingCompleted', true)
+
+        history.push('/onboarding/my-accounts');
+        hideLoader();
+    }
+
+    const completed = shareholdersDone.length === shareholders.length && companyDone === 5;
+
+    const termsStatement = <Styled.TermsAccept>
+        I accept the
+                <Styled.TermsLink onClick={() => setShowTerms(true)}> Terms &amp; Conditions </Styled.TermsLink>
+                    on behalf of {getValue(companyStructure.name)}
+        <FormCheckbox style={'confirm'} onChange={() => { setShowTerms(false); setAcceptTerms(!acceptTerms); }} checked={acceptTerms} />
+    </Styled.TermsAccept>;
+
     return (
         <MainStyled.MainSt className={classNames('hasActionBar', { person: section === 'People' }, { company: section === 'Company' })}>
             <SetupStatus markets={currentUser.markets} />
 
-            <MainStyled.ContentNarrow>
-                <h1 className="center">Please complete all company and personal information to open the accounts</h1>
+            {showTerms &&
+                <MainStyled.ContentNarrow>
+                    <Styled.Terms>
+                        <Terms />
+                        <br /><br />
+                        {termsStatement}
+                    </Styled.Terms>
+                </MainStyled.ContentNarrow>
+            }
 
-                <TabNav
-                    onChange={setSection}
-                    items={[
-                        {
-                            label: 'People',
-                            stat: `${shareholdersDone.length} / ${shareholders.length}`,
-                            content: (
-                                <Blocks>
-                                    <h2 className="center">
-                                        We have identified {shareholders.length} {shareholders.length === 1 ? 'UBO' : 'UBOs'} from {company.name} company structure which require ID checks
+            {!showTerms &&
+                <MainStyled.ContentNarrow>
+                    <h1 className="center">Please complete all company and personal information to open the accounts</h1>
+
+                    <TabNav
+                        onChange={setSection}
+                        items={[
+                            {
+                                label: 'People',
+                                stat: `${shareholdersDone.length} / ${shareholders.length}`,
+                                content: (
+                                    <Blocks>
+                                        <h2 className="center">
+                                            We have identified {shareholders.length} {shareholders.length === 1 ? 'UBO' : 'UBOs'} from {company.name} company structure which require ID checks
                                 </h2>
-                                    {shareholders.map((shareholder: any, count: 0) => {
-                                        const completed = confirmDone(shareholder, Person);
+                                        {shareholders.map((shareholder: any, count: 0) => {
+                                            const completed = confirmDone(shareholder, Person);
 
-                                        let notificationSent = false;
-                                        if (shareholder.verification) {
-                                            if (shareholder.verification.passport && shareholder.verification.passport.substring(0, 5) === 'Notif') {
-                                                notificationSent = shareholder.verification.passport;
-                                            } else if (shareholder.verification.utilityBill && shareholder.verification.utilityBill.substring(0, 5) === 'Notif') {
-                                                notificationSent = shareholder.verification.utilityBill;
+                                            let notificationSent = false;
+                                            if (shareholder.verification) {
+                                                if (shareholder.verification.passport && shareholder.verification.passport.substring(0, 5) === 'Notif') {
+                                                    notificationSent = shareholder.verification.passport;
+                                                } else if (shareholder.verification.utilityBill && shareholder.verification.utilityBill.substring(0, 5) === 'Notif') {
+                                                    notificationSent = shareholder.verification.utilityBill;
+                                                }
                                             }
-                                        }
 
-                                        return (
-                                            <Entry
-                                                icon={IconPerson}
-                                                key={`box-${count}`}
-                                                onClick={() => history.push(`/onboarding/my-documents/${shareholder.docId}`)}
-                                                type={'person'}
-                                                title={getValue(shareholder.name)}
-                                                subTitle={'UBO'}
-                                                status={setStatus(completed === 5, notificationSent)}
-                                                total={5}
-                                                completed={completed}
-                                            />
-                                        )
-                                    })}
-                                </Blocks>
-                            )
-                        },
-                        {
-                            label: 'Company',
-                            stat: `${companyDone} / 5`,
-                            content: (
-                                <Blocks>
-                                    <h2 className="center">We have auto filled most of the company information required to make it as easy as possible for you to complete this step</h2>
-                                    <Entry
-                                        icon={IconCompany}
-                                        subIcon={IconEdit}
-                                        onClick={() => history.push('/onboarding/my-documents/company/company-details')}
-                                        type={'company'}
-                                        title={'Company details'}
-                                        status={setStatus(confirmDone(companyStructure, CompanyDetails) === CompanyDetails.length)}
-                                        total={CompanyDetails.length}
-                                        completed={confirmDone(companyStructure, CompanyDetails)}
-                                    />
+                                            return (
+                                                <Entry
+                                                    icon={IconPerson}
+                                                    key={`box-${count}`}
+                                                    onClick={() => history.push(`/onboarding/my-documents/${shareholder.docId}`)}
+                                                    type={'person'}
+                                                    title={getValue(shareholder.name)}
+                                                    subTitle={'UBO'}
+                                                    status={setStatus(completed === 5, notificationSent)}
+                                                    total={5}
+                                                    completed={completed}
+                                                />
+                                            )
+                                        })}
+                                    </Blocks>
+                                )
+                            },
+                            {
+                                label: 'Company',
+                                stat: `${companyDone} / 5`,
+                                content: (
+                                    <Blocks>
+                                        <h2 className="center">We have auto filled most of the company information required to make it as easy as possible for you to complete this step</h2>
+                                        <Entry
+                                            icon={IconCompany}
+                                            subIcon={IconEdit}
+                                            onClick={() => history.push('/onboarding/my-documents/company/company-details')}
+                                            type={'company'}
+                                            title={'Company details'}
+                                            status={setStatus(confirmDone(companyStructure, CompanyDetails) === CompanyDetails.length)}
+                                            total={CompanyDetails.length}
+                                            completed={confirmDone(companyStructure, CompanyDetails)}
+                                        />
 
-                                    <Entry
-                                        icon={IconBusiness}
-                                        subIcon={IconEdit}
-                                        onClick={() => history.push('/onboarding/my-documents/company/business-details')}
-                                        type={'company'}
-                                        title={'Business details'}
-                                        status={setStatus(confirmDone(companyStructure, BusinessDetails) === BusinessDetails.length)}
-                                        total={BusinessDetails.length}
-                                        completed={confirmDone(companyStructure, BusinessDetails)}
-                                    />
+                                        <Entry
+                                            icon={IconBusiness}
+                                            subIcon={IconEdit}
+                                            onClick={() => history.push('/onboarding/my-documents/company/business-details')}
+                                            type={'company'}
+                                            title={'Business details'}
+                                            status={setStatus(confirmDone(companyStructure, BusinessDetails) === BusinessDetails.length)}
+                                            total={BusinessDetails.length}
+                                            completed={confirmDone(companyStructure, BusinessDetails)}
+                                        />
 
-                                    <Entry
-                                        icon={IconDocuments}
-                                        subIcon={IconUpload}
-                                        onClick={() => history.push('/onboarding/my-documents/company/company-documents')}
-                                        type={'company'}
-                                        title={'Documents to upload'}
-                                        status={setStatus(confirmDone(companyStructure.verification, CompanyDocuments) === CompanyDocuments.length)}
-                                        total={CompanyDocuments.length}
-                                        completed={confirmDone(companyStructure.verification, CompanyDocuments)}
-                                    />
+                                        <Entry
+                                            icon={IconDocuments}
+                                            subIcon={IconUpload}
+                                            onClick={() => history.push('/onboarding/my-documents/company/company-documents')}
+                                            type={'company'}
+                                            title={'Documents to upload'}
+                                            status={setStatus(confirmDone(companyStructure.verification, CompanyDocuments) === CompanyDocuments.length)}
+                                            total={CompanyDocuments.length}
+                                            completed={confirmDone(companyStructure.verification, CompanyDocuments)}
+                                        />
 
-                                    <Entry
-                                        icon={IconTaxDocuments}
-                                        subIcon={IconDownload}
-                                        type={'company'}
-                                        title={'Tax documents to upload'}
-                                        status={setStatus(true)}
-                                        total={3}
-                                        completed={3}
-                                    />
+                                        <Entry
+                                            icon={IconTaxDocuments}
+                                            subIcon={IconDownload}
+                                            type={'company'}
+                                            title={'Tax documents to upload'}
+                                            status={setStatus(true)}
+                                            total={3}
+                                            completed={3}
+                                        />
 
-                                    <Entry
-                                        icon={IconVideo}
-                                        subIcon={IconSchedule}
-                                        type={'other'}
-                                        title={'Schedule video call'}
-                                        status={setStatus(true)}
-                                        total={3}
-                                        completed={3}
-                                    />
-                                </Blocks>
-                            )
-                        }
-                    ]}
-                />
-            </MainStyled.ContentNarrow>
+                                        <Entry
+                                            icon={IconVideo}
+                                            subIcon={IconSchedule}
+                                            type={'other'}
+                                            title={'Schedule video call'}
+                                            status={setStatus(true)}
+                                            total={3}
+                                            completed={3}
+                                        />
+                                    </Blocks>
+                                )
+                            }
+                        ]}
+                    />
+                </MainStyled.ContentNarrow>
+            }
 
             <ActionBar
                 labelPrimary={'Open accounts!'}
-                actionPrimary={() => history.push('/onboarding/my-accounts')}
-                disabledPrimary={true}
+                actionPrimary={completeOnboarding}
+                disabledPrimary={!completed || !acceptTerms}
                 labelSecondary={'Complete later'}
                 actionSecondary={() => { }}
                 disabledSecondary={true}
+                header={termsStatement}
+                showHeader={completed}
+                hidden={showTerms}
             />
         </MainStyled.MainSt>
+    )
+}
+
+const Entry = (props: any) => {
+    return (
+        <Styled.Entry
+            onClick={props.onClick}
+        >
+            <Box shadowed>
+                <Styled.Progress>
+                    <Styled.Header>
+                        <Icon icon={props.icon} style={props.type} subIcon={props.subIcon} />
+                        <div>
+                            <Styled.HeaderName>{props.title}</Styled.HeaderName>
+                            {props.subTitle && <Styled.HeaderRole>{props.subTitle}</Styled.HeaderRole>}
+                        </div>
+                    </Styled.Header>
+
+                    <Styled.Status>{props.status}</Styled.Status>
+
+                    <div>
+                        <ProgressBubble type={props.type} completed={props.completed} total={props.total} />
+                    </div>
+                </Styled.Progress>
+            </Box>
+        </Styled.Entry>
     )
 }
 
@@ -300,6 +352,8 @@ const mapStateToProps = (state: any) => ({
     ownershipThreshold: state.screening.ownershipThreshold,
 });
 
+const actions = { showLoader, hideLoader, editUser };
+
 export const RawComponent = MyDocuments;
 
-export default connect(mapStateToProps, null)(withRouter(MyDocuments));
+export default connect(mapStateToProps, actions)(withRouter(MyDocuments));

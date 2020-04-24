@@ -9,7 +9,7 @@ interface FormCheckboxProps {
   onChange?: Function;
   error?: string;
   disabled?: boolean;
-  style?: 'tick' | 'group';
+  style?: 'tick' | 'confirm' | 'group';
 }
 const FormCheckbox: React.FC<FormCheckboxProps> = ({ label, checked = false, onChange, error, disabled = false, style = 'tick' }) => {
   return (

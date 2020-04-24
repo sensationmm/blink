@@ -97,12 +97,12 @@ const MyCompany = (props: any) => {
 
     const confirmStructure = async () => {
         showLoader();
-        history.push('/onboarding/my-documents');
 
         await apiEditField(currentUser.profileDocId, 'structureConfirmed', true);
 
         editUser('structureConfirmed', true)
 
+        history.push('/onboarding/my-documents');
         hideLoader();
     }
 

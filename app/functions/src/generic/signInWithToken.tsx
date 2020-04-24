@@ -98,7 +98,8 @@ server.post('*/', async function (req: any, res: any) {
                         personDocId: personObject.ref?.path,
                         profileDocId,
                         markets: profile.markets,
-                        structureConfirmed: profile.structureConfirmed
+                        structureConfirmed: profile.structureConfirmed,
+                        onboardingCompleted: profile.onboardingCompleted
                     };
                 }
             }

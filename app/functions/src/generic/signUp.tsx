@@ -122,7 +122,8 @@ server.post('*/', async function (req: any, res: any) {
                                 account,
                                 company: companyRef,
                                 markets: [],
-                                structureConfirmed: false
+                                structureConfirmed: false,
+                                onboardingCompleted: false
                             });
                             // profileRef = profile.ref;
                         }

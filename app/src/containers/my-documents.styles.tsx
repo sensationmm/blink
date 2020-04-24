@@ -128,3 +128,25 @@ export const StatusComplete = styled.div`
         mask-size: contain;
     }
 `;
+
+export const Terms = styled.div`
+    border: 1px solid var(--basic-shadow);
+    background: var(--basic-white);
+    padding: 60px 150px;
+`;
+
+export const TermsLink = styled.span`
+    color: var(--brand-secondary);
+    cursor: pointer;
+    padding: 0 5px;
+
+    &:hover {
+        text-decoration: underline;
+    }
+`;
+
+export const TermsAccept = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
