@@ -30,8 +30,11 @@ const List = (props: any) => {
         <styled.Actions>
             <styled.Search value={searchTerm} onChange={(e: any) => setSearchTerm(e.target.value)} placeholder="Search" />
             <styled.CollectionFilter>
-                {collectionOptions.map((option: string) => <label key={option}>{option}
-                    <styled.CheckBox type="checkbox" onChange={e => changeCollection(option, e.target.checked)} checked={!!collections.find((c: string) => c === option)} /></label>
+                {collectionOptions.map((option: string) => <label key={option}>
+                    <Icon size="small" icon={option === "Person" ? PersonIcon : CompanyIcon} style={option === "Person" ? "person" : "company"} />
+                    <span>{option}</span>
+                    <styled.CheckBox type="checkbox" onChange={e => changeCollection(option, e.target.checked)}
+                        checked={!!collections.find((c: string) => c === option)} /></label>
 
                 )}
             </styled.CollectionFilter>
