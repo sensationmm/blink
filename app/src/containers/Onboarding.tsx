@@ -13,6 +13,7 @@ import { requestCompanyUBOStructure } from '../utils/generic/request';
 import { editField as apiEditField } from '../utils/validation/request';
 import { editUser } from '../redux/actions/auth';
 import { showLoader, hideLoader } from '../redux/actions/loader';
+import Loader from '../components/loader';
 
 import HeaderPassport from '../svg/header-passport.svg';
 
@@ -33,6 +34,7 @@ const Onboarding = (props: any) => {
     } = props;
 
     const [isPaused, setIsPaused] = useState(true);
+    let renderLoader = true;
 
     useEffect(() => {
         setCompany(currentUser.company);
@@ -40,29 +42,34 @@ const Onboarding = (props: any) => {
         if (currentUser.screened) {
             preloadCompany();
         } else {
+            renderLoader = false;
             setIsPaused(false);
         }
     }, []);
 
     const preloadCompany = async () => {
-        showLoader();
         let UBOStructure = await requestCompanyUBOStructure(currentUser.company.companyId, currentUser.company.countryCode);
         setCompanyStructure(UBOStructure);
         setIsPaused(false);
-        hideLoader();
+    }
+
+    if (currentUser.admin) {
+        return <Redirect to="/" />;
+    } else if (currentUser.onboardingCompleted) {
+        return <Redirect to="/onboarding/my-accounts" />;
     }
 
     if (!isPaused) {
         if (currentUser.structureConfirmed) {
             return <Redirect to="/onboarding/my-documents" />;
-        } else if (currentUser.markets.length > 0) {
+        } else if (currentUser.markets?.length > 0) {
             return <Redirect to="/onboarding/my-company" />;
         } else if (currentUser.screened) {
             return <Redirect to="/onboarding/select-markets" />;
         }
     }
 
-    const loadCompany = async () => {
+    const completeVerification = async () => {
         showLoader();
 
         const passport = currentUser.verification?.passport;
@@ -80,40 +87,41 @@ const Onboarding = (props: any) => {
 
     const allowProgress = currentUser.verification?.passport && (currentUser.type === 'officer' || currentUser.verification?.boardMandate);
 
-    if (isPaused) {
-        return <div />;
-    }
-
     return (
         <TemplateUser headerIcon={HeaderPassport}>
             <Styled.ContentNarrow>
-                <Blocks>
-                    <h1 className={'center'}>We just need a copy of your passport to verify your ID and then you are done!</h1>
+                {isPaused || renderLoader
+                    ? <div><Loader manual /></div>
+                    : (
+                        <Blocks>
+                            <h1 className={'center'}>We just need a copy of your passport to verify your ID and then you are done!</h1>
 
-                    <FormLabel label={'Upload passport'} tooltip={'We need your passport as proof of ID'} />
-                    <FormUploader
-                        id={'passport'}
-                        onUpload={(src: string, base64File: any) => editUser('verification.passport', base64File)}
-                        uploaded={currentUser.verification?.passport}
-                        onClearUpload={() => editUser('verification.passport', null)}
-                    />
-
-                    {currentUser.type !== 'officer' &&
-                        <>
-                            <FormLabel label={'Upload board mandate'} tooltip={`We need proof you are empowered to act on behalf of ${company?.name}`} />
+                            <FormLabel label={'Upload passport'} tooltip={'We need your passport as proof of ID'} />
                             <FormUploader
-                                id={'boardMandate'}
-                                onUpload={(src: string, base64File: any) => editUser('verification.boardMandate', base64File)}
-                                uploaded={currentUser.verification?.boardMandate}
-                                onClearUpload={() => editUser('verification.boardMandate', null)}
+                                id={'passport'}
+                                onUpload={(src: string, base64File: any) => editUser('verification.passport', base64File)}
+                                uploaded={currentUser.verification?.passport}
+                                onClearUpload={() => editUser('verification.passport', null)}
                             />
-                        </>
-                    }
 
-                    <Actions>
-                        <Button label="Select Markets" onClick={loadCompany} disabled={!allowProgress} />
-                    </Actions>
-                </Blocks>
+                            {currentUser.type !== 'officer' &&
+                                <>
+                                    <FormLabel label={'Upload board mandate'} tooltip={`We need proof you are empowered to act on behalf of ${company?.name}`} />
+                                    <FormUploader
+                                        id={'boardMandate'}
+                                        onUpload={(src: string, base64File: any) => editUser('verification.boardMandate', base64File)}
+                                        uploaded={currentUser.verification?.boardMandate}
+                                        onClearUpload={() => editUser('verification.boardMandate', null)}
+                                    />
+                                </>
+                            }
+
+                            <Actions>
+                                <Button label="Select Markets" onClick={completeVerification} disabled={!allowProgress} />
+                            </Actions>
+                        </Blocks>
+                    )
+                }
             </Styled.ContentNarrow>
         </TemplateUser>
     )

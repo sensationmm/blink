@@ -36,6 +36,7 @@ import MyCompany from './containers/MyCompany';
 import MyDocuments from './containers/MyDocuments';
 import MyDocumentsPerson from './containers/MyDocumentsPerson';
 import MyDocumentsCompany from './containers/MyDocumentsCompany';
+import MyAccounts from './containers/MyAccounts';
 import RuleEditor from './containers/RuleEditor';
 
 export default () => {
@@ -77,6 +78,7 @@ const App = withRouter((props: any) => {
         <Route exact path="/onboarding/my-documents/:type/:docId" component={
           (props: any) => (<MyDocumentsPerson docId={props.match.params.docId} type={props.match.params.type} />
           )} />
+        <Route exact path="/onboarding/my-accounts"><MyAccounts /></Route>
 
         <Route exact path="/search"><Search /></Route>
         <Route exact path="/company-structure"><CompanyStructure /></Route>

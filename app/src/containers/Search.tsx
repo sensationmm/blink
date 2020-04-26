@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { withRouter } from 'react-router-dom';
+import { Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import CompanySearch from '../components/generic/search-company'
 import { requestCompanyProfile } from '../utils/kyckr/request';
@@ -25,7 +25,8 @@ const Search = (props: any) => {
         setCompanyStructure,
         selectedCountry,
         selectedCompany,
-        setMarkets
+        setMarkets,
+        currentUser
     } = props;
 
     const [ignoreDB, setIgnoreDB] = useState(false);
@@ -44,6 +45,10 @@ const Search = (props: any) => {
         },
         [selectedCompany, selectedCountry]
     );
+
+    if (!currentUser.admin) {
+        return <Redirect to="/onboarding" />;
+    }
 
     const orderReference = () => {
         const countryCode = selectedCompany.countryCode || selectedCountry.value;
@@ -183,6 +188,7 @@ const Search = (props: any) => {
 }
 
 const mapStateToProps = (state: any) => ({
+    currentUser: state.auth.user,
     selectedCompany: state.screening.company,
     selectedCountry: state.screening.country,
 });

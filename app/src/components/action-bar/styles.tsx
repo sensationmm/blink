@@ -8,15 +8,32 @@ export const Main = styled.div`
     bottom: 0;
     padding: 20px;
     background: var(--brand-tertiary);
-    display: flex;
-    justify-content: space-between;
     transition: 0.2s ease-out;
-
-    > div {
-        min-width: 150px;
-    }
 
     &.hide {
         transform: translateY(100%);
+    }
+`;
+
+export const Header = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--basic-white);
+    margin-bottom: 20px;
+
+    > div {
+        display: flex;
+        align-items: center;
+    }
+`;
+
+export const Buttons = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    > div {
+        min-width: 150px;
     }
 `;

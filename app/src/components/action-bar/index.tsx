@@ -13,6 +13,8 @@ interface ActionBarProps {
     disabledPrimary?: boolean;
     disabledSecondary?: boolean;
     hidden?: boolean;
+    header?: JSX.Element;
+    showHeader?: boolean;
 }
 
 const ActionBar: React.FC<ActionBarProps> = ({
@@ -22,18 +24,24 @@ const ActionBar: React.FC<ActionBarProps> = ({
     actionSecondary,
     disabledPrimary = false,
     disabledSecondary = false,
-    hidden = false
+    hidden = false,
+    header,
+    showHeader = false
 }) => {
     return (
         <Styled.Main className={classNames({ hide: hidden })}>
-            <div />
+            {header && showHeader && <Styled.Header>{header}</Styled.Header>}
 
-            <Button small onClick={actionPrimary} label={labelPrimary} disabled={disabledPrimary} />
+            <Styled.Buttons>
+                <div />
 
-            {labelSecondary && actionSecondary
-                ? <Button small type={'secondary'} onClick={actionSecondary} label={labelSecondary} disabled={disabledSecondary} />
-                : <div />
-            }
+                <Button small onClick={actionPrimary} label={labelPrimary} disabled={disabledPrimary} />
+
+                {labelSecondary && actionSecondary
+                    ? <Button small type={'secondary'} onClick={actionSecondary} label={labelSecondary} disabled={disabledSecondary} />
+                    : <div />
+                }
+            </Styled.Buttons>
         </Styled.Main>
     )
 }
