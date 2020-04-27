@@ -68,11 +68,16 @@ const RuleDetails = (props: any) => {
         if (selectedRule.originalData) {
             const dataToSave: any = {};
             Object.keys(selectedRule.originalData).forEach((key: string) => {
-                dataToSave[key] = selectedRule[key];
+                dataToSave[key] = {
+                    value: selectedRule[key]
+                }
             });
 
             if (dataToSave[selectedRule.name]) {
-                dataToSave[selectedRule.name] = JSON.parse(dataToSave[selectedRule.name]);
+                dataToSave[selectedRule.name] = {
+                    value: JSON.parse(dataToSave[selectedRule.name].value),
+                    merge: false
+                };
             }
 
             await editMultipleFields(selectedRule.path, dataToSave)

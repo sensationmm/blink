@@ -6,16 +6,18 @@ const cors = require('cors');
 const express = require('express');
 const server = express();
 server.use(cors());
-server.post('*/', function (req: any, res: any) {
-    const { docId, field, value } = req.body;
+server.post('*/', async function (req: any, res: any) {
+    const { docId, field, value, merge = true } = req.body;
 
     const documentParts = docId.split("/");
 
     const newDocID = documentParts.pop();
 
-    admin.firestore().collection(documentParts[0])
-        .doc(newDocID)
-        .set({ [field]: value }, { merge: true })
+    const doc = admin.firestore().collection(documentParts[0])
+        .doc(newDocID);
+
+        const docData = await(await doc.get()).data();
+        doc.set({ ...docData, [field]: value }, { merge })
         .then(function (res: any) {
             console.log("Rule edited with ID: ", newDocID);
         })

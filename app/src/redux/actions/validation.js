@@ -21,7 +21,7 @@ export const editMultipleFields = (docId, edits) => async (dispatch,
     const keys = Object.keys(edits);
 
     await Promise.all(keys.map(async (key) => {
-        await editField(docId, key, edits[key]);
+        await editField(docId, key, edits[key]?.value, edits[key]?.merge);
     }));
 
 
