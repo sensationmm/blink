@@ -57,6 +57,8 @@ server.post('*/', function (req: any, res: any) {
             const rule = doc.data();
             const rulesMarkets = rule.marketRuleMapping;
             delete rule.marketRuleMapping;
+            delete rule.title;
+            delete rule.description;
             const ruleName = Object.keys(rule)[0] as string;
 
             rulesMarkets.filter((market: market) => companyMarketsToValidate.indexOf(market) > -1).forEach((market: market) => {
