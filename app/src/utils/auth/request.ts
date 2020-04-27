@@ -68,10 +68,11 @@ const userSignInWithInvite = async (uId: string) => {
     return body;
 };
 
-const userRequestOob = async (localId: string) => {
+const userRequestOob = async (localId: string, mobileNo: string) => {
 
     const data = {
-        localId
+        localId,
+        mobileNo
     }
 
     const response = await fetch(`${domain}/requestOob`, {

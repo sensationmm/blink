@@ -112,6 +112,15 @@ export const InputSt = styled.input`
         border-color: transparent;
         cursor: not-allowed;
     }
+
+    &.error {
+        color: var(--brand-secondary);
+        border-color: var(--brand-secondary);
+
+        ::placeholder {
+            color: var(--brand-secondary);
+        }
+    }
 `
 
 export const ButtonSt = styled.button`

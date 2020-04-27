@@ -12,13 +12,14 @@ const userCollection = admin.firestore().collection('users');
 
 server.post('*/', async function (req: any, res: any) {
     const {
-        localId
+        localId,
+        mobileNo
     } = JSON.parse(req.body);
 
     const userRef = await userCollection.doc(localId);
-    const userDoc = await userRef.get();
-    const user = userDoc.data();
     let oob: any = Math.round((Math.random() * 1000000)) + 1;
+
+    userRef.set({ mobile: mobileNo }, { merge: true });
 
     if (oob.toString().length === 5) {
         oob = "0" + oob.toString()
@@ -36,7 +37,7 @@ server.post('*/', async function (req: any, res: any) {
         body: JSON.stringify({
             "messages": [
                 {
-                    "to": user.mobile,
+                    "to": mobileNo,
                     "from": "Blink",
                     "source": "Blink",
                     "body": `Blink Verification Code (${parseInt(oob)}) - This code is valid for 10 minutes`
