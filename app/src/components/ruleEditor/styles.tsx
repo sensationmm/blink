@@ -50,13 +50,20 @@ export const Name = styled.span`
 `
 
 export const CollectionFilter = styled.div`
-font-size: 12px;
+  font-size: 12px;
   display: flex;
   label {
     display: flex;
-align-items: center;
-
+    align-items: center;
     padding-left: 30px;
+  }
+  .person, .company {
+    height: 22px;
+    width: 22px
+  }
+
+  span {
+      padding: 0 8px;
   }
 `
 
@@ -139,7 +146,7 @@ export const Policies = styled.ul`
 export const CheckBox = styled.input`
   appearance: unset;
   border: 1px solid var(--brand-secondary);
-  padding: 8px;
+  padding: 6px;
   border-radius: 50%;
   position: relative;
   outline: none;
@@ -147,8 +154,8 @@ export const CheckBox = styled.input`
   &:checked::after {
     content: "";
     position: absolute;
-    height: 12px;
-    width: 12px;
+    height: 8px;
+    width: 8px;
     border-radius: 50%;
     background-color: var(--brand-secondary);
     top: 50%;
