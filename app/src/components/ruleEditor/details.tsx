@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import * as styled from "./styles";
 import { Link } from 'react-router-dom';
 import Box from '../../layout/box';
@@ -12,7 +12,9 @@ import Button from '../button';
 
 const RuleDetails = (props: any) => {
 
-    const { rules, selectedRule, editMultipleFields, setRules, setModal } = props;
+    const [JSONIsValid, setJSONIsValid] = useState(true);
+
+    const { rules, selectedRule, editMultipleFields, setRules, setModal, hasJsonStructure, isEditingJSON, setIsEditingJSON } = props;
 
     const coreSelected = selectedRule && selectedRule.marketRuleMapping ?.indexOf("Core") > -1;
 
@@ -48,9 +50,13 @@ const RuleDetails = (props: any) => {
                 const originalData = rule.originalData || {};
                 if (!originalData[field] && originalData[field] !== "") {
                     originalData[field] = rule[field];
+                }  else if (originalData[field].toString() === value.toString()) {
+                    delete originalData[field]
                 }
-
-                return { ...rule, [field]: value, isEdited: true, originalData };
+                const newRule = { ...rule, [field]: value, isEdited: true, originalData };
+                if (Object.keys(newRule.originalData).length === 0) {
+                    delete newRule.originalData;
+                }return newRule;
             }
             return rule
         });
@@ -64,6 +70,8 @@ const RuleDetails = (props: any) => {
             Object.keys(selectedRule.originalData).forEach((key: string) => {
                 dataToSave[key] = selectedRule[key];
             });
+
+            dataToSave[selectedRule.name] = JSON.parse(dataToSave[selectedRule.name]);
 
             await editMultipleFields(selectedRule.path, dataToSave)
 
@@ -86,6 +94,16 @@ const RuleDetails = (props: any) => {
             return rule
         });
         setRules(newRules);
+    }
+
+    const saveJSON = () => {
+        const rule = selectedRule[selectedRule.name];
+        const isValid = hasJsonStructure(rule);
+        setJSONIsValid(isValid);
+        if (!isValid) {
+            return setModal("Invalid JSON", "Rule format is currently invalid", null);
+        }
+        setIsEditingJSON(false);
     }
 
     return <styled.ContentNarrowInner>
@@ -122,7 +140,7 @@ const RuleDetails = (props: any) => {
 
                     <Box centered shadowed>
                         <styled.Markets>
-
+                            {/* {selectedRule.id} */}
                             <li key="Core">
                                 <label htmlFor={`${selectedRule.id}-Core`}>
                                     Core
@@ -203,16 +221,21 @@ const RuleDetails = (props: any) => {
                                     <b>Rule</b>
                                 </span>
                                 <span>
-                                    {JSON.stringify(selectedRule[selectedRule.name])}
+                                    {isEditingJSON && <><styled.RuleCode className={`isValid-${JSONIsValid}`} onChange={e => editRuleField(selectedRule.path, [selectedRule.name]?.toString(), e.target.value)} value={selectedRule[selectedRule.name]}></styled.RuleCode>
+                                    <styled.SaveRuleCode onClick={saveJSON}>Save</styled.SaveRuleCode></>}
+                                    {!isEditingJSON && selectedRule[selectedRule.name]}
                                 </span>
-                                <styled.Edit />
+                                {!isEditingJSON &&<styled.Edit onClick={() => 
+                                    setIsEditingJSON(isEditingJSON)} 
+                                    // to enabled code edit functionalty change above line to: setIsEditingJSON(!isEditingJSON)} 
+                                />}
                             </li>
                         </styled.Code>
                     </Box>
                 </Blocks>
 
             </styled.Info>
-            {selectedRule.originalData && <Actions>
+            {selectedRule.originalData && !isEditingJSON && <Actions>
                 <Button label="Submit for approval" onClick={() => saveEdits()} />
                 <Button type={'tertiary'} label="Undo" onClick={() => undoEdits()} />
             </Actions>}

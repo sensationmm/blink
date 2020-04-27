@@ -18,6 +18,7 @@ const RuleEditor = (props: any) => {
   const [rules, setRules] = useState();
   const [hasRequestRules, setHasRequestRules] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isEditingJSON, setIsEditingJSON] = useState("");
 
   const sort = (rules: any) => {
 
@@ -32,6 +33,19 @@ const RuleEditor = (props: any) => {
     return rules.sort(sort)
   }
 
+  const hasJsonStructure = (str: string) => {
+
+    if (typeof str !== 'string') return false;
+    try {
+      const result = JSON.parse(str);
+      const type = Object.prototype.toString.call(result);
+      return type === '[object Object]'
+        || type === '[object Array]';
+    } catch (err) {
+      return false;
+    }
+  }
+
   const getRules = async (newCollections?: Array<string>) => {
     let allRules: Array<string> = [];
 
@@ -40,7 +54,7 @@ const RuleEditor = (props: any) => {
       await new Promise(async (next) => {
         const rules = await props.requestAllRules(collection.toLowerCase());
         allRules = allRules.concat(rules.map((rule: any) => {
-          const name = Object.keys(rule).find((key: string) =>
+          const name: any = Object.keys(rule).find((key: string) =>
             key !== "type" &&
             key !== "description" &&
             key !== "isEdited" &&
@@ -53,6 +67,7 @@ const RuleEditor = (props: any) => {
             ...rule,
             type: collection.toLowerCase(),
             name,
+            [name]: JSON.stringify(rule[name]),
             description: rule.description || "",
             title: rule.title || ""
           }
@@ -100,22 +115,25 @@ const RuleEditor = (props: any) => {
 
             {(ruleId && selectedRule) ?
               <RuleDetails s
-                etRules={setRules} 
-                rules={rules} 
-                selectedRule={selectedRule} 
+                etRules={setRules}
+                rules={rules}
+                selectedRule={selectedRule}
                 setRules={setRules}
                 editMultipleFields={props.editMultipleFields}
-                setModal={props.setModal} />
-              :
+                setModal={props.setModal}
+                hasJsonStructure={hasJsonStructure}
+                isEditingJSON={isEditingJSON} 
+                setIsEditingJSON={setIsEditingJSON} />
+        :
 
-              <List 
-                collections={collections} 
-                rules={rules} 
-                changeCollection={changeCollection} 
-                collectionOptions={collectionOptions} 
-                setSearchTerm={setSearchTerm} 
-                searchTerm={searchTerm}
-                history={props.history} />
+              <List
+              collections={collections}
+              rules={rules}
+              changeCollection={changeCollection}
+              collectionOptions={collectionOptions}
+              setSearchTerm={setSearchTerm}
+              searchTerm={searchTerm}
+              history={props.history} />
             }
 
           </>
