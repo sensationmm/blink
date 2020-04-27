@@ -97,7 +97,7 @@ const App = withRouter((props: any) => {
         <Route path="/combined">
           <Generic />
         </Route>
-        <Route path="/graph/:companyId?/:countryCode?">
+        <Route path="/graph/:companyId?/:key?">
           <Graph />
         </Route>
         <Route path="/ruleEditor/:ruleId?">
