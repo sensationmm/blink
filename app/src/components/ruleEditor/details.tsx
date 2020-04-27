@@ -71,7 +71,9 @@ const RuleDetails = (props: any) => {
                 dataToSave[key] = selectedRule[key];
             });
 
-            dataToSave[selectedRule.name] = JSON.parse(dataToSave[selectedRule.name]);
+            if (dataToSave[selectedRule.name]) {
+                dataToSave[selectedRule.name] = JSON.parse(dataToSave[selectedRule.name]);
+            }
 
             await editMultipleFields(selectedRule.path, dataToSave)
 
