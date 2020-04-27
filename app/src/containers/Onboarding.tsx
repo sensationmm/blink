@@ -34,7 +34,7 @@ const Onboarding = (props: any) => {
     } = props;
 
     const [isPaused, setIsPaused] = useState(true);
-    let renderLoader = true;
+    const [renderLoader, setRenderLoader] = useState(true);
 
     useEffect(() => {
         setCompany(currentUser.company);
@@ -42,7 +42,7 @@ const Onboarding = (props: any) => {
         if (currentUser.screened) {
             preloadCompany();
         } else {
-            renderLoader = false;
+            setRenderLoader(false);
             setIsPaused(false);
         }
     }, []);
@@ -82,7 +82,7 @@ const Onboarding = (props: any) => {
         await apiEditField(`users/${currentUser.localId}`, 'screened', true);
 
         hideLoader();
-        history.push('/onboarding/select-markets');
+        history.push('/onboarding/id-check-complete');
     }
 
     const allowProgress = currentUser.verification?.passport && (currentUser.type === 'officer' || currentUser.verification?.boardMandate);
@@ -117,7 +117,7 @@ const Onboarding = (props: any) => {
                             }
 
                             <Actions>
-                                <Button label="Select Markets" onClick={completeVerification} disabled={!allowProgress} />
+                                <Button label={'Confirm'} onClick={completeVerification} disabled={!allowProgress} />
                             </Actions>
                         </Blocks>
                     )

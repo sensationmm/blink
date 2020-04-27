@@ -31,6 +31,7 @@ import Modal from './containers/Modal';
 import Doc from './containers/Doc';
 
 import Onboarding from './containers/Onboarding';
+import IDCheckComplete from './containers/IDCheckComplete';
 import SelectMarkets from './containers/SelectMarkets';
 import MyCompany from './containers/MyCompany';
 import MyDocuments from './containers/MyDocuments';
@@ -68,6 +69,7 @@ const App = withRouter((props: any) => {
         <Route exact path="/"><Redirect to="/search" /></Route>
 
         <Route exact path="/onboarding"><Onboarding /></Route>
+        <Route exact path="/onboarding/id-check-complete"><IDCheckComplete /></Route>
         <Route exact path="/onboarding/select-markets"><SelectMarkets /></Route>
         <Route exact path="/onboarding/my-company"><MyCompany /></Route>
         <Route exact path="/onboarding/my-documents"><MyDocuments /></Route>

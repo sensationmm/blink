@@ -10,7 +10,7 @@ import { InputSt } from '../styles';
 import * as Styled from './styles';
 
 export interface FormInputProps {
-    type?: 'text' | 'password';
+    type?: 'text' | 'number' | 'password';
     stateKey: string;
     label: string;
     placeholder?: string;
@@ -21,6 +21,7 @@ export interface FormInputProps {
     suffix?: string;
     validated?: boolean;
     disabled?: boolean;
+    hasError?: boolean;
 }
 
 const FormInput: React.FC<FormInputProps> = ({
@@ -34,7 +35,8 @@ const FormInput: React.FC<FormInputProps> = ({
     isEdit = false,
     suffix,
     validated = false,
-    disabled = false
+    disabled = false,
+    hasError = false
 }) => {
     const [focused, setFocused] = useState(false);
     const [initVal] = useState(value);
@@ -50,7 +52,7 @@ const FormInput: React.FC<FormInputProps> = ({
 
     let msg = placeholder;
 
-    if (initVal) {
+    if (initVal && !isEdit) {
         msg += ` (found: ${initVal})`;
     }
 
@@ -60,7 +62,7 @@ const FormInput: React.FC<FormInputProps> = ({
 
             <Styled.FieldHolder>
                 <InputSt
-                    className={classNames({ edit: isEdit }, { disabled: disabled })}
+                    className={classNames({ edit: isEdit }, { disabled: disabled }, { error: hasError })}
                     placeholder={msg}
                     onChange={(e) => onChange(stateKey, e.target.value)}
                     onFocus={handleOnFocus}

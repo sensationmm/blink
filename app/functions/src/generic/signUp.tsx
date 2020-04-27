@@ -133,7 +133,7 @@ server.post('*/', async function (req: any, res: any) {
                             verified: false,
                             generatedBy: generatedBy || "z73PTfu2PmeUQFSNS5JiNVaHOXO2",
                             profile: profileRef,
-                            mobile: user.mobile || "+447492667072",
+                            mobile: user.mobile || '',
                             person: personRef,
                             tempPassword: true
                         });

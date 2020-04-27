@@ -100,7 +100,7 @@ export const userSignupError = errors => async (dispatch) => {
     })
 }
 
-export const requestUserOob = () => async (dispatch, getState) => {
+export const requestUserOob = (mobileNo) => async (dispatch, getState) => {
 
     dispatch({
         type: SHOW_LOADER,
@@ -108,7 +108,7 @@ export const requestUserOob = () => async (dispatch, getState) => {
 
     const auth = getState().auth;
 
-    const result = await userRequestOob(auth.user.localId);
+    const result = await userRequestOob(auth.user.localId, mobileNo);
 
     setTimeout(() => dispatch({
         type: HIDE_LOADER,

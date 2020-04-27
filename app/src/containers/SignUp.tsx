@@ -28,11 +28,13 @@ const SignUp = (props: any) => {
     // const [hasRequestedOOb, sethasRequestedOOb] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
     const [showLanding, setShowLanding] = useState(true);
+    const [mobile, setMobile] = useState('+44 7');
+    const [mobileHasError, setMobileHasError] = useState(false);
 
     const user = props.auth.user;
 
-    const requestOOb = async () => {
-        const result = await props.requestUserOob();
+    const requestOOb = async (mobileNo: string) => {
+        const result = await props.requestUserOob(mobileNo);
         // if (!result.error) {
         //     sethasRequestedOOb(true);
         // }
@@ -57,13 +59,21 @@ const SignUp = (props: any) => {
         const token = window.localStorage.getItem("firebase-token");
         await props.requestUserChangePassword(newPassword, newPasswordRepeat, token);
 
-        requestOOb();
+        requestOOb(mobile);
     }
 
     const isValidPasswordChange = () => {
         return newPassword.length > 3 && newPasswordRepeat.length > 3
         // && oldPassword !== "" 
 
+    }
+
+    const checkMobile = () => {
+        if (mobile !== '' && mobile !== '+44 7') {
+            setShowLanding(false)
+        } else {
+            setMobileHasError(true);
+        }
     }
 
     let headerIcon;
@@ -76,7 +86,14 @@ const SignUp = (props: any) => {
     }
 
     if (showLanding) {
-        return <Landing onClick={() => setShowLanding(false)} />
+        return (
+            <Landing
+                mobileNo={mobile}
+                onClick={checkMobile}
+                onType={(field: string, value: any) => setMobile(value)}
+                error={mobileHasError}
+            />
+        )
     }
 
     return <TemplateUser headerIcon={headerIcon}>
