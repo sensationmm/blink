@@ -196,3 +196,28 @@ export const Edit = styled.button`
   right: 40px;
 `
 export const Code = styled(Policies)``
+
+export const RuleCode = styled.textarea`
+  height: 100px;
+  width: 300px;
+  padding: 10px;
+  resize: none;
+  letter-spacing: 1px;
+  font-size: 12px;
+
+  $.isValid-true {
+    
+  }
+`
+export const SaveRuleCode = styled.button`
+  border: none;
+  background: none; 
+  color: var(--brand-secondary);
+  margin: 0 0 0 20px;
+  outline: none;
+  padding: 10px;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`

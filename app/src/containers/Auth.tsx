@@ -144,7 +144,7 @@ const Auth = (props: any) => {
                 }
             </Actions>
 
-            {!showSignUp && (window.location.href.startsWith("http://localhost:3000") || window.location.href.startsWith("https://blink-staging-20006.firebaseapp.com/")) && <button onClick={() => setshowSignUp(true)}>Show sign up</button>}
+            {/* {!showSignUp && (window.location.href.startsWith("http://localhost:3000") || window.location.href.startsWith("https://blink-staging-20006.firebaseapp.com/")) && <button onClick={() => setshowSignUp(true)}>Show sign up</button>} */}
         </MainStyled.ContentMini>
     </TemplateUser>
 }
