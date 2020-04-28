@@ -11,8 +11,8 @@ jobs:
   cypress-run:
     runs-on: ubuntu-16.04
     name: E2E on Chrome
-    working-directory: ./app
     steps:
+      working-directory: ./app
       - uses: actions/checkout@v1
       - uses: cypress-io/github-action@v1
         with:
