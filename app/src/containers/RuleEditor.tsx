@@ -78,8 +78,6 @@ const RuleEditor = (props: any) => {
       })
     }
 
-
-
     setRules(sort(allRules));
   }
 
