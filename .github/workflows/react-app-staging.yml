@@ -35,7 +35,7 @@ jobs:
           CI: true
       - name: start app
         working-directory: ./app
-        run: yarn start
+        run: yarn start-ci
       - name: Cypress run
         uses: cypress-io/github-action@v1
       - name: Build
