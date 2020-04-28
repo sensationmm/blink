@@ -33,12 +33,12 @@ jobs:
         run: yarn test
         env:
           CI: true
-      - name: Start App
+      - name: Serve App and e2e
         working-directory: ./app
         # run: yarn start-ci
         # env:
         #   CI: false
-        run: ./node_modules/.bin/firebase serve --only hosting -P staging --token $FIREBASE_TOKEN
+        run: ./node_modules/.bin/firebase serve --only hosting -P staging --token $FIREBASE_TOKEN && echo running
         env:
           FIREBASE_TOKEN: ${{ secrets.STAGING_FIREBASE_TOKEN }}
       - name: Cypress run
