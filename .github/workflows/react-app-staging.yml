@@ -34,10 +34,11 @@ jobs:
         env:
           CI: true
       - name: Start App
-        working-directory: ./app
-        run: yarn start-ci
-        env:
-          CI: false
+        # working-directory: ./app
+        # run: yarn start-ci
+        # env:
+        #   CI: false
+        run: ./node_modules/.bin/firebase serve --only hosting
       - name: Cypress run
         uses: cypress-io/github-action@v1
       - name: Build
