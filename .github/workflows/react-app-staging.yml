@@ -28,9 +28,6 @@ jobs:
       - name: Install Dependencies
         working-directory: ./app
         run: yarn
-        env:
-          CI: true
-          PORT: "5555"
       - name: Unit tests
         working-directory: ./app
         run: yarn test
@@ -39,6 +36,9 @@ jobs:
       - name: Start App
         working-directory: ./app
         run: yarn start-ci
+        env:
+          CI: true
+          PORT: "5555"
       - name: Cypress run
         uses: cypress-io/github-action@v1
       - name: Build
