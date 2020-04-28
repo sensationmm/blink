@@ -34,7 +34,7 @@ jobs:
         env:
           CI: true
       - name: Start App
-        # working-directory: ./app
+        working-directory: ./app
         # run: yarn start-ci
         # env:
         #   CI: false
