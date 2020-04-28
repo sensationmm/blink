@@ -38,7 +38,7 @@ jobs:
         # run: yarn start-ci
         # env:
         #   CI: false
-        run: ./node_modules/.bin/firebase serve --only hosting
+        run: ./node_modules/.bin/firebase serve --only hosting -P staging
       - name: Cypress run
         uses: cypress-io/github-action@v1
       - name: Build
