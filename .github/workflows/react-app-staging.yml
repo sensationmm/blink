@@ -8,20 +8,16 @@ on:
       - app/**
       - '!app/functions/**'
 jobs:
-  cypress-run:
-    runs-on: ubuntu-16.04
-    name: E2E on Chrome
+  build:
+    name: Build
+    runs-on: ubuntu-latest
     steps:
+      - name: e2e tests
         uses: actions/checkout@v1
         uses: cypress-io/github-action@v1
         working-directory: ./app
         with:
           browser: chrome
-
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    steps:
       - name: Checkout Repo
         uses: actions/checkout@master
       - name: Install Dependencies
