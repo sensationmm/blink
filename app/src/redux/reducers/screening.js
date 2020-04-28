@@ -99,7 +99,7 @@ export const screening = (state = initialState, action) => {
                   doc[field[0]] = {
                     ...doc[field[0]],
                     [field[1]]: action.value,
-                    source: 'entry'
+                    sourceType: 'entry'
                   };
                 }
                 return doc;
@@ -116,7 +116,7 @@ export const screening = (state = initialState, action) => {
           [field[0]]: {
             ...state.companyStructure[field[0]],
             [field[1]]: action.value,
-            source: 'entry'
+            sourceType: 'entry'
           }
         }
       }

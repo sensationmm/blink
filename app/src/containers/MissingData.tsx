@@ -46,7 +46,8 @@ const MissingData = (props: any) => {
         hideLoader,
         setCompletion,
         setErrors,
-        markets
+        markets,
+        currentUser
     } = props;
 
     if (!company || !companyStructure || markets.length === 0) {
@@ -79,7 +80,7 @@ const MissingData = (props: any) => {
         if (value !== undefined && value !== '') {
             showLoader('Saving');
 
-            const res = await apiEditField(docId || props.companyStructure.docId, field, value);
+            const res = await apiEditField(docId || props.companyStructure.docId, field, value, currentUser);
             console.log('onEditField', res)
 
             hideLoader();
@@ -180,7 +181,7 @@ const MissingData = (props: any) => {
                                                         onBlur: () => onEditField(
                                                             sanitizedKey,
                                                             companyStructure[sanitizedKey],
-                                                            companyStructure.docId
+                                                            companyStructure.docId,
                                                         ),
                                                         value: getValue(companyStructure[sanitizedKey]) || '',
                                                         missingValue: valueMissing,
@@ -459,6 +460,7 @@ const mapStateToProps = (state: any) => ({
     companyStructure: state.screening.companyStructure,
     ownershipThreshold: state.screening.ownershipThreshold,
     validation: state.screening.validation,
+    currentUser: state.auth.user.localId
 });
 
 const actions = { saveEditField, showLoader, hideLoader, setCompletion, setErrors };

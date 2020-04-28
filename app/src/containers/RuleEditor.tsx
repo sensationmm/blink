@@ -59,6 +59,7 @@ const RuleEditor = (props: any) => {
             key !== "description" &&
             key !== "isEdited" &&
             key !== "title" &&
+            key !== "edits" &&
             key !== "marketRuleMapping" &&
             key !== "id"
             && key !== "path")

@@ -42,7 +42,8 @@ const ContactClient = (props: any) => {
         showLoader,
         hideLoader,
         setCompanyContact,
-        setCompanyStructure
+        setCompanyStructure,
+        currentUser
     } = props;
 
     const [selectedOfficer, setSelectedOfficer] = useState(null);
@@ -102,6 +103,7 @@ const ContactClient = (props: any) => {
                                 hideLoader={hideLoader}
                                 onClick={setSelectedOfficer}
                                 selected={contact && contact!.id === officer.docId}
+                                currentUser={currentUser}
                             />
                         );
                     })}
@@ -151,13 +153,13 @@ const ContactClient = (props: any) => {
 }
 
 const Officer = (props: any) => {
-    const { officer, onChange, showLoader, hideLoader, onClick, selected } = props;
+    const { officer, onChange, showLoader, hideLoader, onClick, selected, currentUser } = props;
     const email = officer.emailAddress?.value || '';
     const [hasEmail, setEmail] = useState(email !== '');
 
     const onSave = async () => {
         showLoader();
-        await apiEditField(officer.docId, 'emailAddress', { value: email });
+        await apiEditField(officer.docId, 'emailAddress', { value: email }, currentUser);
         setEmail(true);
         hideLoader();
     }
