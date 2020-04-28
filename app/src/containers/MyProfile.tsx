@@ -205,7 +205,7 @@ const MyProfile = (props: any) => {
             {section === undefined &&
               <Screen steps={[accounts1, accounts2]}></Screen>
             }
-            {section === 'make-a-payment' && <><h2>Make a payment</h2><Screen steps={[accounts3, accounts4, accounts5, accounts6, accounts7, accounts8]}></Screen></>}
+            {section === 'make-a-payment' && <><h1>Make a payment</h1><Screen steps={[accounts3, accounts4, accounts5, accounts6, accounts7, accounts8]}></Screen></>}
             {section === 'connect-banks' && <Screen steps={[connectbanks1, connectbanks2, connectbanks3, connectbanks4, connectbanks5, connectbanks6, connectbanks7]}></Screen>}
           </MainStyled.ContentNarrow>
         </>
