@@ -28,6 +28,9 @@ jobs:
       - name: Install Dependencies
         working-directory: ./app
         run: yarn
+        env:
+          CI: true
+          PORT: "5555"
       - name: Unit tests
         working-directory: ./app
         run: yarn test
