@@ -72,7 +72,6 @@ const RuleEditor = (props: any) => {
             description: rule.description || "",
             title: rule.title || ""
           }
-
         }));
         next();
       })
