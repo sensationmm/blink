@@ -33,6 +33,11 @@ jobs:
         run: yarn test
         env:
           CI: true
+      - name: start app
+        working-directory: ./app
+        run: yarn start
+      - name: Cypress run
+        uses: cypress-io/github-action@v1
       - name: Build
         working-directory: ./app
         run: yarn run build
@@ -40,11 +45,6 @@ jobs:
           CI: false
       # - name: Checkout
       #   uses: actions/checkout@v1
-      - name: start app
-        working-directory: ./app
-        run: yarn test:e2e
-      - name: Cypress run
-        uses: cypress-io/github-action@v1
       - name: Deploy hosting to Firebase (staging)
         working-directory: ./app
         run: ./node_modules/.bin/firebase deploy --only hosting -P staging --token $FIREBASE_TOKEN
