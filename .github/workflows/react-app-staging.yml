@@ -33,7 +33,7 @@ jobs:
         run: yarn test
         env:
           CI: true
-      - name: start app
+      - name: Start App
         working-directory: ./app
         run: yarn start-ci
       - name: Cypress run
