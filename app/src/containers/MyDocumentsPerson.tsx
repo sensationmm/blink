@@ -114,12 +114,12 @@ const MyDocumentsPerson = (props: any) => {
         const passport = shareholder.verification?.passport;
         const utilityBill = shareholder.verification?.utilityBill;
 
-        await apiEditField(shareholder.docId, 'countryOfTaxResidence', countryOfTaxResidence || '');
-        await apiEditField(shareholder.docId, 'taxId', taxId || '');
-        await apiEditField(shareholder.docId, 'role', role || '');
+        await apiEditField(shareholder.docId, 'countryOfTaxResidence', countryOfTaxResidence || '', currentUser.localId);
+        await apiEditField(shareholder.docId, 'taxId', taxId || '', currentUser.localId);
+        await apiEditField(shareholder.docId, 'role', role || '', currentUser.localId);
 
-        passport && await apiEditField(shareholder.docId, 'verification', { passport });
-        utilityBill && await apiEditField(shareholder.docId, 'verification', { utilityBill });
+        passport && await apiEditField(shareholder.docId, 'verification', { passport }, currentUser.localId);
+        utilityBill && await apiEditField(shareholder.docId, 'verification', { utilityBill }, currentUser.localId);
 
         hideLoader();
         history.push('/onboarding/my-documents');

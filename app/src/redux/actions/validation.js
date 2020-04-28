@@ -9,19 +9,19 @@ import {
 } from "../../utils/validation/request"
 
 export const editMultipleFields = (docId, edits) => async (dispatch,
-    // getState
+    getState
 ) => {
 
     dispatch({
         type: SHOW_LOADER,
     })
 
-    // const auth = getState().auth;
+    const auth = getState().auth;
 
     const keys = Object.keys(edits);
 
     await Promise.all(keys.map(async (key) => {
-        await editField(docId, key, edits[key]?.value, edits[key]?.merge);
+        await editField(docId, key, edits[key]?.value, auth.user.localId, edits[key]?.merge);
     }));
 
 
