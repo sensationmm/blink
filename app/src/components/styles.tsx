@@ -75,6 +75,10 @@ export const MainSt = styled.main`
     }
 `
 
+export const MainStScreens = styled(MainSt)`
+    background: var(--basic-white);
+`;
+
 export const Content = styled.div`
     max-width: var(--max-content);
     margin: 0 auto;

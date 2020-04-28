@@ -25,7 +25,6 @@ import CompanyCompletion from './containers/CompanyCompletion';
 import ContactClient from './containers/ContactClient';
 import ContactEmail from './containers/ContactEmail';
 import ScreeningComplete from './containers/ScreeningComplete';
-import Integrations from './containers/Integrations';
 import Loader from './components/loader';
 import Modal from './containers/Modal';
 import Doc from './containers/Doc';
@@ -38,6 +37,7 @@ import MyDocuments from './containers/MyDocuments';
 import MyDocumentsPerson from './containers/MyDocumentsPerson';
 import MyDocumentsCompany from './containers/MyDocumentsCompany';
 import MyAccounts from './containers/MyAccounts';
+import MyProfile from './containers/MyProfile';
 import RuleEditor from './containers/RuleEditor';
 
 export default () => {
@@ -81,6 +81,7 @@ const App = withRouter((props: any) => {
           (props: any) => (<MyDocumentsPerson docId={props.match.params.docId} type={props.match.params.type} />
           )} />
         <Route exact path="/onboarding/my-accounts"><MyAccounts /></Route>
+        <Route exact path="/my-profile/:provider?/:section?"><MyProfile /></Route>
 
         <Route exact path="/search"><Search /></Route>
         <Route exact path="/company-structure"><CompanyStructure /></Route>
@@ -107,9 +108,6 @@ const App = withRouter((props: any) => {
         </Route>
         <Route path="/import">
           <Import />
-        </Route>
-        <Route path="/integrations/:provider?">
-          <Integrations />
         </Route>
         <Route path="*">
           <div>Not found</div>

@@ -44,7 +44,7 @@ const MyAccounts = (props: any) => {
                     <p>You have opened up your first Blink bank account!<br />Now you can send and receive payments,
                     get connected to local tax experts in {accounts.join(', ')} and more</p>
 
-                    <Actions centered><Button onClick={() => history.push('/my-account')} label={"Let's go!"} /></Actions>
+                    <Actions centered><Button onClick={() => history.push('/my-profile/accounts')} label={"Let's go!"} /></Actions>
                 </Styled.Completed>
             </MainStyled.ContentNarrow>
         </MainStyled.MainSt>

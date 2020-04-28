@@ -129,8 +129,4 @@ export const Banner = styled.div`
             background-size: contain;
         }
     }
-
-    h1 {
-        margin-top: 50px;
-    }
 `

@@ -84,39 +84,43 @@ const MenuSt = styled.div`
 const Menu = (props: any) => {
   return <MenuSt>
     <ul>
-      <li className="user">
-        <Avatar />
-        {props.userName}
+      <li className="user"><Avatar />{props.userName}</li>
+      <li><Link className={props.path === undefined ? "active" : ""} to="/my-profile">Dashboard</Link></li>
+      <li><Link className={props.path === "accounts" ? "active" : ""} to="/my-profile/accounts">Accounts</Link>
+        {props.path === 'accounts' &&
+          <ul>
+            <li><Link className={props.section === "connect-banks" ? "active" : ""} to="/my-profile/accounts/connect-banks">Connect banks</Link> </li>
+            <li><Link className={props.section === "make-a-payment" ? "active" : ""} to="/my-profile/accounts/make-a-payment">Payments</Link> </li>
+          </ul>
+        }
       </li>
-      <li>
-        <Link className={props.path === "dashboard" ? "active" : ""} to="/integrations/dashboard">
-          Dashboard
-        </Link>
-      </li>
-      <li><Link
-        className={props.path === "accounts" ? "active" : ""}
-        to="/integrations/accounts">Accounts</Link></li>
       <li><Link className={props.path === "tax" ? "active" : ""}
-        to="/integrations/tax">Tax</Link>
+        to="/my-profile/tax">Tax</Link>
         {(props.path === "tax" || props.path === "tax-planning" || props.path === "local-tax-partners") && <ul>
           <li>
-            <Link className={props.path === "tax-planning" ? "active" : ""}
-              to="/integrations/tax-planning">Tax planning</Link>
+            <Link className={props.section === "tax-planning" ? "active" : ""}
+              to="/my-profile/tax/tax-planning">Tax planning</Link>
           </li>
           <li>
-            <Link className={props.path === "local-tax-partners" ? "active" : ""}
-              to="/integrations/local-tax-partners">Local tax partners</Link>
+            <Link className={props.section === "local-tax-partners" ? "active" : ""}
+              to="/my-profile/tax/local-tax-partners">Local tax partners</Link>
           </li>
         </ul>
         }
 
       </li>
-      <li><Link
-        className={(props.path === "integrations" || props.path === "xero") ? "active" : ""}
-        to="/integrations">Integrations</Link></li>
-      <li><Link to="/integrations/funding" className={props.path === "funding" ? "active" : ""}>Funding</Link></li>
-      <li><Link to="/integrations/settings" className={props.path === "settings" ? "active" : ""} >Settings</Link></li>
+      <li><Link className={(props.path === "integrations" || props.path === "xero") ? "active" : ""} to="/my-profile/integrations">Integrations</Link></li>
+      <li><Link to="/my-profile/funding" className={props.path === "funding" ? "active" : ""}>Funding</Link></li>
+      <li><Link to="/my-profile/settings" className={props.path === "settings" ? "active" : ""} >Settings</Link>
+        {props.path === 'settings' &&
+          <ul>
+            <li><Link className={props.section === "general" ? "active" : ""} to="/my-profile/settings/general">General</Link> </li>
+            <li><Link className={props.section === "users" ? "active" : ""} to="/my-profile/settings/users">Users</Link> </li>
+          </ul>
+        }
+      </li>
       <li><Link onClick={props.userSignout} to="/">Logout</Link></li>
+      <li><Link to="/my-profile/integration-demo">Integration Demo</Link></li>
     </ul>
   </MenuSt>
 
