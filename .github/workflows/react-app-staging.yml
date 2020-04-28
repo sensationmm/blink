@@ -12,13 +12,13 @@ jobs:
     name: cypress
     runs-on: ubuntu-16.04
     steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-      - name: Cypress run
-        working-directory: ./app
-        uses: cypress-io/github-action@v1
+      steps:
+      - uses: actions/checkout@v1
+      - uses: cypress-io/github-action@v1
+      - working-directory: ./app
         with:
-          browser: chrome  
+          browser: chrome
+
   build:
     name: Build
     runs-on: ubuntu-latest
