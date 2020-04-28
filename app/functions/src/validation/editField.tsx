@@ -27,6 +27,7 @@ server.post('*/', async function (req: any, res: any) {
             editedDate: new Date(),
             field,
             value,
+            sourceType: "entry",
             previousValue: docData[field] || ""
         })
 

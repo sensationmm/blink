@@ -63,7 +63,7 @@ const ShareholderEdit: React.FC<ShareholderEditProps> = ({
     const saveChanges = async () => {
         showLoader('Saving');
 
-        await apiEditField(shareholder.docId, 'name', { ...shareholder.name, value: editName }, currentUser);
+        await apiEditField(shareholder.docId, 'fullName', { ...shareholder.fullName, value: editName }, currentUser);
         await apiEditField(shareholder.relationshipDocId, 'percentage', { ...shareholder.percentage, value: editPercentage }, currentUser);
         const UBOStructure = await requestCompanyUBOStructure(companyId, countryCode);
 

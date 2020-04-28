@@ -13,19 +13,19 @@ server.post('*/', function (req: any, res: any) {
         name: {
             certification: '',
             validation: '',
-            source: 'entry',
+            sourceType: 'entry',
             value: name
         },
         fullName: {
             certification: '',
             validation: '',
-            source: 'entry',
+            sourceType: 'entry',
             value: name
         },
         emailAddress: {
             certification: '',
             validation: '',
-            source: 'entry',
+            sourceType: 'entry',
             value: emailAddress
         },
     } as { [key: string]: any };

@@ -13,13 +13,13 @@ server.post('*/', function (req: any, res: any) {
         name: {
             certification: '',
             validation: '',
-            source: 'entry',
+            sourceType: 'entry',
             value: name
         },
         shareholderType: {
             certification: '',
             validation: '',
-            source: 'entry',
+            sourceType: 'entry',
             value: type === 'persons' ? 'P' : 'C'
         }
     } as { [key: string]: any };
@@ -28,7 +28,7 @@ server.post('*/', function (req: any, res: any) {
         newUBO.role = {
             certification: '',
             validation: '',
-            source: 'entry',
+            sourceType: 'entry',
             value: role
         }
     }
@@ -49,7 +49,7 @@ server.post('*/', function (req: any, res: any) {
                 percentage: {
                     certification: '',
                     validation: '',
-                    source: 'entry',
+                    sourceType: 'entry',
                     value: percentage
                 },
             }
