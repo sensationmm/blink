@@ -71,7 +71,7 @@ const deleteAllRules = async (collection: string) => {
     return body.msg;
 }
 
-const editField = async (docId: string, field: string, value: any, merge?: boolean) => {
+const editField = async (docId: string, field: string, value: any, editedBy: string, merge?: boolean) => {
     const response = await fetch(`${domain}/editField`, {
         method: "POST",
         mode: "cors",
@@ -82,6 +82,7 @@ const editField = async (docId: string, field: string, value: any, merge?: boole
             docId,
             field,
             value,
+            editedBy,
             merge
         })
     });

@@ -162,7 +162,7 @@ const MyDocuments = (props: any) => {
     const completeOnboarding = async () => {
         showLoader();
 
-        await apiEditField(currentUser.profileDocId, 'onboardingCompleted', true);
+        await apiEditField(currentUser.profileDocId, 'onboardingCompleted', true, currentUser.localId);
 
         editUser('onboardingCompleted', true)
 

@@ -30,6 +30,7 @@ interface ShareholderEditProps {
     setCompanyStructure: (company: any) => void;
     companyId: string;
     countryCode: string;
+    currentUser: string;
 }
 
 const ShareholderEdit: React.FC<ShareholderEditProps> = ({
@@ -40,7 +41,8 @@ const ShareholderEdit: React.FC<ShareholderEditProps> = ({
     clearSideTray,
     setCompanyStructure,
     companyId,
-    countryCode
+    countryCode,
+    currentUser
 }) => {
     const ShareholderImage = getValue(shareholder.shareholderType) === 'P' ? Styled.ImagePerson : Styled.ImageCompany;
     const ShareholderIcon = getValue(shareholder.shareholderType) === 'P' ? PersonIcon : CompanyIcon;
@@ -61,8 +63,8 @@ const ShareholderEdit: React.FC<ShareholderEditProps> = ({
     const saveChanges = async () => {
         showLoader('Saving');
 
-        await apiEditField(shareholder.docId, 'name', { ...shareholder.name, value: editName });
-        await apiEditField(shareholder.relationshipDocId, 'percentage', { ...shareholder.percentage, value: editPercentage });
+        await apiEditField(shareholder.docId, 'name', { ...shareholder.name, value: editName }, currentUser);
+        await apiEditField(shareholder.relationshipDocId, 'percentage', { ...shareholder.percentage, value: editPercentage }, currentUser);
         const UBOStructure = await requestCompanyUBOStructure(companyId, countryCode);
 
         setCompanyStructure(UBOStructure);
@@ -200,6 +202,7 @@ const ShareholderEdit: React.FC<ShareholderEditProps> = ({
 const mapStateToProps = (state: any) => ({
     companyId: state.screening.company.companyId,
     countryCode: state.screening.company.countryCode,
+    currentUser: state.auth.user.localId
 });
 
 const actions = {

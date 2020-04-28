@@ -98,7 +98,7 @@ const MyCompany = (props: any) => {
     const confirmStructure = async () => {
         showLoader();
 
-        await apiEditField(currentUser.profileDocId, 'structureConfirmed', true);
+        await apiEditField(currentUser.profileDocId, 'structureConfirmed', true, currentUser.localId);
 
         editUser('structureConfirmed', true)
 

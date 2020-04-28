@@ -65,7 +65,7 @@ const SelectMarkets = (props: any) => {
         showLoader();
         let UBOStructure = await requestCompanyUBOStructure(currentUser.company.companyId, currentUser.company.countryCode);
 
-        await apiEditField(currentUser.profileDocId, 'markets', currentUser.markets.slice());
+        await apiEditField(currentUser.profileDocId, 'markets', currentUser.markets.slice(), currentUser.localId);
 
         setCompanyStructure(UBOStructure);
         hideLoader();

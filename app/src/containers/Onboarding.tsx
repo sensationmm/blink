@@ -75,11 +75,11 @@ const Onboarding = (props: any) => {
         const passport = currentUser.verification?.passport;
         const boardMandate = currentUser.verification?.boardMandate;
 
-        passport && await apiEditField(currentUser.personDocId, 'verification', { passport });
-        boardMandate && await apiEditField(currentUser.personDocId, 'verification', { boardMandate });
+        passport && await apiEditField(currentUser.personDocId, 'verification', { passport }, currentUser.localId);
+        boardMandate && await apiEditField(currentUser.personDocId, 'verification', { boardMandate }, currentUser.localId);
 
         editUser('screened', true)
-        await apiEditField(`users/${currentUser.localId}`, 'screened', true);
+        await apiEditField(`users/${currentUser.localId}`, 'screened', true, currentUser.localId);
 
         hideLoader();
         history.push('/onboarding/id-check-complete');

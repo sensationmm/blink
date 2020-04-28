@@ -7,7 +7,7 @@ const express = require('express');
 const server = express();
 server.use(cors());
 server.post('*/', async function (req: any, res: any) {
-    const { docId, field, value, merge = true } = req.body;
+    const { docId, field, value, editedBy, merge = true } = req.body;
 
     const documentParts = docId.split("/");
 
@@ -17,7 +17,21 @@ server.post('*/', async function (req: any, res: any) {
         .doc(newDocID);
 
         const docData = await(await doc.get()).data();
+
+        if (!docData.edits) {
+            docData.edits = []
+        }
+
+        docData.edits.push({
+            editedBy,
+            editedDate: new Date(),
+            field,
+            value,
+            previousValue: docData[field] || ""
+        })
+
         doc.set({ ...docData, [field]: value }, { merge })
+
         .then(function (res: any) {
             console.log("Rule edited with ID: ", newDocID);
         })
