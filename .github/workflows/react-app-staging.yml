@@ -37,8 +37,7 @@ jobs:
         working-directory: ./app
         run: yarn start-ci
         env:
-          CI: true
-          PORT: "5555"
+          CI: false
       - name: Cypress run
         uses: cypress-io/github-action@v1
       - name: Build
