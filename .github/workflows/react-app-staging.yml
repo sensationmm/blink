@@ -14,6 +14,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
+      - name: start app
+        run: yarn test:e2e
       - name: Cypress run
         uses: cypress-io/github-action@v1
         # working-directory: ./app
