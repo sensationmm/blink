@@ -79,7 +79,6 @@ const RuleEditor = (props: any) => {
     }
     setRules(sort(allRules));
   }
-  
 
   if (!hasRequestRules) {
     setHasRequestRules(true);
