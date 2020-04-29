@@ -12,6 +12,19 @@ server.post('*/', async function (req: any, res: any) {
     const isRule = documentParts[0] === "companyRules" || documentParts[0] === "personRules";
     const newDocID = documentParts.pop();
 
+    const arraysEqual = (a: Array<any>, b: Array<any>) => {
+        if (a === b) return true;
+        if (a == null || b == null) return false;
+        if (a.length != b.length) return false;
+
+        // sort?
+
+        for (var i = 0; i < a.length; ++i) {
+            if (a[i] !== b[i]) return false;
+        }
+        return true;
+    }
+
     const doc = admin.firestore().collection(documentParts[0])
         .doc(newDocID);
 
@@ -21,10 +34,11 @@ server.post('*/', async function (req: any, res: any) {
         docData.edits = []
     }
 
-    const previousValue = docData[field] ?.value;
+    const previousValue = docData[field]?.value || docData[field];
+    const newValue = value?.value || value;
 
-    const wasNullAndIsNowEmptyString = previousValue && value ?.value === "";
-    const isSameValue = previousValue === value ?.value;
+    const wasNullAndIsNowEmptyString = previousValue && newValue === "";
+    const isSameValue = previousValue === newValue || (Array.isArray(newValue) && arraysEqual(newValue, previousValue));
 
     const fieldHasChanged = !(wasNullAndIsNowEmptyString || isSameValue);
 
@@ -41,7 +55,7 @@ server.post('*/', async function (req: any, res: any) {
             previousValue: docData[field] || ""
         });
 
-        if (!isRule && fieldHasChanged) {
+        if (!isRule && fieldHasChanged && typeof value === 'object') {
             value.sourceType = "entry";
         }
 
@@ -59,7 +73,7 @@ server.post('*/', async function (req: any, res: any) {
                 console.error("Error editing rule: ", error);
             });
 
-        return res.send({ msg: `Edited ${field}:${value}` });
+        return res.send({ msg: `Edited ${field}:${value.value}` });
 
     } else {
         return res.send({ msg: `No changes ${field}` });
