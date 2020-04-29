@@ -8,6 +8,17 @@ on:
       - app/**
       - '!app/functions/**'
 jobs:
+  # cypress:
+  #   name: cypress
+  #   runs-on: ubuntu-16.04
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v1
+  #     - name: start app
+  #       run: cd ./app && yarn test:e2e
+  #     - name: Cypress run
+  #       uses: cypress-io/github-action@v1
+  #       # working-directory: ./app
   build:
     name: Build
     runs-on: ubuntu-latest
@@ -27,6 +38,16 @@ jobs:
         run: yarn run build
         env:
           CI: false
+      - name: Serve App and e2e
+        working-directory: ./app
+        # run: yarn start-ci
+        # env:
+        #   CI: false
+        run: ./node_modules/.bin/firebase serve --only hosting -P staging --port=3000 --token $FIREBASE_TOKEN & yarn cypress run
+        env:
+          FIREBASE_TOKEN: ${{ secrets.STAGING_FIREBASE_TOKEN }}
+      # - name: Checkout
+      #   uses: actions/checkout@v1
       - name: Deploy hosting to Firebase (staging)
         working-directory: ./app
         run: ./node_modules/.bin/firebase deploy --only hosting -P staging --token $FIREBASE_TOKEN
