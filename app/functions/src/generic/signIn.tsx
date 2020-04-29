@@ -103,7 +103,8 @@ server.post('*/', async function (req: any, res: any) {
                     profileDocId,
                     markets: profile.markets,
                     structureConfirmed: profile.structureConfirmed,
-                    onboardingCompleted: profile.onboardingCompleted
+                    onboardingCompleted: profile.onboardingCompleted,
+                    gearboxEdited: profile.gearboxEdited
                 };
             }
         }

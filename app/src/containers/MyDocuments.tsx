@@ -142,14 +142,29 @@ const MyDocuments = (props: any) => {
 
     const shareholdersDone = shareholders.filter((shareholder: any) => confirmDone(shareholder, Person) === 5);
 
-    let companyDone = 2;
+    const highRisk = parseInt(getValue(companyStructure.riskRating)) === 5;
+    const mediumRisk = parseInt(getValue(companyStructure.riskRating)) >= 3;
+    const docsRequired = (
+        highRisk ||
+        (mediumRisk && currentUser.gearboxEdited) ||
+        currentUser.markets.indexOf('RO') > -1
+    );
+    let companySections = 2;
+    if (highRisk) {
+        companySections += 2;
+    }
+    if (docsRequired) {
+        companySections++;
+    }
+
+    let companyDone = highRisk ? 2 : 0;
     if (confirmDone(companyStructure, CompanyDetails) == CompanyDetails.length) {
         companyDone++;
     }
     if (confirmDone(companyStructure, BusinessDetails) == BusinessDetails.length) {
         companyDone++;
     }
-    if (confirmDone(companyStructure.verification, CompanyDocuments) === CompanyDocuments.length) {
+    if (docsRequired && confirmDone(companyStructure.verification, CompanyDocuments) === CompanyDocuments.length) {
         companyDone++;
     }
 
@@ -170,7 +185,7 @@ const MyDocuments = (props: any) => {
         hideLoader();
     }
 
-    const completed = shareholdersDone.length === shareholders.length && companyDone === 5;
+    const completed = shareholdersDone.length === shareholders.length && companyDone === companySections;
 
     const termsStatement = <Styled.TermsAccept>
         I accept the
@@ -239,7 +254,7 @@ const MyDocuments = (props: any) => {
                             },
                             {
                                 label: 'Company',
-                                stat: `${companyDone} / 5`,
+                                stat: `${companyDone} / ${companySections}`,
                                 content: (
                                     <Blocks>
                                         <h2 className="center">We have auto filled most of the company information required to make it as easy as possible for you to complete this step</h2>
@@ -265,41 +280,48 @@ const MyDocuments = (props: any) => {
                                             completed={confirmDone(companyStructure, BusinessDetails)}
                                         />
 
-                                        <Entry
-                                            icon={IconDocuments}
-                                            subIcon={IconUpload}
-                                            onClick={() => history.push('/onboarding/my-documents/company/company-documents')}
-                                            type={'company'}
-                                            title={'Documents to upload'}
-                                            status={setStatus(confirmDone(companyStructure.verification, CompanyDocuments) === CompanyDocuments.length)}
-                                            total={CompanyDocuments.length}
-                                            completed={confirmDone(companyStructure.verification, CompanyDocuments)}
-                                        />
+                                        {docsRequired &&
+                                            <Entry
+                                                icon={IconDocuments}
+                                                subIcon={IconUpload}
+                                                onClick={() => history.push('/onboarding/my-documents/company/company-documents')}
+                                                type={'company'}
+                                                title={'Documents to upload'}
+                                                status={setStatus(confirmDone(companyStructure.verification, CompanyDocuments) === CompanyDocuments.length)}
+                                                total={CompanyDocuments.length}
+                                                completed={confirmDone(companyStructure.verification, CompanyDocuments)}
+                                            />
+                                        }
 
-                                        <Entry
-                                            icon={IconTaxDocuments}
-                                            subIcon={IconDownload}
-                                            type={'company'}
-                                            title={'Tax documents to upload'}
-                                            status={setStatus(true)}
-                                            total={3}
-                                            completed={3}
-                                        />
+                                        {highRisk &&
+                                            <Entry
+                                                icon={IconTaxDocuments}
+                                                subIcon={IconDownload}
+                                                type={'company'}
+                                                title={'Planned use of bank account'}
+                                                status={setStatus(true)}
+                                                total={10}
+                                                completed={10}
+                                            />
+                                        }
 
-                                        <Entry
-                                            icon={IconVideo}
-                                            subIcon={IconSchedule}
-                                            type={'other'}
-                                            title={'Schedule video call'}
-                                            status={setStatus(true)}
-                                            total={3}
-                                            completed={3}
-                                        />
+                                        {highRisk &&
+                                            <Entry
+                                                icon={IconVideo}
+                                                subIcon={IconSchedule}
+                                                type={'other'}
+                                                title={'Schedule video call'}
+                                                status={setStatus(true)}
+                                                total={3}
+                                                completed={3}
+                                            />
+                                        }
                                     </Blocks>
                                 )
                             }
                         ]}
                     />
+                    <br /><br /><br />
                 </MainStyled.ContentNarrow>
             }
 

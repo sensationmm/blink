@@ -17,6 +17,7 @@ import { clearSideTray } from '../../redux/actions/side-tray';
 import { editField as apiEditField, addUBO as apiAddUBO, deleteUBO as apiDeleteUBO } from '../../utils/validation/request';
 import { showLoader, hideLoader } from '../../redux/actions/loader';
 import { setCompanyStructure } from '../../redux/actions/screening';
+import { editUser } from '../../redux/actions/auth';
 import { requestCompanyUBOStructure } from '../../utils/generic/request';
 
 import * as Styled from './styles';
@@ -26,11 +27,12 @@ interface ShareholderEditProps {
     shares: number;
     showLoader: (msg: string) => void;
     hideLoader: () => void;
+    editUser: (field: string, value: any) => void;
     clearSideTray: () => void;
     setCompanyStructure: (company: any) => void;
     companyId: string;
     countryCode: string;
-    currentUser: string;
+    currentUser: any;
 }
 
 const ShareholderEdit: React.FC<ShareholderEditProps> = ({
@@ -42,7 +44,8 @@ const ShareholderEdit: React.FC<ShareholderEditProps> = ({
     setCompanyStructure,
     companyId,
     countryCode,
-    currentUser
+    currentUser,
+    editUser
 }) => {
     const ShareholderImage = getValue(shareholder.shareholderType) === 'P' ? Styled.ImagePerson : Styled.ImageCompany;
     const ShareholderIcon = getValue(shareholder.shareholderType) === 'P' ? PersonIcon : CompanyIcon;
@@ -63,8 +66,10 @@ const ShareholderEdit: React.FC<ShareholderEditProps> = ({
     const saveChanges = async () => {
         showLoader('Saving');
 
-        await apiEditField(shareholder.docId, 'fullName', { ...shareholder.fullName, value: editName }, currentUser);
-        await apiEditField(shareholder.relationshipDocId, 'percentage', { ...shareholder.percentage, value: editPercentage }, currentUser);
+        await apiEditField(shareholder.docId, 'name', { ...shareholder.name, value: editName }, currentUser.localId);
+        await apiEditField(shareholder.relationshipDocId, 'percentage', { ...shareholder.percentage, value: editPercentage }, currentUser.localId);
+        editUser('gearboxEdited', true);
+        await apiEditField(currentUser.profileDocId, 'gearboxEdited', true, currentUser.localId);
         const UBOStructure = await requestCompanyUBOStructure(companyId, countryCode);
 
         setCompanyStructure(UBOStructure);
@@ -77,6 +82,8 @@ const ShareholderEdit: React.FC<ShareholderEditProps> = ({
         showLoader('Saving');
 
         await apiAddUBO(shareholder.docId, addType, addPercentage, addName, addRole);
+        editUser('gearboxEdited', true);
+        await apiEditField(currentUser.profileDocId, 'gearboxEdited', true, currentUser.localId);
         const UBOStructure = await requestCompanyUBOStructure(companyId, countryCode);
 
         setCompanyStructure(UBOStructure);
@@ -89,6 +96,8 @@ const ShareholderEdit: React.FC<ShareholderEditProps> = ({
         showLoader('Saving');
 
         await apiDeleteUBO(shareholder.relationshipDocId);
+        editUser('gearboxEdited', true);
+        await apiEditField(currentUser.profileDocId, 'gearboxEdited', true, currentUser.localId);
         const UBOStructure = await requestCompanyUBOStructure(companyId, countryCode);
 
         setCompanyStructure(UBOStructure);
@@ -202,10 +211,11 @@ const ShareholderEdit: React.FC<ShareholderEditProps> = ({
 const mapStateToProps = (state: any) => ({
     companyId: state.screening.company.companyId,
     countryCode: state.screening.company.countryCode,
-    currentUser: state.auth.user.localId
+    currentUser: state.auth.user
 });
 
 const actions = {
+    editUser,
     clearSideTray,
     showLoader,
     hideLoader,
