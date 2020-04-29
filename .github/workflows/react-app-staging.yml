@@ -41,8 +41,6 @@ jobs:
         run: ./node_modules/.bin/firebase serve --only hosting -P staging --token $FIREBASE_TOKEN & yarn cypress run
         env:
           FIREBASE_TOKEN: ${{ secrets.STAGING_FIREBASE_TOKEN }}
-      - name: Cypress run
-        uses: cypress-io/github-action@v1
       - name: Build
         working-directory: ./app
         run: yarn run build
