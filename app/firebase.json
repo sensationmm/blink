@@ -129,6 +129,10 @@
       "function": "signUp"
     }, 
     {
+      "source": "/signInFromInvite",
+      "function": "signInFromInvite"
+    }, 
+    {
       "source": "/requestOob",
       "function": "requestOob"
     },  
