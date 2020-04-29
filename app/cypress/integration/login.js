@@ -10,8 +10,8 @@ describe("Sign in", () => {
     });
     it("Signs in with valid credentials", () => {
         // // cy.visit("http://localhost:3000/");
-        // cy.visit("/");
-        // cy.get(".sign-in-btn").click();
+        cy.visit("/");
+        cy.get(".sign-in-btn").click();
         // cy.get(".email").type("testuser@skorz.co.uk");
         // cy.get(".password").type("testtest123");
         // cy.get(".sign-in-btn").click();
