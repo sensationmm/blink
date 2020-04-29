@@ -157,6 +157,7 @@ const MyProfile = (props: any) => {
           provider === "tax-planning" ||
           provider === "settings" ||
           provider === "funding" ||
+          provider === "integration-demo" ||
           provider === undefined) &&
         <Menu path={provider} section={section} userSignout={props.userSignout} userName={props?.auth?.user.name || props?.auth?.user.email} />
       }

@@ -25,6 +25,7 @@ import CompanyCompletion from './containers/CompanyCompletion';
 import ContactClient from './containers/ContactClient';
 import ContactEmail from './containers/ContactEmail';
 import ScreeningComplete from './containers/ScreeningComplete';
+import TwoFactorAuthentication from './containers/TwoFactorAuthentication'
 import Loader from './components/loader';
 import Modal from './containers/Modal';
 import Doc from './containers/Doc';
@@ -60,59 +61,63 @@ const App = withRouter((props: any) => {
   })
 
   const [authedUser, setAuthedUser] = useState() // useState(window.location.href.indexOf("localhost:") > -1);
-
   return !authedUser ?
 
     <Auth />
-    : (!authedUser.verified ? <SignUp /> : <div>
-      <Switch>
-        <Route exact path="/"><Redirect to="/search" /></Route>
+    : ((!authedUser?.verified && !authedUser?.screened) && !authedUser.admin ? <SignUp /> :
+      !authedUser.has2FA 
+      ?
+        <TwoFactorAuthentication showHeader />
+        :
+        <div>
+          <Switch>
+            <Route exact path="/"><Redirect to="/search" /></Route>
 
-        <Route exact path="/onboarding"><Onboarding /></Route>
-        <Route exact path="/onboarding/id-check-complete"><IDCheckComplete /></Route>
-        <Route exact path="/onboarding/select-markets"><SelectMarkets /></Route>
-        <Route exact path="/onboarding/my-company"><MyCompany /></Route>
-        <Route exact path="/onboarding/my-documents"><MyDocuments /></Route>
-        <Route exact path="/onboarding/my-documents/company-details"><MyDocumentsCompany /></Route>
-        <Route exact path="/onboarding/my-documents/company/:section" component={
-          (props: any) => (<MyDocumentsCompany section={props.match.params.section} />
-          )} />
-        <Route exact path="/onboarding/my-documents/:type/:docId" component={
-          (props: any) => (<MyDocumentsPerson docId={props.match.params.docId} type={props.match.params.type} />
-          )} />
-        <Route exact path="/onboarding/my-accounts"><MyAccounts /></Route>
-        <Route exact path="/my-profile/:provider?/:section?"><MyProfile /></Route>
+            <Route exact path="/onboarding"><Onboarding /></Route>
+            <Route exact path="/onboarding/id-check-complete"><IDCheckComplete /></Route>
+            <Route exact path="/onboarding/select-markets"><SelectMarkets /></Route>
+            <Route exact path="/onboarding/my-company"><MyCompany /></Route>
+            <Route exact path="/onboarding/my-documents"><MyDocuments /></Route>
+            <Route exact path="/onboarding/my-documents/company-details"><MyDocumentsCompany /></Route>
+            <Route exact path="/onboarding/my-documents/company/:section" component={
+              (props: any) => (<MyDocumentsCompany section={props.match.params.section} />
+              )} />
+            <Route exact path="/onboarding/my-documents/:type/:docId" component={
+              (props: any) => (<MyDocumentsPerson docId={props.match.params.docId} type={props.match.params.type} />
+              )} />
+            <Route exact path="/onboarding/my-accounts"><MyAccounts /></Route>
+            <Route exact path="/my-profile/:provider?/:section?"><MyProfile /></Route>
 
-        <Route exact path="/search"><Search /></Route>
-        <Route exact path="/company-structure"><CompanyStructure /></Route>
-        <Route exact path="/company-readiness"><CompanyReadiness /></Route>
-        <Route exact path="/missing-data"><MissingData /></Route>
-        <Route exact path="/company-completion"><CompanyCompletion /></Route>
-        <Route exact path="/contact-client"><ContactClient /></Route>
-        <Route exact path="/contact-email"><ContactEmail /></Route>
-        <Route exact path="/screening-complete"><ScreeningComplete /></Route>
+            <Route exact path="/search"><Search /></Route>
+            <Route exact path="/company-structure"><CompanyStructure /></Route>
+            <Route exact path="/company-readiness"><CompanyReadiness /></Route>
+            <Route exact path="/missing-data"><MissingData /></Route>
+            <Route exact path="/company-completion"><CompanyCompletion /></Route>
+            <Route exact path="/contact-client"><ContactClient /></Route>
+            <Route exact path="/contact-email"><ContactEmail /></Route>
+            <Route exact path="/screening-complete"><ScreeningComplete /></Route>
 
-        <Route exact path="/doc"><Doc /></Route>
+            <Route exact path="/doc"><Doc /></Route>
 
-        <Route path="/kyckr-filing-search">
-          <KyckrFilingSearch />
-        </Route>
-        <Route path="/combined">
-          <Generic />
-        </Route>
-        <Route path="/graph/:companyId?/:key?">
-          <Graph />
-        </Route>
-        <Route path="/ruleEditor/:ruleId?">
-          <RuleEditor />
-        </Route>
-        <Route path="/import">
-          <Import />
-        </Route>
-        <Route path="*">
-          <div>Not found</div>
-        </Route>
-      </Switch>
-    </div>
+            <Route path="/kyckr-filing-search">
+              <KyckrFilingSearch />
+            </Route>
+            <Route path="/combined">
+              <Generic />
+            </Route>
+            <Route path="/graph/:companyId?/:key?">
+              <Graph />
+            </Route>
+            <Route path="/ruleEditor/:ruleId?">
+              <RuleEditor />
+            </Route>
+            <Route path="/import">
+              <Import />
+            </Route>
+            <Route path="*">
+              <div>Not found</div>
+            </Route>
+          </Switch>
+        </div>
     )
 });
