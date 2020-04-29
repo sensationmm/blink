@@ -65,7 +65,7 @@ const ContactEmail = (props: any) => {
 
         const result = await userSignUp([user], emailText, currentUser);
 
-        // leave this console - we need it to get the signin link
+        // do not remove this console.log() - we need it to get the signin link
         if (window.location.href.startsWith("http://localhost" || window.location.href.startsWith("https://blink-staging-20006.firebaseapp.com/"))) {
             console.log(result)
         }
