@@ -33,6 +33,11 @@ jobs:
         run: yarn test
         env:
           CI: true
+      - name: Build
+        working-directory: ./app
+        run: yarn run build
+        env:
+          CI: false
       - name: Serve App and e2e
         working-directory: ./app
         # run: yarn start-ci
@@ -41,11 +46,6 @@ jobs:
         run: ./node_modules/.bin/firebase serve --only hosting -P staging --token $FIREBASE_TOKEN & yarn cypress run
         env:
           FIREBASE_TOKEN: ${{ secrets.STAGING_FIREBASE_TOKEN }}
-      - name: Build
-        working-directory: ./app
-        run: yarn run build
-        env:
-          CI: false
       # - name: Checkout
       #   uses: actions/checkout@v1
       - name: Deploy hosting to Firebase (staging)
