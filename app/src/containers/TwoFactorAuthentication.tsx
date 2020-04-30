@@ -49,7 +49,9 @@ const TwoFactorAuthentication = (props: any) => {
 
     if (!hasRequestedOob) {
         sethasRequestedOOb(true);
-        requestOOb();
+        if (!window.location.href.startsWith("http://localhost:")) {
+            requestOOb();
+        }
     }
 
     if (!props.showHeader) {
