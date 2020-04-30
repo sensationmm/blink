@@ -28,6 +28,8 @@ import * as MainStyled from "../components/styles";
 import * as Styled from './my-documents.styles';
 import FormInput from "../components/form-input";
 
+import { Person, personValidation } from './MyDocuments';
+
 const ManualApproval = (props: any) => {
     const { type, docId, onSave, value } = props;
 
@@ -90,8 +92,11 @@ const MyDocumentsPerson = (props: any) => {
         docId,
         type,
         companyStructure,
+        validation,
         history,
-        saveEditField
+        saveEditField,
+        showLoader,
+        hideLoader
     } = props;
 
     const shareholder = companyStructure && getByValue(companyStructure?.distinctShareholders, 'docId', `${type}/${docId}`);
@@ -108,15 +113,13 @@ const MyDocumentsPerson = (props: any) => {
 
     const saveShareholder = async () => {
         showLoader('Saving');
-        const countryOfTaxResidence = shareholder.countryOfTaxResidence;
-        const taxId = shareholder.taxId;
-        const role = shareholder.role;
         const passport = shareholder.verification?.passport;
         const utilityBill = shareholder.verification?.utilityBill;
 
-        await apiEditField(shareholder.docId, 'countryOfTaxResidence', countryOfTaxResidence || '', currentUser.localId);
-        await apiEditField(shareholder.docId, 'taxId', taxId || '', currentUser.localId);
-        await apiEditField(shareholder.docId, 'role', role || '', currentUser.localId);
+        Person.filter((item: any) => item !== 'verification.passport' && item !== 'verification.utilityBill')
+            .forEach(async (item: any) => {
+                await apiEditField(shareholder.docId, item, shareholder[item] || '', currentUser.localId);
+            })
 
         passport && await apiEditField(shareholder.docId, 'verification', { passport }, currentUser.localId);
         utilityBill && await apiEditField(shareholder.docId, 'verification', { utilityBill }, currentUser.localId);
@@ -128,6 +131,8 @@ const MyDocumentsPerson = (props: any) => {
     const handleUpload = (src: string, base64File: any) => {
         saveEditField(`verification.${src}`, base64File, "distinctShareholders", shareholder.docId)
     }
+
+    const validationResults = personValidation(Person, validation[shareholder.docId].errors, currentUser.markets);
 
     return (
         <MainStyled.MainSt className="person">
@@ -144,80 +149,139 @@ const MyDocumentsPerson = (props: any) => {
                     <h1 className="center">Verify Identification</h1>
 
                     <Blocks>
-                        <FormLabel label={'Do you have a copy of their passport?'} />
-                        <FormCheckboxGroup
-                            stateKey={''}
-                            options={[{ label: 'Yes', value: false }, { label: 'No', value: true }]}
-                            selected={manualID ? true : false}
-                            onChange={(field: string, value: any) => setManualID(value)}
-                        />
-
-                        {!manualID
-                            ? <Blocks>
-                                <FormLabel label={'Upload passport'} tooltip={'We need your passport as proof of ID'} />
-                                <FormUploader
-                                    id={'passport'}
-                                    onUpload={handleUpload}
-                                    uploaded={!manualPassport && shareholder.verification?.passport}
-                                    onClearUpload={() => saveEditField('verification.passport', null, 'distinctShareholders', shareholder.docId)}
+                        {validationResults.indexOf('dateOfBirth') > -1 &&
+                            <Styled.Inputs>
+                                <FormInput
+                                    stateKey={'dateOfBirth.value'}
+                                    label={'Date of birth'}
+                                    onChange={(field: any, value: any) => saveEditField(field, value, "distinctShareholders", shareholder.docId)}
+                                    value={getValue(shareholder.dateOfBirth)}
+                                    isEdit
+                                    placeholder={'DD/MM/YYYY'}
                                 />
-                            </Blocks>
-                            : <ManualApproval
-                                type={'passport'}
-                                docId={shareholder.docId} onSave={saveEditField}
-                                value={shareholder.verification?.passport}
-                            />
+                            </Styled.Inputs>
                         }
 
-                        <FormLabel label={'Do you have a copy of their utility bill?'} />
-                        <FormCheckboxGroup
-                            stateKey={''}
-                            options={[{ label: 'Yes', value: false }, { label: 'No', value: true }]}
-                            selected={manualAddress ? true : false}
-                            onChange={(field: string, value: any) => setManualAddress(value)}
-                        />
-
-                        {!manualAddress
-                            ? <Blocks>
-                                <FormLabel label={'Upload utility bill'} tooltip={'We need your utility bill as proof of address'} />
-                                <FormUploader
-                                    id={'utilityBill'}
-                                    onUpload={handleUpload}
-                                    uploaded={!manualUtilityBill && shareholder.verification?.utilityBill}
-                                    onClearUpload={() => saveEditField('verification.utilityBill', null, 'distinctShareholders', shareholder.docId)}
-                                />
-                            </Blocks>
-                            : <ManualApproval
-                                type={'utilityBill'}
-                                docId={shareholder.docId}
-                                onSave={saveEditField}
-                                value={shareholder.verification?.utilityBill}
+                        {validationResults.indexOf('verification.passport') > -1 && <>
+                            <FormLabel label={'Do you have a copy of their passport?'} />
+                            <FormCheckboxGroup
+                                stateKey={''}
+                                options={[{ label: 'Yes', value: false }, { label: 'No', value: true }]}
+                                selected={manualID ? true : false}
+                                onChange={(field: string, value: any) => setManualID(value)}
                             />
+
+                            {!manualID
+                                ? <Blocks>
+                                    <FormLabel label={'Upload passport'} tooltip={'We need your passport as proof of ID'} />
+                                    <FormUploader
+                                        id={'passport'}
+                                        onUpload={handleUpload}
+                                        uploaded={!manualPassport && shareholder.verification?.passport}
+                                        onClearUpload={() => saveEditField('verification.passport', null, 'distinctShareholders', shareholder.docId)}
+                                    />
+                                </Blocks>
+                                : <ManualApproval
+                                    type={'passport'}
+                                    docId={shareholder.docId} onSave={saveEditField}
+                                    value={shareholder.verification?.passport}
+                                />
+                            }
+                        </>
+                        }
+
+                        {validationResults.indexOf('residentialAddress') > -1 &&
+                            <Styled.Inputs>
+                                <FormInput
+                                    stateKey={'residentialAddress.value'}
+                                    label={'Residential address'}
+                                    onChange={(field: any, value: any) => saveEditField(field, value, "distinctShareholders", shareholder.docId)}
+                                    value={getValue(shareholder.residentialAddress)}
+                                    isEdit
+                                />
+                            </Styled.Inputs>
+                        }
+
+                        {validationResults.indexOf('verification.utilityBill') > -1 && <>
+                            <FormLabel label={'Do you have a copy of their utility bill?'} />
+                            <FormCheckboxGroup
+                                stateKey={''}
+                                options={[{ label: 'Yes', value: false }, { label: 'No', value: true }]}
+                                selected={manualAddress ? true : false}
+                                onChange={(field: string, value: any) => setManualAddress(value)}
+                            />
+
+                            {!manualAddress
+                                ? <Blocks>
+                                    <FormLabel label={'Upload utility bill'} tooltip={'We need your utility bill as proof of address'} />
+                                    <FormUploader
+                                        id={'utilityBill'}
+                                        onUpload={handleUpload}
+                                        uploaded={!manualUtilityBill && shareholder.verification?.utilityBill}
+                                        onClearUpload={() => saveEditField('verification.utilityBill', null, 'distinctShareholders', shareholder.docId)}
+                                    />
+                                </Blocks>
+                                : <ManualApproval
+                                    type={'utilityBill'}
+                                    docId={shareholder.docId}
+                                    onSave={saveEditField}
+                                    value={shareholder.verification?.utilityBill}
+                                />
+                            }
+                        </>
                         }
 
                         <Styled.Inputs>
                             <Blocks>
                                 <Styled.TaxBlock>
-                                    <div>
-                                        <FormInput
-                                            stateKey={'countryOfTaxResidence.value'}
-                                            label={'Country of residence'}
-                                            onChange={(field: any, value: any) => saveEditField(field, value, "distinctShareholders", shareholder.docId)}
-                                            value={getValue(shareholder.countryOfTaxResidence)}
-                                            isEdit
-                                        />
-                                    </div>
+                                    {validationResults.indexOf('countryOfTaxResidence') > -1 &&
+                                        <div>
+                                            <FormInput
+                                                stateKey={'countryOfTaxResidence.value'}
+                                                label={'Country of residence'}
+                                                onChange={(field: any, value: any) => saveEditField(field, value, "distinctShareholders", shareholder.docId)}
+                                                value={getValue(shareholder.countryOfTaxResidence)}
+                                                isEdit
+                                            />
+                                        </div>
+                                    }
 
+                                    {validationResults.indexOf('taxId') > -1 &&
+                                        <div>
+                                            <FormInput
+                                                stateKey={'taxId.value'}
+                                                label={'Tax ID'}
+                                                onChange={(field: any, value: any) => saveEditField(field, value, "distinctShareholders", shareholder.docId)}
+                                                value={getValue(shareholder.taxId)}
+                                                isEdit
+                                            />
+                                        </div>
+                                    }
+                                </Styled.TaxBlock>
+
+                                {validationResults.indexOf('contactEmail') > -1 &&
                                     <div>
                                         <FormInput
-                                            stateKey={'taxId.value'}
-                                            label={'Tax ID'}
+                                            stateKey={'contactEmail.value'}
+                                            label={'Contact email'}
                                             onChange={(field: any, value: any) => saveEditField(field, value, "distinctShareholders", shareholder.docId)}
-                                            value={getValue(shareholder.taxId)}
+                                            value={getValue(shareholder.contactEmail)}
                                             isEdit
                                         />
                                     </div>
-                                </Styled.TaxBlock>
+                                }
+
+                                {validationResults.indexOf('contactPhone') > -1 &&
+                                    <div>
+                                        <FormInput
+                                            stateKey={'contactPhone.value'}
+                                            label={'Contact phone'}
+                                            onChange={(field: any, value: any) => saveEditField(field, value, "distinctShareholders", shareholder.docId)}
+                                            value={getValue(shareholder.contactPhone)}
+                                            isEdit
+                                        />
+                                    </div>
+                                }
 
                                 <FormInput
                                     stateKey={'role.value'}
@@ -243,6 +307,7 @@ const MyDocumentsPerson = (props: any) => {
 const mapStateToProps = (state: any) => ({
     currentUser: state.auth.user,
     companyStructure: state.screening.companyStructure,
+    validation: state.screening.validation,
 });
 
 const actions = { showLoader, hideLoader, saveEditField };
