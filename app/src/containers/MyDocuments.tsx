@@ -36,11 +36,15 @@ import * as Styled from './my-documents.styles';
 
 import Terms from '../terms';
 
-const Person = [
+export const Person = [
+    'dateOfBirth',
     'verification.passport',
+    'residentialAddress',
     'verification.utilityBill',
     'countryOfTaxResidence',
     'taxId',
+    'contactEmail',
+    'contactPhone',
     'role'
 ];
 
@@ -86,6 +90,28 @@ export const CompanyDocuments = [
     'romanianFiscalCertificate',
 ];
 
+export const personValidation = (field: Array<string>, validationErrors: any, markets: Array<string>) => {
+    let uniqueFieldErrors: Array<string> = [];
+
+    Object.keys(validationErrors)
+        .filter((market: string) => market === 'Core' || markets.indexOf(market) > -1)
+        .forEach((market: string) => {
+            let errorFields = Object.keys(validationErrors[market]);
+            errorFields = errorFields.map((errorField: string) => {
+                const subField = Object.keys(validationErrors[market][errorField])[0];
+                if (subField !== 'value') {
+                    return `${errorField}.${subField}`;
+                }
+                return errorField;
+            })
+            uniqueFieldErrors = uniqueFieldErrors.concat(errorFields);
+        })
+
+    const requiredFields = field.filter(value => -1 !== [...new Set(uniqueFieldErrors)].indexOf(value));
+
+    return requiredFields;
+}
+
 const MyDocuments = (props: any) => {
     const {
         currentUser,
@@ -95,7 +121,8 @@ const MyDocuments = (props: any) => {
         history,
         showLoader,
         hideLoader,
-        editUser
+        editUser,
+        validation
     } = props;
 
     const [section, setSection] = useState('People');
@@ -104,6 +131,10 @@ const MyDocuments = (props: any) => {
 
     if (!currentUser.screened || currentUser.markets.length === 0 || !company || !companyStructure) {
         return <Redirect to="/onboarding" />;
+    }
+
+    if (!validation) {
+        return null;
     }
 
     const shareholders = companyStructure.distinctShareholders.filter((shareholder: any) =>
@@ -140,7 +171,10 @@ const MyDocuments = (props: any) => {
         return completed;
     }
 
-    const shareholdersDone = shareholders.filter((shareholder: any) => confirmDone(shareholder, Person) === 5);
+    const shareholdersDone = shareholders.filter((shareholder: any) => {
+        const PersonReq = personValidation(Person, validation[shareholder.docId]['errors'], currentUser.markets);
+        return confirmDone(shareholder, PersonReq) === PersonReq.length;
+    });
 
     const highRisk = parseInt(getValue(companyStructure.riskRating)) === 5;
     const mediumRisk = parseInt(getValue(companyStructure.riskRating)) >= 3;
@@ -222,9 +256,10 @@ const MyDocuments = (props: any) => {
                                     <Blocks>
                                         <h2 className="center">
                                             We have identified {shareholders.length} {shareholders.length === 1 ? 'UBO' : 'UBOs'} from {company.name} company structure which require ID checks
-                                </h2>
+                                        </h2>
                                         {shareholders.map((shareholder: any, count: 0) => {
-                                            const completed = confirmDone(shareholder, Person);
+                                            const PersonReq = personValidation(Person, validation[shareholder.docId]['errors'], currentUser.markets);
+                                            const completed = confirmDone(shareholder, PersonReq);
 
                                             let notificationSent = false;
                                             if (shareholder.verification) {
@@ -243,8 +278,8 @@ const MyDocuments = (props: any) => {
                                                     type={'person'}
                                                     title={getValue(shareholder.name)}
                                                     subTitle={'UBO'}
-                                                    status={setStatus(completed === 5, notificationSent)}
-                                                    total={5}
+                                                    status={setStatus(completed === PersonReq.length, notificationSent)}
+                                                    total={PersonReq.length}
                                                     completed={completed}
                                                 />
                                             )
@@ -372,6 +407,7 @@ const mapStateToProps = (state: any) => ({
     company: state.screening.company,
     companyStructure: state.screening.companyStructure,
     ownershipThreshold: state.screening.ownershipThreshold,
+    validation: state.screening.validation
 });
 
 const actions = { showLoader, hideLoader, editUser };

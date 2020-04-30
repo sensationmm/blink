@@ -30,7 +30,7 @@ export const onGetValidation = async (
     setCompletion: (type: string, src: object) => void,
     hideLoader: () => void,
     push: (target: string) => void,
-    redirect: string,
+    redirect: string | null,
     ownershipThreshold: string,
     markets: Array<market>
 ) => {
@@ -67,7 +67,7 @@ export const onGetValidation = async (
         setErrors(entity, marketErrors);
     })
     hideLoader();
-    push(redirect)
+    redirect && push(redirect)
 }
 
 const CompanyStructure = (props: any) => {

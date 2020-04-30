@@ -76,10 +76,8 @@ export const Inputs = styled.div`
     text-align: left;
     margin: 0 auto;
 
-    label {
-        text-align: left;
-        font-size: 0.8em;
-        color: var(--basic-shadow);
+    label, input[type="text"] {
+        text-align: center;
     }
 `;
 

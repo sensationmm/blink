@@ -14,6 +14,8 @@ import { editField as apiEditField } from '../utils/validation/request';
 import { editUser } from '../redux/actions/auth';
 import { showLoader, hideLoader } from '../redux/actions/loader';
 import Loader from '../components/loader';
+import { onGetValidation } from './CompanyStructure';
+import { setCompletion, setErrors } from '../redux/actions/screening';
 
 import HeaderPassport from '../svg/header-passport.svg';
 
@@ -31,6 +33,9 @@ const Onboarding = (props: any) => {
         editUser,
         showLoader,
         hideLoader,
+        ownershipThreshold,
+        setCompletion,
+        setErrors
     } = props;
 
     const [isPaused, setIsPaused] = useState(true);
@@ -50,6 +55,19 @@ const Onboarding = (props: any) => {
     const preloadCompany = async () => {
         let UBOStructure = await requestCompanyUBOStructure(currentUser.company.companyId, currentUser.company.countryCode);
         setCompanyStructure(UBOStructure);
+
+        await onGetValidation(
+            showLoader,
+            setErrors,
+            UBOStructure,
+            setCompletion,
+            hideLoader,
+            history.push,
+            null,
+            ownershipThreshold,
+            currentUser.markets
+        );
+
         setIsPaused(false);
     }
 
@@ -133,9 +151,11 @@ const mapStateToProps = (state: any) => ({
     currentUser: state.auth.user,
     selectedCompany: state.screening.company,
     selectedCountry: state.screening.country,
+
+    ownershipThreshold: state.screening.ownershipThreshold,
 });
 
-const actions = { showLoader, hideLoader, setCompany, setCompanyStructure, editUser };
+const actions = { showLoader, hideLoader, setCompany, setCompanyStructure, editUser, setCompletion, setErrors };
 
 export const RawComponent = Onboarding;
 
