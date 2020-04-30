@@ -13,12 +13,13 @@ server.post('*/', function (req: any, res: any) {
         .add(rule)
         .then(function (docRef: any) {
             console.log("Rule written with ID: ", docRef.id);
-            res.send({ ...rule, id: docRef.id, path: docRef.path })
+            return res.send({ ...rule, id: docRef.id, path: docRef.path })
         })
         .catch(function (error: string) {
             console.error("Error adding rule: ", error);
+            return res.send({ msg: "error adding rule" })
         });
 
-    return res.send(rule);
+    // return res.send(rule);
 });
 module.exports = functions.https.onRequest(server);

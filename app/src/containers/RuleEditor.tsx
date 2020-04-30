@@ -20,7 +20,7 @@ const RuleEditor = (props: any) => {
   const [hasRequestRules, setHasRequestRules] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [isEditingJSON, setIsEditingJSON] = useState("");
-  console.log(props)
+
   if (!props.auth?.user?.admin) {
     return <Redirect to="/" />
   }
@@ -146,7 +146,8 @@ const RuleEditor = (props: any) => {
                 isEditingJSON={isEditingJSON}
                 setIsEditingJSON={setIsEditingJSON}
                 collectionOptions={collectionOptions}
-                requestAddRule={props.requestAddRule} />
+                requestAddRule={props.requestAddRule}
+                history={props.history} />
               :
 
               <List

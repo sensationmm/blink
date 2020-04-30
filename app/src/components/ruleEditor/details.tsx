@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import * as styled from "./styles";
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import Box from '../../layout/box';
 import Blocks from '../../layout/blocks';
 import Actions from '../../layout/actions';
@@ -15,7 +15,7 @@ const RuleDetails = (props: any) => {
 
     const [JSONIsValid, setJSONIsValid] = useState(true);
 
-    const { collectionOptions, rules, selectedRule, editMultipleFields, setRules, setModal, hasJsonStructure, isEditingJSON, setIsEditingJSON, requestAddRule } = props;
+    const { history, collectionOptions, rules, selectedRule, editMultipleFields, setRules, setModal, hasJsonStructure, isEditingJSON, setIsEditingJSON, requestAddRule } = props;
 
     const coreSelected = selectedRule && selectedRule.marketRuleMapping ?.indexOf("Core") > -1;
 
@@ -94,21 +94,31 @@ const RuleDetails = (props: any) => {
                 });
             }
 
+            const ruleToSave: any = {...selectedRule}
+            const ruleName = ruleToSave.name
+            delete ruleToSave.id;
+            delete ruleToSave.originalData;
+            ruleToSave[ruleToSave.name] = JSON.parse(ruleToSave[ruleToSave.name])
+            delete ruleToSave.name;
+            delete ruleToSave.isEdited;
+            delete ruleToSave.path;
+            const collection = ruleToSave.type;
+            delete ruleToSave.type;
 
-            delete selectedRule.id;
-            delete selectedRule.originalData;
-            selectedRule[selectedRule.name] = JSON.parse(selectedRule[selectedRule.name])
-            delete selectedRule.name;
-            delete selectedRule.isEdited;
-            delete selectedRule.path;
-            const collection = selectedRule.type;
-            delete selectedRule.type;
-
-            const result = await requestAddRule(selectedRule, `${collection.toLowerCase()}Rules`);
-            const newRules = rules.filter((rule: any) => rule.id !== "new");
-            newRules.push(result);
+            const result = await requestAddRule(ruleToSave, `${collection.toLowerCase()}Rules`);
+            const newRules: any = rules.map((rule: any) => {
+                if (rule.id == "new") {
+                    ruleToSave.id = result.id;
+                    ruleToSave.type = collection.toLowerCase();
+                    ruleToSave.name = ruleName
+                    ruleToSave[ruleName] = JSON.stringify(ruleToSave[ruleName])
+                    return ruleToSave;
+                }
+                return rule;
+            })
+            console.log(newRules)
             setRules(newRules);
-
+            return history.push(`/ruleEditor/${result.id}`);
         }
         else if (selectedRule.originalData) {
             const dataToSave: any = {};
