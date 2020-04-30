@@ -7,6 +7,7 @@ import Actions from '../../layout/actions';
 import Icon from "../icon"
 import CompanyIcon from '../../svg/company-icon.svg';
 import PersonIcon from '../../svg/individual-icon.svg';
+import ArrowBack from '../../svg/arrow-back.svg';
 import { blinkMarkets } from "../../utils/config/blink-markets";
 import Button from '../button';
 
@@ -164,7 +165,7 @@ const RuleDetails = (props: any) => {
 
     return <styled.ContentNarrowInner>
 
-        <Link style={{ textDecoration: "none" }} onClick={e => {
+        <Link style={{ textDecoration: "none", display:"flex", color: "black" }} onClick={e => {
             if (selectedRule ?.originalData) {
                 e.preventDefault();
                 setModal("Unsaved changes", "You have unsaved changes. Please confirm or undo", null)
@@ -173,7 +174,7 @@ const RuleDetails = (props: any) => {
                     setRules(rules.filter((rule: any) => rule.id !== "new"));
                 }
             }
-        }} to="/ruleEditor">&lt; Back</Link>
+        }} to="/ruleEditor"><img style={{ marginRight: 10 }} src={ArrowBack} alt="Back" /> Back</Link>
 
         <styled.ContentNarrowInner>
             <styled.Info>

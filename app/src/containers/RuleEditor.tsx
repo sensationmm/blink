@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { requestAllRules } from '../redux/actions/rules';
 import { setModal } from '../redux/actions/modal';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Redirect } from 'react-router-dom';
 import * as Styled from "../components/styles";
 import { requestEditMultipleFields, requestAddRule } from "../redux/actions/validation";
 
 import RuleDetails from "../components/ruleEditor/details";
 import List from "../components/ruleEditor/list";
 import BlinkLogo from '../svg/blink-logo.svg';
+import User from './User';
 
 const collectionOptions = ["Person", "Company"];
 
@@ -19,6 +20,10 @@ const RuleEditor = (props: any) => {
   const [hasRequestRules, setHasRequestRules] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [isEditingJSON, setIsEditingJSON] = useState("");
+  console.log(props)
+  if (!props.auth?.user?.admin) {
+    return <Redirect to="/" />
+  }
 
   const sort = (rules: any) => {
 
@@ -123,6 +128,7 @@ const RuleEditor = (props: any) => {
     <>
       <Styled.Header>
         <img alt="Blink" src={BlinkLogo} />
+        <User />
       </Styled.Header>
       <Styled.MainSt>
         <Styled.ContentNarrow>
@@ -137,21 +143,21 @@ const RuleEditor = (props: any) => {
                 editMultipleFields={props.editMultipleFields}
                 setModal={props.setModal}
                 hasJsonStructure={hasJsonStructure}
-                isEditingJSON={isEditingJSON} 
+                isEditingJSON={isEditingJSON}
                 setIsEditingJSON={setIsEditingJSON}
-                collectionOptions={collectionOptions} 
+                collectionOptions={collectionOptions}
                 requestAddRule={props.requestAddRule} />
-        :
+              :
 
-            <List
-              createNewRule={createNewRule}
-              collections={collections}
-              rules={rules}
-              changeCollection={changeCollection}
-              collectionOptions={collectionOptions}
-              setSearchTerm={setSearchTerm}
-              searchTerm={searchTerm}
-              history={props.history} />
+              <List
+                createNewRule={createNewRule}
+                collections={collections}
+                rules={rules}
+                changeCollection={changeCollection}
+                collectionOptions={collectionOptions}
+                setSearchTerm={setSearchTerm}
+                searchTerm={searchTerm}
+                history={props.history} />
             }
 
           </>
@@ -164,6 +170,7 @@ const RuleEditor = (props: any) => {
 
 const mapStateToProps = (state: any) => ({
   modal: state.modal,
+  auth: state.auth
 });
 
 const actions = {
