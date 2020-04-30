@@ -109,7 +109,7 @@ const Auth = (props: any) => {
                             <FormInput
                                 stateKey={'username'}
                                 label={'Username'}
-                                test-id='auth-input-username'
+                                testId="auth-input-username"
                                 onChange={(field: any, value: any) => setUsername(value)}
                                 value={username}
                                 isEdit
@@ -120,7 +120,7 @@ const Auth = (props: any) => {
                                     type={passwordVisible ? "text" : "password"}
                                     stateKey={'password'}
                                     label={'Password'}
-                                    test-id='auth-input-password'
+                                    testId='auth-input-password'
                                     onChange={(field: any, value: any) => setPassword(value)}
                                     value={password}
                                     isEdit

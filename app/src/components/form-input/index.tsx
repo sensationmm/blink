@@ -22,6 +22,7 @@ export interface FormInputProps {
     validated?: boolean;
     disabled?: boolean;
     hasError?: boolean;
+    testId?: string | undefined;
 }
 
 const FormInput: React.FC<FormInputProps> = ({
@@ -36,7 +37,8 @@ const FormInput: React.FC<FormInputProps> = ({
     suffix,
     validated = false,
     disabled = false,
-    hasError = false
+    hasError = false,
+    testId,
 }) => {
     const [focused, setFocused] = useState(false);
     const [initVal] = useState(value);
@@ -70,6 +72,7 @@ const FormInput: React.FC<FormInputProps> = ({
                     type={type}
                     value={initVal !== value || isEdit ? (value || '') : ''}
                     disabled={disabled}
+                    data-test-id={testId}
                 />
                 {(focused || suffix !== '' || validated) &&
                     <Styled.After>
