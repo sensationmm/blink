@@ -56,7 +56,7 @@ export const CompanyDetails = [
     'type',
     'primaryAddress',
     'registeredAddress',
-    'countryCode',
+    'incorporationCountry',
     'incorporationDate',
     'companyId',
     'countryOfTaxResidence',

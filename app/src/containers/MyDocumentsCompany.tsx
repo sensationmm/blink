@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
@@ -31,7 +31,7 @@ import * as Styled from './my-documents.styles';
 
 import { CompanyDetails, BusinessDetails, CompanyDocuments } from './MyDocuments';
 
-const MyDocumentsPerson = (props: any) => {
+const MyDocumentsCompany = (props: any) => {
     const {
         currentUser,
         companyStructure,
@@ -40,10 +40,19 @@ const MyDocumentsPerson = (props: any) => {
         section
     } = props;
 
+    const [loadedCompanyStructure, setLoadedCompanyStructure] = useState();
+    useEffect(() => {
+        setLoadedCompanyStructure(companyStructure);
+    }, []);
+
     if (!currentUser.screened || !companyStructure) {
         return <Redirect to="/onboarding" />;
     } else if (!section) {
         return <Redirect to="/onboarding/my-documents" />;
+    }
+
+    if (!loadedCompanyStructure) {
+        return null;
     }
 
     let title;
@@ -57,7 +66,7 @@ const MyDocumentsPerson = (props: any) => {
     if (section === 'company-details') {
         title = 'Company details';
         subTitle = 'Please confirm or edit information';
-        heading = "All you need to do is make sure the auto-filled information is correct,<br />and fill in anything that is missing and confirm. That's it!";
+        heading = "All you need to do is make sure the auto-filled information is correct, and fill in anything that is missing and confirm. That's it!";
         icon = IconCompany;
         subIcon = IconEdit;
 
@@ -77,12 +86,12 @@ const MyDocumentsPerson = (props: any) => {
             { type: FormInput, label: 'Primary address' },
             { type: FormInput, label: 'Registered address' },
             { type: FormInput, label: 'Incorporation address (if different)' },
-            { type: FormInput, label: 'Incorporation country' },
-            { type: FormInput, label: 'Incorporation date' },
-            { type: FormInput, label: 'Company Registration number' },
+            { type: FormInput, label: 'Incorporation country', noConfirm: true },
+            { type: FormInput, label: 'Incorporation date', noConfirm: true },
+            { type: FormInput, label: 'Company Registration number', noConfirm: true },
             { type: FormInput, label: 'Country of tax residence' },
             { type: FormInput, label: 'Company tax number' },
-            { type: FormInput, label: 'Company VAT number' },
+            { type: FormInput, label: 'Company VAT number', noConfirm: true },
         ];
     } else if (section === 'business-details') {
         title = 'Business details';
@@ -94,23 +103,23 @@ const MyDocumentsPerson = (props: any) => {
         fields = BusinessDetails.slice(0);
 
         structure = [
-            { type: FormInput, label: 'Company NAICS Code' },
-            { type: FormInput, label: 'NAICS Description' },
-            { type: FormInput, label: 'Countries of Primary business operations' },
-            { type: FormInput, label: 'Number of business locations' },
+            { type: FormInput, label: 'Company NAICS Code', noConfirm: true },
+            { type: FormInput, label: 'NAICS Description', noConfirm: true },
+            { type: FormInput, label: 'Countries of Primary business operations', noConfirm: true },
+            { type: FormInput, label: 'Number of business locations', noConfirm: true },
             { type: FormInput, label: 'Currency' },
             { type: FormInput, label: 'Revenue' },
             { type: FormInput, label: 'Funding Sources' },
             { type: FormInput, label: 'Revenue Sources' },
-            { type: FormInput, label: 'Number of employees' },
-            { type: FormCheckboxGroup, label: 'I confirm the Company is not based at home?' },
-            { type: FormCheckboxGroup, label: 'I confirm the Company has had no material mergers' },
-            { type: FormCheckboxGroup, label: 'I confirm the Company has had no material change in business activity' },
-            { type: FormCheckboxGroup, label: 'I confirm the company does not allow the issuance of Bearer Shares' },
-            { type: FormCheckboxGroup, label: 'I confirm the Company is not an internet only business' },
-            { type: FormCheckboxGroup, label: 'I confirm the Company is not a Special Purpose Vehicle' },
+            { type: FormInput, label: 'Number of employees', noConfirm: true },
+            { type: FormCheckboxGroup, label: 'I confirm the Company is not based at home?', noConfirm: true },
+            { type: FormCheckboxGroup, label: 'I confirm the Company has had no material mergers', noConfirm: true },
+            { type: FormCheckboxGroup, label: 'I confirm the Company has had no material change in business activity', noConfirm: true },
+            { type: FormCheckboxGroup, label: 'I confirm the company does not allow the issuance of Bearer Shares', noConfirm: true },
+            { type: FormCheckboxGroup, label: 'I confirm the Company is not an internet only business', noConfirm: true },
+            { type: FormCheckboxGroup, label: 'I confirm the Company is not a Special Purpose Vehicle', noConfirm: true },
             { type: FormCheckboxGroup, label: 'I confirm the Company does not hold Client Funds' },
-            { type: FormCheckboxGroup, label: 'I confirm the Company is not a payment Intermediary' },
+            { type: FormCheckboxGroup, label: 'I confirm the Company is not a payment Intermediary', noConfirm: true },
             { type: FormCheckboxGroup, label: 'I confirm the company has no business dealings with North Korea, Sudan, Iran, Syria, the Crimea Region' },
         ];
     } else if (section === 'company-documents') {
@@ -179,6 +188,14 @@ const MyDocumentsPerson = (props: any) => {
                                         ...structure[count]
                                     }
                                 })
+                                .filter((item: any) => {
+                                    const value = getValue(loadedCompanyStructure[item.field]);
+
+                                    return (
+                                        !item.noConfirm ||
+                                        (item.noConfirm === true && (value === '' || value === undefined || value === null))
+                                    )
+                                })
                                 .map((item: any, count: number) => {
 
                                     const config: { [key: string]: any } = {
@@ -237,6 +254,6 @@ const mapStateToProps = (state: any) => ({
 
 const actions = { showLoader, hideLoader, saveEditField };
 
-export const RawComponent = MyDocumentsPerson;
+export const RawComponent = MyDocumentsCompany;
 
-export default connect(mapStateToProps, actions)(withRouter(MyDocumentsPerson));
+export default connect(mapStateToProps, actions)(withRouter(MyDocumentsCompany));
