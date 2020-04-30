@@ -5,10 +5,11 @@ import {
 } from '../constants';
 
 import {
-    editField
+    editField,
+    addRule
 } from "../../utils/validation/request"
 
-export const editMultipleFields = (docId, edits) => async (dispatch,
+export const requestEditMultipleFields = (docId, edits) => async (dispatch,
     getState
 ) => {
 
@@ -35,4 +36,30 @@ export const editMultipleFields = (docId, edits) => async (dispatch,
             type: HIDE_LOADER,
         })
     }, 1000);
+};
+
+export const requestAddRule = (collection, rule) => async (dispatch,
+    getState
+) => {
+
+    dispatch({
+        type: SHOW_LOADER,
+    })
+
+    const auth = getState().auth;
+
+    const result = await addRule(collection, rule, auth.user.localId);
+
+    setTimeout(() => {
+        dispatch({
+            type: SET_MODAL,
+            heading: "Success",
+            message: "Rules added for approval"
+        });
+        dispatch({
+            type: HIDE_LOADER,
+        })
+    }, 1000);
+
+    return result
 };

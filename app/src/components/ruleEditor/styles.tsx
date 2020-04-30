@@ -23,6 +23,17 @@ clear: both;
       z-index: 1;
       position: relative;
     }
+
+    &.new-rule {
+      margin-top: 20px;
+      height: 50px;
+      border-style: dashed;
+      padding-top: 6px;
+      padding-bottom: 6px;
+      span {
+        margin: auto;
+      }
+    }
   }
 
   label {
@@ -64,6 +75,28 @@ export const CollectionFilter = styled.div`
 
   span {
       padding: 0 8px;
+  }
+`
+
+export const Type = styled.ul `
+  display: flex;
+
+  .company, 
+  ,person {
+    list-style-type: none;
+    position: relative;
+    margin: 0 10px;
+    padding: 0;
+    &.selected {
+      &::after {
+        content: "";
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        padding: 2px;
+        border: 1px solid var(--brand-secondary);
+      }
+    }
   }
 `
 
@@ -173,6 +206,8 @@ export const Title = styled(InputSt)`
     border-color: var(--basic-shadow);
   }
 `
+
+export const NameInput = styled(Title)``;
 
 export const Description = styled(Title)`
   color: #979797;

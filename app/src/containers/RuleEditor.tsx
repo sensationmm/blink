@@ -4,7 +4,7 @@ import { requestAllRules } from '../redux/actions/rules';
 import { setModal } from '../redux/actions/modal';
 import { withRouter } from 'react-router-dom';
 import * as Styled from "../components/styles";
-import { editMultipleFields } from "../redux/actions/validation";
+import { requestEditMultipleFields, requestAddRule } from "../redux/actions/validation";
 
 import RuleDetails from "../components/ruleEditor/details";
 import List from "../components/ruleEditor/list";
@@ -24,10 +24,10 @@ const RuleEditor = (props: any) => {
 
     const sort: (a: any, b: any) => any = (a: any, b: any) => {
 
-      if (b.title && a.title) {
-        return b.title.toLowerCase() > a.title.toLowerCase() ? -1 : 1
-      }
-      return b.name.toLowerCase() > a.name.toLowerCase() ? -1 : 1
+      const aNameOrTitle = a.title || a.name;
+      const bNameOrTitle = b.title || b.name;
+
+      return bNameOrTitle.toLowerCase() > aNameOrTitle.toLowerCase() ? -1 : 1
     }
 
     return rules.sort(sort)
@@ -44,6 +44,20 @@ const RuleEditor = (props: any) => {
     } catch (err) {
       return false;
     }
+  }
+
+  const createNewRule = () => {
+    const newRule = {
+      name: "",
+      type: undefined,
+      title: "",
+      description: "",
+      path: "",
+      id: "new",
+      marketRuleMapping: [],
+    }
+    const newRules = [...rules, newRule];
+    setRules(newRules)
   }
 
   const getRules = async (newCollections?: Array<string>) => {
@@ -115,8 +129,8 @@ const RuleEditor = (props: any) => {
           {rules && <>
 
             {(ruleId && selectedRule) ?
-              <RuleDetails s
-                etRules={setRules}
+              <RuleDetails
+                // setRules={setRules}
                 rules={rules}
                 selectedRule={selectedRule}
                 setRules={setRules}
@@ -124,10 +138,13 @@ const RuleEditor = (props: any) => {
                 setModal={props.setModal}
                 hasJsonStructure={hasJsonStructure}
                 isEditingJSON={isEditingJSON} 
-                setIsEditingJSON={setIsEditingJSON} />
+                setIsEditingJSON={setIsEditingJSON}
+                collectionOptions={collectionOptions} 
+                requestAddRule={props.requestAddRule} />
         :
 
-              <List
+            <List
+              createNewRule={createNewRule}
               collections={collections}
               rules={rules}
               changeCollection={changeCollection}
@@ -151,7 +168,8 @@ const mapStateToProps = (state: any) => ({
 
 const actions = {
   requestAllRules,
-  editMultipleFields,
+  requestAddRule,
+  editMultipleFields: requestEditMultipleFields,
   setModal
 }
 

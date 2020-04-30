@@ -7,7 +7,7 @@ import PersonIcon from '../../svg/individual-icon.svg';
 
 const List = (props: any) => {
 
-    const { history, rules, setSearchTerm, searchTerm, collectionOptions, changeCollection, collections } = props;
+    const { history, rules, setSearchTerm, searchTerm, collectionOptions, changeCollection, collections, createNewRule } = props;
 
     const highlightSearch = (value: string) => {
         if (searchTerm == '') {
@@ -57,6 +57,15 @@ const List = (props: any) => {
                         <styled.Name>{highlightSearch(rule.title || rule.name)}</styled.Name>
                     </label></li>
             })}
+        </styled.RulesList>
+        <styled.RulesList>
+            <li className="new-rule" key={"new"} onClick={() => {
+                createNewRule()
+                history.push("/ruleEditor/new")
+            }}>
+                <label>
+                    <styled.Name> + New Rule</styled.Name>
+                </label></li>
         </styled.RulesList>
     </styled.ContentNarrowInner>
 }
