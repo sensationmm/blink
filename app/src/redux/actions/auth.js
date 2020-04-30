@@ -18,6 +18,7 @@ export const requestUserSignIn = (user, password) => async (dispatch) => {
     })
 
     const result = await userSignIn(user, password);
+    result.has2FA = result.admin;
 
     setTimeout(() => dispatch({
         type: HIDE_LOADER,
@@ -50,7 +51,12 @@ export const requestUserSignInWithToken = token => async (dispatch) => {
     if (result.notFound) {
         return dispatch(userSignout());
     } else {
-        return dispatch(userSignInSuccess({ ...result, idToken: token }));
+        result.has2FA = (result.verified || result.admin) && !result.oob
+
+        return dispatch(userSignInSuccess({
+            ...result,
+            idToken: token
+        }));
     }
 };
 
@@ -107,8 +113,7 @@ export const requestUserOob = (mobileNo) => async (dispatch, getState) => {
     })
 
     const auth = getState().auth;
-
-    const result = await userRequestOob(auth.user.localId, mobileNo);
+    const result = await userRequestOob(auth.user.localId, (mobileNo || auth.user.mobile));
 
     setTimeout(() => dispatch({
         type: HIDE_LOADER,
@@ -141,7 +146,7 @@ export const requestUserVerifyOob = oob => async (dispatch, getState) => {
     }), 1000);
 
     if (!result.verified) {
-        dispatch({
+        return dispatch({
             type: SET_MODAL,
             heading: "Invalid code",
             message: "Please try again"
@@ -149,10 +154,20 @@ export const requestUserVerifyOob = oob => async (dispatch, getState) => {
     }
 
     if (result.expired) {
-        dispatch({
+        return dispatch({
             type: SET_MODAL,
             heading: "Code has expired",
             message: "Please request a new code"
+        })
+    }
+
+    if (result.verified) {
+        dispatch({
+            type: USER_SIGNIN_SUCCESS,
+            user: {
+                ...auth.user,
+                has2FA: true
+            }
         })
     }
 

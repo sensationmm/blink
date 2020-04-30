@@ -109,6 +109,7 @@ const Auth = (props: any) => {
                             <FormInput
                                 stateKey={'username'}
                                 label={'Username'}
+                                testId="auth-input-username"
                                 onChange={(field: any, value: any) => setUsername(value)}
                                 value={username}
                                 isEdit
@@ -119,6 +120,7 @@ const Auth = (props: any) => {
                                     type={passwordVisible ? "text" : "password"}
                                     stateKey={'password'}
                                     label={'Password'}
+                                    testId='auth-input-password'
                                     onChange={(field: any, value: any) => setPassword(value)}
                                     value={password}
                                     isEdit

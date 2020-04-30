@@ -129,12 +129,20 @@
       "function": "signUp"
     }, 
     {
+      "source": "/signInFromInvite",
+      "function": "signInFromInvite"
+    }, 
+    {
       "source": "/requestOob",
       "function": "requestOob"
     },  
     {
       "source": "/verifyOob",
       "function": "verifyOob"
+    },
+    {
+      "source": "/changePassword",
+      "function": "changePassword"
     },
     {
       "source": "/getAllRules/**",

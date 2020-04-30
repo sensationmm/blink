@@ -7,10 +7,11 @@ import * as Styled from './styles';
 
 interface VerifyCodeProps {
     onSubmit: (value: string) => void;
+    code: string, 
+    setCode: any
 }
 
-const VerifyCode: React.FC<VerifyCodeProps> = ({ onSubmit }) => {
-    const [code, setCode] = useState('');
+const VerifyCode: React.FC<VerifyCodeProps> = ({ onSubmit, code, setCode }) => {
 
     const onType = (index: number, value: string) => {
         const newValue = code.substr(0, index) + value + code.substr(index + 1);

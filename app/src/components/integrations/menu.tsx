@@ -120,7 +120,7 @@ const Menu = (props: any) => {
         }
       </li>
       <li><Link onClick={props.userSignout} to="/">Logout</Link></li>
-      <li><Link to="/my-profile/integration-demo">Integration Demo</Link></li>
+      <li><Link className={props.path === "integration-demo" ? "active" : ""} to="/my-profile/integration-demo">Integration Demo</Link></li>
     </ul>
   </MenuSt>
 
