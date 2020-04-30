@@ -196,7 +196,7 @@ const MissingData = (props: any) => {
                                     <Blocks gutter={'small'}>
                                         <IconTitle title={'Screening'} icon={IconTarget} />
                                         <Grid
-                                            labels={['AML Watchlist', 'Sanctions Screening', 'AML Red Flag List', 'Adverse Media']}
+                                            labels={['AML Watchlist', 'Sanctions Screening', 'AML Red Flag List', 'Adverse Media', 'Local Lists']}
                                             content={[
                                                 {
                                                     values: [
@@ -204,6 +204,7 @@ const MissingData = (props: any) => {
                                                         getValue(companyStructure.sanctionsScreeningPassed),
                                                         getValue(companyStructure.AMLRedFlagListPassed),
                                                         getValue(companyStructure.adverseMediaChecksPassed),
+                                                        getValue(companyStructure.LocalListCheckPassed),
                                                     ]
                                                 }
                                             ]}
@@ -365,7 +366,7 @@ const MissingData = (props: any) => {
                                             <Blocks gutter={'small'}>
                                                 <IconTitle title={'Screening'} icon={IconTarget} />
                                                 <Grid
-                                                    labels={['AML Watchlist', 'Sanctions Screening', 'AML Red Flag List', 'Adverse Media', 'Senior Public Figure']}
+                                                    labels={['AML Watchlist', 'Sanctions Screening', 'AML Red Flag List', 'Adverse Media', 'Local Lists', 'Senior Public Figure']}
                                                     content={[
                                                         {
                                                             values: [
@@ -373,6 +374,7 @@ const MissingData = (props: any) => {
                                                                 shareholder.sanctionsScreeningPassed,
                                                                 shareholder.AMLRedFlagListPassed,
                                                                 shareholder.adverseMediaChecksPassed,
+                                                                shareholder.LocalListCheckPassed,
                                                                 shareholder.seniorPublicFigure,
                                                             ]
                                                         }

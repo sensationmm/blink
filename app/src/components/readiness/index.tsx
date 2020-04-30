@@ -101,7 +101,7 @@ const Readiness: React.FC<ReadinessProps> = ({
 
             <Box title={'Screening'} icon={IconTarget} paddedLarge shadowed>
                 <Grid
-                    labels={['AML Watchlist', 'Sanctions Screening', 'AML Red Flag List', 'Adverse Media', 'Senior Public Figure']}
+                    labels={['AML Watchlist', 'Sanctions Screening', 'AML Red Flag List', 'Adverse Media', 'Local Lists', 'Senior Public Figure']}
                     content={[
                         {
                             label: getValue(companyStructure.name),
@@ -111,6 +111,7 @@ const Readiness: React.FC<ReadinessProps> = ({
                                 getValue(companyStructure.sanctionsScreeningPassed),
                                 getValue(companyStructure.AMLRedFlagListPassed),
                                 getValue(companyStructure.adverseMediaChecksPassed),
+                                getValue(companyStructure.LocalListCheckPassed),
                                 null,
                             ]
                         },
@@ -123,6 +124,7 @@ const Readiness: React.FC<ReadinessProps> = ({
                                     getValue(shareholder.sanctionsScreeningPassed),
                                     getValue(shareholder.AMLRedFlagListPassed),
                                     getValue(shareholder.adverseMediaChecksPassed),
+                                    getValue(companyStructure.LocalListCheckPassed),
                                     getValue(shareholder.seniorPublicFigure),
                                 ]
                             }
