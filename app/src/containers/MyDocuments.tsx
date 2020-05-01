@@ -172,7 +172,8 @@ const MyDocuments = (props: any) => {
     }
 
     const shareholdersDone = shareholders.filter((shareholder: any) => {
-        const PersonReq = personValidation(Person, validation[shareholder.docId]['errors'], currentUser.markets);
+        const validationErrors = validation[shareholder.docId] ? validation[shareholder.docId]['errors'] : [];
+        const PersonReq = personValidation(Person, validationErrors, currentUser.markets);
         return confirmDone(shareholder, PersonReq) === PersonReq.length;
     });
 
