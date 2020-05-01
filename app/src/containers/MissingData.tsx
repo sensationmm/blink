@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { prettify } from 'validate.js';
 
 import ScreeningStatus from '../components/screening-status';
 import Icon from '../components/icon';
+import ActionBar from '../components/action-bar';
 import Stats from '../components/stat';
 import Box from '../layout/box';
 import Blocks from '../layout/blocks';
@@ -13,6 +14,7 @@ import capitalize from '../utils/functions/capitalize';
 import getByValue from '../utils/functions/getByValue';
 import getValue from '../utils/functions/getValue';
 import IconTitle from '../components/icon-title';
+import FormCheckbox from '../components/form-checkbox';
 import Grid from '../layout/grid';
 import FlexRowGrid from '../layout/flex-row-grid';
 import Button from '../components/button';
@@ -34,6 +36,7 @@ import * as MainStyled from "../components/styles";
 import MissingField from '../components/missing-field';
 
 import * as Styled from './missing-data.styles';
+import { TermsAccept } from './my-documents.styles';
 
 const MissingData = (props: any) => {
     const {
@@ -49,6 +52,9 @@ const MissingData = (props: any) => {
         markets,
         currentUser
     } = props;
+
+    const [showEmployeeConfirm, setShowEmployeeConfirm] = useState(false);
+    const [employeeConfirmed, setEmployeeConfirmed] = useState(false);
 
     if (!company || !companyStructure || markets.length === 0) {
         return <Redirect to="/search" />;
@@ -449,9 +455,22 @@ const MissingData = (props: any) => {
                 </Blocks>
 
                 <Actions>
-                    <Button onClick={getValidation} label={'Return check with new info'} icon={ArrowRight} />
+                    <Button onClick={() => setShowEmployeeConfirm(true)} label={'Return check with new info'} icon={ArrowRight} />
                 </Actions>
             </MainStyled.ContentNarrow>
+
+            <ActionBar
+                labelPrimary={'Confirm'}
+                actionPrimary={getValidation}
+                disabledPrimary={!employeeConfirmed}
+                header={<TermsAccept>
+                    I confirm as a Blink employee this information is accurate based on the verifiable sources in accordance
+                    with existing policies and standards
+                    <FormCheckbox style={'confirm'} onChange={() => setEmployeeConfirmed(!employeeConfirmed)} checked={employeeConfirmed} />
+                </TermsAccept>}
+                showHeader={true}
+                hidden={!showEmployeeConfirm}
+            />
         </MainStyled.MainSt>
     )
 }
