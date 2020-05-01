@@ -1,158 +1,323 @@
 const primitiveValidation = require('./functionsPrimitive');
 
 describe('equalTo()', () => {
-    it('passes if equal', () => {
-        const company = {
-            example: 'yes'
-        };
+    describe('for non-nested keys', () => {
+        it('passes if equal', () => {
+            const company = {
+                example: 'yes'
+            };
 
-        const options = {
-            search: 'example',
-            match: 'yes'
-        }
+            const options = {
+                search: 'example',
+                match: 'yes'
+            }
 
-        const valid = primitiveValidation.equalTo(null, options, 'testField', company);
+            const valid = primitiveValidation.equalTo(null, options, 'testField', company);
 
-        expect(valid).toEqual(null);
+            expect(valid).toEqual(null);
+        });
+
+        it('fails if not equal', () => {
+            const company = {
+                example: 'no'
+            };
+
+            const options = {
+                search: 'example',
+                match: 'yes'
+            }
+
+            const valid = primitiveValidation.equalTo(null, options, 'testField', company);
+
+            expect(valid).toEqual('equalTo fail');
+        });
     });
 
-    it('fails if not equal', () => {
-        const company = {
-            example: 'no'
-        };
+    describe('for nested keys', () => {
+        it('passes if equal', () => {
+            const company = {
+                example: {"value": "yes"}
+            };
 
-        const options = {
-            search: 'example',
-            match: 'yes'
-        }
+            const options = {
+                search: 'example.value',
+                match: 'yes'
+            }
 
-        const valid = primitiveValidation.equalTo(null, options, 'testField', company);
+            const valid = primitiveValidation.equalTo(null, options, 'testField', company);
 
-        expect(valid).toEqual('equalTo fail');
+            expect(valid).toEqual(null);
+        });
+
+        it('fails if not equal', () => {
+            const company = {
+                example: {"value": "no"}
+            };
+
+            const options = {
+                search: 'example.value',
+                match: 'yes'
+            }
+
+            const valid = primitiveValidation.equalTo(null, options, 'testField', company);
+
+            expect(valid).toEqual('equalTo fail');
+        });
     });
 });
 
 describe('notEqualTo()', () => {
-    it('fails if equal', () => {
-        const company = {
-            example: 'yes'
-        };
+    describe('for non-nested keys', () => {
+        it('fails if equal', () => {
+            const company = {
+                example: 'yes'
+            };
 
-        const options = {
-            search: 'example',
-            match: 'yes'
-        }
+            const options = {
+                search: 'example',
+                match: 'yes'
+            }
 
-        const valid = primitiveValidation.notEqualTo(null, options, 'testField', company);
+            const valid = primitiveValidation.notEqualTo(null, options, 'testField', company);
 
-        expect(valid).toEqual('notEqualTo fail');
+            expect(valid).toEqual('notEqualTo fail');
+        });
+
+        it('passes if not equal', () => {
+            const company = {
+                example: 'no'
+            };
+
+            const options = {
+                search: 'example',
+                match: 'yes'
+            }
+
+            const valid = primitiveValidation.notEqualTo(null, options, 'testField', company);
+
+            expect(valid).toEqual(null);
+        });
     });
 
-    it('passes if not equal', () => {
-        const company = {
-            example: 'no'
-        };
+    describe('for nested keys', () => {
+        it('fails if equal', () => {
+            const company = {
+                example: {"value": "yes"}
+            };
 
-        const options = {
-            search: 'example',
-            match: 'yes'
-        }
+            const options = {
+                search: 'example.value',
+                match: 'yes'
+            }
 
-        const valid = primitiveValidation.notEqualTo(null, options, 'testField', company);
+            const valid = primitiveValidation.notEqualTo(null, options, 'testField', company);
 
-        expect(valid).toEqual(null);
+            expect(valid).toEqual('notEqualTo fail');
+        });
+
+        it('passes if not equal', () => {
+            const company = {
+                example: {"value": "no"}
+            };
+
+            const options = {
+                search: 'example.value',
+                match: 'yes'
+            }
+
+            const valid = primitiveValidation.notEqualTo(null, options, 'testField', company);
+
+            expect(valid).toEqual(null);
+        });
     });
 });
 
 describe('greaterThan()', () => {
-    it('passes if greater', () => {
-        const company = {
-            example: 20
-        };
+    describe('for non-nested keys', () => {
+        it('passes if greater', () => {
+            const company = {
+                example: 20
+            };
 
-        const options = {
-            search: 'example',
-            match: 15
-        }
+            const options = {
+                search: 'example',
+                match: 15
+            }
 
-        const valid = primitiveValidation.greaterThan(null, options, 'testField', company);
+            const valid = primitiveValidation.greaterThan(null, options, 'testField', company);
 
-        expect(valid).toEqual(null);
+            expect(valid).toEqual(null);
+        });
+        it('passes if equal', () => {
+            const company = {
+                example: 15
+            };
+
+            const options = {
+                search: 'example',
+                match: 15
+            }
+
+            const valid = primitiveValidation.greaterThan(null, options, 'testField', company);
+
+            expect(valid).toEqual(null);
+        });
+
+        it('fails if lesser', () => {
+            const company = {
+                example: 14
+            };
+
+            const options = {
+                search: 'example',
+                match: 15
+            }
+
+            const valid = primitiveValidation.greaterThan(null, options, 'testField', company);
+
+            expect(valid).toEqual('greaterThan fail');
+        });
     });
-    it('passes if equal', () => {
-        const company = {
-            example: 15
-        };
 
-        const options = {
-            search: 'example',
-            match: 15
-        }
+    describe('for nested keys', () => {
+        it('passes if greater', () => {
+            const company = {
+                example: {"value": 20}
+            };
 
-        const valid = primitiveValidation.greaterThan(null, options, 'testField', company);
+            const options = {
+                search: 'example.value',
+                match: 15
+            }
 
-        expect(valid).toEqual(null);
-    });
+            const valid = primitiveValidation.greaterThan(null, options, 'testField', company);
 
-    it('fails if lesser', () => {
-        const company = {
-            example: 14
-        };
+            expect(valid).toEqual(null);
+        });
+        it('passes if equal', () => {
+            const company = {
+                example: {"value": 15}
+            };
 
-        const options = {
-            search: 'example',
-            match: 15
-        }
+            const options = {
+                search: 'example.value',
+                match: 15
+            }
 
-        const valid = primitiveValidation.greaterThan(null, options, 'testField', company);
+            const valid = primitiveValidation.greaterThan(null, options, 'testField', company);
 
-        expect(valid).toEqual('greaterThan fail');
+            expect(valid).toEqual(null);
+        });
+
+        it('fails if lesser', () => {
+            const company = {
+                example: {"value": 14}
+            };
+
+            const options = {
+                search: 'example.value',
+                match: 15
+            }
+
+            const valid = primitiveValidation.greaterThan(null, options, 'testField', company);
+
+            expect(valid).toEqual('greaterThan fail');
+        });
     });
 });
 
 describe('lessThan()', () => {
-    it('fails if greater', () => {
-        const company = {
-            example: 20
-        };
+    describe('for non-nested keys', () => {
+        it('fails if greater', () => {
+            const company = {
+                example: 20
+            };
 
-        const options = {
-            search: 'example',
-            match: 15
-        }
+            const options = {
+                search: 'example',
+                match: 15
+            }
 
-        const valid = primitiveValidation.lessThan(null, options, 'testField', company);
+            const valid = primitiveValidation.lessThan(null, options, 'testField', company);
 
-        expect(valid).toEqual('lessThan fail');
+            expect(valid).toEqual('lessThan fail');
+        });
+
+        it('fails if equal', () => {
+            const company = {
+                example: 15
+            };
+
+            const options = {
+                search: 'example',
+                match: 15
+            }
+
+            const valid = primitiveValidation.lessThan(null, options, 'testField', company);
+
+            expect(valid).toEqual('lessThan fail');
+        });
+
+        it('passes if lesser', () => {
+            const company = {
+                example: 14
+            };
+
+            const options = {
+                search: 'example',
+                match: 15
+            }
+
+            const valid = primitiveValidation.lessThan(null, options, 'testField', company);
+
+            expect(valid).toEqual(null);
+        });
     });
 
-    it('fails if equal', () => {
-        const company = {
-            example: 15
-        };
+    describe('for nested keys', () => {
+        it('fails if greater', () => {
+            const company = {
+                example: {"value": 20}
+            };
 
-        const options = {
-            search: 'example',
-            match: 15
-        }
+            const options = {
+                search: 'example.value',
+                match: 15
+            }
 
-        const valid = primitiveValidation.lessThan(null, options, 'testField', company);
+            const valid = primitiveValidation.lessThan(null, options, 'testField', company);
 
-        expect(valid).toEqual('lessThan fail');
-    });
+            expect(valid).toEqual('lessThan fail');
+        });
 
-    it('passes if lesser', () => {
-        const company = {
-            example: 14
-        };
+        it('fails if equal', () => {
+            const company = {
+                example: {"value": 15}
+            };
 
-        const options = {
-            search: 'example',
-            match: 15
-        }
+            const options = {
+                search: 'example.value',
+                match: 15
+            }
 
-        const valid = primitiveValidation.lessThan(null, options, 'testField', company);
+            const valid = primitiveValidation.lessThan(null, options, 'testField', company);
 
-        expect(valid).toEqual(null);
+            expect(valid).toEqual('lessThan fail');
+        });
+
+        it('passes if lesser', () => {
+            const company = {
+                example: {"value": 14}
+            };
+
+            const options = {
+                search: 'example.value',
+                match: 15
+            }
+
+            const valid = primitiveValidation.lessThan(null, options, 'testField', company);
+
+            expect(valid).toEqual(null);
+        });
     });
 });

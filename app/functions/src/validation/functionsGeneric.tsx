@@ -7,6 +7,32 @@ export type Options = { [key: string]: any };
 export type Key = string;
 export type Attributes = { [key: string]: any };
 
+// Helper function to check for existence of nested key
+const propertyExists = (attributes: Attributes, key: string) => {
+    while(key.indexOf('.') > 0) {
+        let parts = key.split(/\.(.+)/);
+        if(attributes.hasOwnProperty(parts[0])){
+            attributes = attributes[parts[0]];
+            key = parts[1];
+        }
+        else 
+            return false;
+    }
+    return attributes.hasOwnProperty(key);
+}
+
+// Helper function to extract underlying value from nested keys
+const getAttributeValue = (attributes: Attributes, search: string) => {
+    while(search.indexOf('.') > 0 && attributes !== undefined)
+    {
+        let parts = search.split(/\.(.+)/);
+        attributes = attributes[parts[0]];
+        search = parts[1];
+    }
+    if (attributes === undefined) return '';
+    else return attributes[search];
+}
+
 const requiredIfValueEquals = (value: Value, { search, match }: Options, key: Key, attributes: Attributes, globalOptions: Options) => {
     if (!search) {
         return ': ERROR requiredIfValueEquals.options.search not defined';
@@ -15,7 +41,7 @@ const requiredIfValueEquals = (value: Value, { search, match }: Options, key: Ke
         return ': ERROR requiredIfValueEquals.options.match not defined';
     }
 
-    if (attributes[search] === match) {
+    if (getAttributeValue(attributes,search) === match) {
         if (validateJS.isDefined(value)) {
             return null;
         }
@@ -39,7 +65,7 @@ const requiredIfValueEquals = (value: Value, { search, match }: Options, key: Ke
 const requiredIf = (value: Value, options: Options, key: Key, attributes: Attributes) => {
     const valid = validateJS.validate(attributes, { [key]: options });
 
-    if ((valid === 'undefined' || valid === undefined) && !attributes.hasOwnProperty(key)) {
+    if ((valid === 'undefined' || valid === undefined) && !propertyExists(attributes, key)) {
         return 'is required';
     }
 
