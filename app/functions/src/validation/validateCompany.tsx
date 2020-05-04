@@ -19,7 +19,8 @@ customValidationKeys.forEach((key) => {
     validateJS.validate.validators[key] = customValidation[key];
 });
 
-validateJS.validate.type.types.dateString = (value: any) => {
+validateJS.validate.validators.type.types.dateString = (value: any) => {
+    console.log('dateString', value)
     return moment(value).isValid();
 };
 
@@ -235,7 +236,7 @@ server.post('*/', function (req: any, res: any) {
                         })
                         .filter((officer: any) => {
                             if (officer.title) {
-                                if (markets.indexOf('DE') > -1 && company.riskRating.value === 5) {
+                                if (markets.indexOf('DE') > -1 && company.riskRating?.value === 5) {
                                     return true;
                                 } else {
                                     return highestRanking.id === officer.docId;
