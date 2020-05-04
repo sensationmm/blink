@@ -19,7 +19,7 @@ customValidationKeys.forEach((key) => {
     validateJS.validate.validators[key] = customValidation[key];
 });
 
-validateJS.validate.type.dateString = (value: any) => {
+validateJS.validate.type.types.dateString = (value: any) => {
     return moment(value).isValid();
 };
 
