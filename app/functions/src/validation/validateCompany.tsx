@@ -135,7 +135,9 @@ server.post('*/', function (req: any, res: any) {
                     rulesetPerson[ruleName] = rule[ruleName];
                 });
 
-                const shareholders = company.distinctShareholders.filter((shareholder: any) => shareholder.totalShareholding >= parseInt(ownershipThreshold));
+                let shareholders = company.distinctShareholders.filter((shareholder: any) => shareholder.totalShareholding >= parseInt(ownershipThreshold));
+
+                shareholders = shareholders.concat(company.officers);
 
                 let hasShareholdersOver25 = false;
 
@@ -158,6 +160,8 @@ server.post('*/', function (req: any, res: any) {
                                     completion: numRules / numRules,
                                     passed: numRules,
                                     total: numRules,
+                                    failed: 0,
+                                    errors: []
                                 };
 
                                 return personMarketValidation[market] = valid;

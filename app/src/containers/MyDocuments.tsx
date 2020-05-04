@@ -96,6 +96,7 @@ export const personValidation = (field: Array<string>, validationErrors: any, ma
     Object.keys(validationErrors)
         .filter((market: string) => market === 'Core' || markets.indexOf(market) > -1)
         .forEach((market: string) => {
+            console.log('market', market)
             let errorFields = Object.keys(validationErrors[market]);
             errorFields = errorFields.map((errorField: string) => {
                 const subField = Object.keys(validationErrors[market][errorField])[0];
@@ -137,10 +138,12 @@ const MyDocuments = (props: any) => {
         return null;
     }
 
-    const shareholders = companyStructure.distinctShareholders.filter((shareholder: any) =>
+    let shareholders = companyStructure.distinctShareholders.filter((shareholder: any) =>
         shareholder.totalShareholding > ownershipThreshold &&
         getValue(shareholder.shareholderType) === 'P'
     );
+
+    shareholders = shareholders.concat(companyStructure.officers);
 
     const confirmDone = (object: any, sources: any) => {
         let completed = 0;
@@ -256,7 +259,7 @@ const MyDocuments = (props: any) => {
                                 content: (
                                     <Blocks>
                                         <h2 className="center">
-                                            We have identified {shareholders.length} {shareholders.length === 1 ? 'UBO' : 'UBOs'} from {company.name} company structure which require ID checks
+                                            We have identified {shareholders.length} {shareholders.length === 1 ? 'person' : 'people'} from {company.name} company structure which require ID checks
                                         </h2>
                                         {shareholders.map((shareholder: any, count: 0) => {
                                             const PersonReq = personValidation(Person, validation[shareholder.docId]['errors'], currentUser.markets);
@@ -269,6 +272,8 @@ const MyDocuments = (props: any) => {
                                                 notificationSent = shareholder.utilityBill.value;
                                             }
 
+                                            const role = shareholder.type === 'shareholder' ? 'UBO' : (shareholder.type === 'officer' ? (shareholder.title || 'Officer') : 'Authorised Signer')
+
                                             return (
                                                 <Entry
                                                     icon={IconPerson}
@@ -276,7 +281,7 @@ const MyDocuments = (props: any) => {
                                                     onClick={() => history.push(`/onboarding/my-documents/${shareholder.docId}`)}
                                                     type={'person'}
                                                     title={getValue(shareholder.name)}
-                                                    subTitle={'UBO'}
+                                                    subTitle={role}
                                                     status={setStatus(completed === PersonReq.length, notificationSent)}
                                                     total={PersonReq.length}
                                                     completed={completed}
