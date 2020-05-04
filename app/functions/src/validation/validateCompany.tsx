@@ -167,7 +167,7 @@ server.post('*/', function (req: any, res: any) {
                                     passed: numRules,
                                     total: numRules,
                                     failed: 0,
-                                    errors: []
+                                    errors: {}
                                 };
 
                                 return personMarketValidation[market] = valid;

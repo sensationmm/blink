@@ -37,14 +37,14 @@ import * as Styled from './my-documents.styles';
 import Terms from '../terms';
 
 export const Person = [
-    'dateOfBirth',
+    'birthDate',
     'passport',
-    'residentialAddress',
+    'currentResidenceAddress',
     'utilityBill',
     'countryOfTaxResidence',
     'taxId',
-    'contactEmail',
-    'contactPhone',
+    'emailAddress',
+    'phoneNumber',
     'role'
 ];
 

@@ -99,7 +99,8 @@ const MyDocumentsPerson = (props: any) => {
         hideLoader
     } = props;
 
-    const shareholder = companyStructure && getByValue(companyStructure?.distinctShareholders, 'docId', `${type}/${docId}`);
+    const people = companyStructure?.distinctShareholders.concat(companyStructure?.officers);
+    const shareholder = companyStructure && getByValue(people, 'docId', `${type}/${docId}`);
 
     const manualPassport = shareholder?.passport?.value?.substring(0, 5) === 'Notif';
     const manualUtilityBill = shareholder?.utilityBill?.value?.substring(0, 5) === 'Notif';
@@ -149,13 +150,13 @@ const MyDocumentsPerson = (props: any) => {
                     <h1 className="center">Verify Identification</h1>
 
                     <Blocks>
-                        {validationResults.indexOf('dateOfBirth') > -1 &&
+                        {validationResults.indexOf('birthDate') > -1 &&
                             <Styled.Inputs>
                                 <FormInput
-                                    stateKey={'dateOfBirth.value'}
+                                    stateKey={'birthDate.value'}
                                     label={'Date of birth'}
                                     onChange={(field: any, value: any) => saveEditField(field, value, "distinctShareholders", shareholder.docId)}
-                                    value={getValue(shareholder.dateOfBirth)}
+                                    value={getValue(shareholder.birthDate)}
                                     isEdit
                                     placeholder={'DD/MM/YYYY'}
                                 />
@@ -190,13 +191,13 @@ const MyDocumentsPerson = (props: any) => {
                         </>
                         }
 
-                        {validationResults.indexOf('residentialAddress') > -1 &&
+                        {validationResults.indexOf('currentResidenceAddress') > -1 &&
                             <Styled.Inputs>
                                 <FormInput
-                                    stateKey={'residentialAddress.value'}
+                                    stateKey={'currentResidenceAddress.value'}
                                     label={'Residential address'}
                                     onChange={(field: any, value: any) => saveEditField(field, value, "distinctShareholders", shareholder.docId)}
-                                    value={getValue(shareholder.residentialAddress)}
+                                    value={getValue(shareholder.currentResidenceAddress)}
                                     isEdit
                                 />
                             </Styled.Inputs>
@@ -271,13 +272,13 @@ const MyDocumentsPerson = (props: any) => {
                                     </div>
                                 }
 
-                                {validationResults.indexOf('contactPhone') > -1 &&
+                                {validationResults.indexOf('phoneNumber') > -1 &&
                                     <div>
                                         <FormInput
-                                            stateKey={'contactPhone.value'}
+                                            stateKey={'phoneNumber.value'}
                                             label={'Contact phone'}
                                             onChange={(field: any, value: any) => saveEditField(field, value, "distinctShareholders", shareholder.docId)}
-                                            value={getValue(shareholder.contactPhone)}
+                                            value={getValue(shareholder.phoneNumber)}
                                             isEdit
                                         />
                                     </div>
