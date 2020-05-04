@@ -46,6 +46,8 @@ server.post('*/', async function (req: any, res: any) {
                 const officerDoc = await officerRelationshipDoc.source.get()
                 let officer = { ...officerDoc.data() };
 
+                delete officer.edits;
+
                 officer = { ...officer, ...officerRelationshipDoc, docId: officerRelationshipDoc.source.path, relId: officerRelationship.ref.path };
 
                 delete officer.source;
@@ -75,6 +77,7 @@ server.post('*/', async function (req: any, res: any) {
                 shareholder.relationshipDocId = shareholderRelationship.ref.path;
 
                 delete shareholder.searchName;
+                delete shareholder.edits;
 
                 shareholder.totalShareholding = (totalShareholding / 100) * (shareholder.percentage?.value / 100);
 
@@ -162,6 +165,8 @@ server.post('*/', async function (req: any, res: any) {
             const companiesDoc = companies.docs[0];
             returnCompany = companiesDoc.data();
             returnCompany.docId = companiesDoc.ref.path;
+
+            delete returnCompany.edits
 
             const shareholdersAndOfficers = await getShareholdersAndOfficers(companyId, companiesDoc.ref, 1, 100);
             if (shareholdersAndOfficers) {
