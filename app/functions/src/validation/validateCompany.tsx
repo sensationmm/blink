@@ -2,6 +2,7 @@ export { }
 
 const functions = require('firebase-functions');
 const admin = require("firebase-admin");
+const moment = require('moment');
 const cors = require('cors');
 const validateJS = require('validate.js');
 const express = require('express');
@@ -17,6 +18,10 @@ const customValidationKeys = Object.keys(customValidation);
 customValidationKeys.forEach((key) => {
     validateJS.validate.validators[key] = customValidation[key];
 });
+
+validateJS.validate.type.dateString = (value: any) => {
+    return moment(value).isValid();
+};
 
 type market = 'Core' | 'GB' | 'DE' | 'FR' | 'RO' | 'IT' | 'SE';
 type indexedObject = { [key: string]: any };
