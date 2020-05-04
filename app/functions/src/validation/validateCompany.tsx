@@ -20,8 +20,16 @@ customValidationKeys.forEach((key) => {
 });
 
 validateJS.validate.validators.type.types.dateString = (value: any) => {
-    console.log('dateString', value)
-    return moment(value).isValid();
+    if (!moment(value).isValid()) {
+        // check to see if it looks like something close to a valid date
+        const dateBits = value.split && value.split(/[-/]/);
+        if (dateBits.length === 3) {
+            const newDate = `${dateBits[1]}-${dateBits[0]}-${dateBits[2]}`
+            return moment(newDate).isValid()
+        }
+    }
+
+    return moment(value).isValid()
 };
 
 type market = 'Core' | 'GB' | 'DE' | 'FR' | 'RO' | 'IT' | 'SE';
