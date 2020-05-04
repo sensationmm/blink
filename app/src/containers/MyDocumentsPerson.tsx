@@ -38,7 +38,7 @@ const ManualApproval = (props: any) => {
     const [done, setDone] = useState(value?.substr(0, 5) === 'Notif');
 
     const onDone = () => {
-        onSave(`verification.${type}`, `Notification sent ${moment().format('DD.MM.YY')}`, "distinctShareholders", docId)
+        onSave(`${type}.value`, `Notification sent ${moment().format('DD.MM.YY')}`, "distinctShareholders", docId)
         setDone(true);
     }
 
@@ -101,8 +101,8 @@ const MyDocumentsPerson = (props: any) => {
 
     const shareholder = companyStructure && getByValue(companyStructure?.distinctShareholders, 'docId', `${type}/${docId}`);
 
-    const manualPassport = shareholder?.verification?.passport?.substring(0, 5) === 'Notif';
-    const manualUtilityBill = shareholder?.verification?.utilityBill?.substring(0, 5) === 'Notif';
+    const manualPassport = shareholder?.passport?.value?.substring(0, 5) === 'Notif';
+    const manualUtilityBill = shareholder?.utilityBill?.value?.substring(0, 5) === 'Notif';
 
     const [manualID, setManualID] = useState(manualPassport);
     const [manualAddress, setManualAddress] = useState(manualUtilityBill);
@@ -113,23 +113,23 @@ const MyDocumentsPerson = (props: any) => {
 
     const saveShareholder = async () => {
         showLoader('Saving');
-        const passport = shareholder.verification?.passport;
-        const utilityBill = shareholder.verification?.utilityBill;
+        const passport = shareholder.passport?.value;
+        const utilityBill = shareholder.utilityBill?.value;
 
-        Person.filter((item: any) => item !== 'verification.passport' && item !== 'verification.utilityBill')
+        Person.filter((item: any) => item !== 'passport' && item !== 'utilityBill')
             .forEach(async (item: any) => {
                 await apiEditField(shareholder.docId, item, shareholder[item] || '', currentUser.localId);
             })
 
-        passport && await apiEditField(shareholder.docId, 'verification', { passport }, currentUser.localId);
-        utilityBill && await apiEditField(shareholder.docId, 'verification', { utilityBill }, currentUser.localId);
+        passport && await apiEditField(shareholder.docId, 'passport', { file: passport }, currentUser.localId);
+        utilityBill && await apiEditField(shareholder.docId, 'utilityBill', { file: utilityBill }, currentUser.localId);
 
         hideLoader();
         history.push('/onboarding/my-documents');
     }
 
     const handleUpload = (src: string, base64File: any) => {
-        saveEditField(`verification.${src}`, base64File, "distinctShareholders", shareholder.docId)
+        saveEditField(`${src}.value`, base64File, "distinctShareholders", shareholder.docId)
     }
 
     const validationResults = personValidation(Person, validation[shareholder.docId].errors, currentUser.markets);
@@ -162,7 +162,7 @@ const MyDocumentsPerson = (props: any) => {
                             </Styled.Inputs>
                         }
 
-                        {validationResults.indexOf('verification.passport') > -1 && <>
+                        {validationResults.indexOf('passport') > -1 && <>
                             <FormLabel label={'Do you have a copy of their passport?'} />
                             <FormCheckboxGroup
                                 stateKey={''}
@@ -177,14 +177,14 @@ const MyDocumentsPerson = (props: any) => {
                                     <FormUploader
                                         id={'passport'}
                                         onUpload={handleUpload}
-                                        uploaded={!manualPassport && shareholder.verification?.passport}
-                                        onClearUpload={() => saveEditField('verification.passport', null, 'distinctShareholders', shareholder.docId)}
+                                        uploaded={!manualPassport && shareholder.passport?.value}
+                                        onClearUpload={() => saveEditField('passport.value', null, 'distinctShareholders', shareholder.docId)}
                                     />
                                 </Blocks>
                                 : <ManualApproval
                                     type={'passport'}
                                     docId={shareholder.docId} onSave={saveEditField}
-                                    value={shareholder.verification?.passport}
+                                    value={shareholder.passport?.value}
                                 />
                             }
                         </>
@@ -202,7 +202,7 @@ const MyDocumentsPerson = (props: any) => {
                             </Styled.Inputs>
                         }
 
-                        {validationResults.indexOf('verification.utilityBill') > -1 && <>
+                        {validationResults.indexOf('utilityBill') > -1 && <>
                             <FormLabel label={'Do you have a copy of their utility bill?'} />
                             <FormCheckboxGroup
                                 stateKey={''}
@@ -217,15 +217,15 @@ const MyDocumentsPerson = (props: any) => {
                                     <FormUploader
                                         id={'utilityBill'}
                                         onUpload={handleUpload}
-                                        uploaded={!manualUtilityBill && shareholder.verification?.utilityBill}
-                                        onClearUpload={() => saveEditField('verification.utilityBill', null, 'distinctShareholders', shareholder.docId)}
+                                        uploaded={!manualUtilityBill && shareholder.utilityBill?.value}
+                                        onClearUpload={() => saveEditField('utilityBill.value', null, 'distinctShareholders', shareholder.docId)}
                                     />
                                 </Blocks>
                                 : <ManualApproval
                                     type={'utilityBill'}
                                     docId={shareholder.docId}
                                     onSave={saveEditField}
-                                    value={shareholder.verification?.utilityBill}
+                                    value={shareholder.utilityBill?.value}
                                 />
                             }
                         </>

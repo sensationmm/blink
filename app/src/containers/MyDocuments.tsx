@@ -38,9 +38,9 @@ import Terms from '../terms';
 
 export const Person = [
     'dateOfBirth',
-    'verification.passport',
+    'passport',
     'residentialAddress',
-    'verification.utilityBill',
+    'utilityBill',
     'countryOfTaxResidence',
     'taxId',
     'contactEmail',
@@ -199,7 +199,7 @@ const MyDocuments = (props: any) => {
     if (confirmDone(companyStructure, BusinessDetails) == BusinessDetails.length) {
         companyDone++;
     }
-    if (docsRequired && confirmDone(companyStructure.verification, CompanyDocuments) === CompanyDocuments.length) {
+    if (docsRequired && confirmDone(companyStructure, CompanyDocuments) === CompanyDocuments.length) {
         companyDone++;
     }
 
@@ -263,12 +263,10 @@ const MyDocuments = (props: any) => {
                                             const completed = confirmDone(shareholder, PersonReq);
 
                                             let notificationSent = false;
-                                            if (shareholder.verification) {
-                                                if (shareholder.verification.passport && shareholder.verification.passport.substring(0, 5) === 'Notif') {
-                                                    notificationSent = shareholder.verification.passport;
-                                                } else if (shareholder.verification.utilityBill && shareholder.verification.utilityBill.substring(0, 5) === 'Notif') {
-                                                    notificationSent = shareholder.verification.utilityBill;
-                                                }
+                                            if (shareholder.passport?.value && shareholder.passport.value.substring(0, 5) === 'Notif') {
+                                                notificationSent = shareholder.passport.value;
+                                            } else if (shareholder.utilityBill?.value && shareholder.utilityBill.value.substring(0, 5) === 'Notif') {
+                                                notificationSent = shareholder.utilityBill.value;
                                             }
 
                                             return (
@@ -323,9 +321,9 @@ const MyDocuments = (props: any) => {
                                                 onClick={() => history.push('/onboarding/my-documents/company/company-documents')}
                                                 type={'company'}
                                                 title={'Documents to upload'}
-                                                status={setStatus(confirmDone(companyStructure.verification, CompanyDocuments) === CompanyDocuments.length)}
+                                                status={setStatus(confirmDone(companyStructure, CompanyDocuments) === CompanyDocuments.length)}
                                                 total={CompanyDocuments.length}
-                                                completed={confirmDone(companyStructure.verification, CompanyDocuments)}
+                                                completed={confirmDone(companyStructure, CompanyDocuments)}
                                             />
                                         }
 
