@@ -90,11 +90,11 @@ const Onboarding = (props: any) => {
     const completeVerification = async () => {
         showLoader();
 
-        const passport = currentUser.verification?.passport;
-        const boardMandate = currentUser.verification?.boardMandate;
+        const passport = currentUser.passport?.value;
+        const boardMandate = currentUser.boardMandate?.value;
 
-        passport && await apiEditField(currentUser.personDocId, 'verification', { passport }, currentUser.localId);
-        boardMandate && await apiEditField(currentUser.personDocId, 'verification', { boardMandate }, currentUser.localId);
+        passport && await apiEditField(currentUser.personDocId, 'passport', { file: passport }, currentUser.localId);
+        boardMandate && await apiEditField(currentUser.personDocId, 'boardMandate', { file: boardMandate }, currentUser.localId);
 
         editUser('screened', true)
         await apiEditField(`users/${currentUser.localId}`, 'screened', true, currentUser.localId);
@@ -103,7 +103,7 @@ const Onboarding = (props: any) => {
         history.push('/onboarding/id-check-complete');
     }
 
-    const allowProgress = currentUser.verification?.passport && (currentUser.type === 'officer' || currentUser.verification?.boardMandate);
+    const allowProgress = currentUser.passport?.value && (currentUser.type === 'officer' || currentUser.boardMandate?.value);
 
     return (
         <TemplateUser headerIcon={HeaderPassport}>
@@ -117,9 +117,9 @@ const Onboarding = (props: any) => {
                             <FormLabel label={'Upload passport'} tooltip={'We need your passport as proof of ID'} />
                             <FormUploader
                                 id={'passport'}
-                                onUpload={(src: string, base64File: any) => editUser('verification.passport', base64File)}
-                                uploaded={currentUser.verification?.passport}
-                                onClearUpload={() => editUser('verification.passport', null)}
+                                onUpload={(src: string, base64File: any) => editUser('passport.value', base64File)}
+                                uploaded={currentUser.passport?.value}
+                                onClearUpload={() => editUser('passport.value', null)}
                             />
 
                             {currentUser.type !== 'officer' &&
@@ -127,9 +127,9 @@ const Onboarding = (props: any) => {
                                     <FormLabel label={'Upload board mandate'} tooltip={`We need proof you are empowered to act on behalf of ${company?.name}`} />
                                     <FormUploader
                                         id={'boardMandate'}
-                                        onUpload={(src: string, base64File: any) => editUser('verification.boardMandate', base64File)}
-                                        uploaded={currentUser.verification?.boardMandate}
-                                        onClearUpload={() => editUser('verification.boardMandate', null)}
+                                        onUpload={(src: string, base64File: any) => editUser('boardMandate.value', base64File)}
+                                        uploaded={currentUser.boardMandate?.value}
+                                        onClearUpload={() => editUser('boardMandate.value', null)}
                                     />
                                 </>
                             }

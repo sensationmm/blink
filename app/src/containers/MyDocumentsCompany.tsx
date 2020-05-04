@@ -143,11 +143,11 @@ const MyDocumentsCompany = (props: any) => {
             let value = companyStructure[source];
             let fieldToUpdate = source;
 
-            if (structure[fields.indexOf(source)].type === FormUploader) {
-                value = { [source]: companyStructure.verification && companyStructure.verification[source] };
-                console.log('FormUplaoder', value, source, companyStructure.verification[source])
-                fieldToUpdate = 'verification';
-            }
+            // if (structure[fields.indexOf(source)].type === FormUploader) {
+            //     value = { [source]: companyStructure.verification && companyStructure.verification[source] };
+            //     console.log('FormUplaoder', value, source, companyStructure.verification[source])
+            //     fieldToUpdate = 'verification';
+            // }
 
             const sourceString = source.split('.')
             if (sourceString.length > 1) {
@@ -162,7 +162,7 @@ const MyDocumentsCompany = (props: any) => {
     }
 
     const handleUpload = (src: string, base64File: any) => {
-        saveEditField(`verification.${src}`, base64File)
+        saveEditField(`${src}.value`, base64File)
     }
 
     return (
@@ -215,8 +215,8 @@ const MyDocumentsCompany = (props: any) => {
                                         config.selected = getValue(companyStructure[item.field]);
                                     } else if (item.type === FormUploader) {
                                         config.onUpload = handleUpload;
-                                        config.uploaded = companyStructure.verification && companyStructure.verification[item.field];
-                                        config.onClearUpload = () => saveEditField(`verification.${item.field}`, null);
+                                        config.uploaded = companyStructure[item.field] && companyStructure[item.field].value;
+                                        config.onClearUpload = () => saveEditField(`${item.field}.value`, null);
                                     }
 
                                     return (
