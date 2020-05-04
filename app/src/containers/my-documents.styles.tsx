@@ -53,6 +53,15 @@ export const HeaderRole = styled.div`
     color: var(--basic-shadow);
     text-transform: uppercase;
     font-weight: bold;
+
+    span {
+        font-size: 0.8em;
+        padding-left: 10px;
+        
+        &:hover {
+            color: var(--brand-secondary);
+        }
+    }
 `;
 
 export const TaxBlock = styled.div`

@@ -47,3 +47,10 @@ export const Item = styled.div`
 export const Add = styled(Box)`
     cursor: pointer;
 `;
+
+export const Meta = styled.div`
+    display: flex;
+    flex-direction: column;
+    justift-content: center;
+    align-items: flex-end;
+`;

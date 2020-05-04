@@ -156,11 +156,21 @@ const Officer = (props: any) => {
     const { officer, onChange, showLoader, hideLoader, onClick, selected, currentUser } = props;
     const email = officer.emailAddress?.value || '';
     const [hasEmail, setEmail] = useState(email !== '');
+    const [editRole, setEditRole] = useState(false);
+    const [newRole, setNewRole] = useState('');
 
-    const onSave = async () => {
+    const onSaveEmail = async () => {
         showLoader();
         await apiEditField(officer.docId, 'emailAddress', { value: email }, currentUser);
         setEmail(true);
+        hideLoader();
+    }
+
+    const onSaveRole = async () => {
+        showLoader();
+        await apiEditField(officer.docId, 'title', newRole, currentUser);
+        onChange('title.value', newRole, "officers", officer.docId)
+        setEditRole(false);
         hideLoader();
     }
 
@@ -182,11 +192,14 @@ const Officer = (props: any) => {
                         <Icon icon={IconPerson} style={'person'} />
                         <div>
                             <Styled.HeaderName>{capitalize(officer.fullName?.value)}</Styled.HeaderName>
-                            <Styled.HeaderRole>{officer.title ? officer.title : 'officer'}</Styled.HeaderRole>
+                            <Styled.HeaderRole>
+                                {officer.title ? (officer.title.value ? officer.title.value : officer.title) : 'officer'}
+                                <span onClick={(e) => { e.stopPropagation(); setEditRole(true); }}> [Edit]</span>
+                            </Styled.HeaderRole>
                         </div>
                     </Styled.Header>
 
-                    <div>
+                    <ClientStyled.Meta>
                         {hasEmail
                             ? <Styled.Status>{email}</Styled.Status>
                             : <FormInput
@@ -196,10 +209,22 @@ const Officer = (props: any) => {
                                 onChange={(field: any, value: any) => onChange(field, value, "officers", officer.docId)}
                                 value={email}
                                 isEdit
-                                onBlur={onSave}
+                                onBlur={onSaveEmail}
                             />
                         }
-                    </div>
+
+                        {editRole &&
+                            <FormInput
+                                label={''}
+                                placeholder={officer.title || 'officer'}
+                                stateKey={'title.value'}
+                                onChange={(field: any, value: any) => setNewRole(value)}
+                                value={newRole}
+                                isEdit
+                                onBlur={onSaveRole}
+                            />
+                        }
+                    </ClientStyled.Meta>
 
                 </Styled.Progress>
             </Box>

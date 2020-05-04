@@ -28,6 +28,13 @@ body {
   --max-content-mini: 400px;
 }
 
+input {
+  font-family: Avenir, Times;
+  letter-spacing: 1px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
