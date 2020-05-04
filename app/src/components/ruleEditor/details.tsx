@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import * as styled from "./styles";
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Box from '../../layout/box';
 import Blocks from '../../layout/blocks';
 import Actions from '../../layout/actions';
@@ -12,6 +12,10 @@ import { blinkMarkets } from "../../utils/config/blink-markets";
 import Button from '../button';
 
 const RuleDetails = (props: any) => {
+
+    useEffect(() => {
+        window.scrollTo(0, 0)
+      }, [])
 
     const [JSONIsValid, setJSONIsValid] = useState(true);
 
