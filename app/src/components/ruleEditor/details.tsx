@@ -323,7 +323,7 @@ const RuleDetails = (props: any) => {
                                     if (selectedRule.name === "") {
                                         return setModal("Rule must have a name", "Please give the rule a name before editing code", null);
                                     }
-                                    setIsEditingJSON(selectedRule.id === "new" ? !isEditingJSON : isEditingJSON)
+                                    setIsEditingJSON(!isEditingJSON)
                                 }}
                                 // to enabled code edit functionalty change above line to: setIsEditingJSON(!isEditingJSON)} 
                                 />}
