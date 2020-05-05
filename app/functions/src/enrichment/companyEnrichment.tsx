@@ -23,6 +23,7 @@ const valueToObject = (value: any, sourceType: string = "blink", sourceCountry: 
         sourceType,
         sourceCountry,
         certification: "",
+        validateion: "",
         evidence: "",
         evidenceExpiration: ""
     };
@@ -37,7 +38,7 @@ async function doCompanyEnrichment(companyRef: any) {
 
         // check FR Non-Coop Country
         let isFRNonCoopCountry = valueToObject(await checkFRNonCoopCountry(companyData.countryCode.value));
-
+        console.log ("Doing Company Enrichment");
         await companyRef.update({
             isFATFCountry: isFATFCountry,
             isFRNonCoopCountry: isFRNonCoopCountry
@@ -47,7 +48,7 @@ async function doCompanyEnrichment(companyRef: any) {
     // Check NAICS code
 }
 
-async function doCompanyEnrichmentForId(companyId: string) {
+async function doCompanyEnrichmentForCompanyId(companyId: string) {
     //Get company Ref from DB
     const targetCompanyQuery = await companyCollection.where('companyId.value', '==', companyId).get();
     let targetCompanyRef: any;
@@ -63,13 +64,25 @@ async function doCompanyEnrichmentForId(companyId: string) {
     //Call enrichment function
 }
 
+async function doCompanyEnrichmentForId(id: string) {
+    //Get company Ref from DB
+    console.log("Starting Company Enrichment for ", id)
+    const targetCompanyRef = await companyCollection.doc(id);
+    let companyDoc = await targetCompanyRef.get();
+    if (!companyDoc.exists) {
+        return("error, company not found");
+    }
+    
+    return doCompanyEnrichment(targetCompanyRef);
+}
+
 server.post('*/', async function (req: any, res: any) {
     const {
         companyId
     } = JSON.parse(req.body);
     // } = req.body;
 
-    const response = await doCompanyEnrichmentForId(
+    const response = await doCompanyEnrichmentForCompanyId(
         companyId
     )
 
@@ -78,3 +91,4 @@ server.post('*/', async function (req: any, res: any) {
 
 module.exports = functions.https.onRequest(server);
 module.exports.doCompanyEnrichment = doCompanyEnrichment;
+module.exports.doCompanyEnrichmentForId = doCompanyEnrichmentForId;

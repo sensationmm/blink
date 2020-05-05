@@ -4,12 +4,17 @@ const functions = require('firebase-functions');
 const admin = require("firebase-admin");
 const cors = require('cors');
 const express = require('express');
+const { doCompanyEnrichmentForId } = require('../enrichment/companyEnrichment');
+const { doPersonEnrichmentForId } = require('../enrichment/personEnrichment');
+
 const server = express();
 server.use(cors());
 server.post('*/', async function (req: any, res: any) {
     const { docId, field, value, editedBy, merge = true } = req.body;
     const documentParts = docId.split("/");
     const isRule = documentParts[0] === "companyRules" || documentParts[0] === "personRules";
+    const isPerson = documentParts[0] === "persons";
+    const isCompany = documentParts[0] === "companies";
     const newDocID = documentParts.pop();
 
     const arraysEqual = (a: Array<any>, b: Array<any>) => {
@@ -59,7 +64,7 @@ server.post('*/', async function (req: any, res: any) {
             value.sourceType = "entry";
         }
 
-        doc.set({ ...docData, [field]: value }, { merge })
+        await doc.set({ ...docData, [field]: value }, { merge })
 
             .then(function (res: any) {
                 if (!fieldHasChanged) {
@@ -67,12 +72,19 @@ server.post('*/', async function (req: any, res: any) {
                 } else {
                     console.log("Rule edited with ID: ", newDocID);
                 }
-
             })
             .catch(function (error: string) {
                 console.error("Error editing rule: ", error);
             });
-
+        
+        if(fieldHasChanged) {
+            if(isPerson) {
+                await doPersonEnrichmentForId(newDocID);
+            }
+            else if (isCompany) {
+                await doCompanyEnrichmentForId(newDocID);
+            }
+        }
         return res.send({ msg: `Edited ${field}:${value.value}` });
 
     } else {
