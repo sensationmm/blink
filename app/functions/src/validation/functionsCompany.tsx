@@ -40,7 +40,7 @@ const requiresUBOChecks = (value: Value, options: Options, key: Key, attributes:
     return { required: true };
 };
 
-export const parseDate = (value: string) => {
+const parseDate = (value: string) => {
     // check to see if it looks like something close to a valid date
     if (moment(value).isValid()) {
         return value;
@@ -146,3 +146,4 @@ const validationFunctions = {
 };
 
 module.exports = validationFunctions;
+module.exports.parseDate = parseDate;

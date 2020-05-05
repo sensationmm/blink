@@ -9,7 +9,7 @@ const express = require('express');
 const validationGeneric = require('./functionsGeneric');
 const validationCompany = require('./functionsCompany');
 const validationPerson = require('./functionsPerson');
-const { parseDate } = require('./functionsCompany');
+const parseDate = require('./functionsCompany').parseDate;
 const server = express();
 server.use(cors());
 
