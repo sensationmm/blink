@@ -77,7 +77,11 @@ server.post('*/', function (req: any, res: any) {
             const ruleName = Object.keys(rule)[0] as string;
 
             rulesMarkets.filter((market: market) => companyMarketsToValidate.indexOf(market) > -1).forEach((market: market) => {
-                companyMarketRulesets[market][ruleName] = rule[ruleName]
+                if (companyMarketRulesets[market][ruleName]) {
+                    companyMarketRulesets[market][ruleName] = { 'requiredIfOne': { 'scenarios': [companyMarketRulesets[market][ruleName], rule[ruleName]] } };
+                } else {
+                    companyMarketRulesets[market][ruleName] = rule[ruleName];
+                }
             });
             rulesetCompany[ruleName] = rule[ruleName];
         });
@@ -144,7 +148,11 @@ server.post('*/', function (req: any, res: any) {
                     const ruleName = Object.keys(rule)[0] as string;
 
                     rulesMarkets.filter((market: market) => personMarketsToValidate.indexOf(market) > -1).forEach((market: market) => {
-                        personMarketRulesets[market][ruleName] = rule[ruleName]
+                        if (personMarketRulesets[market][ruleName]) {
+                            personMarketRulesets[market][ruleName] = { 'requiredIfOne': { 'scenarios': [personMarketRulesets[market][ruleName], rule[ruleName]] } };
+                        } else {
+                            personMarketRulesets[market][ruleName] = rule[ruleName];
+                        }
                     });
                     rulesetPerson[ruleName] = rule[ruleName];
                 });
@@ -182,7 +190,6 @@ server.post('*/', function (req: any, res: any) {
                             }, (errors: any) => {
                                 const failedRules = errors ? Object.keys(errors).length : 0;
                                 const numRules = Object.keys(personMarketRulesets[market]).length;
-
                                 const groupedErrors: indexedObject = {};
 
                                 Object.keys(errors).forEach(item => {
