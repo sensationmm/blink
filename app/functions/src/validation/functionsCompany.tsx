@@ -40,9 +40,26 @@ const requiresUBOChecks = (value: Value, options: Options, key: Key, attributes:
     return { required: true };
 };
 
+const parseDate = (value: string) => {
+    // check to see if it looks like something close to a valid date
+    if (moment(value).isValid()) {
+        return value;
+    }
+
+    if (value) {
+        const dateBits = value.split && value.split(/[-/]/);
+        if (dateBits.length === 3) {
+            const newDate = `${dateBits[1]}-${dateBits[0]}-${dateBits[2]}`
+            return newDate;
+        }
+    }
+    return value;
+}
+
 const ageLessThanThree = (value: Value, options: Options, key: Key, attributes: Attributes, globalOptions: Options) => {
     const undefinedYear = attributes.incorporationDate === undefined || attributes.incorporationDate === null || attributes.incorporationDate === '';
-    const younger = moment(attributes.incorporationDate) > moment.utc().subtract(3, 'years');
+    const parsedDate = parseDate(attributes.incorporationDate);
+    const younger = moment(parsedDate) > moment.utc().subtract(3, 'years');
 
     if ((undefinedYear || younger) && !validateJS.isDefined(value)) {
         return 'is required if incorporation is < 3yrs';
@@ -129,3 +146,4 @@ const validationFunctions = {
 };
 
 module.exports = validationFunctions;
+module.exports.parseDate = parseDate;

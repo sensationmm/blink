@@ -9,6 +9,7 @@ const express = require('express');
 const validationGeneric = require('./functionsGeneric');
 const validationCompany = require('./functionsCompany');
 const validationPerson = require('./functionsPerson');
+const parseDate = require('./functionsCompany').parseDate;
 const server = express();
 server.use(cors());
 
@@ -21,12 +22,8 @@ customValidationKeys.forEach((key) => {
 
 validateJS.validate.validators.type.types.dateString = (value: any) => {
     if (!moment(value).isValid()) {
-        // check to see if it looks like something close to a valid date
-        const dateBits = value.split && value.split(/[-/]/);
-        if (dateBits.length === 3) {
-            const newDate = `${dateBits[1]}-${dateBits[0]}-${dateBits[2]}`
-            return moment(newDate).isValid()
-        }
+        const parsedDate = parseDate(value)
+        return moment(parsedDate).isValid()
     }
 
     return moment(value).isValid()
@@ -166,6 +163,10 @@ server.post('*/', function (req: any, res: any) {
                 const responsesPeople = shareholders.map((shareholder: any) => {
                     const personMarketValidation = {} as { [key: string]: indexedObject };
 
+                    // hack - set the person's risk rating to the same as the company risk rating
+                    // need to work out how to get access to company data without copying to each person
+                    shareholder.riskRating = company.riskRating;
+
                     personMarketsToValidate
                         .filter((market: market) => {
                             return market === 'Core' || !uboChecksRequired.for || (uboChecksRequired.for && uboChecksRequired.for.length > 0 && uboChecksRequired.for.indexOf(market) > -1)
@@ -261,6 +262,10 @@ server.post('*/', function (req: any, res: any) {
                             return false;
                         }).map((officer: any) => {
                             const officerMarketValidation = {} as { [key: string]: indexedObject };
+
+                            // hack - set the officer's risk rating to the same as the company risk rating
+                            // need to work out how to get access to company data without copying to each person
+                            officer.riskRating = company.riskRating;
 
                             personMarketsToValidate
                                 .filter((market: market) => {

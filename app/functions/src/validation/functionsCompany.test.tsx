@@ -318,6 +318,29 @@ describe('ageLessThanThree()', () => {
 
         expect(valid).toEqual('is required if incorporation is < 3yrs')
     });
+
+    it('correctly parses date if in DD-MM-YYYY format and recognises < 3 years old', () => {
+        const company = {
+            incorporationDate: '15-01-2019',
+            fundingSources: null,
+        };
+
+        const valid = companyValidation.ageLessThanThree(company.fundingSources, {}, 'fundingSources', company);
+
+        expect(valid).toEqual('is required if incorporation is < 3yrs')
+    });
+
+
+    it('correctly parses date if in DD-MM-YYYY format and recognises > 3 years old', () => {
+        const company = {
+            incorporationDate: '15-01-2012',
+            fundingSources: null,
+        };
+
+        const valid = companyValidation.ageLessThanThree(company.fundingSources, {}, 'fundingSources', company);
+
+        expect(valid).toEqual(null)
+    });
 });
 
 describe('shareholdingGreaterThan()', () => {
