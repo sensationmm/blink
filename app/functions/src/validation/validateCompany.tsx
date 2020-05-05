@@ -256,6 +256,10 @@ server.post('*/', function (req: any, res: any) {
                         }).map((officer: any) => {
                             const officerMarketValidation = {} as { [key: string]: indexedObject };
 
+                            // hack - set the officer's risk rating to the same as the company risk rating
+                            // need to work out how to get access to company data without copying to each person
+                            officer.riskRating = company.riskRating;
+
                             personMarketsToValidate
                                 .filter((market: market) => {
                                     return market === 'Core' || !uboChecksRequired.for || (uboChecksRequired.for && uboChecksRequired.for.length > 0 && uboChecksRequired.for.indexOf(market) > -1)
