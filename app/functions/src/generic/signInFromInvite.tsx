@@ -91,7 +91,8 @@ server.post('*/', async function (req: any, res: any) {
     
                 const relationships = await relationshipsCollection
                 .where('target', '==', profile.company)
-                .where('source', '==', user.person).get();
+                .where('source', '==', user.person).get()
+                .where("type", "in", ["officer", "authorisedSigner"])
     
                 if (relationships.docs[0]) {
                     const relationship = await relationships.docs[0].data();
