@@ -38,9 +38,9 @@ import Terms from '../terms';
 
 export const Person = [
     'birthDate',
-    'passport',
+    'passport.file',
     'currentResidenceAddress',
-    'utilityBill',
+    'utilityBill.file',
     'countryOfTaxResidence',
     'taxId',
     'emailAddress',
@@ -96,7 +96,6 @@ export const personValidation = (field: Array<string>, validationErrors: any, ma
     Object.keys(validationErrors)
         .filter((market: string) => market === 'Core' || markets.indexOf(market) > -1)
         .forEach((market: string) => {
-            console.log('market', market)
             let errorFields = Object.keys(validationErrors[market]);
             errorFields = errorFields.map((errorField: string) => {
                 const subField = Object.keys(validationErrors[market][errorField])[0];
