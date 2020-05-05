@@ -165,36 +165,38 @@ const MissingData = (props: any) => {
                                             <FlexRowGrid
                                                 cols={2}
                                                 component={MissingField}
-                                                content={validation.company.errors.Core && Object.keys(validation.company.errors.Core).map(key => {
-                                                    const label = capitalize(prettify(key));
-                                                    const msg = sanitizeError(validation.company.errors.Core[key].value, label);
+                                                content={validation.company.errors.Core && Object.keys(validation.company.errors.Core)
+                                                    .sort((a: any, b: any) => parseFloat(validation.company.errors.Core[a].sortOrder) > parseFloat(validation.company.errors.Core[b].sortOrder || !validation.company.errors.Core[a].sortOrder) ? 1 : -1)
+                                                    .map(key => {
+                                                        const label = capitalize(prettify(key));
+                                                        const msg = sanitizeError(validation.company.errors.Core[key].value, label);
 
-                                                    const valueMissing = validation.company.errors.Core[key].value !== undefined;
-                                                    const sourceMissing = sanitizeError(validation.company.errors.Core[key].source, label);
-                                                    const certificationMissing = sanitizeError(validation.company.errors.Core[key].certification, label);
+                                                        const valueMissing = validation.company.errors.Core[key].value !== undefined;
+                                                        const sourceMissing = sanitizeError(validation.company.errors.Core[key].source, label);
+                                                        const certificationMissing = sanitizeError(validation.company.errors.Core[key].certification, label);
 
-                                                    // if (companyStructure[key]) {
-                                                    //     msg += ` (found: ${companyStructure[key]})`;
-                                                    // }
+                                                        // if (companyStructure[key]) {
+                                                        //     msg += ` (found: ${companyStructure[key]})`;
+                                                        // }
 
-                                                    const sanitizedKey = key.replace('.value', '');
+                                                        const sanitizedKey = key.replace('.value', '');
 
-                                                    return {
-                                                        stateKey: `${key}.value`,
-                                                        label: label.replace(' value', ''),
-                                                        placeholder: msg,
-                                                        onChange: saveEditField,
-                                                        onBlur: () => onEditField(
-                                                            sanitizedKey,
-                                                            companyStructure[sanitizedKey],
-                                                            companyStructure.docId,
-                                                        ),
-                                                        value: getValue(companyStructure[sanitizedKey]) || '',
-                                                        missingValue: valueMissing,
-                                                        missingSource: sourceMissing,
-                                                        missingCertification: certificationMissing,
-                                                    }
-                                                })}
+                                                        return {
+                                                            stateKey: `${key}.value`,
+                                                            label: label.replace(' value', ''),
+                                                            placeholder: msg,
+                                                            onChange: saveEditField,
+                                                            onBlur: () => onEditField(
+                                                                sanitizedKey,
+                                                                companyStructure[sanitizedKey],
+                                                                companyStructure.docId,
+                                                            ),
+                                                            value: getValue(companyStructure[sanitizedKey]) || '',
+                                                            missingValue: valueMissing,
+                                                            missingSource: sourceMissing,
+                                                            missingCertification: certificationMissing,
+                                                        }
+                                                    })}
                                             />
                                         </Blocks>
                                     }
@@ -241,6 +243,7 @@ const MissingData = (props: any) => {
                                                                     cols={2}
                                                                     component={MissingField}
                                                                     content={Object.keys(validation.company.errors[marketInfo.code])
+                                                                        .sort((a: any, b: any) => parseFloat(validation.company.errors[marketInfo.code][a].sortOrder) > parseFloat(validation.company.errors[marketInfo.code][b].sortOrder || !validation.company.errors[marketInfo.code][a].sortOrder) ? 1 : -1)
                                                                         .map(key => {
                                                                             const label = capitalize(prettify(key));
                                                                             const msg = sanitizeError(validation.company.errors[marketInfo.code][key].value, label);
@@ -339,32 +342,34 @@ const MissingData = (props: any) => {
                                                     <FlexRowGrid
                                                         cols={2}
                                                         component={MissingField}
-                                                        content={validation[shareholder.docId].errors.Core && Object.keys(validation[shareholder.docId].errors.Core).map(key => {
-                                                            const label = capitalize(prettify(key));
-                                                            const msg = sanitizeError(validation[shareholder.docId].errors.Core[key].value, label);
+                                                        content={validation[shareholder.docId].errors.Core && Object.keys(validation[shareholder.docId].errors.Core)
+                                                            .sort((a: any, b: any) => parseFloat(validation[shareholder.docId].errors.Core[a].sortOrder) > parseFloat(validation[shareholder.docId].errors.Core[b].sortOrder || !validation[shareholder.docId].errors.Core[a].sortOrder) ? 1 : -1)
+                                                            .map(key => {
+                                                                const label = capitalize(prettify(key));
+                                                                const msg = sanitizeError(validation[shareholder.docId].errors.Core[key].value, label);
 
-                                                            const sanitizedKey = key.replace('.value', '');
+                                                                const sanitizedKey = key.replace('.value', '');
 
-                                                            const valueMissing = validation[shareholder.docId].errors.Core[key].value !== undefined;
-                                                            const sourceMissing = sanitizeError(validation[shareholder.docId].errors.Core[key].source, label);
-                                                            const certificationMissing = sanitizeError(validation[shareholder.docId].errors.Core[key].certification, label);
+                                                                const valueMissing = validation[shareholder.docId].errors.Core[key].value !== undefined;
+                                                                const sourceMissing = sanitizeError(validation[shareholder.docId].errors.Core[key].source, label);
+                                                                const certificationMissing = sanitizeError(validation[shareholder.docId].errors.Core[key].certification, label);
 
-                                                            return {
-                                                                stateKey: `${key}.value`,
-                                                                label: label.replace(' value', ''),
-                                                                placeholder: msg,
-                                                                onChange: (field: any, value: any) => saveEditField(field, value, "distinctShareholders", shareholder.docId),
-                                                                onBlur: () => onEditField(
-                                                                    key,
-                                                                    shareholder[sanitizedKey],
-                                                                    shareholder.docId
-                                                                ),
-                                                                value: getValue(shareholder[sanitizedKey]) || '',
-                                                                missingValue: valueMissing,
-                                                                missingSource: sourceMissing,
-                                                                missingCertification: certificationMissing,
-                                                            }
-                                                        })}
+                                                                return {
+                                                                    stateKey: `${key}.value`,
+                                                                    label: label.replace(' value', ''),
+                                                                    placeholder: msg,
+                                                                    onChange: (field: any, value: any) => saveEditField(field, value, "distinctShareholders", shareholder.docId),
+                                                                    onBlur: () => onEditField(
+                                                                        key,
+                                                                        shareholder[sanitizedKey],
+                                                                        shareholder.docId
+                                                                    ),
+                                                                    value: getValue(shareholder[sanitizedKey]) || '',
+                                                                    missingValue: valueMissing,
+                                                                    missingSource: sourceMissing,
+                                                                    missingCertification: certificationMissing,
+                                                                }
+                                                            })}
                                                     />
                                                 </Blocks>
                                             }
@@ -412,6 +417,7 @@ const MissingData = (props: any) => {
                                                                             cols={2}
                                                                             component={MissingField}
                                                                             content={Object.keys(validation[shareholder.docId].errors[marketInfo.code])
+                                                                                .sort((a: any, b: any) => parseFloat(validation[shareholder.docId].errors[marketInfo.code][a].sortOrder) > parseFloat(validation[shareholder.docId].errors[marketInfo.code][b].sortOrder || !validation[shareholder.docId].errors[marketInfo.code][a].sortOrder) ? 1 : -1)
                                                                                 .map(key => {
                                                                                     const label = capitalize(prettify(key));
                                                                                     const msg = sanitizeError(validation[shareholder.docId].errors[marketInfo.code][key].value, label);

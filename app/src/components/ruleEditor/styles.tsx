@@ -78,7 +78,7 @@ export const CollectionFilter = styled.div`
   }
 `
 
-export const Type = styled.ul `
+export const Type = styled.ul`
   display: flex;
 
   .company, 
@@ -210,8 +210,7 @@ export const Title = styled(InputSt)`
 export const NameInput = styled(Title)``;
 
 export const Description = styled(Title)`
-  color: #979797;
-  font-size: 14px;
+  padding: 0;
 `;
 
 export const Heading = styled.span`
@@ -256,3 +255,11 @@ export const SaveRuleCode = styled.button`
     text-decoration: underline;
   }
 `
+
+export const sort = styled.div`
+  display: flex;
+  align-items: center;
+  color: var(--basic-text);
+  font-size: 14px;
+  white-space: nowrap;
+`;

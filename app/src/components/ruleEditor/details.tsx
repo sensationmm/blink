@@ -15,13 +15,13 @@ const RuleDetails = (props: any) => {
 
     useEffect(() => {
         window.scrollTo(0, 0)
-      }, [])
+    }, [])
 
     const [JSONIsValid, setJSONIsValid] = useState(true);
 
     const { history, collectionOptions, rules, selectedRule, editMultipleFields, setRules, setModal, hasJsonStructure, isEditingJSON, setIsEditingJSON, requestAddRule } = props;
 
-    const coreSelected = selectedRule && selectedRule.marketRuleMapping ?.indexOf("Core") > -1;
+    const coreSelected = selectedRule && selectedRule.marketRuleMapping?.indexOf("Core") > -1;
 
     const editMarkets = async (id: string, market: string, checked: boolean, path: string) => {
 
@@ -98,7 +98,7 @@ const RuleDetails = (props: any) => {
                 });
             }
 
-            const ruleToSave: any = {...selectedRule}
+            const ruleToSave: any = { ...selectedRule }
             const ruleName = ruleToSave.name
             delete ruleToSave.id;
             delete ruleToSave.originalData;
@@ -139,7 +139,6 @@ const RuleDetails = (props: any) => {
                 };
             }
 
-
             await editMultipleFields(selectedRule.path, dataToSave)
 
             const newRules = rules.map((rule: any) => {
@@ -179,8 +178,8 @@ const RuleDetails = (props: any) => {
 
     return <styled.ContentNarrowInner>
 
-        <Link style={{ textDecoration: "none", display:"flex", color: "black" }} onClick={e => {
-            if (selectedRule ?.originalData) {
+        <Link style={{ textDecoration: "none", display: "flex", color: "black" }} onClick={e => {
+            if (selectedRule?.originalData) {
                 e.preventDefault();
                 setModal("Unsaved changes", "You have unsaved changes. Please confirm or undo", null)
             } else {
@@ -206,30 +205,40 @@ const RuleDetails = (props: any) => {
                     <Icon size="small" icon={selectedRule.type === "person" ? PersonIcon : CompanyIcon} style={selectedRule.type} />
                 }
 
-               
+
                 {selectedRule.id === "new" ? <>
-                <styled.Heading id="info-label">INFO</styled.Heading>
-                <styled.NameInput
-                    id="rule-name"
-                    autoFocus
-                    onChange={(e: any) => editRuleField(selectedRule ?.path, "name", e.target.value)}
-                    placeholder="Create rule name - e.g property.value"
-                    value={selectedRule ?.name}
-                /></> : <span>{selectedRule ?.name}</span>}
+                    <styled.Heading id="info-label">INFO</styled.Heading>
+                    <styled.NameInput
+                        id="rule-name"
+                        autoFocus
+                        onChange={(e: any) => editRuleField(selectedRule?.path, "name", e.target.value)}
+                        placeholder="Create rule name - e.g property.value"
+                        value={selectedRule?.name}
+                    /></> : <span>{selectedRule?.name}</span>}
 
                 <styled.Title
                     // onBlur={(e: any) => saveEditRuleField(selectedRule.path, "title", e.target.value)}
-                    onChange={(e: any) => editRuleField(selectedRule ?.path, "title", e.target.value)}
+                    onChange={(e: any) => editRuleField(selectedRule?.path, "title", e.target.value)}
                     placeholder="Add a title"
-                    value={selectedRule ?.title}
+                    value={selectedRule?.title}
                 />
 
                 <styled.Description
                     // onBlur={(e: any) => saveEditRuleField(selectedRule.path, "description", e.target.value)}
-                    onChange={(e: any) => editRuleField(selectedRule ?.path, "description", e.target.value)}
+                    onChange={(e: any) => editRuleField(selectedRule?.path, "description", e.target.value)}
                     placeholder="Add a description"
-                    value={selectedRule ?.description}
+                    value={selectedRule?.description}
                 />
+
+                <styled.sort>
+                    Sort order:
+                    <styled.Description
+                        // onBlur={(e: any) => saveEditRuleField(selectedRule.path, "description", e.target.value)}
+                        onChange={(e: any) => editRuleField(selectedRule?.path, "sortOrder", e.target.value)}
+                        placeholder="Add a sort order"
+                        value={selectedRule?.sortOrder}
+                    />
+                </styled.sort>
 
 
                 <styled.Heading id="markets-label">MARKETS</styled.Heading>
@@ -239,23 +248,23 @@ const RuleDetails = (props: any) => {
                         <styled.Markets>
                             {/* {selectedRule.id} */}
                             <li key="Core">
-                                <label htmlFor={`${selectedRule ?.id}-Core`}>
+                                <label htmlFor={`${selectedRule?.id}-Core`}>
                                     Core
-                                    <styled.CheckBox id={`${selectedRule ?.id}-Core`}
-                                        checked={selectedRule ?.marketRuleMapping.indexOf("Core") > -1}
-                                        onChange={e => editMarkets(selectedRule ?.id, "Core", e.target.checked, selectedRule.path)}
+                                    <styled.CheckBox id={`${selectedRule?.id}-Core`}
+                                        checked={selectedRule?.marketRuleMapping.indexOf("Core") > -1}
+                                        onChange={e => editMarkets(selectedRule?.id, "Core", e.target.checked, selectedRule.path)}
                                         type="checkbox"></styled.CheckBox>
                                 </label>
                             </li>
                             {blinkMarkets
                                 .filter((market: any) => !market.disabled)
                                 .map((market: any) => <li className={coreSelected ? "coreSelected" : ""} key={market.code}>
-                                    <label htmlFor={`${selectedRule ?.id}-${market.code}`}>
+                                    <label htmlFor={`${selectedRule?.id}-${market.code}`}>
                                         <img src={market.flag} alt={market.name} />
                                         {market.code}
-                                        <styled.CheckBox id={`${selectedRule ?.id}-${market.code}`}
-                                            checked={selectedRule ?.marketRuleMapping ?.indexOf(market.code) > -1}
-                                            onChange={e => editMarkets(selectedRule ?.id, market.code, e.target.checked, selectedRule.path)}
+                                        <styled.CheckBox id={`${selectedRule?.id}-${market.code}`}
+                                            checked={selectedRule?.marketRuleMapping?.indexOf(market.code) > -1}
+                                            onChange={e => editMarkets(selectedRule?.id, market.code, e.target.checked, selectedRule.path)}
                                             type="checkbox"></styled.CheckBox>
                                     </label>
                                 </li>)}
@@ -270,7 +279,7 @@ const RuleDetails = (props: any) => {
                         <Box centered shadowed>
                             <styled.Policies>
                                 {
-                                    selectedRule ?.marketRuleMapping ?.map((market: any) => {
+                                    selectedRule?.marketRuleMapping?.map((market: any) => {
 
                                         let blinkMarket
                                         if (market === "Core") {
@@ -288,7 +297,7 @@ const RuleDetails = (props: any) => {
 
                                         return <li key={market}>
                                             <span>
-                                                <img src={blinkMarket ?.flag} alt={blinkMarket ?.name} />{blinkMarket ?.name}
+                                                <img src={blinkMarket?.flag} alt={blinkMarket?.name} />{blinkMarket?.name}
                                             </span>
                                             <span>
                                                 XYZ Policy Section 1.2 /a
@@ -296,7 +305,7 @@ const RuleDetails = (props: any) => {
                                             <styled.Edit />
                                         </li>
                                     })
-                            }
+                                }
                             </styled.Policies>
                         </Box>
                     </Blocks>
@@ -311,7 +320,7 @@ const RuleDetails = (props: any) => {
                                     <b>Data Element</b>
                                 </span>
                                 <span>
-                                    {selectedRule ?.name}
+                                    {selectedRule?.name}
                                 </span>
                             </li>
                             <li>
@@ -319,9 +328,9 @@ const RuleDetails = (props: any) => {
                                     <b>Rule</b>
                                 </span>
                                 <span>
-                                    {isEditingJSON && <><styled.RuleCode id="rule-code-input" className={`isValid-${JSONIsValid}`} onChange={e => editRuleField(selectedRule.path, [selectedRule ?.name] ?.toString(), e.target.value)} value={selectedRule[selectedRule.name]}></styled.RuleCode>
+                                    {isEditingJSON && <><styled.RuleCode id="rule-code-input" className={`isValid-${JSONIsValid}`} onChange={e => editRuleField(selectedRule.path, [selectedRule?.name]?.toString(), e.target.value)} value={selectedRule[selectedRule.name]}></styled.RuleCode>
                                         <styled.SaveRuleCode onClick={saveJSON}>Save</styled.SaveRuleCode></>}
-                                    {!isEditingJSON && selectedRule && selectedRule[selectedRule ?.name]}
+                                    {!isEditingJSON && selectedRule && selectedRule[selectedRule?.name]}
                                 </span>
                                 {!isEditingJSON && <styled.Edit onClick={() => {
                                     if (selectedRule.name === "") {
@@ -337,7 +346,7 @@ const RuleDetails = (props: any) => {
                 </Blocks>
 
             </styled.Info>
-            {selectedRule ?.originalData && !isEditingJSON && <Actions>
+            {selectedRule?.originalData && !isEditingJSON && <Actions>
                 <Button label="Submit for approval" onClick={() => saveEdits()} />
                 <Button type={'tertiary'} label="Undo" onClick={() => undoEdits()} />
             </Actions>}

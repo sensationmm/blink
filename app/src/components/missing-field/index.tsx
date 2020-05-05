@@ -21,10 +21,10 @@ const MissingField: React.FC<MissingFieldProps> = (props) => {
     let errorMsg = [];
 
     if (props.missingSource !== 'Undefined') {
-        errorMsg.push(<div>{capitalize(props.missingSource)}</div>);
+        errorMsg.push(<div key={'error-src'}>{capitalize(props.missingSource)}</div>);
     }
     if (props.missingCertification !== 'Undefined') {
-        errorMsg.push(<div>{capitalize(props.missingCertification)}</div>);
+        errorMsg.push(<div key={'error-cert'}>{capitalize(props.missingCertification)}</div>);
     }
 
     return (

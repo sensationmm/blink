@@ -28,11 +28,7 @@ const RuleEditor = (props: any) => {
   const sort = (rules: any) => {
 
     const sort: (a: any, b: any) => any = (a: any, b: any) => {
-
-      const aNameOrTitle = a.title || a.name;
-      const bNameOrTitle = b.title || b.name;
-
-      return bNameOrTitle.toLowerCase() > aNameOrTitle.toLowerCase() ? -1 : 1
+      return (parseFloat(a.sortOrder) > parseFloat(b.sortOrder) || !a.sortOrder) ? 1 : -1
     }
 
     return rules.sort(sort)
@@ -74,6 +70,7 @@ const RuleEditor = (props: any) => {
         const rules = await props.requestAllRules(collection.toLowerCase());
         allRules = allRules.concat(rules.map((rule: any) => {
           const name: any = Object.keys(rule).find((key: string) =>
+            key !== "sortOrder" &&
             key !== "type" &&
             key !== "description" &&
             key !== "isEdited" &&
@@ -122,7 +119,7 @@ const RuleEditor = (props: any) => {
   }
 
   const { ruleId } = props.match.params;
-  const selectedRule = ruleId && rules ?.find((r: any) => r.id === ruleId);
+  const selectedRule = ruleId && rules?.find((r: any) => r.id === ruleId);
 
   return (
     <>

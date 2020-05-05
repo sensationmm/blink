@@ -64,14 +64,18 @@ server.post('*/', function (req: any, res: any) {
     const peopleMarketValidation = {} as { [key: string]: indexedObject };
 
     rulesCompany.get().then(async (rulesCompanyItem: any) => {
+        const companyRulesOrder = {} as indexedObject;
         rulesCompanyItem.forEach((doc: any) => {
             const rule = doc.data();
             const rulesMarkets = rule.marketRuleMapping;
+            const holdSortOrder = rule.sortOrder;
             delete rule.marketRuleMapping;
             delete rule.title;
             delete rule.description;
             delete rule.edits;
+            delete rule.sortOrder;
             const ruleName = Object.keys(rule)[0] as string;
+            companyRulesOrder[ruleName] = holdSortOrder || 1000;
 
             rulesMarkets.filter((market: market) => companyMarketsToValidate.indexOf(market) > -1).forEach((market: market) => {
                 if (companyMarketRulesets[market][ruleName]) {
@@ -85,6 +89,7 @@ server.post('*/', function (req: any, res: any) {
 
         const responsesCompany = companyMarketsToValidate.map((market: market) => {
             return validateJS.validate.async(company, companyMarketRulesets[market], { cleanAttributes: false, market }).then(() => {
+
                 const numRules = Object.keys(companyMarketRulesets[market]).length;
 
                 const valid = {
@@ -105,6 +110,7 @@ server.post('*/', function (req: any, res: any) {
 
                     const errorType = error.pop();
                     const errorField = error.join('.');
+                    console.log(errorType, errorField)
 
                     if (errorField) {
                         if (!groupedErrors[errorField]) {
@@ -114,8 +120,10 @@ server.post('*/', function (req: any, res: any) {
                         if (errorType) {
                             groupedErrors[errorField][errorType] = errors[item];
                         } else {
-                            groupedErrors[errorField] = errors[item];
+                            groupedErrors[errorField].value = errors[item];
                         }
+
+                        groupedErrors[errorField].sortOrder = companyRulesOrder[item];
                     }
                 });
 
@@ -135,14 +143,18 @@ server.post('*/', function (req: any, res: any) {
 
         if (uboChecksRequired.required === true) {
             rulesPerson.get().then(async (rulesPersonItem: any) => {
+                const personRulesOrder = {} as indexedObject;
                 rulesPersonItem.forEach((doc: any) => {
                     const rule = doc.data();
                     const rulesMarkets = rule.marketRuleMapping;
+                    const holdSortOrder = rule.sortOrder;
                     delete rule.marketRuleMapping;
                     delete rule.description;
                     delete rule.title;
                     delete rule.edits;
+                    delete rule.sortOrder;
                     const ruleName = Object.keys(rule)[0] as string;
+                    personRulesOrder[ruleName] = holdSortOrder || 1000;
 
                     rulesMarkets.filter((market: market) => personMarketsToValidate.indexOf(market) > -1).forEach((market: market) => {
                         if (personMarketRulesets[market][ruleName]) {
@@ -207,8 +219,10 @@ server.post('*/', function (req: any, res: any) {
                                         if (errorType) {
                                             groupedErrors[errorField][errorType] = errors[item];
                                         } else {
-                                            groupedErrors[errorField] = errors[item];
+                                            groupedErrors[errorField].value = errors[item];
                                         }
+
+                                        groupedErrors[errorField].sortOrder = personRulesOrder[item];
                                     }
                                 });
 
