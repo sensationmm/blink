@@ -368,7 +368,7 @@ const MyDocuments = (props: any) => {
                 labelPrimary={'Open accounts!'}
                 actionPrimary={completeOnboarding}
                 disabledPrimary={!completed || !acceptTerms}
-                labelSecondary={'Complete later'}
+                // labelSecondary={'Complete later'}
                 actionSecondary={() => { }}
                 disabledSecondary={true}
                 header={termsStatement}

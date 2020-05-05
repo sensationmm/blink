@@ -147,7 +147,7 @@ const MyCompany = (props: any) => {
             <ActionBar
                 labelPrimary={'Confirm company structure'}
                 actionPrimary={confirmStructure}
-                labelSecondary={'Complete later'}
+                // labelSecondary={'Complete later'}
                 actionSecondary={() => { }}
                 hidden={building || sideTrayOpen}
             />
