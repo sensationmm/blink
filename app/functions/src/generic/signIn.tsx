@@ -47,6 +47,11 @@ server.post('*/', async function (req: any, res: any) {
             user = await userDoc.data();
             userRef.update({ ...user, refreshToken: parsedBody.refreshToken })
         }
+        
+        
+        if (!user) {
+            return res.status(403).send({ error: { errors: [{ message: "User profile not found "}] } })
+        }
 
         if (user.admin) {
 
