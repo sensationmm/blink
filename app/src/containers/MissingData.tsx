@@ -177,19 +177,32 @@ const MissingData = (props: any) => {
                                                     //     msg += ` (found: ${companyStructure[key]})`;
                                                     // }
 
-                                                    const sanitizedKey = key.replace('.value', '');
+                                                    let sanitizedKey = key.replace('.value', '');
+                                                    let value = getValue(companyStructure[sanitizedKey]) || '';
+                                                    let saveValue: any;
 
+                                                    if (value === '') {
+                                                        const parts = key.split(".");
+                                                        if (parts.length === 2 && companyStructure[parts[0]] && companyStructure[parts[0]][parts[1]]) {
+                                                            value = companyStructure[parts[0]][parts[1]]?.value;
+                                                            sanitizedKey = parts[0];
+                                                            saveValue = companyStructure[parts[0]]
+                                                        }
+                                                    }
+
+                                                   
                                                     return {
                                                         stateKey: `${key}.value`,
                                                         label: label.replace(' value', ''),
                                                         placeholder: msg,
                                                         onChange: saveEditField,
-                                                        onBlur: () => onEditField(
+                                                        onBlur: () => {
+                                                            onEditField(
                                                             sanitizedKey,
-                                                            companyStructure[sanitizedKey],
+                                                            companyStructure[sanitizedKey] || saveValue,
                                                             companyStructure.docId,
-                                                        ),
-                                                        value: getValue(companyStructure[sanitizedKey]) || '',
+                                                        )},
+                                                        value,
                                                         missingValue: valueMissing,
                                                         missingSource: sourceMissing,
                                                         missingCertification: certificationMissing,
