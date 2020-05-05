@@ -109,6 +109,24 @@ export const screening = (state = initialState, action) => {
       }
 
 
+
+      if (field.length === 3) {
+        return {
+          ...state,
+          companyStructure: {
+            ...state.companyStructure,
+            [field[0]]: {
+              ...state.companyStructure[field[0]],
+              [field[1]]: {
+                ...state.companyStructure[field[0][field[1]]],
+                value: action.value,
+              }
+            }
+          }
+        }
+      }
+
+
       return {
         ...state,
         companyStructure: {
