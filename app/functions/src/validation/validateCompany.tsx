@@ -9,6 +9,7 @@ const express = require('express');
 const validationGeneric = require('./functionsGeneric');
 const validationCompany = require('./functionsCompany');
 const validationPerson = require('./functionsPerson');
+const { parseDate } = require('./functionsCompany');
 const server = express();
 server.use(cors());
 
@@ -21,12 +22,8 @@ customValidationKeys.forEach((key) => {
 
 validateJS.validate.validators.type.types.dateString = (value: any) => {
     if (!moment(value).isValid()) {
-        // check to see if it looks like something close to a valid date
-        const dateBits = value.split && value.split(/[-/]/);
-        if (dateBits.length === 3) {
-            const newDate = `${dateBits[1]}-${dateBits[0]}-${dateBits[2]}`
-            return moment(newDate).isValid()
-        }
+        const parsedDate = parseDate(value)
+        return moment(parsedDate).isValid()
     }
 
     return moment(value).isValid()
