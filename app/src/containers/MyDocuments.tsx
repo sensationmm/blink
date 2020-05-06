@@ -181,11 +181,25 @@ const MyDocuments = (props: any) => {
 
     const highRisk = parseInt(getValue(companyStructure.riskRating)) === 5;
     const mediumRisk = parseInt(getValue(companyStructure.riskRating)) >= 3;
+    const userHasSelectedRomanianMarket = currentUser.markets.indexOf('RO') > -1;
+
     const docsRequired = (
         highRisk ||
         (mediumRisk && currentUser.gearboxEdited) ||
-        currentUser.markets.indexOf('RO') > -1
+        userHasSelectedRomanianMarket
     );
+
+
+    const romanianFiscalCertificateIndex = CompanyDocuments.indexOf('romanianFiscalCertificate');
+    if (!userHasSelectedRomanianMarket && romanianFiscalCertificateIndex > -1) {
+        CompanyDocuments.splice(romanianFiscalCertificateIndex, 1);
+    }
+
+
+    const financialStatementIndex = CompanyDocuments.indexOf('financialStatement');
+    if (!highRisk && financialStatementIndex > -1) {
+        CompanyDocuments.splice(financialStatementIndex, 1);
+    }
     let companySections = 2;
     if (highRisk) {
         companySections += 2;
@@ -317,6 +331,7 @@ const MyDocuments = (props: any) => {
                                             total={BusinessDetails.length}
                                             completed={confirmDone(companyStructure, BusinessDetails)}
                                         />
+
 
                                         {docsRequired &&
                                             <Entry
