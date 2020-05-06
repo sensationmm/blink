@@ -12,10 +12,18 @@ interface TabNavItemProps {
 interface TabNavProps {
     items: TabNavItemProps[];
     onChange?: (activeTabName: string) => void;
+    active?: string;
 }
 
-const TabNav: React.FC<TabNavProps> = ({ items, onChange }) => {
-    const [activeTab, setActiveTab] = useState(0);
+const TabNav: React.FC<TabNavProps> = ({ items, onChange, active }) => {
+    let initTab = 0;
+    items.forEach((obj, index) => {
+        if (obj.label === active) {
+            initTab = index;
+        }
+    });
+
+    const [activeTab, setActiveTab] = useState(initTab);
 
     const prevActiveTabRef = useRef(0);
     useEffect(() => {

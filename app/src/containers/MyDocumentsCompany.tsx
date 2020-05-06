@@ -161,7 +161,7 @@ const MyDocumentsCompany = (props: any) => {
         })
 
         hideLoader();
-        history.push('/onboarding/my-documents');
+        history.push('/onboarding/my-documents', { prevPath: 'Company' });
     }
 
     const handleUpload = (src: string, base64File: any) => {
@@ -242,7 +242,7 @@ const MyDocumentsCompany = (props: any) => {
 
                             <Actions centered>
                                 <Button small onClick={saveCompanyDetails} label={'Confirm'} />
-                                <Button small type={'secondary'} onClick={() => history.push('/onboarding/my-documents')} label={'Cancel'} />
+                                <Button small type={'secondary'} onClick={() => history.push('/onboarding/my-documents', { prevPath: 'Company' })} label={'Cancel'} />
                             </Actions>
                         </Blocks>
                     </Styled.Inputs>

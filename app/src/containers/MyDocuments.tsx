@@ -141,10 +141,16 @@ const MyDocuments = (props: any) => {
         showLoader,
         hideLoader,
         editUser,
-        validation
+        validation,
+        location
     } = props;
 
-    const [section, setSection] = useState('People');
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [])
+
+    const prevPath = location.state?.prevPath;
+    const [section, setSection] = useState(prevPath || 'People');
     const [showTerms, setShowTerms] = useState(false);
     const [acceptTerms, setAcceptTerms] = useState(false);
     const [plannedUseOfBankAccountCompletedCount, changePlannedUseOfBankAccountCompletedCount] = useState(0)
@@ -275,6 +281,7 @@ const MyDocuments = (props: any) => {
 
                     <TabNav
                         onChange={setSection}
+                        active={section}
                         items={[
                             {
                                 label: 'People',
