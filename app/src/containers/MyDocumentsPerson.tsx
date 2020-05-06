@@ -135,8 +135,6 @@ const MyDocumentsPerson = (props: any) => {
 
     const validationResults = personValidation(Person, validation[shareholder.docId].errors, currentUser.markets);
 
-    console.log(validationResults)
-
     return (
         <MainStyled.MainSt className="person">
             <SetupStatus />

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
@@ -12,8 +12,6 @@ import TabNav from '../components/tab-nav';
 import Box from '../layout/box';
 import Blocks from '../layout/blocks';
 import ProgressBubble from '../components/progress-bubble';
-import Button from '../components/button';
-import Actions from '../layout/actions';
 
 import IconDocuments from '../svg/icon-documents.svg';
 import IconTaxDocuments from '../svg/icon-tax-documents.svg';
@@ -149,6 +147,8 @@ const MyDocuments = (props: any) => {
     const [section, setSection] = useState('People');
     const [showTerms, setShowTerms] = useState(false);
     const [acceptTerms, setAcceptTerms] = useState(false);
+    const [plannedUseOfBankAccountCompletedCount, changePlannedUseOfBankAccountCompletedCount] = useState(0)
+    const [scheduleVideoCallCompletedCount, changeScheduleVideoCallCompletedCount] = useState(0)
 
     if (!currentUser.screened || currentUser.markets.length === 0 || !company || !companyStructure) {
         return <Redirect to="/onboarding" />;
@@ -212,7 +212,13 @@ const MyDocuments = (props: any) => {
         companySections++;
     }
 
-    let companyDone = highRisk ? 2 : 0;
+    let companyDone = 0;
+    if (plannedUseOfBankAccountCompletedCount === 10) {
+        companyDone++;
+    }
+    if (scheduleVideoCallCompletedCount === 3) {
+        companyDone++;
+    }
     if (confirmDone(companyStructure, CompanyDetails) == CompanyDetails.length) {
         companyDone++;
     }
@@ -356,21 +362,22 @@ const MyDocuments = (props: any) => {
                                                 subIcon={IconDownload}
                                                 type={'company'}
                                                 title={'Planned use of bank account'}
-                                                status={setStatus(true)}
+                                                status={setStatus(plannedUseOfBankAccountCompletedCount === 10)}
                                                 total={10}
-                                                completed={10}
+                                                completed={plannedUseOfBankAccountCompletedCount}
+                                                onClick={() => changePlannedUseOfBankAccountCompletedCount(10)}
                                             />
                                         }
-
                                         {highRisk &&
                                             <Entry
                                                 icon={IconVideo}
                                                 subIcon={IconSchedule}
                                                 type={'other'}
                                                 title={'Schedule video call'}
-                                                status={setStatus(true)}
+                                                status={setStatus(scheduleVideoCallCompletedCount === 3)}
                                                 total={3}
-                                                completed={3}
+                                                completed={scheduleVideoCallCompletedCount}
+                                                onClick={() => changeScheduleVideoCallCompletedCount(3)}
                                             />
                                         }
                                     </Blocks>
