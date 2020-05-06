@@ -87,7 +87,7 @@ const Readiness: React.FC<ReadinessProps> = ({
                             }
 
                             let role = shareholder.title || shareholder.type;
-                            if ((shareholder.type === 'officer' || shareholder.type === 'authorisedSigner') && fictiveUBOs === 1) {
+                            if ((shareholder.type === 'officer' || shareholder.type === 'authorisedSigner') && fictiveUBOs === 1 && shareholder.title) {
                                 role += ' / Fictive UBO';
                             }
 

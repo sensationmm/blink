@@ -96,7 +96,7 @@ const ContactClient = (props: any) => {
                     {companyStructure.officers.map((officer: any, count: number) => {
                         return (
                             <Officer
-                                key={`officer-${count}`}
+                                key={`officer-${officer.docId}`}
                                 officer={officer}
                                 onChange={saveEditField}
                                 showLoader={showLoader}
