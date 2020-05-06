@@ -56,7 +56,7 @@ const notEqualTo = (value: Value, { search, match }: Options, key: Key, attribut
  * @return {null|string} - returns null if success, `greaterThan fail` if failure
  */
 const greaterThan = (value: Value, { search, match }: Options, key: Key, attributes: Attributes) => {
-     if (getAttributeValue(attributes, search) >= match) {
+     if (parseInt(getAttributeValue(attributes, search)) >= parseInt(match)) {
         return null;
     };
     return 'greaterThan fail';
@@ -72,7 +72,7 @@ const greaterThan = (value: Value, { search, match }: Options, key: Key, attribu
  * @return {null|string} - returns null if success, `lessThan fail` if failure
  */
 const lessThan = (value: Value, { search, match }: Options, key: Key, attributes: Attributes) => {
-    if (getAttributeValue(attributes, search) < match) {
+    if (parseInt(getAttributeValue(attributes, search)) < parseInt(match)) {
         return null;
     };
 
