@@ -26,7 +26,10 @@ export const steps = [
 ];
 
 const SetupStatus: React.FC<SetupStatusProps> = ({ company, markets, location }) => {
-    const path = location.pathname;
+    let path: any = location.pathname;
+    path = path.split('/');
+    path = path.splice(0, 3);
+    path = path.join('/');
     const currentStep = steps.indexOf(getByValue(steps, 'url', path));
     const prevStep = steps[currentStep - 1] || null;
 

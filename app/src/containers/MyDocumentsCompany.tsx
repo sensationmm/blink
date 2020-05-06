@@ -170,7 +170,7 @@ const MyDocumentsCompany = (props: any) => {
 
     return (
         <MainStyled.MainSt className="company">
-            <SetupStatus />
+            <SetupStatus markets={currentUser.markets} />
 
             <MainStyled.ContentNarrow>
                 <Box centered paddedLarge>
