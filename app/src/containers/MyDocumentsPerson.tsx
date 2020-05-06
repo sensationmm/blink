@@ -149,13 +149,13 @@ const MyDocumentsPerson = (props: any) => {
 
         const passportValue: any = { file: passport };
         if (passportMustBeCertified) {
-            passportValue.sourceType = "certified"
+            passportValue.validation = "certified"
         }
         passport && await apiEditField(shareholder.docId, 'passport', passportValue, currentUser.localId);
         
         const utilityBillValue: any = { file: utilityBill };
         if (utilityBillMustBeCertified) {
-            utilityBillValue.sourceType = "certified"
+            utilityBillValue.validation = "certified"
         }
         utilityBill && await apiEditField(shareholder.docId, 'utilityBill', utilityBillValue, currentUser.localId);
 
