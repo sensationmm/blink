@@ -35,7 +35,7 @@ const ManualApproval = (props: any) => {
 
     const [mobile, setMobile] = useState('');
     const [email, setEmail] = useState('');
-    const [done, setDone] = useState(value?.substr(0, 5) === 'Notif');
+    const [done, setDone] = useState(value ?.substr(0, 5) === 'Notif');
 
     const onDone = () => {
         onSave(`${type}.value`, `Notification sent ${moment().format('DD.MM.YY')}`, "distinctShareholders", docId)
@@ -99,11 +99,11 @@ const MyDocumentsPerson = (props: any) => {
         hideLoader
     } = props;
 
-    const people = companyStructure?.distinctShareholders.concat(companyStructure?.officers);
+    const people = companyStructure ?.distinctShareholders.concat(companyStructure ?.officers);
     const shareholder = companyStructure && getByValue(people, 'docId', `${type}/${docId}`);
 
-    const manualPassport = shareholder?.passport?.file?.substring(0, 5) === 'Notif';
-    const manualUtilityBill = shareholder?.utilityBill?.file?.substring(0, 5) === 'Notif';
+    const manualPassport = shareholder ?.passport ?.file ?.substring(0, 5) === 'Notif';
+    const manualUtilityBill = shareholder ?.utilityBill ?.file ?.substring(0, 5) === 'Notif';
 
     const [manualID, setManualID] = useState(manualPassport);
     const [manualAddress, setManualAddress] = useState(manualUtilityBill);
@@ -112,18 +112,52 @@ const MyDocumentsPerson = (props: any) => {
         return <Redirect to="/onboarding" />;
     }
 
+    const validationErrorsForField = (field: string, validationErrors: any) => {
+        let errors: any = [];
+        if (!validationErrors) {
+            return errors
+        }
+        Object.keys(validationErrors).forEach(market => {
+            const marketErrors = validationErrors[market];
+            if (marketErrors ?.[field] ?.validation) {
+                errors = errors.concat(marketErrors[field] ?.validation);
+            }
+        });
+
+        return errors;
+    }
+
+    const validationErrors = validation[shareholder.docId].errors;
+    const validationResults = personValidation(Person, validationErrors, currentUser.markets);
+
+    const passportErrors = validationErrorsForField("passport", validationErrors);
+    const passportMustBeCertified = passportErrors.indexOf("Passport validation must be certified") > -1;
+
+    const utilityBillErrors = validationErrorsForField("utilityBill", validationErrors);
+    const utilityBillMustBeCertified = utilityBillErrors.indexOf("Utility bill validation must be certified") > -1;
+
+
     const saveShareholder = async () => {
         showLoader('Saving');
-        const passport = shareholder.passport?.file;
-        const utilityBill = shareholder.utilityBill?.file;
+        const passport = shareholder.passport ?.file;
+        const utilityBill = shareholder.utilityBill ?.file;
 
         Person.filter((item: any) => item !== 'passport.file' && item !== 'utilityBill.file')
             .forEach(async (item: any) => {
                 await apiEditField(shareholder.docId, item, shareholder[item] || '', currentUser.localId);
             })
 
-        passport && await apiEditField(shareholder.docId, 'passport', { file: passport }, currentUser.localId);
-        utilityBill && await apiEditField(shareholder.docId, 'utilityBill', { file: utilityBill }, currentUser.localId);
+        const passportValue: any = { file: passport };
+        if (passportMustBeCertified) {
+            passportValue.sourceType = "certified"
+        }
+        passport && await apiEditField(shareholder.docId, 'passport', passportValue, currentUser.localId);
+        
+        const utilityBillValue: any = { file: utilityBill };
+        if (utilityBillMustBeCertified) {
+            utilityBillValue.sourceType = "certified"
+        }
+        utilityBill && await apiEditField(shareholder.docId, 'utilityBill', utilityBillValue, currentUser.localId);
 
         hideLoader();
         history.push('/onboarding/my-documents');
@@ -132,8 +166,6 @@ const MyDocumentsPerson = (props: any) => {
     const handleUpload = (src: string, base64File: any) => {
         saveEditField(`${src}.file`, base64File, "distinctShareholders", shareholder.docId)
     }
-
-    const validationResults = personValidation(Person, validation[shareholder.docId].errors, currentUser.markets);
 
     return (
         <MainStyled.MainSt className="person">
@@ -174,11 +206,17 @@ const MyDocumentsPerson = (props: any) => {
 
                             {!manualID
                                 ? <Blocks>
-                                    <FormLabel label={'Upload passport'} tooltip={'We need your passport as proof of ID'} />
+                                    <FormLabel label={
+                                        passportMustBeCertified
+                                            ? 'Upload certified passport'
+                                            : 'Upload passport'}
+                                        tooltip={passportMustBeCertified
+                                            ? 'We need a copy of your passport certified by a lawyer or notary public as proof of your identity'
+                                            : 'We need your passport as proof of ID'} />
                                     <FormUploader
                                         id={'passport'}
                                         onUpload={handleUpload}
-                                        uploaded={!manualPassport && shareholder.passport?.file}
+                                        uploaded={!manualPassport && shareholder.passport ?.file}
                                         onClearUpload={() => saveEditField('passport.value', null, 'distinctShareholders', shareholder.docId)}
                                     />
                                 </Blocks>
@@ -186,7 +224,7 @@ const MyDocumentsPerson = (props: any) => {
                                     type={'passport'}
                                     docId={shareholder.docId} onSave={saveEditField}
 
-                                    value={shareholder.passport?.file}
+                                    value={shareholder.passport ?.file}
                                 />
                             }
                         </>
@@ -215,11 +253,18 @@ const MyDocumentsPerson = (props: any) => {
 
                             {!manualAddress
                                 ? <Blocks>
-                                    <FormLabel label={'Upload utility bill'} tooltip={'We need your utility bill as proof of address'} />
+                                    <FormLabel
+                                        label={utilityBillMustBeCertified
+                                            ? 'Upload certified utility bill'
+                                            : 'Upload utility bill'}
+                                        tooltip={utilityBillMustBeCertified
+                                            ? 'We need a copy of your utility bill certified by a lawyer or notary public as proof of your identity'
+                                            : 'We need your utility bill as proof of address'}
+                                    />
                                     <FormUploader
                                         id={'utilityBill'}
                                         onUpload={handleUpload}
-                                        uploaded={!manualUtilityBill && shareholder.utilityBill?.file}
+                                        uploaded={!manualUtilityBill && shareholder.utilityBill ?.file}
                                         onClearUpload={() => saveEditField('utilityBill.value', null, 'distinctShareholders', shareholder.docId)}
                                     />
                                 </Blocks>
@@ -227,7 +272,7 @@ const MyDocumentsPerson = (props: any) => {
                                     type={'utilityBill'}
                                     docId={shareholder.docId}
                                     onSave={saveEditField}
-                                    value={shareholder.utilityBill?.file}
+                                    value={shareholder.utilityBill ?.file}
                                 />
                             }
                         </>
