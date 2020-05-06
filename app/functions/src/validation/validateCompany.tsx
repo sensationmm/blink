@@ -110,7 +110,6 @@ server.post('*/', function (req: any, res: any) {
 
                     const errorType = error.pop();
                     const errorField = error.join('.');
-                    console.log(errorType, errorField)
 
                     if (errorField) {
                         if (!groupedErrors[errorField]) {
@@ -184,7 +183,7 @@ server.post('*/', function (req: any, res: any) {
                             return market === 'Core' || !uboChecksRequired.for || (uboChecksRequired.for && uboChecksRequired.for.length > 0 && uboChecksRequired.for.indexOf(market) > -1)
                         })
                         .map((market: market) => {
-                            if (shareholder.totalShareholding > 25) {
+                            if (shareholder.totalShareholding > 25 && shareholder.shareholderType === 'P') {
                                 hasShareholdersOver25 = true;
                             }
 
@@ -243,6 +242,7 @@ server.post('*/', function (req: any, res: any) {
                 });
 
                 let responsesOfficers;
+
                 if (!hasShareholdersOver25) {
                     //requires fictive UBOs
                     const officerRanking = [
@@ -262,7 +262,7 @@ server.post('*/', function (req: any, res: any) {
                                 };
                             }
 
-                            return officer;
+                            return { ...officer, totalShareholding: 25 };
                         })
                         .filter((officer: any) => {
                             if (officer.title) {

@@ -18,6 +18,14 @@ import { blinkMarketList, blinkMarkets } from '../../utils/config/blink-markets'
 
 import * as Styled from './styles';
 
+export const officerRanking = [
+    'Chairperson',
+    'President',
+    'CFO',
+    'CEO',
+    'Managing Director',
+];
+
 interface ReadinessProps {
     companyStructure: any;
     ownershipThreshold: any;
@@ -49,45 +57,54 @@ const Readiness: React.FC<ReadinessProps> = ({
                         stacked
                     />
 
-                    {shareholders.filter((shareholder: any) => {
-                        return !(shareholder.type === 'officer' && !validation[shareholder.docId])
-                    }).map((shareholder: any, count: number) => {
-                        if (shareholder.totalShareholding > 25) {
-                            hasShareholdersOver25 = true;
-                        }
+                    {shareholders
+                        .sort((a: any, b: any) => {
+                            return (officerRanking.indexOf(a.title) > officerRanking.indexOf(b.title)) ? -1 : 1;
+                        })
+                        .filter((shareholder: any) => {
+                            return !(shareholder.type === 'officer' && !validation[shareholder.docId])
+                        }).map((shareholder: any, count: number) => {
+                            if (shareholder.totalShareholding > 25) {
+                                hasShareholdersOver25 = true;
+                            }
 
-                        if (shareholder.type === 'officer') {
-                            fictiveUBOs++;
-                        }
+                            if (shareholder.type === 'officer' || shareholder.type === 'authorisedSigner') {
+                                fictiveUBOs++;
+                            }
 
-                        if (!validation[shareholder.docId]) {
+                            if (!validation[shareholder.docId]) {
+                                return (
+                                    <Styled.NotRequired>
+                                        <Styled.Header>
+                                            <Icon icon={PersonIcon} size={'small'} style={'person'} />
+                                            <div>
+                                                {getValue(shareholder.name)}
+                                            </div>
+                                        </Styled.Header>
+                                        <Styled.Message>UBO Checks not required</Styled.Message>
+                                    </Styled.NotRequired>
+                                )
+                            }
+
+                            let role = shareholder.title || shareholder.type;
+                            if ((shareholder.type === 'officer' || shareholder.type === 'authorisedSigner') && fictiveUBOs === 1) {
+                                role += ' / Fictive UBO';
+                            }
+
                             return (
-                                <Styled.NotRequired>
-                                    <Styled.Header>
-                                        <Icon icon={PersonIcon} size={'small'} style={'person'} />
-                                        <div>
-                                            {getValue(shareholder.name)}
-                                        </div>
-                                    </Styled.Header>
-                                    <Styled.Message>UBO Checks not required</Styled.Message>
-                                </Styled.NotRequired>
+                                <ProgressBar
+                                    key={`shareholder-${count}`}
+                                    label={getValue(shareholder.name)}
+                                    labelSub={role}
+                                    icon={<Icon icon={PersonIcon} size={'small'} style={'person'} />}
+                                    value={validation[shareholder.docId].completion['Core'].passed}
+                                    total={validation[shareholder.docId].completion['Core'].total}
+                                    stacked
+                                />
                             )
-                        }
+                        })}
 
-                        return (
-                            <ProgressBar
-                                key={`shareholder-${count}`}
-                                label={getValue(shareholder.name)}
-                                labelSub={shareholder.type === 'officer' ? (shareholder.title || shareholder.type) : null}
-                                icon={<Icon icon={PersonIcon} size={'small'} style={'person'} />}
-                                value={validation[shareholder.docId].completion['Core'].passed}
-                                total={validation[shareholder.docId].completion['Core'].total}
-                                stacked
-                            />
-                        )
-                    })}
-
-                    {!hasShareholdersOver25 && fictiveUBOs === 0 && <Styled.Alert>Fictive UBO required</Styled.Alert>}
+                    {!hasShareholdersOver25 && <Styled.Alert>Fictive UBO required</Styled.Alert>}
 
                     {
                         !hasShareholdersOver25 &&
