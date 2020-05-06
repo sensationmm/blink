@@ -88,6 +88,7 @@ export const BusinessDetails = [
 export const CompanyDocuments = [
     'financialStatement',
     'romanianFiscalCertificate',
+    'editedCompanyStructure'
 ];
 
 export const personValidation = (field: Array<string>, validationErrors: any, markets: Array<string>) => {
@@ -111,6 +112,26 @@ export const personValidation = (field: Array<string>, validationErrors: any, ma
 
     return requiredFields;
 }
+
+export const companyDocsValidation = (currentUser: any, companyStructure: any) => {
+    const requiredFields = [];
+
+    const highRisk = parseInt(getValue(companyStructure.riskRating)) === 5;
+
+    if (highRisk) {
+        requiredFields.push('financialStatement');
+    }
+
+    if (currentUser.markets.indexOf('RO') > -1) {
+        requiredFields.push('romanianFiscalCertificate');
+    }
+
+    if (currentUser.gearboxEdited && getValue(companyStructure.riskRating) >= 3) {
+        requiredFields.push('editedCompanyStructure');
+    }
+
+    return requiredFields;
+};
 
 const MyDocuments = (props: any) => {
     const {
@@ -180,26 +201,9 @@ const MyDocuments = (props: any) => {
     });
 
     const highRisk = parseInt(getValue(companyStructure.riskRating)) === 5;
-    const mediumRisk = parseInt(getValue(companyStructure.riskRating)) >= 3;
-    const userHasSelectedRomanianMarket = currentUser.markets.indexOf('RO') > -1;
 
-    const docsRequired = (
-        highRisk ||
-        (mediumRisk && currentUser.gearboxEdited) ||
-        userHasSelectedRomanianMarket
-    );
+    const docsRequired = companyDocsValidation(currentUser, companyStructure).length;
 
-
-    const romanianFiscalCertificateIndex = CompanyDocuments.indexOf('romanianFiscalCertificate');
-    if (!userHasSelectedRomanianMarket && romanianFiscalCertificateIndex > -1) {
-        CompanyDocuments.splice(romanianFiscalCertificateIndex, 1);
-    }
-
-
-    const financialStatementIndex = CompanyDocuments.indexOf('financialStatement');
-    if (!highRisk && financialStatementIndex > -1) {
-        CompanyDocuments.splice(financialStatementIndex, 1);
-    }
     let companySections = 2;
     if (highRisk) {
         companySections += 2;
@@ -215,7 +219,7 @@ const MyDocuments = (props: any) => {
     if (confirmDone(companyStructure, BusinessDetails) == BusinessDetails.length) {
         companyDone++;
     }
-    if (docsRequired && confirmDone(companyStructure, CompanyDocuments) === CompanyDocuments.length) {
+    if (docsRequired > 0 && confirmDone(companyStructure, CompanyDocuments) === companyDocsValidation(currentUser, companyStructure).length) {
         companyDone++;
     }
 
@@ -333,15 +337,15 @@ const MyDocuments = (props: any) => {
                                         />
 
 
-                                        {docsRequired &&
+                                        {docsRequired > 0 &&
                                             <Entry
                                                 icon={IconDocuments}
                                                 subIcon={IconUpload}
                                                 onClick={() => history.push('/onboarding/my-documents/company/company-documents')}
                                                 type={'company'}
                                                 title={'Documents to upload'}
-                                                status={setStatus(confirmDone(companyStructure, CompanyDocuments) === CompanyDocuments.length)}
-                                                total={CompanyDocuments.length}
+                                                status={setStatus(confirmDone(companyStructure, CompanyDocuments) === docsRequired)}
+                                                total={docsRequired}
                                                 completed={confirmDone(companyStructure, CompanyDocuments)}
                                             />
                                         }

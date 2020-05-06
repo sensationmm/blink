@@ -29,7 +29,7 @@ import IconUpload from '../svg/icon-upload.svg';
 import * as MainStyled from "../components/styles";
 import * as Styled from './my-documents.styles';
 
-import { CompanyDetails, BusinessDetails, CompanyDocuments } from './MyDocuments';
+import { CompanyDetails, BusinessDetails, CompanyDocuments, companyDocsValidation } from './MyDocuments';
 
 const MyDocumentsCompany = (props: any) => {
     const {
@@ -130,9 +130,12 @@ const MyDocumentsCompany = (props: any) => {
 
         fields = CompanyDocuments.slice(0);
 
+        const docsRequired = companyDocsValidation(currentUser, companyStructure);
+
         structure = [
-            { type: FormUploader, label: 'Attach audited financial statements', tooltip: 'Why do we need this??' },
-            { type: FormUploader, label: 'Attach Romanian Fiscal Certificate', tooltip: 'Why do we need this??' },
+            { type: FormUploader, label: 'Attach audited financial statements', tooltip: 'Why do we need this??', show: docsRequired.indexOf(fields[0]) > -1 },
+            { type: FormUploader, label: 'Attach Romanian Fiscal Certificate', tooltip: 'Why do we need this??', show: docsRequired.indexOf(fields[1]) > -1 },
+            { type: FormUploader, label: 'Attach evidence of edited company structure', tooltip: 'Why do we need this??', show: docsRequired.indexOf(fields[2]) > -1 },
         ];
     }
 
@@ -192,8 +195,10 @@ const MyDocumentsCompany = (props: any) => {
                                     const value = getValue(loadedCompanyStructure[item.field]);
 
                                     return (
-                                        !item.noConfirm ||
-                                        (item.noConfirm === true && (value === '' || value === undefined || value === null))
+                                        (
+                                            !item.noConfirm ||
+                                            (item.noConfirm === true && (value === '' || value === undefined || value === null))
+                                        ) && item.show !== false
                                     )
                                 })
                                 .map((item: any, count: number) => {
