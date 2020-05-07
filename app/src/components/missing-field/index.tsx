@@ -12,11 +12,13 @@ interface MissingFieldProps extends FormInputProps {
     missingValue: boolean;
     missingSource: string;
     missingCertification: string;
+    missingFile: string;
+    missingValidation: string;
 }
 
 const MissingField: React.FC<MissingFieldProps> = (props) => {
 
-    const metaMissing = props.missingSource !== 'Undefined' || props.missingCertification !== 'Undefined';
+    const metaMissing = props.missingSource !== 'Undefined' || props.missingCertification !== 'Undefined' || props.missingFile !== 'Undefined' || props.missingValidation !== 'Undefined';
 
     let errorMsg = [];
 
@@ -25,6 +27,12 @@ const MissingField: React.FC<MissingFieldProps> = (props) => {
     }
     if (props.missingCertification !== 'Undefined') {
         errorMsg.push(<div key={'error-cert'}>{capitalize(props.missingCertification)}</div>);
+    }
+    if (props.missingFile !== 'Undefined') {
+        errorMsg.push(<div key={'error-file'}>{capitalize(props.missingFile)}</div>);
+    }
+    if (props.missingValidation !== 'Undefined') {
+        errorMsg.push(<div key={'error-validation'}>{capitalize(props.missingValidation)}</div>);
     }
 
     return (
