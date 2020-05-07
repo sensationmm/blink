@@ -87,7 +87,7 @@ const MissingData = (props: any) => {
         if (value !== undefined && value !== '') {
             showLoader('Saving');
 
-            const res = await apiEditField(docId || props.companyStructure.docId, field, value, currentUser);
+            const res = await apiEditField(docId || props.companyStructure.docId, field, value, currentUser.localId);
             console.log('onEditField', res)
 
             hideLoader();
@@ -175,6 +175,8 @@ const MissingData = (props: any) => {
                                                         const valueMissing = validation.company.errors.Core[key].value !== undefined;
                                                         const sourceMissing = sanitizeError(validation.company.errors.Core[key].source, label);
                                                         const certificationMissing = sanitizeError(validation.company.errors.Core[key].certification, label);
+                                                        const fileMissing = sanitizeError(validation.company.errors.Core[key].file, label);
+                                                        const validationMissing = sanitizeError(validation.company.errors.Core[key].validation, label);
 
                                                         // if (companyStructure[key]) {
                                                         //     msg += ` (found: ${companyStructure[key]})`;
@@ -210,6 +212,8 @@ const MissingData = (props: any) => {
                                                             missingValue: valueMissing,
                                                             missingSource: sourceMissing,
                                                             missingCertification: certificationMissing,
+                                                            missingFile: fileMissing,
+                                                            missingValidation: validationMissing
                                                         }
                                                     })}
                                             />
@@ -268,6 +272,8 @@ const MissingData = (props: any) => {
                                                                             const valueMissing = validation.company.errors[marketInfo.code][key].value !== undefined;
                                                                             const sourceMissing = sanitizeError(validation.company.errors[marketInfo.code][key].source, label);
                                                                             const certificationMissing = sanitizeError(validation.company.errors[marketInfo.code][key].certification, label);
+                                                                            const fileMissing = sanitizeError(validation.company.errors[marketInfo.code][key].file, label);
+                                                                            const validationMissing = sanitizeError(validation.company.errors[marketInfo.code][key].validation, label);
 
                                                                             return {
                                                                                 stateKey: `${key}.value`,
@@ -283,6 +289,8 @@ const MissingData = (props: any) => {
                                                                                 missingValue: valueMissing,
                                                                                 missingSource: sourceMissing,
                                                                                 missingCertification: certificationMissing,
+                                                                                missingFile: fileMissing,
+                                                                                missingValidation: validationMissing
                                                                             }
                                                                         })
                                                                     }
@@ -372,6 +380,8 @@ const MissingData = (props: any) => {
                                                                     const valueMissing = validation[shareholder.docId].errors.Core[key].value !== undefined;
                                                                     const sourceMissing = sanitizeError(validation[shareholder.docId].errors.Core[key].source, label);
                                                                     const certificationMissing = sanitizeError(validation[shareholder.docId].errors.Core[key].certification, label);
+                                                                    const fileMissing = sanitizeError(validation[shareholder.docId].errors.Core[key].file, label);
+                                                                    const validationMissing = sanitizeError(validation[shareholder.docId].errors.Core[key].validation, label);
 
                                                                     return {
                                                                         stateKey: `${key}.value`,
@@ -387,6 +397,8 @@ const MissingData = (props: any) => {
                                                                         missingValue: valueMissing,
                                                                         missingSource: sourceMissing,
                                                                         missingCertification: certificationMissing,
+                                                                        missingFile: fileMissing,
+                                                                        missingValidation: validationMissing
                                                                     }
                                                                 })}
                                                         />
@@ -446,6 +458,8 @@ const MissingData = (props: any) => {
                                                                                         const valueMissing = validation[shareholder.docId].errors[marketInfo.code][key].value !== undefined;
                                                                                         const sourceMissing = sanitizeError(validation[shareholder.docId].errors[marketInfo.code][key].source, label);
                                                                                         const certificationMissing = sanitizeError(validation[shareholder.docId].errors[marketInfo.code][key].certification, label);
+                                                                                        const fileMissing = sanitizeError(validation[shareholder.docId].errors[marketInfo.code][key].file, label);
+                                                                                        const validationMissing = sanitizeError(validation[shareholder.docId].errors[marketInfo.code][key].validation, label);
 
                                                                                         return {
                                                                                             stateKey: `${key}.value`,
@@ -461,6 +475,8 @@ const MissingData = (props: any) => {
                                                                                             missingValue: valueMissing,
                                                                                             missingSource: sourceMissing,
                                                                                             missingCertification: certificationMissing,
+                                                                                            missingFile: fileMissing,
+                                                                                            missingValidation: validationMissing
                                                                                         }
                                                                                     })
                                                                                 }
@@ -506,7 +522,7 @@ const mapStateToProps = (state: any) => ({
     companyStructure: state.screening.companyStructure,
     ownershipThreshold: state.screening.ownershipThreshold,
     validation: state.screening.validation,
-    currentUser: state.auth.user.localId
+    currentUser: state.auth.user
 });
 
 const actions = { saveEditField, showLoader, hideLoader, setCompletion, setErrors };

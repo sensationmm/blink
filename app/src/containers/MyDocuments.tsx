@@ -42,7 +42,7 @@ export const Person = [
     'countryOfTaxResidence',
     'taxId',
     'emailAddress',
-    'phoneNumber',
+    'contactPhone',
     'role'
 ];
 
@@ -52,8 +52,8 @@ export const CompanyDetails = [
     'contactEmail',
     'phoneNumber',
     'type',
-    'primaryAddress',
-    'registeredAddress',
+    'primaryAddress.fullAddress',
+    'registeredAddress.fullAddress',
     'incorporationCountry',
     'incorporationDate',
     'companyId',
