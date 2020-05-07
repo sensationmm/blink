@@ -57,8 +57,8 @@ const parseDate = (value: string) => {
 }
 
 const ageLessThanThree = (value: Value, options: Options, key: Key, attributes: Attributes, globalOptions: Options) => {
-    const undefinedYear = attributes.incorporationDate === undefined || attributes.incorporationDate === null || attributes.incorporationDate === '';
-    const parsedDate = parseDate(attributes.incorporationDate);
+    const undefinedYear = attributes.incorporationDate?.value === undefined || attributes.incorporationDate?.value === null || attributes.incorporationDate?.value === '';
+    const parsedDate = parseDate(attributes.incorporationDate?.value);
     const younger = moment(parsedDate) > moment.utc().subtract(3, 'years');
 
     if ((undefinedYear || younger) && !validateJS.isDefined(value)) {

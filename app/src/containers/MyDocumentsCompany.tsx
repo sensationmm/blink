@@ -89,7 +89,7 @@ const MyDocumentsCompany = (props: any) => {
             { type: FormInput, label: 'Incorporation country', noConfirm: true },
             { type: FormInput, label: 'Incorporation date', noConfirm: true },
             { type: FormInput, label: 'Company Registration number', noConfirm: true },
-            { type: FormInput, label: 'Country of tax residence', noConfirm: true },
+            { type: FormInput, label: 'Tax Residence Country', noConfirm: true },
             { type: FormInput, label: 'Company tax number', noConfirm: true },
             { type: FormInput, label: 'Company VAT number', noConfirm: true },
         ];
@@ -172,7 +172,7 @@ const MyDocumentsCompany = (props: any) => {
         let value: string;
         const fieldParts = field.split('.');
         if (fieldParts.length === 2) {
-            value = getValue(loadedCompanyStructure[fieldParts[0]][fieldParts[1]]);
+            value = getValue(loadedCompanyStructure[fieldParts[0]]?.[fieldParts[1]]);
         } else {
             value = getValue(loadedCompanyStructure[field]);
         }
