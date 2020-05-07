@@ -6,12 +6,12 @@ import { requestCompanyUBOStructure } from '../../utils/generic/request';
 import { withRouter } from "react-router-dom";
 
 const CompanyGraph = (props: any) => {
- 
-    const [company, setCompany] = useState();
 
+    const [company, setCompany] = useState();
+    const { match: { params: { companyId, key = "shareholders" } } } = props;
+    
     const go = async () => {
-        const { match: { params: { companyId, countryCode } } } = props;
-        const requestedCompany = await requestCompanyUBOStructure(companyId || "10103078", countryCode);
+        const requestedCompany = await requestCompanyUBOStructure(companyId || "10103078");
         setCompany(requestedCompany);
     }
     if (!company) {
@@ -21,35 +21,34 @@ const CompanyGraph = (props: any) => {
     const nodes: any = [];
     const edges: any = [];
 
-    const buildNodesAndEdges = (shareholders: any, parentDocId: any) => {
-        shareholders.forEach((shareholder: any) => {
+    const buildNodesAndEdges = (collection: any, key: string, parentDocId: any) => {
+        collection.forEach((entity: any) => {
 
-            if (!nodes.find((node: any) => node.id === shareholder.docId)) {
+            if (!nodes.find((node: any) => node.id === entity.docId)) {
                 nodes.push({
-                    id: shareholder.docId,
-                    label: shareholder.name || shareholder.fullName,
-                    title: shareholder.percentage,
-                    color: shareholder.shareholderType === "P" ? "#f8f7ff" : "#d9fff9"
+                    id: entity.docId,
+                    label: entity.name ?.value || entity.fullName ?.value,
+                    title: entity.percentage ?.value,
+                    color: entity.shareholderType ?.value === "P" ? "#f8f7ff" : "#d9fff9"
                 });
             }
             edges.push({
-                to: shareholder.docId,
+                to: entity.docId,
                 from: parentDocId
             })
-            if (shareholder.shareholders) {
-                buildNodesAndEdges(shareholder.shareholders, shareholder.docId);
+            if (collection[key]) {
+                buildNodesAndEdges(collection[key], key, collection.docId);
             }
         });
     }
 
     if (company) {
         nodes.push({
-            id: company.name,
-            label: company.name,
+            id: company.name ?.value,
+            label: company.name ?.value,
         });
-        if (company.shareholders) {
-
-            buildNodesAndEdges(company.shareholders, company.name);
+        if (company[key]) {
+            buildNodesAndEdges(company[key], key, company.name ?.value);
         }
     }
 
@@ -59,31 +58,19 @@ const CompanyGraph = (props: any) => {
     };
 
     const options = {
-        // layout: {
-        //     hierarchical: true
-        // },
         edges: {
             color: "#000000"
         },
         height: "800px"
     };
 
-    const events = {
-        // select: function (event) {
-        //     var { nodes, edges } = event;
-        // }
-    };
-    console.log("company", company)
     return (
         company ? <Graph
             graph={graph}
             options={options}
-            events={events}
-        // getNetwork={network => {
-        //     //  if you want access to vis.js network api you can set the state in a parent component using this property
-        // }}
-        /> : 
-        <div></div>
+            events={{}}
+        /> :
+            <div></div>
     );
 }
 

@@ -1,25 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
 import { Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { prettify } from 'validate.js';
 
 import ScreeningStatus from '../components/screening-status';
 import Icon from '../components/icon';
+import ActionBar from '../components/action-bar';
 import Stats from '../components/stat';
 import Box from '../layout/box';
 import Blocks from '../layout/blocks';
 import Accordion from '../components/accordion';
 import capitalize from '../utils/functions/capitalize';
+import getByValue from '../utils/functions/getByValue';
+import getValue from '../utils/functions/getValue';
 import IconTitle from '../components/icon-title';
+import FormCheckbox from '../components/form-checkbox';
 import Grid from '../layout/grid';
 import FlexRowGrid from '../layout/flex-row-grid';
 import Button from '../components/button';
 import Actions from '../layout/actions';
-import { blinkMarketList, blinkMarkets, marketType } from '../utils/config/blink-markets';
+import { blinkMarketList, blinkMarkets } from '../utils/config/blink-markets';
 import { editField as apiEditField } from '../utils/validation/request';
 import { editField as saveEditField, setCompletion, setErrors } from '../redux/actions/screening';
 import { showLoader, hideLoader } from '../redux/actions/loader';
 import { onGetValidation } from './CompanyStructure';
+import { officerRanking } from '../components/readiness';
 
 import CompanyIcon from '../svg/company-icon.svg';
 import PersonIcon from '../svg/individual-icon.svg';
@@ -29,9 +34,10 @@ import IconTarget from '../svg/icon-target.svg';
 import ArrowRight from '../svg/arrow-right.svg';
 
 import * as MainStyled from "../components/styles";
-import FormInput from '../components/form-input';
+import MissingField from '../components/missing-field';
 
 import * as Styled from './missing-data.styles';
+import { TermsAccept } from './my-documents.styles';
 
 const MissingData = (props: any) => {
     const {
@@ -44,11 +50,16 @@ const MissingData = (props: any) => {
         hideLoader,
         setCompletion,
         setErrors,
+        markets,
+        currentUser
     } = props;
 
-    if (!company || !companyStructure) {
+    const [showEmployeeConfirm, setShowEmployeeConfirm] = useState(false);
+    const [employeeConfirmed, setEmployeeConfirmed] = useState(false);
+
+    if (!company || !companyStructure || markets.length === 0) {
         return <Redirect to="/search" />;
-    } else if (!validation.company.completion) {
+    } else if (!validation.company || !validation.company.completion) {
         return <Redirect to="/company-structure" />;
     }
 
@@ -72,11 +83,11 @@ const MissingData = (props: any) => {
             }
         });
 
-    const onEditField = async (field: string, value: any) => {
+    const onEditField = async (field: string, value: any, docId: any) => {
         if (value !== undefined && value !== '') {
             showLoader('Saving');
 
-            const res = await apiEditField(props.companyStructure.docId, field, value);
+            const res = await apiEditField(docId || props.companyStructure.docId, field, value, currentUser.localId);
             console.log('onEditField', res)
 
             hideLoader();
@@ -91,17 +102,33 @@ const MissingData = (props: any) => {
             setCompletion,
             hideLoader,
             props.history.push,
-            '/contact-client'
+            '/company-completion',
+            ownershipThreshold,
+            markets
         );
     };
 
-    const shareholders = companyStructure.distinctShareholders.filter((shareholder: any) => shareholder.totalShareholding > ownershipThreshold && shareholder.shareholderType === 'P');
+    const shareholders = companyStructure.distinctShareholders.filter((shareholder: any) => shareholder.totalShareholding > ownershipThreshold && getValue(shareholder.shareholderType) === 'P');
+
+    const companyInCountryRequirements = ((countryTotal - validation.company.completion.Core.total) - (countryCompletion - validation.company.completion.Core.passed));
+    const companyKYC = Object.keys(validation.company.errors.Core).length;
+
+    const sanitizeError = (err: string, label: string) => {
+        let error = String(err);
+
+        error = error.replace(`${label} is`, '').replace(label, '');
+        error = capitalize(error.trim());
+
+        return error;
+    }
+
+    const shAndOff = shareholders.concat(companyStructure.officers);
 
     return (
         <MainStyled.MainSt>
             <ScreeningStatus
-                company={companyStructure.name}
-                country={companyStructure.incorporationCountry}
+                company={getValue(companyStructure.name)}
+                country={getValue(companyStructure.incorporationCountry)}
             />
 
             <MainStyled.ContentNarrow>
@@ -110,7 +137,7 @@ const MissingData = (props: any) => {
                         <Accordion
                             header={
                                 <Styled.AccordionHeader>
-                                    <Styled.Label><Icon icon={CompanyIcon} size={'small'} />{companyStructure.name}</Styled.Label>
+                                    <Styled.Label><Icon icon={CompanyIcon} size={'small'} />{getValue(companyStructure.name)}</Styled.Label>
 
                                     <Stats list={[
                                         {
@@ -121,56 +148,90 @@ const MissingData = (props: any) => {
                                         {
                                             label: 'In-Country requirements',
                                             icon: IconLocation,
-                                            value: ((countryTotal - validation.company.completion.Core.total) - (countryCompletion - validation.company.completion.Core.passed)),
+                                            value: companyInCountryRequirements,
                                         },
                                         {
                                             label: 'KYC',
                                             icon: IconSearch,
-                                            value: Object.keys(validation.company.errors.Core).length,
+                                            value: companyKYC,
                                         }
                                     ]} />
                                 </Styled.AccordionHeader>
                             }
                             content={
                                 <Blocks>
-                                    <Blocks gutter={'small'}>
-                                        <IconTitle title={'KYC'} icon={IconSearch} />
-                                        <FlexRowGrid
-                                            cols={2}
-                                            component={FormInput}
-                                            content={validation.company.errors.Core && Object.keys(validation.company.errors.Core).map(key => {
-                                                const label = capitalize(prettify(key));
-                                                let msg = String(validation.company.errors.Core[key]);
-                                                msg = capitalize(msg.replace(label, '').trim());
+                                    {companyKYC > 0 &&
+                                        <Blocks gutter={'small'}>
+                                            <IconTitle title={'KYC'} icon={IconSearch} />
+                                            <FlexRowGrid
+                                                cols={2}
+                                                component={MissingField}
+                                                content={validation.company.errors.Core && Object.keys(validation.company.errors.Core)
+                                                    .sort((a: any, b: any) => parseFloat(validation.company.errors.Core[a].sortOrder) > parseFloat(validation.company.errors.Core[b].sortOrder || !validation.company.errors.Core[a].sortOrder) ? 1 : -1)
+                                                    .map(key => {
+                                                        const label = capitalize(prettify(key));
+                                                        const msg = sanitizeError(validation.company.errors.Core[key].value, label);
 
-                                                // if (companyStructure[key]) {
-                                                //     msg += ` (found: ${companyStructure[key]})`;
-                                                // }
+                                                        const valueMissing = validation.company.errors.Core[key].value !== undefined;
+                                                        const sourceMissing = sanitizeError(validation.company.errors.Core[key].source, label);
+                                                        const certificationMissing = sanitizeError(validation.company.errors.Core[key].certification, label);
+                                                        const fileMissing = sanitizeError(validation.company.errors.Core[key].file, label);
+                                                        const validationMissing = sanitizeError(validation.company.errors.Core[key].validation, label);
 
-                                                return {
-                                                    stateKey: key,
-                                                    label,
-                                                    placeholder: msg,
-                                                    onChange: saveEditField,
-                                                    onBlur: onEditField,
-                                                    value: companyStructure[key] ? companyStructure[key] : '',
-                                                }
-                                            })}
-                                        />
-                                    </Blocks>
+                                                        // if (companyStructure[key]) {
+                                                        //     msg += ` (found: ${companyStructure[key]})`;
+                                                        // }
+
+                                                        let sanitizedKey = key.replace('.value', '');
+                                                        let value = getValue(companyStructure[sanitizedKey]) || '';
+                                                        let saveValue: any;
+
+                                                        if (value === '') {
+                                                            const parts = key.split(".");
+                                                            if (parts.length === 2 && companyStructure[parts[0]] && companyStructure[parts[0]][parts[1]]) {
+                                                                value = companyStructure[parts[0]][parts[1]]?.value;
+                                                                sanitizedKey = parts[0];
+                                                                saveValue = companyStructure[parts[0]]
+                                                            }
+                                                        }
+
+
+                                                        return {
+                                                            stateKey: `${key}.value`,
+                                                            label: label.replace(' value', ''),
+                                                            placeholder: msg,
+                                                            onChange: saveEditField,
+                                                            onBlur: () => {
+                                                                onEditField(
+                                                                    sanitizedKey,
+                                                                    companyStructure[sanitizedKey] || saveValue,
+                                                                    companyStructure.docId,
+                                                                )
+                                                            },
+                                                            value,
+                                                            missingValue: valueMissing,
+                                                            missingSource: sourceMissing,
+                                                            missingCertification: certificationMissing,
+                                                            missingFile: fileMissing,
+                                                            missingValidation: validationMissing
+                                                        }
+                                                    })}
+                                            />
+                                        </Blocks>
+                                    }
 
                                     <Blocks gutter={'small'}>
                                         <IconTitle title={'Screening'} icon={IconTarget} />
                                         <Grid
-                                            labels={['AML Watchlist', 'Sanctions Screening', 'AML Red Flag List', 'Adverse Media', 'Senior Public Figure']}
+                                            labels={['AML Watchlist', 'Sanctions Screening', 'AML Red Flag List', 'Adverse Media', 'Local Lists']}
                                             content={[
                                                 {
                                                     values: [
-                                                        companyStructure.AMLWatchListPassed,
-                                                        companyStructure.sanctionsScreeningPassed,
-                                                        companyStructure.AMLRedFlagListPassed,
-                                                        companyStructure.adverseMediaChecksPassed,
-                                                        null,
+                                                        getValue(companyStructure.AMLWatchListPassed),
+                                                        getValue(companyStructure.sanctionsScreeningPassed),
+                                                        getValue(companyStructure.AMLRedFlagListPassed),
+                                                        getValue(companyStructure.adverseMediaChecksPassed),
+                                                        getValue(companyStructure.LocalListCheckPassed),
                                                     ]
                                                 }
                                             ]}
@@ -178,210 +239,290 @@ const MissingData = (props: any) => {
                                         />
                                     </Blocks>
 
-                                    <Blocks gutter={'small'}>
-                                        <IconTitle title={'In-Country requirements'} icon={IconLocation} />
-                                        {Object.keys(blinkMarketList)
-                                            .filter(market => {
-                                                const marketInfo = blinkMarkets[market as any];
-                                                return validation.company.errors[marketInfo.code] && Object.keys(validation.company.errors[marketInfo.code]).length > 0;
-                                            })
-                                            .map((market, count) => {
-                                                const marketInfo = blinkMarkets[market as any];
-                                                return (
-                                                    <Accordion
-                                                        key={`accordion-${count}`}
-                                                        header={
-                                                            <Styled.AccordionHeader>
-                                                                <IconTitle title={marketInfo.name} icon={marketInfo.flag} />
-                                                            </Styled.AccordionHeader>
-                                                        }
-                                                        content={
-                                                            <FlexRowGrid
-                                                                cols={2}
-                                                                component={FormInput}
-                                                                content={Object.keys(validation.company.errors[marketInfo.code])
-                                                                    .map(key => {
-                                                                        const label = capitalize(prettify(key));
-                                                                        let msg = String(validation.company.errors[marketInfo.code][key]);
-                                                                        msg = capitalize(msg.replace(label, '').trim());
+                                    {companyInCountryRequirements > 0 &&
+                                        <Blocks gutter={'small'}>
+                                            <IconTitle title={'In-Country requirements'} icon={IconLocation} />
+                                            {markets
+                                                .filter((market: string) => {
+                                                    const marketInfo = getByValue(blinkMarkets, 'code', market);
+                                                    return validation.company.errors[marketInfo.code] && Object.keys(validation.company.errors[marketInfo.code]).length > 0;
+                                                })
+                                                .map((market: string, count: number) => {
+                                                    const marketInfo = getByValue(blinkMarkets, 'code', market);
+                                                    return (
+                                                        <Accordion
+                                                            key={`accordion-${count}`}
+                                                            header={
+                                                                <Styled.AccordionHeader>
+                                                                    <IconTitle title={marketInfo.name} icon={marketInfo.flag} />
+                                                                </Styled.AccordionHeader>
+                                                            }
+                                                            content={
+                                                                <FlexRowGrid
+                                                                    cols={2}
+                                                                    component={MissingField}
+                                                                    content={Object.keys(validation.company.errors[marketInfo.code])
+                                                                        .sort((a: any, b: any) => parseFloat(validation.company.errors[marketInfo.code][a].sortOrder) > parseFloat(validation.company.errors[marketInfo.code][b].sortOrder || !validation.company.errors[marketInfo.code][a].sortOrder) ? 1 : -1)
+                                                                        .map(key => {
+                                                                            const label = capitalize(prettify(key));
+                                                                            const msg = sanitizeError(validation.company.errors[marketInfo.code][key].value, label);
 
-                                                                        return {
-                                                                            stateKey: key,
-                                                                            label,
-                                                                            placeholder: msg,
-                                                                            onChange: saveEditField,
-                                                                            onBlur: onEditField,
-                                                                            value: companyStructure[key] ? companyStructure[key] : '',
-                                                                        }
-                                                                    })
-                                                                }
-                                                            />
-                                                        }
-                                                    />
-                                                )
-                                            })}
-                                    </Blocks>
+                                                                            const sanitizedKey = key.replace('.value', '');
+
+                                                                            const valueMissing = validation.company.errors[marketInfo.code][key].value !== undefined;
+                                                                            const sourceMissing = sanitizeError(validation.company.errors[marketInfo.code][key].source, label);
+                                                                            const certificationMissing = sanitizeError(validation.company.errors[marketInfo.code][key].certification, label);
+                                                                            const fileMissing = sanitizeError(validation.company.errors[marketInfo.code][key].file, label);
+                                                                            const validationMissing = sanitizeError(validation.company.errors[marketInfo.code][key].validation, label);
+
+                                                                            return {
+                                                                                stateKey: `${key}.value`,
+                                                                                label: label.replace(' value', ''),
+                                                                                placeholder: msg,
+                                                                                onChange: saveEditField,
+                                                                                onBlur: () => onEditField(
+                                                                                    sanitizedKey,
+                                                                                    companyStructure[sanitizedKey],
+                                                                                    companyStructure.docId
+                                                                                ),
+                                                                                value: getValue(companyStructure[sanitizedKey]) || '',
+                                                                                missingValue: valueMissing,
+                                                                                missingSource: sourceMissing,
+                                                                                missingCertification: certificationMissing,
+                                                                                missingFile: fileMissing,
+                                                                                missingValidation: validationMissing
+                                                                            }
+                                                                        })
+                                                                    }
+                                                                />
+                                                            }
+                                                        />
+                                                    )
+                                                })}
+                                        </Blocks>
+                                    }
                                 </Blocks>
                             }
                         />
                     </Box>
 
-                    {shareholders.map((shareholder: any, count: number) => {
-                        const marketCompletion = Object.keys(validation[shareholder.docId].completion)
-                            .filter((x, i, a) => a.indexOf(x) === i)
-                            .map((item: any) => validation[shareholder.docId].completion[item].passed)
-                            .reduce((total, current) => {
-                                if (current) {
-                                    return total + current;
-                                } else {
-                                    return total;
-                                }
-                            });
-
-                        const marketTotal = Object.keys(validation[shareholder.docId].completion)
-                            .filter((x, i, a) => a.indexOf(x) === i)
-                            .map((item: any) => validation[shareholder.docId].completion[item].total)
-                            .reduce((total, current) => {
-                                if (current) {
-                                    return total + current;
-                                } else {
-                                    return total;
-                                }
-                            });
-
-
-                        return (
-                            <Box shadowed key={`shareholder-${count}`}>
-                                <Accordion
-                                    header={
-                                        <Styled.AccordionHeader>
-                                            <Styled.Label><Icon icon={PersonIcon} size={'small'} style={'person'} />{shareholder.name}</Styled.Label>
-                                            <Stats list={[
-                                                {
-                                                    label: 'Screening',
-                                                    icon: IconTarget,
-                                                    value: 5
-                                                },
-                                                {
-                                                    label: 'In-Country requirements',
-                                                    icon: IconLocation,
-                                                    value: ((marketTotal - validation[shareholder.docId].completion.Core.total) - (marketCompletion - validation[shareholder.docId].completion.Core.passed)),
-                                                },
-                                                {
-                                                    label: 'KYC',
-                                                    icon: IconSearch,
-                                                    value: Object.keys(validation[shareholder.docId].errors.Core).length,
-                                                }
-                                            ]} />
-                                        </Styled.AccordionHeader>
+                    {shAndOff
+                        .sort((a: any, b: any) => {
+                            return (officerRanking.indexOf(a.title) > officerRanking.indexOf(b.title)) ? -1 : 1;
+                        })
+                        .filter((shareholder: any) => validation[shareholder.docId]).map((shareholder: any, count: number) => {
+                            const marketCompletion = Object.keys(validation[shareholder.docId].completion)
+                                .filter((x, i, a) => a.indexOf(x) === i)
+                                .map((item: any) => validation[shareholder.docId].completion[item].passed)
+                                .reduce((total, current) => {
+                                    if (current) {
+                                        return total + current;
+                                    } else {
+                                        return total;
                                     }
-                                    content={
-                                        <Blocks>
-                                            <Blocks gutter={'small'}>
-                                                <IconTitle title={'KYC'} icon={IconSearch} />
-                                                <FlexRowGrid
-                                                    cols={2}
-                                                    component={FormInput}
-                                                    content={validation[shareholder.docId].errors.Core && Object.keys(validation[shareholder.docId].errors.Core).map(key => {
-                                                        const label = capitalize(prettify(key));
-                                                        let msg = String(validation[shareholder.docId].errors.Core[key]);
-                                                        msg = capitalize(msg.replace(label, '').trim());
+                                });
 
-                                                        return {
-                                                            stateKey: key,
-                                                            label,
-                                                            placeholder: msg,
-                                                            onChange: saveEditField,
-                                                            onBlur: onEditField,
-                                                            value: shareholder[key] ? shareholder[key] : '',
-                                                        }
-                                                    })}
-                                                />
-                                            </Blocks>
+                            const marketTotal = Object.keys(validation[shareholder.docId].completion)
+                                .filter((x, i, a) => a.indexOf(x) === i)
+                                .map((item: any) => validation[shareholder.docId].completion[item].total)
+                                .reduce((total, current) => {
+                                    if (current) {
+                                        return total + current;
+                                    } else {
+                                        return total;
+                                    }
+                                });
 
-                                            <Blocks gutter={'small'}>
-                                                <IconTitle title={'Screening'} icon={IconTarget} />
-                                                <Grid
-                                                    labels={['AML Watchlist', 'Sanctions Screening', 'AML Red Flag List', 'Adverse Media', 'Senior Public Figure']}
-                                                    content={[
-                                                        {
-                                                            values: [
-                                                                shareholder.AMLWatchListPassed,
-                                                                shareholder.sanctionsScreeningPassed,
-                                                                shareholder.AMLRedFlagListPassed,
-                                                                shareholder.adverseMediaChecksPassed,
-                                                                null,
-                                                            ]
-                                                        }
-                                                    ]}
-                                                    rowHeaderWidth={0}
-                                                />
-                                            </Blocks>
+                            const countInCountryRequirements = ((marketTotal - validation[shareholder.docId].completion.Core.total) - (marketCompletion - validation[shareholder.docId].completion.Core.passed));
+                            const countKYC = validation[shareholder.docId].errors.Core && Object.keys(validation[shareholder.docId].errors.Core).length;
 
-                                            <Blocks gutter={'small'}>
-                                                <IconTitle title={'In-Country requirements'} icon={IconLocation} />
-                                                {Object.keys(blinkMarketList)
-                                                    .filter(market => {
-                                                        const marketInfo = blinkMarkets[market as any];
-                                                        return validation[shareholder.docId].errors[marketInfo.code] && Object.keys(validation[shareholder.docId].errors[marketInfo.code]).length > 0;
-                                                    })
-                                                    .map((market, count) => {
-                                                        const marketInfo = blinkMarkets[market as any];
-                                                        return (
-                                                            <Accordion
-                                                                key={`accordion-${count}`}
-                                                                header={
-                                                                    <Styled.AccordionHeader>
-                                                                        <IconTitle title={marketInfo.name} icon={marketInfo.flag} />
-                                                                    </Styled.AccordionHeader>
-                                                                }
-                                                                content={
-                                                                    <FlexRowGrid
-                                                                        cols={2}
-                                                                        component={FormInput}
-                                                                        content={Object.keys(validation[shareholder.docId].errors[marketInfo.code])
-                                                                            .map(key => {
-                                                                                const label = capitalize(prettify(key));
-                                                                                let msg = String(validation[shareholder.docId].errors[marketInfo.code][key]);
-                                                                                msg = capitalize(msg.replace(label, '').trim());
+                            return (
+                                <Box shadowed key={`shareholder-${count}`}>
+                                    <Accordion
+                                        header={
+                                            <Styled.AccordionHeader>
+                                                <Styled.Label><Icon icon={PersonIcon} size={'small'} style={'person'} />{getValue(shareholder.name)}</Styled.Label>
+                                                <Stats list={[
+                                                    {
+                                                        label: 'Screening',
+                                                        icon: IconTarget,
+                                                        value: 5
+                                                    },
+                                                    {
+                                                        label: 'In-Country requirements',
+                                                        icon: IconLocation,
+                                                        value: countInCountryRequirements,
+                                                    },
+                                                    {
+                                                        label: 'KYC',
+                                                        icon: IconSearch,
+                                                        value: countKYC,
+                                                    }
+                                                ]} />
+                                            </Styled.AccordionHeader>
+                                        }
+                                        content={
+                                            <Blocks>
+                                                {countKYC > 0 &&
+                                                    <Blocks gutter={'small'}>
+                                                        <IconTitle title={'KYC'} icon={IconSearch} />
+                                                        <FlexRowGrid
+                                                            cols={2}
+                                                            component={MissingField}
+                                                            content={validation[shareholder.docId].errors.Core && Object.keys(validation[shareholder.docId].errors.Core)
+                                                                .sort((a: any, b: any) => parseFloat(validation[shareholder.docId].errors.Core[a].sortOrder) > parseFloat(validation[shareholder.docId].errors.Core[b].sortOrder || !validation[shareholder.docId].errors.Core[a].sortOrder) ? 1 : -1)
+                                                                .map(key => {
+                                                                    const label = capitalize(prettify(key));
+                                                                    const msg = sanitizeError(validation[shareholder.docId].errors.Core[key].value, label);
 
-                                                                                return {
-                                                                                    stateKey: key,
-                                                                                    label,
-                                                                                    placeholder: msg,
-                                                                                    onChange: saveEditField,
-                                                                                    onBlur: onEditField,
-                                                                                    value: shareholder[key] ? shareholder[key] : '',
+                                                                    const sanitizedKey = key.replace('.value', '');
+
+                                                                    const valueMissing = validation[shareholder.docId].errors.Core[key].value !== undefined;
+                                                                    const sourceMissing = sanitizeError(validation[shareholder.docId].errors.Core[key].source, label);
+                                                                    const certificationMissing = sanitizeError(validation[shareholder.docId].errors.Core[key].certification, label);
+                                                                    const fileMissing = sanitizeError(validation[shareholder.docId].errors.Core[key].file, label);
+                                                                    const validationMissing = sanitizeError(validation[shareholder.docId].errors.Core[key].validation, label);
+
+                                                                    return {
+                                                                        stateKey: `${key}.value`,
+                                                                        label: label.replace(' value', ''),
+                                                                        placeholder: msg,
+                                                                        onChange: (field: any, value: any) => saveEditField(field, value, "distinctShareholders", shareholder.docId),
+                                                                        onBlur: () => onEditField(
+                                                                            key,
+                                                                            shareholder[sanitizedKey],
+                                                                            shareholder.docId
+                                                                        ),
+                                                                        value: getValue(shareholder[sanitizedKey]) || '',
+                                                                        missingValue: valueMissing,
+                                                                        missingSource: sourceMissing,
+                                                                        missingCertification: certificationMissing,
+                                                                        missingFile: fileMissing,
+                                                                        missingValidation: validationMissing
+                                                                    }
+                                                                })}
+                                                        />
+                                                    </Blocks>
+                                                }
+
+                                                <Blocks gutter={'small'}>
+                                                    <IconTitle title={'Screening'} icon={IconTarget} />
+                                                    <Grid
+                                                        labels={['AML Watchlist', 'Sanctions Screening', 'AML Red Flag List', 'Adverse Media', 'Local Lists', 'Senior Public Figure']}
+                                                        content={[
+                                                            {
+                                                                values: [
+                                                                    shareholder.AMLWatchListPassed,
+                                                                    shareholder.sanctionsScreeningPassed,
+                                                                    shareholder.AMLRedFlagListPassed,
+                                                                    shareholder.adverseMediaChecksPassed,
+                                                                    shareholder.LocalListCheckPassed,
+                                                                    shareholder.seniorPublicFigure,
+                                                                ]
+                                                            }
+                                                        ]}
+                                                        rowHeaderWidth={0}
+                                                    />
+                                                </Blocks>
+
+                                                {countInCountryRequirements > 0 &&
+                                                    <Blocks gutter={'small'}>
+                                                        <IconTitle title={'In-Country requirements'} icon={IconLocation} />
+                                                        {markets
+                                                            .filter((market: string) => {
+                                                                const marketInfo = getByValue(blinkMarkets, 'code', market);
+                                                                return validation[shareholder.docId].errors[marketInfo.code] && Object.keys(validation[shareholder.docId].errors[marketInfo.code]).length > 0;
+                                                            })
+                                                            .map((market: string, count: number) => {
+                                                                const marketInfo = getByValue(blinkMarkets, 'code', market);
+                                                                return (
+                                                                    <Accordion
+                                                                        key={`accordion-${count}`}
+                                                                        header={
+                                                                            <Styled.AccordionHeader>
+                                                                                <IconTitle title={marketInfo.name} icon={marketInfo.flag} />
+                                                                            </Styled.AccordionHeader>
+                                                                        }
+                                                                        content={
+                                                                            <FlexRowGrid
+                                                                                cols={2}
+                                                                                component={MissingField}
+                                                                                content={Object.keys(validation[shareholder.docId].errors[marketInfo.code])
+                                                                                    .sort((a: any, b: any) => parseFloat(validation[shareholder.docId].errors[marketInfo.code][a].sortOrder) > parseFloat(validation[shareholder.docId].errors[marketInfo.code][b].sortOrder || !validation[shareholder.docId].errors[marketInfo.code][a].sortOrder) ? 1 : -1)
+                                                                                    .map(key => {
+                                                                                        const label = capitalize(prettify(key));
+                                                                                        const msg = sanitizeError(validation[shareholder.docId].errors[marketInfo.code][key].value, label);
+
+                                                                                        const sanitizedKey = key.replace('.value', '');
+
+                                                                                        const valueMissing = validation[shareholder.docId].errors[marketInfo.code][key].value !== undefined;
+                                                                                        const sourceMissing = sanitizeError(validation[shareholder.docId].errors[marketInfo.code][key].source, label);
+                                                                                        const certificationMissing = sanitizeError(validation[shareholder.docId].errors[marketInfo.code][key].certification, label);
+                                                                                        const fileMissing = sanitizeError(validation[shareholder.docId].errors[marketInfo.code][key].file, label);
+                                                                                        const validationMissing = sanitizeError(validation[shareholder.docId].errors[marketInfo.code][key].validation, label);
+
+                                                                                        return {
+                                                                                            stateKey: `${key}.value`,
+                                                                                            label: label.replace(' value', ''),
+                                                                                            placeholder: msg,
+                                                                                            onChange: (field: any, value: any) => saveEditField(field, value, "distinctShareholders", shareholder.docId),
+                                                                                            onBlur: () => onEditField(
+                                                                                                sanitizedKey,
+                                                                                                shareholder[sanitizedKey],
+                                                                                                shareholder.docId
+                                                                                            ),
+                                                                                            value: getValue(shareholder[sanitizedKey]) || '',
+                                                                                            missingValue: valueMissing,
+                                                                                            missingSource: sourceMissing,
+                                                                                            missingCertification: certificationMissing,
+                                                                                            missingFile: fileMissing,
+                                                                                            missingValidation: validationMissing
+                                                                                        }
+                                                                                    })
                                                                                 }
-                                                                            })
+                                                                            />
                                                                         }
                                                                     />
-                                                                }
-                                                            />
-                                                        )
-                                                    })}
+                                                                )
+                                                            })}
+                                                    </Blocks>
+                                                }
                                             </Blocks>
-                                        </Blocks>
-                                    }
-                                />
-                            </Box>
-                        )
-                    })}
+                                        }
+                                    />
+                                </Box>
+                            )
+                        })}
                 </Blocks>
 
                 <Actions>
-                    <Button onClick={getValidation} label={'Return check with new info'} icon={ArrowRight} />
+                    <Button onClick={() => setShowEmployeeConfirm(true)} label={'Return check with new info'} icon={ArrowRight} />
                 </Actions>
             </MainStyled.ContentNarrow>
+
+            <ActionBar
+                labelPrimary={'Confirm'}
+                actionPrimary={getValidation}
+                disabledPrimary={!employeeConfirmed}
+                header={<TermsAccept>
+                    I confirm as a Blink employee this information is accurate based on verifiable sources in accordance
+                    with existing policies and standards
+                    <FormCheckbox style={'confirm'} onChange={() => setEmployeeConfirmed(!employeeConfirmed)} checked={employeeConfirmed} />
+                </TermsAccept>}
+                showHeader={true}
+                hidden={!showEmployeeConfirm}
+            />
         </MainStyled.MainSt>
     )
 }
 
 const mapStateToProps = (state: any) => ({
+    markets: state.screening.markets,
     company: state.screening.company,
     companyStructure: state.screening.companyStructure,
     ownershipThreshold: state.screening.ownershipThreshold,
     validation: state.screening.validation,
+    currentUser: state.auth.user
 });
 
 const actions = { saveEditField, showLoader, hideLoader, setCompletion, setErrors };

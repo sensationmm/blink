@@ -3,9 +3,12 @@ import {
     SET_COUNTRY,
     SET_COMPANY_STRUCTURE,
     SET_OWNERSHIP_THRESHOLD,
+    SET_MARKETS,
+    SET_COMPANY_CONTACT,
     SET_COMPLETION,
     SET_ERRORS,
     EDIT_FIELD,
+    RESET_SCREENING
 } from '../constants';
 
 export const setCompany = (company) => {
@@ -36,6 +39,20 @@ export const setOwnershipThreshold = (threshold) => {
     }
 }
 
+export const setMarkets = (markets) => {
+    return {
+        type: SET_MARKETS,
+        markets
+    }
+}
+
+export const setCompanyContact = (contact) => {
+    return {
+        type: SET_COMPANY_CONTACT,
+        contact
+    }
+}
+
 export const setCompletion = (target, completion) => {
     return {
         type: SET_COMPLETION,
@@ -52,10 +69,18 @@ export const setErrors = (target, errors) => {
     }
 }
 
-export const editField = (field, value) => {
+export const editField = (field, value, collection, docId) => {
     return {
         type: EDIT_FIELD,
         field,
-        value
+        value,
+        collection,
+        docId
+    }
+}
+
+export const resetScreening = () => {
+    return {
+        type: RESET_SCREENING
     }
 }

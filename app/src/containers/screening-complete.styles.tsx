@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import IconEmail from '../svg/icon-email.svg';
+import IconSent from '../svg/icon-sent.svg';
 
 export const Main = styled.div`
     height: 400px;
@@ -15,5 +15,6 @@ export const Image = styled.div`
     color: var(--brand-primary);
     fill: var(--brand-primary);
     background: var(--brand-primary);
-    mask: url(${IconEmail}) center center no-repeat;
+    mask: url(${IconSent}) center center no-repeat;
+    margin-bottom: 30px;
 `;

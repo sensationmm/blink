@@ -1,27 +1,34 @@
 import styled from 'styled-components';
 import Select from "react-select";
 
+export const Header = styled.header`
+    text-align: center;
+    background: var(--basic-white);
+    padding-bottom: 20px;
+`;
+
 export const Tabs = styled.ul`
     padding: 0;
-    margin: 0;
-    width: 100%;
-    background-color: #999;
-    overflow: hidden;
+    margin: 50px auto;
+    width: auto;
+    display: flex;
+    justify-content: center;
 
     li {
 
         margin: 0;
-        border: 1px solid #666;
-        border-top: none;
-        background-color: #999;
-        float: left;
+        // background-color: #999;
         list-style-type: none;
+        float: left;
+        text-align: center;
 
         a {
             color: #333;
             text-decoration: none;
-            padding: 20px;
+            padding: 20px 50px;
             display: block;
+            text-transform: capitalize;
+            cursor: pointer;
 
             span {
                 line-height: 18px;
@@ -29,11 +36,12 @@ export const Tabs = styled.ul`
         }
 
         &.active {
-            background-color: #fff;
-            border-bottom: 1px solid #fff;
+            // background-color: #fff;
+            border-bottom: 1px solid #999;
 
             a {
                 color: #000;
+                cursor: auto;
             }
         }
     }
@@ -42,11 +50,34 @@ export const Tabs = styled.ul`
 
 export const MainSt = styled.main`
     padding: 0 30px 30px 30px;
+    min-height: calc(100vh - 30px);
+    transition: background 0.2s linear;
 
     .pretty-json-container {
         margin-top: 20px;
     }
+
+    dl.details {
+        display: none;
+    }
+
+    &.hasActionBar {
+        padding-bottom: 120px;
+        min-height: calc(100vh - 30px - 120px);
+    }
+
+    &.person {
+        background: var(--brand-person-faded);
+    }
+
+    &.company {
+        background: var(--brand-company-faded);
+    }
 `
+
+export const MainStScreens = styled(MainSt)`
+    background: var(--basic-white);
+`;
 
 export const Content = styled.div`
     max-width: var(--max-content);
@@ -55,6 +86,12 @@ export const Content = styled.div`
 
 export const ContentNarrow = styled.div`
     max-width: var(--max-content-narrow);
+    margin: 0 auto;
+`;
+
+export const ContentMini = styled.div`
+    width: 100%;
+    max-width: var(--max-content-mini);
     margin: 0 auto;
 `;
 
@@ -69,6 +106,25 @@ export const InputSt = styled.input`
     font-size: inherit;
     outline: none;
     min-height: 30px;
+    color: var(--basic-text);
+
+    &.edit {
+        border-color: var(--basic-shadow);
+    }
+
+    &.disabled {
+        border-color: transparent;
+        cursor: not-allowed;
+    }
+
+    &.error {
+        color: var(--brand-secondary);
+        border-color: var(--brand-secondary);
+
+        ::placeholder {
+            color: var(--brand-secondary);
+        }
+    }
 `
 
 export const ButtonSt = styled.button`
@@ -316,3 +372,33 @@ export const CountrySelect = styled.select`
     height: 72px;
     float: right;
 `
+
+export const Doc = styled.div`
+    padding-left: 30%;
+`;
+
+export const DocNav = styled.div`
+    width: 20%;
+    padding: 30px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: var(--basic-white);
+    border-bottom: 1px solid var(--brand-primary);
+
+    > div {
+        cursor: pointer;
+        text-align: center;
+        width: 0;
+        flex-grow: 1;
+        font-family: 'Open Sans Light', sans-serif;
+        font-size: 24px;
+        letter-spacing: -2px;
+        color: var(--brand-primary);
+
+        &:hover {
+            color: var(--brand-secondary);
+        }
+    }
+`;
+

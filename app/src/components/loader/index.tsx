@@ -1,22 +1,29 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import classNames from 'classnames';
 // import useLockBodyScroll from 'react-use/lib/useLockBodyScroll';
 
 import * as Styled from './styles';
 
-const Loader = (props: any) => {
+interface LoaderProps {
+  manual?: boolean;
+  loading: boolean;
+  label: string;
+}
+
+const Loader: React.FC<LoaderProps> = ({ loading, label, manual = false }) => {
   // useLockBodyScroll(true);
-  if (!props.loading) {
+  if (!loading && !manual) {
     return <div />;
   }
 
   return (
-    <Styled.Loader data-test="component-loader">
+    <Styled.Loader data-test="component-loader" className={classNames({ manual: manual })}>
       <div className="lds-ripple">
         <div />
         <div />
       </div>
-      <Styled.Label>{props.label}</Styled.Label>
+      <Styled.Label>{label}</Styled.Label>
     </Styled.Loader>
   );
 };

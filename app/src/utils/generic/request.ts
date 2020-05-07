@@ -7,7 +7,7 @@ const stringSimilarity = require('string-similarity');
 
 // const debounce = require('lodash.debounce');
 
-const domain = window.location.href.indexOf("localhost") > -1 ? "http://localhost:5001/blink-3b651/us-central1" : "https://us-central1-blink-3b651.cloudfunctions.net";
+const domain = window.location.href.indexOf("localhost") > -1 ? "http://localhost:5001/blink-staging-20006/us-central1" : "";
 
 const requestCompanyUBOStructure = async (companyId: string, countryISOCode: string = "GB") => {
     // const response = await fetch(`${domain}/requestCompanyUBOStructure/any/${companyNumber}/${countryISOCode}`, { mode: 'cors' });
@@ -41,7 +41,7 @@ const getCompanyIdFromSearch = async (query: string, countryISOCode: string = "G
         const companies = response.companies.map(((c: any) => c.name.toLowerCase()));
 
         const matches = stringSimilarity.findBestMatch(query.toLowerCase(), companies);
-        const bestMatchIndex = matches && matches.bestMatchIndex;
+        // const bestMatchIndex = matches && matches.bestMatchIndex;
         if (matches.bestMatch && matches.bestMatch.rating > 0.8) {
             company = response.companies[matches.bestMatchIndex];
             // console.log(query, matches, company);
@@ -67,21 +67,6 @@ const saveCompanyStructure = async (companyStructure: any, ignoreDB: boolean) =>
         body: JSON.stringify(data)
     })
 };
-
-
-const requestSignIn = async (password: any) => {
-    const data = {
-        password
-    }
-
-    const response = await fetch(`${domain}/signIn`, {
-        method: 'post',
-        body: JSON.stringify(data)
-    })
-
-    return response.status === 200;
-};
-
 
 const toCamel = (obj: any) => {
     let newO: any, origKey, newKey, value
@@ -130,4 +115,4 @@ const normalisePropertyNames = (obj: any) => {
     }
 }
 
-export { requestCompanyUBOStructure, getCompanyIdFromSearch, saveCompanyStructure, toCamel, normalisePropertyNames, requestSignIn }
+export { requestCompanyUBOStructure, getCompanyIdFromSearch, saveCompanyStructure, toCamel, normalisePropertyNames }

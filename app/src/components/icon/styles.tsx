@@ -5,8 +5,8 @@ export const Main = styled.div`
     width: 50px;
     height: 50px;
     border-radius: 26px;
-    border: 2px solid #000;
-    background: center top 10px no-repeat;
+    border: 1px solid #000;
+    background: center center no-repeat;
     background-size: contain;
     flex-shrink: 0;
 
@@ -20,7 +20,6 @@ export const Main = styled.div`
         width: 30px;
         height: 30px;
         border-radius: 15px;
-        background-position: center top 5px;
     }
 
     &.company {
@@ -31,9 +30,25 @@ export const Main = styled.div`
         background-color: var(--brand-person);
     }
 
+    &.other {
+        background-color: var(--brand-other);
+    }
+
     &.button {
         border: 0;
         background: var(--brand-primary) center center no-repeat;
         background-size: 60%;
     }
+`;
+
+export const Sub = styled.div`
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 20px;
+    height: 20px;
+    border-radius: 26px;
+    border: 1px solid #000;
+    background: var(--brand-warning) center center no-repeat;
+    background-size: contain;
 `;

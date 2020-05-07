@@ -4,13 +4,30 @@ const admin = require("firebase-admin");
 const cors = require('cors');
 const express = require('express');
 const server = express();
-
 var soap = require('soap');
+
+const fetchGoogleSheet = require('../google/fetchSheet').fetchGoogleSheet;
 const dueDilCompanySearch = require('../duedill/searchCompany').searchCompany;
 const dueDilCompanyVitals = require('../duedill/requestCompanyVitals').requestCompanyVitals;
+const getKyckrSearchResults = require('./searchCompany').getKyckrSearchResults;
 const bloombergSearchCompany = require('../bloomberg/searchCompany').searchCompany;
+const compositeExchangeCodes = require('../bloomberg/compositeExchangeCodes');
+const { doCompanyEnrichment } = require('../enrichment/companyEnrichment');
 
 server.use(cors());
+
+const valueToObject = (value: any, sourceType: string = "registry", sourceCountry: string = "") => {
+    return {
+        value,
+        updatedAt: new Date(),
+        sourceType,
+        sourceCountry,
+        certification: "",
+        validation: "",
+        evidence: "",
+        evidenceExpiration: ""
+    };
+}
 
 const buildShareholderPerson = (shareholder: any) => {
     const firstName = shareholder?.name?.split(' ').slice(0, -1).join(' ');
@@ -19,16 +36,16 @@ const buildShareholderPerson = (shareholder: any) => {
     let newShareholder: any = {};
 
     if (shareholder.name) {
-        newShareholder.fullName = shareholder?.name?.toLowerCase().replace(/  /g, " ");
+        newShareholder.fullName = valueToObject(shareholder?.name?.toLowerCase().replace(/  /g, " "));
     }
     if (firstName) {
-        newShareholder.firstName = firstName;
+        newShareholder.firstName = valueToObject(firstName);
     }
     if (lastName) {
-        newShareholder.lastName = lastName;
+        newShareholder.lastName = valueToObject(lastName);
     }
     if (shareholder?.dateOfBirth) {
-        newShareholder.dateOfBirth = shareholder?.dateOfBirth;
+        newShareholder.dateOfBirth = valueToObject(shareholder?.dateOfBirth);
     }
     return newShareholder;
 }
@@ -39,8 +56,11 @@ const isCompanyByName = (name: string) => {
         name?.indexOf("limited") > -1 ||
         name?.indexOf("corporation") > -1 ||
         name?.slice(name.length - 3) === " ag" ||  // bit weak?
+        name?.slice(name.length - 3) === " ug" ||  // similar to ag in Germany
         name?.indexOf("ltd") > -1 ||
-        name?.indexOf("s.r.l") > -1
+        name?.indexOf("s.r.l") > -1 ||
+        name?.indexOf("inc.") > -1 ||
+        name?.indexOf("incorporated") > -1
 }
 
 // -------------------------------------
@@ -133,7 +153,7 @@ const requestCompanyProfile = async (
         const go = async () => {
             let parentCompanyIsInDB = false;
             // THE PARENT COMPANY
-            const targetCompanyQuery = await companyCollection.where('companyId', '==', companyCode).get();
+            const targetCompanyQuery = await companyCollection.where('companyId.value', '==', companyCode).get();
             let targetCompanyRef: any;
             let targetCompany: any;
             if (targetCompanyQuery?.docs.length > 0) {
@@ -152,38 +172,111 @@ const requestCompanyProfile = async (
                         if (err) {
                             console.log(err);
                         }
-
+                        
                         const directorAndShareDetails = result?.CompanyProfileResult?.CompanyProfile?.directorAndShareDetails;
 
                         let shareholders: any = [];
                         let officers: any = [];
 
                         // no shareholders so the company might be public..
-                        const companiesResult = await bloombergSearchCompany(targetCompany.searchName);
+                        const companiesResult = await bloombergSearchCompany(targetCompany.searchName.value);
                         const companies = JSON.parse(companiesResult)
 
                         if (companies?.results) {
                             const matchingCompanies = companies?.results.filter((company: any) => {
-                                const matchingCompanyName = company.name.toLowerCase() === targetCompany.searchName
+                                const matchingCompanyName = company.name.toLowerCase() === targetCompany.searchName.value
                                 let matchingCountryCode = true;
-                                if (targetCompany.countryCode) {
-                                    matchingCountryCode = targetCompany.countryCode.toLowerCase() === company.country.toLowerCase();
+                                if (targetCompany.countryCode.value) {
+                                    matchingCountryCode = targetCompany.countryCode.value.toLowerCase() === company.country.toLowerCase();
                                 }
 
                                 return matchingCompanyName && matchingCountryCode
                             });
                             //  if (matchingCompanies.length > 0 ) {
-                            await targetCompanyRef.update({
-                                bloomberg: matchingCompanies.map((matchingCompany: any) => {
-                                    return {
-                                        securityType: matchingCompany.security_type,
-                                        resourceId: matchingCompany.resource_id,
-                                        tickerSymbol: matchingCompany.ticker_symbol
 
+                            const publicCompanyTypes = await fetchGoogleSheet('15rgjIj9PElEKw48TFGJoX87A_biUqpGqrVM2wOG4UQE', '1450221886');
+                            // publicCompanyTypes && console.log("publicCompanyTypes", publicCompanyTypes);
+                            // const cleanedPublicCompany
+
+                            const publicCompanyFlags: any = {
+                            }
+
+                            if (publicCompanyTypes) {
+
+                                publicCompanyFlags.isPublic = valueToObject(false, "blink")
+
+                                // console.log("publicCompanyTypes", publicCompanyTypes)
+                                const cleanedPublicCompanies = JSON.parse(publicCompanyTypes).filter((companyType: any) => {
+                                    const { PublicLimitedLiabilityCompanyLongForm, PublicLimitedLiabilityCompanyShortForm } = companyType;
+                                    return !!PublicLimitedLiabilityCompanyLongForm && !!PublicLimitedLiabilityCompanyShortForm
+                                }).map((companyType: any) => {
+                                    // console.log("companyType", companyType)
+                                    return {
+                                        PublicLimitedLiabilityCompanyLongForm: companyType.PublicLimitedLiabilityCompanyLongForm,
+                                        PublicLimitedLiabilityCompanyShortForm: companyType.PublicLimitedLiabilityCompanyShortForm,
+                                        countryCode: companyType["Alpha-2 code"]
                                     }
-                                }), updatedAt: new Date()
+                                })
+                                // .sort((companyTypeA: any, companyTypeB: any) => companyTypeA.countryCode.localeCompare(companyTypeB.countryCode));
+                                const companyName = targetCompany.name?.value.toLowerCase();
+                                if (targetCompany && targetCompany.countryCode) {
+                                    const countryCodeCleanedPublicCompanies = cleanedPublicCompanies.filter((publicCompanyTypes: any) =>
+                                        publicCompanyTypes.countryCode === targetCompany.countryCode);
+                                    if (countryCodeCleanedPublicCompanies) {
+                                        countryCodeCleanedPublicCompanies.forEach((countryCodeCleanedPublicCompany: any) => {
+                                            const { PublicLimitedLiabilityCompanyShortForm } = countryCodeCleanedPublicCompany;
+                                            const shortFormString = PublicLimitedLiabilityCompanyShortForm.toLowerCase();
+                                            if (
+                                                companyName.indexOf(" " + shortFormString) > -1
+                                                ||
+                                                companyName.indexOf(shortFormString + " ") > -1
+                                            ) {
+                                                publicCompanyFlags.isPublic.value = true;
+                                            }
+                                        });
+                                    }
+                                } else {
+                                    cleanedPublicCompanies.forEach((cleanedPublicCompany: any) => {
+                                        const { PublicLimitedLiabilityCompanyShortForm } = cleanedPublicCompany;
+                                        const shortFormString = PublicLimitedLiabilityCompanyShortForm.toLowerCase();
+                                        if (
+                                            companyName.indexOf(" " + shortFormString) > -1
+                                            ||
+                                            companyName.indexOf(shortFormString + " ") > -1
+                                        ) {
+                                            publicCompanyFlags.isPublic.value = true;
+                                            publicCompanyFlags.suspectedCountryFromName = valueToObject(cleanedPublicCompany.countryCode)
+                                        }
+                                    });
+                                }
+                            }
+
+                            const bloombergExhangeData = valueToObject(matchingCompanies.map((matchingCompany: any) => {
+                                return {
+                                    securityType: matchingCompany.security_type,
+                                    resourceId: matchingCompany.resource_id,
+                                    tickerSymbol: matchingCompany.ticker_symbol
+                                }
+                            }), "bloomberg")
+
+                            let citiCoveredExchange = valueToObject(false);
+                            bloombergExhangeData.value.forEach((exchange: any) => {
+                                const exchangeCode = exchange.tickerSymbol.split(":").pop();
+                                if (compositeExchangeCodes.indexOf(exchangeCode) > -1) {
+                                    citiCoveredExchange.value = true;
+                                }
+
+                            })
+
+                            await targetCompanyRef.update({
+                                bloomberg: bloombergExhangeData,
+                                ...publicCompanyFlags,
+                                // updatedAt: new Date(),
+                                citiCoveredExchange
                             }, { merge: true });
-                            //  }
+
+                            // Other company enrichments
+                            doCompanyEnrichment(targetCompanyRef);
                         }
 
                         if (directorAndShareDetails) {
@@ -198,23 +291,27 @@ const requestCompanyProfile = async (
                                         const sourceShareholder = shareholderDetails[i];
                                         const searchName = sourceShareholder?.name?.toLowerCase().replace(/  /g, " ");
                                         const name = sourceShareholder?.name;
-                                        const shareholder = { ...sourceShareholder };
+                                        // const shareholder = { ...sourceShareholder };
+                                        const shareholder: any = {};
+                                        Object.keys(sourceShareholder).forEach((key: string) => {
+                                            shareholder[key] = valueToObject(sourceShareholder[key])
+                                        })
 
-                                        if (!shareholder.shareholderType) {
-                                            const shareholderName = shareholder.name;
+                                        if (!(shareholder.shareholderType && shareholder.shareholderType.value)) {
+                                            const shareholderName = shareholder.name.value;
                                             if (
                                                 isCompanyByName(shareholderName?.toLowerCase())
                                             ) {
-                                                shareholder.shareholderType = "C";
+                                                shareholder.shareholderType = valueToObject("C");
                                             } else {
-                                                shareholder.shareholderType = "P";
+                                                shareholder.shareholderType = valueToObject("P");
                                             }
                                         }
                                         // console.log("shareholder", shareholder);
 
                                         let ref: any;
 
-                                        if (shareholder.shareholderType === "P") {
+                                        if (shareholder.shareholderType.value === "P") {
 
                                             const newShareholder = await buildShareholderPerson(sourceShareholder);
 
@@ -222,18 +319,18 @@ const requestCompanyProfile = async (
 
                                             // it's a person - see if we already have them in our DB and if not, add
 
-                                            let personsQuery = personsCollection.where('fullName', '==', searchName);
+                                            let personsQuery = personsCollection.where('fullName.value', '==', searchName);
                                             await personsQuery.get().then(async (persons: any) => {
 
                                                 const entityAlreadyAdded = entitiesAlreadyAdded.find((c: any) => c.searchName === searchName);
 
                                                 if (entityAlreadyAdded) {
                                                     ref = entityAlreadyAdded.ref;
-                                                    await ref.update({ ...newShareholder, updatedAt: new Date() }, { merge: true });
+                                                    await ref.update({ ...newShareholder }, { merge: true });
                                                 }
                                                 else if (persons.empty) {
                                                     console.log("empty")
-                                                    ref = await personsCollection.add({ ...newShareholder, updatedAt: new Date() }, { merge: true });
+                                                    ref = await personsCollection.add({ ...newShareholder }, { merge: true });
                                                     entitiesAlreadyAdded.push({
                                                         searchName,
                                                         ref
@@ -242,16 +339,16 @@ const requestCompanyProfile = async (
                                                     const personDoc = persons.docs[0];
                                                     ref = personDoc.ref;
                                                     // console.log("personDoc", personDoc?.ref.path)
-                                                    await ref.update({ ...newShareholder, updatedAt: new Date() }, { merge: true });
+                                                    await ref.update({ ...newShareholder }, { merge: true });
                                                 }
                                             });
 
                                             // console.log("person Ref", ref)
                                         }
+                                        
+                                        if (shareholder.shareholderType.value === "C" || shareholder.shareholderType.value === "O") {
 
-                                        if (shareholder.shareholderType === "C" || shareholder.shareholderType === "O") {
-
-                                            let companiesQuery = companyCollection.where('searchName', '==', searchName);
+                                            let companiesQuery = companyCollection.where('searchName.value', '==', searchName);
                                             await companiesQuery.get().then(async (companies: any) => {
 
                                                 let obj: any;
@@ -265,22 +362,63 @@ const requestCompanyProfile = async (
                                                             searchName,
                                                             name
                                                         }
+                                                        //Fix for DE company IDs so that the lookup works for Kyckr
+                                                        //e.g. 'Hannover HRB 58272' should be 'HRB 58272'
+                                                        if(company && company.countryCode && company.countryCode == 'DE') {
+                                                            if(company.companyId && !company.companyId.startsWith('HRB')) {
+                                                                company.companyId = company.companyId.replace(/^.*?HRB/g,'HRB');
+                                                                console.log('DE company', company.companyId);
+                                                            }
+                                                        }
                                                     }
 
                                                 }
                                                 catch (e) {
                                                     console.log(e)
                                                 }
+                                                
+                                                try {
+                                                    if (searchResponse) {
+                                                        const results = await JSON.parse(searchResponse)
+                                                        company = results?.companies?.find((c: any) => c.name?.toLowerCase() === searchName);
+                                                        obj = {
+                                                            searchName,
+                                                            name
+                                                        }
+                                                    }
+                                                }
+                                                catch (e) {
+                                                    console.log(e)
+                                                }
+
+                                                //for DE, IT, RO companies, need to use Kyckr to get searchCode
+                                                //for IT, we also need registration authority
+                                                if(company && company.countryCode && ['DE', 'IT', 'RO'].includes(company.countryCode)) {
+                                                    // for DE, IT, RO will need to go to kyckr for the vitals and 'code' as they have their own proprietary code
+                                                    const kyckrSearchResults = await getKyckrSearchResults(searchName, company.countryCode, orderReference);
+                                                    try {
+                                                        if (kyckrSearchResults) {
+                                                            const kyckrCompany = kyckrSearchResults?.CompanySearchResult?.Companies?.CompanyDTO?.find((c: any) => c.Name.toLowerCase() === searchName);
+                                                            //console.log(kyckrCompany.Name, kyckrCompany.Code);
+                                                            shareholder.code = valueToObject(kyckrCompany.Code);
+                                                            obj.code = kyckrCompany.Code;
+                                                            shareholder.registrationAuthorityCode = valueToObject(kyckrCompany.RegistrationAuthorityCode);
+                                                            obj.registrationAuthorityCode = kyckrCompany.RegistrationAuthorityCode;
+                                                        }
+                                                    }
+                                                    catch (e) {
+                                                        console.log(e)
+                                                    }
+                                                }
                                                 if (company && company.companyId) {
                                                     obj.companyId = company.companyId;
-                                                    shareholder.companyId = company.companyId;
+                                                    shareholder.companyId = valueToObject(company.companyId);
 
+                                                    // required in order for next iteration of search to work when triggered from front end
+                                                    if (company.countryCode) shareholder.countryCode = valueToObject(company.countryCode);
+                                                    
                                                     // get the vitals too.. 
                                                     // preserve the original name so the "where 'name' == name" still works
-
-
-                                                    // for DE will need to go to kyckr for the vitals and 'code' as they have their own proprietary code
-
                                                     const vitalsResponse = await dueDilCompanyVitals(company.companyId, company?.countryCode.toLowerCase());
                                                     try {
                                                         if (vitalsResponse && vitalsResponse.httpCode !== 400 && vitalsResponse.httpCode !== 404) {
@@ -292,17 +430,34 @@ const requestCompanyProfile = async (
                                                     }
                                                 }
 
+                                                //Fix for DE company IDs so that the lookup works for Kyckr
+                                                //e.g. 'Hannover HRB 58272' should be 'HRB 58272'
+                                                console.log(obj.countryCode, obj.companyId);
+                                                if(obj.countryCode && obj.countryCode == 'DE' && obj.companyId && !obj.companyId.startsWith('HRB')) {
 
-                                                // console.log(searchName, `empty = ${companies.empty}`)
+                                                    obj.companyId = obj.companyId.replace(/^.*?HRB/g,'HRB'); // for storing with the company
+                                                    shareholder.companyId = valueToObject(obj.companyId);  // for storing in the relationship / returning to the FE
+                                                }
+
+                                                const companyEnrichmentProperties: any = {};
+                                                Object.keys(obj).forEach((key: any) => {
+                                                    companyEnrichmentProperties[key] = valueToObject(obj[key]);
+                                                })
+                                                
+                                                // console.log("searchName", searchName)
                                                 const entityAlreadyAdded = entitiesAlreadyAdded.find((c: any) => c.searchName === searchName);
 
                                                 if (entityAlreadyAdded) {
                                                     ref = entityAlreadyAdded.ref;
-                                                    await ref.update({ ...obj, updatedAt: new Date() }, { merge: true });
+                                                    await ref.update({ ...companyEnrichmentProperties, 
+                                                        // updatedAt: new Date() 
+                                                    }, { merge: true });
                                                 }
                                                 else if (companies.empty) {
                                                     console.log("empty")
-                                                    ref = await companyCollection.add({ ...obj, updatedAt: new Date() }, { merge: true });
+                                                    ref = await companyCollection.add({ ...companyEnrichmentProperties, 
+                                                        // updatedAt: new Date() 
+                                                    }, { merge: true });
                                                     entitiesAlreadyAdded.push({
                                                         searchName,
                                                         ref
@@ -311,7 +466,9 @@ const requestCompanyProfile = async (
                                                     const companiesDoc = companies.docs[0];
                                                     ref = companiesDoc.ref
                                                     // console.log("ref 2", ref)
-                                                    await ref.update({ ...obj, updatedAt: new Date() }, { merge: true });
+                                                    await ref.update({ ...companyEnrichmentProperties, 
+                                                        // updatedAt: new Date() 
+                                                    }, { merge: true });
                                                 }
                                             });
                                         }
@@ -366,25 +523,32 @@ const requestCompanyProfile = async (
                                             }
                                         }
 
-                                        const newOfficer = officer;
-                                        newOfficer.searchName = searchName;
-                                        newOfficer.fullName = searchName;
+                                        const newOfficer: any = {};
+                                        Object.keys(officer).forEach((key:any) => {
+                                            newOfficer[key] = valueToObject(officer[key]);
+                                        });
+                                        newOfficer.searchName = valueToObject(searchName);
+                                        newOfficer.fullName = valueToObject(searchName);
 
                                         // it's a person - see if we already have them in our DB and if not, add
 
                                         if (!newOfficer.companyId) {
 
-                                            let personsQuery = personsCollection.where('fullName', '==', searchName);
+                                            let personsQuery = personsCollection.where('fullName.value', '==', searchName);
                                             await personsQuery.get().then(async (persons: any) => {
 
                                                 const entityAlreadyAdded = entitiesAlreadyAdded.find((c: any) => c.searchName === searchName);
 
                                                 if (entityAlreadyAdded) {
                                                     ref = entityAlreadyAdded.ref;
-                                                    ref.update({ ...newOfficer, updatedAt: new Date() }, { merge: true });
+                                                    ref.update({ ...newOfficer, 
+                                                        // updatedAt: new Date() 
+                                                    }, { merge: true });
                                                 }
                                                 else if (persons.empty) {
-                                                    ref = await personsCollection.add({ ...newOfficer, updatedAt: new Date() }, { merge: true });
+                                                    ref = await personsCollection.add({ ...newOfficer, 
+                                                        // updatedAt: new Date() 
+                                                    }, { merge: true });
                                                     entitiesAlreadyAdded.push({
                                                         searchName,
                                                         ref
@@ -392,24 +556,30 @@ const requestCompanyProfile = async (
                                                 } else {
                                                     const personDoc = persons.docs[0];
                                                     ref = personDoc.ref;
-                                                    await personDoc.ref.update({ ...newOfficer, updatedAt: new Date() }, { merge: true });
+                                                    await personDoc.ref.update({ ...newOfficer, 
+                                                        // updatedAt: new Date() 
+                                                    }, { merge: true });
                                                 }
                                             });
                                         }
 
                                         else {
-                                            let companiesQuery = companyCollection.where('searchName', '==', searchName);
+                                            let companiesQuery = companyCollection.where('searchName.value', '==', searchName);
                                             await companiesQuery.get().then(async (companies: any) => {
 
                                                 const entityAlreadyAdded = entitiesAlreadyAdded.find((c: any) => c.searchName === searchName);
 
                                                 if (entityAlreadyAdded) {
                                                     ref = entityAlreadyAdded.ref;
-                                                    await ref.update({ ...newOfficer, updatedAt: new Date() }, { merge: true });
+                                                    await ref.update({ ...newOfficer, 
+                                                        // updatedAt: new Date() 
+                                                    }, { merge: true });
                                                 }
                                                 else if (companies.empty) {
                                                     // console.log("companies", companies)
-                                                    ref = await companyCollection.add({ ...newOfficer, updatedAt: new Date() }, { merge: true });
+                                                    ref = await companyCollection.add({ ...newOfficer, 
+                                                        // updatedAt: new Date() 
+                                                    }, { merge: true });
                                                     entitiesAlreadyAdded.push({
                                                         searchName,
                                                         ref
@@ -417,7 +587,9 @@ const requestCompanyProfile = async (
                                                 } else {
                                                     const companiesDoc = companies.docs[0];
                                                     ref = companiesDoc.ref;
-                                                    await companiesDoc.ref.update({ ...newOfficer, updatedAt: new Date() }, { merge: true });
+                                                    await companiesDoc.ref.update({ ...newOfficer, 
+                                                        // updatedAt: new Date() 
+                                                    }, { merge: true });
                                                 }
                                             });
                                         }
@@ -443,6 +615,8 @@ const requestCompanyProfile = async (
                                     type,
                                     updatedAt: new Date()
                                 }
+
+                                // console.log("relationship", relationship)
 
                                 // check if we already have the relationship
                                 const relationshipQuery = await relationshipsCollection
@@ -485,7 +659,6 @@ const requestCompanyProfile = async (
                                 }
                             }
 
-
                             if (shareholders.length > 0) {
                                 await Promise.all(
                                     shareholders.map(async (shareholder: any) => {
@@ -503,7 +676,7 @@ const requestCompanyProfile = async (
                             }
 
                             // console.log(shareholders)
-                            resolve({ shareholders, officers, entitiesAlreadyAdded });
+                            resolve({ shareholders, officers });
 
 
 

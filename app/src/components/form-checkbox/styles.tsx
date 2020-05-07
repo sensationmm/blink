@@ -11,34 +11,70 @@ export const Main = styled.div`
 
 export const Checkbox = styled.div`
   position: relative;
-  background: var(--brand-warning);
-  border-radius: 10px;
+  border-radius: 50%;
   min-width: 20px;
   height: 20px;
-  margin-right: 10px;
-  background: $white;
+  margin: 0 10px;
+  transition: all 0.2s linear;
 
-  &.checked {
-    background: var(--basic-black);
-  }
+  &.tick {
+    background: var(--brand-warning);
 
-  &.checked:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: block;
-    width: 100%;
-    height: 100%;
-    background: var(--basic-white);
-    mask: url(${IconTick}) center center no-repeat;
-  }
-
-  &.error {
-    border-color: var(--brand-warning);
+    &.checked {
+      background: var(--basic-black);
+    }
 
     &.checked:before {
-      background: var(--brand-warning);
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: var(--basic-white);
+      mask: url(${IconTick}) center center no-repeat;
+    }
+  }
+
+  &.group {
+    border: 2px solid var(--basic-shadow);
+    background: var(--basic-shadow);
+
+    &.checked:before {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 16px;
+      height: 16px;
+      border-radius: 8px;
+      background: var(--brand-secondary);
+    }
+  }
+
+  &.confirm {
+    border: 2px solid var(--basic-shadow);
+    background: var(--basic-shadow);
+    min-width: 24px;
+    height: 24px;
+
+    &.checked {
+      border-color: var(--brand-secondary);
+      background: var(--brand-secondary);
+    }
+
+    &.checked:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: var(--basic-white);
+      mask: url(${IconTick}) center center no-repeat;
+      mask-size: 70%;
     }
   }
 

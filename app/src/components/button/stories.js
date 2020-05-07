@@ -13,10 +13,11 @@ storiesOf('Components|Button', module).add('default', () => {
     return (
         <Button
             label={text('label', 'Submit')}
-            type={select('type', ['primary', 'secondary'], 'primary')}
+            type={select('type', ['primary', 'secondary', 'tertiary'], 'primary')}
             onClick={action('onClick')}
             disabled={boolean('disabled', false)}
             fullWidth={boolean('fullWidth', false)}
+            small={boolean('small', false)}
             icon={select('icon', [undefined, ArrowRight, IconEmail], undefined)}
         />
     );

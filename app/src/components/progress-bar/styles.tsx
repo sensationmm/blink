@@ -3,6 +3,14 @@ import styled from 'styled-components';
 export const Label = styled.div`
     width: 150px;
     margin-right: 20px;
+
+    span {
+        font-size: 0.8em;
+        text-transform: uppercase;
+        color: var(--basic-shadow);
+        padding-left: 5px;
+        font-weight: bold;
+    }
 `;
 
 export const Icon = styled.div`
@@ -14,11 +22,15 @@ export const Icon = styled.div`
 
 export const Bar = styled.div`
     position: relative;
-    width: calc(100% - 170px);
+    width: 100%;
     height: 4px;
     border-radius: 2px;
     background: var(--basic-shadow);
     overflow: hidden;
+
+    &.hasLabel {
+        width: calc(100% - 170px);
+    }
 `;
 
 export const Stat = styled.div`
@@ -34,7 +46,6 @@ export const Fill = styled.div`
     width: 0%;
     height: 100%;
     top: 0;
-    left: -2px;
     background: var(--brand-primary);
     border-radius: inherit;
     transition: all ease-out 0.5s;
@@ -42,6 +53,10 @@ export const Fill = styled.div`
 
     &.warning {
         background: var(--brand-warning);
+    }
+
+    &.controlled {
+        background: var(--basic-black);
     }
 `;
 
@@ -65,6 +80,10 @@ export const Stacker = styled.div`
             margin-right: 0;
             margin-bottom: 10px;
         }
+    }
+
+    &.controlled {
+        width: 100%;
     }
 `;
 

@@ -9,6 +9,8 @@ import BlinkLogo from '../../svg/blink-logo.svg';
 
 import Box from '../../layout/box';
 
+import User from '../../containers/User';
+
 
 import * as Styled from './styles';
 
@@ -22,7 +24,9 @@ export const steps = [
     { label: 'Company structure', url: '/company-structure' },
     { label: 'Company readiness', url: '/company-readiness' },
     { label: 'Missing data', url: '/missing-data' },
+    { label: 'Company readiness', url: '/company-completion' },
     { label: 'Contact client', url: '/contact-client' },
+    { label: 'Email template', url: '/contact-email' },
 ];
 
 const ScreeningStatus: React.FC<ScreeningStatusProps> = ({ company, country, location }) => {
@@ -32,7 +36,10 @@ const ScreeningStatus: React.FC<ScreeningStatusProps> = ({ company, country, loc
 
     return (
         <Styled.Main>
-            <Styled.Header><img src={BlinkLogo} /></Styled.Header>
+            <Styled.Header>
+                <img alt="blink" src={BlinkLogo} />
+                <User />
+            </Styled.Header>
             <Styled.Nav>
                 {steps.map((step, count) => {
                     return (
@@ -51,7 +58,7 @@ const ScreeningStatus: React.FC<ScreeningStatusProps> = ({ company, country, loc
 
             <Styled.Info>
                 {prevStep ? <Styled.Title>
-                    <Link to={prevStep.url}><img src={ArrowBack} /></Link>
+                    <Link to={prevStep.url}><img alt="" src={ArrowBack} /></Link>
                     <h1>{steps[currentStep].label}</h1>
                 </Styled.Title> : <div />}
 

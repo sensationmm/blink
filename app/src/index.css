@@ -1,8 +1,6 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  font-family: Avenir, Times;
   letter-spacing: 1px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -10,11 +8,16 @@ body {
 
   --brand-primary: #44D7B6;
   --brand-secondary: #FF788B;
+  --brand-tertiary: #161e49;
   --brand-company: #D9FFF9;
+  --brand-company-faded: #f8fffe;
   --brand-person: #EEEAFF;
+  --brand-person-faded:#FCFBFF;
   --brand-warning: #FFD521;
+  --brand-other: #fef6ef;
   
   --basic-shadow: #ccc;
+  --basic-shadow-light: #F9F9F9;
   --basic-black: #000000;
   --basic-white: #ffffff;
   --basic-text: #505050;
@@ -22,6 +25,14 @@ body {
 
   --max-content: 1200px;
   --max-content-narrow: 920px;
+  --max-content-mini: 400px;
+}
+
+input {
+  font-family: Avenir, Times;
+  letter-spacing: 1px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 code {
@@ -37,6 +48,26 @@ code {
 }
 
 h1 {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: normal;
+  margin-top: 0;
+  margin-bottom: 40px;
+}
+
+h1.center {
+  text-align: center;
+}
+
+h1.noMargin {
+  margin: 0 0 10px 0;
+}
+
+h2 {
+  font-size: 20px;
+  font-weight: normal;
+  margin-bottom: 40px;
+}
+
+h2.center {
+  text-align: center;
 }

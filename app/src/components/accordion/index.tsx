@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import classNames from 'classnames';
 import { SlideDown } from 'react-slidedown';
 
 import * as Styled from './styles';
@@ -19,7 +18,7 @@ const Accordion: React.FC<AccordionProps> = ({ header, content, opened = false }
         <Styled.Main>
             <Styled.Header onClick={() => setOpen(!open)}>{header}</Styled.Header>
 
-            <Styled.Toggle><img src={ArrowBack} /></Styled.Toggle>
+            <Styled.Toggle><img src={ArrowBack} alt="Back" /></Styled.Toggle>
 
             <SlideDown style={{ transitionDuration: '0.2s' }}>
                 {open ? <Styled.Content>{content}</Styled.Content> : null}

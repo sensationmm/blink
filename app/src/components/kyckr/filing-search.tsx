@@ -166,8 +166,8 @@ export default function FilingSearch() {
                                 <td>
                                     {
                                     found ? 
-                                    found.AVAILABLE == 1 ? 
-                                    <a href={found.Url} target="_blank"> Download </a> :
+                                    found.AVAILABLE === 1 ? 
+                                    <a href={found.Url} rel="noopener noreferrer" target="_blank"> Download </a> :
                                     <LabelSt>Awaiting Delivery - Ordered: {found.OrderDateTime}</LabelSt>
                                     : 
                                     <LabelSt className="link" onClick={() => orderProduct(filing.Id)}>Order</LabelSt>}

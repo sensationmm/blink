@@ -1,11 +1,24 @@
 import styled from 'styled-components';
 
+import { Main as Icon } from '../icon/styles';
+
+// const zoomIn = keyframes`
+//     0% {
+//         opacity: 0;
+//         transform: scale(0) rotate(180deg);
+//     }
+
+//     100% {
+//         opacity: 1;
+//         transform: scale(1) rotate(180deg);
+//     }
+// `;
+
 export const Shareholder = styled.div`
     position: relative;
     display: inline-block;
     width: 120px;
     padding: 15px 20px;
-    transform: rotate(180deg);
     left: 3px;
     border-radius: 3px;
     border: 2px solid transparent;
@@ -13,9 +26,9 @@ export const Shareholder = styled.div`
     background: #fff;
     margin: 0 20px;
     z-index: 1;
-    transition: background 0.1s linear;
+    transition: all 0.2s linear;
     min-height: 166px;
-    font-weight: bold;
+    transform: rotate(180deg);
 
     &.heading {
         box-shadow: none;
@@ -25,19 +38,23 @@ export const Shareholder = styled.div`
         cursor: default;
     }
 
-    // &.isCompany:hover {
-    //     background-color: var(--brand-primary-alt);
-    //     transform: rotate(180deg) scale(1.1);
-    // }
-
-    // &.isPerson:hover {
-    //     background-color: var(--brand-secondary-alt);
-    //     transform: rotate(180deg) scale(1.1);
-    // }
-
     &.isWithinShareholderThreshold {
         box-shadow: 0px 0px 10px var(--highlight);
         border: 2px solid var(--highlight);
+    }
+
+    &.animate {
+        opacity: 0;
+        transform: scale(0) rotate(180deg);
+    }
+
+    &.animateReady {
+        opacity: 1;
+        transform: scale(1) rotate(180deg);
+    }
+
+    ${Icon} {
+        margin: 0 auto 10px auto;
     }
 `
 
@@ -48,6 +65,7 @@ export const ShareholderList = styled.div`
     padding-bottom: 20px;
     border-bottom: 1px solid var(--basic-shadow);
     margin-bottom: 20px;
+    width: 100%;
 
     &:last-of-type {
         border: 0;
@@ -57,32 +75,9 @@ export const ShareholderList = styled.div`
     > div {
         margin: 0 !important;
     }
+    
 `;
 
-export const Image = styled.div`
-    width: 50px;
-    height: 50px;
-    border-radius: 26px;
-    border: 2px solid #000;
-    position: relative;
-    margin: 0 auto 10px auto;
-    background: center top 10px no-repeat;
-    background-size: contain;
-
-    &.large {
-        width: 100px;
-        height: 100px;
-        border-radius: 50px;
-    }
-`
-
-export const ImageCompany = styled(Image)`
-    background-color: var(--brand-company);
-`
-
-export const ImagePerson = styled(Image)`
-    background-color: var(--brand-person);
-`
 
 export const Heading = styled.div`
     font-weight: bold;
@@ -91,21 +86,33 @@ export const Heading = styled.div`
 `
 
 export const Label = styled.div`
+    font-family: 'Avenir Next Condensed';
     position: relative;
     border-radius: 20px;
     
     &.P {
         text-transform: capitalize;
     }
-`
+`;
+
+export const ListLabel = styled.div`
+    text-align: left;
+    padding-left: 20px;
+`;
 
 export const Shares = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Lato;
+    font-weight: bold;
     padding-left: 10px;
     margin-bottom: 10px;
+    font-size: 1.6em;
 
     > span {
         font-weight: bold;
-        font-size: 1.4em;
+        font-size: 0.8em;
         margin-right: 5px;
     }
 `

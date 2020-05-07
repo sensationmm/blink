@@ -11,9 +11,151 @@
       "**/.*",
       "**/node_modules/**"
     ],
-    "rewrites": [{
-      "source": "**",
-      "destination": "/index.html"
-    }]
+    "rewrites": [
+      {
+        "source": "/requestCompanyUBOStructure",
+        "function": "requestCompanyUBOStructure"
+      },
+      {
+        "source": "/saveCompanyUBOStructure",
+        "function": "saveCompanyUBOStructure"
+      },
+      {
+        "source": "/duedillSearchCompany/**/**",
+        "function": "duedillSearchCompany"
+      },
+      {
+        "source": "/duedillCompanyVitals/**/**",
+        "function": "duedillCompanyVitals"
+      },
+      {
+        "source": "/duedillCompanyIndustries/**/**",
+        "function": "duedillCompanyIndustries"
+      },
+      {
+        "source": "/kyckrSearchCompany/**/**",
+        "function": "kyckrSearchCompany"
+      },
+      {
+        "source": "/kyckrCompanyProfile/",
+        "function": "kyckrCompanyProfile"
+      },
+      {
+        "source": "/validateCompany",
+        "function": "validateCompany"
+      },
+      {
+        "source": "/addRule",
+        "function": "addRule"
+      },
+      {
+        "source": "/addOfficer",
+        "function": "addOfficer"
+      },
+      {
+        "source": "/deleteAllRules",
+        "function": "deleteAllRules"
+      },
+      {
+        "source": "/editField",
+        "function": "editField"
+      },
+      {
+        "source": "/googleFetchSheet",
+        "function": "googleFetchSheet"
+      },
+      {
+        "source": "/signIn",
+        "function": "signIn"
+      },
+      {
+        "source": "/signInWithToken",
+        "function": "signInWithToken"
+      },
+      {
+        "source": "/xeroAuthenticateCallback",
+        "function": "xeroAuthenticateCallback"
+      },
+      {
+        "source": "/xeroDisconnect/**",
+        "function": "xeroDisconnect"
+      },
+      {
+        "source": "/xeroAuthenticate",
+        "function": "xeroAuthenticate"
+      },
+      {
+        "source": "/xeroGetInvoices/**",
+        "function": "xeroGetInvoices"
+      },
+      {
+        "source": "/xeroAddBankAccount/**",
+        "function": "xeroAddBankAccount"
+      },
+      {
+        "source": "/xeroGetBankAccounts/**",
+        "function": "xeroGetBankAccounts"
+      },
+      {
+        "source": "/xeroDeleteBankAccount/**/**",
+        "function": "xeroDeleteBankAccount"
+      },
+      {
+        "source": "/xeroConnectBankAccount",
+        "function": "xeroConnectBankAccount"
+      },
+      {
+        "source": "/xeroToggleAccountStatus/**/**/**",
+        "function": "xeroToggleAccountStatus"
+      },
+      {
+        "source": "/revolutGetBankAccounts",
+        "function": "revolutGetBankAccounts"
+      },
+      {
+        "source": "/revolutGetBankAccount",
+        "function": "revolutGetBankAccount"
+      },
+      {
+        "source": "/revolutGetCounterparties",
+        "function": "revolutGetCounterparties"
+      },
+      {
+        "source": "/revolutGetBankAccountTransactions",
+        "function": "revolutGetBankAccountTransactions"
+      },
+      {
+        "source": "/revolutPostPayment",
+        "function": "revolutPostPayment"
+      },
+      {
+        "source": "/signUp",
+        "function": "signUp"
+      },
+      {
+        "source": "/signInFromInvite",
+        "function": "signInFromInvite"
+      },
+      {
+        "source": "/requestOob",
+        "function": "requestOob"
+      },
+      {
+        "source": "/verifyOob",
+        "function": "verifyOob"
+      },
+      {
+        "source": "/changePassword",
+        "function": "changePassword"
+      },
+      {
+        "source": "/getAllRules/**",
+        "function": "getAllRules"
+      },
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
   }
 }

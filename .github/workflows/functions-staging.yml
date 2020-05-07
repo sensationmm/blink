@@ -1,0 +1,84 @@
+name: CI - Functions Staging
+
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - app/functions/**
+
+jobs:
+  build:
+    name: Deploy functions
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@master
+      - name: Install Dependencies
+        working-directory: ./app
+        run: yarn add firebase-tools
+      - name: Set functions secrets
+        working-directory: ./app
+        run: ./node_modules/.bin/firebase functions:config:set 
+          cryptr.key=${CRYPTR_KEY} 
+          blink_web_address.key=${BLINK_WEB_ADDRESS} 
+          clicksend_api.key=${CLICKSEND_API_KEY} 
+          clicksend_email.key=${CLICKSEND_EMAIL} 
+          revolut_private_key.key=${REVOLUT_PRIVATE_KEY} 
+          revolut_client_id.key=${REVOLUT_CLIENT_ID} 
+          revolut_authenticate_redirect_url.key=${REVOLUT_AUTHENTICATE_REDIRECT_URL} 
+          revolut_issuer.key=${REVOLUT_ISSUER} 
+          xero_authenticate_callback_url.key=${XERO_AUTHENTICATE_CALLBACK_URL} 
+          xero_authenticate_redirect_url.key=${XERO_AUTHENTICATE_REDIRECT_URL} 
+          xero_client_id.key=${XERO_CLIENT_ID} 
+          xero_client_secret.key=${XERO_CLIENT_SECRET} 
+          auth_api.key=${FIREBASE_AUTH_API_KEY} 
+          database_url.key=${FIREBASE_DATABASE_URL} 
+          project_id.key=${FIREBASE_PROJECT_ID} 
+          app_google_service_account_email.key=${APP_GOOGLE_SERVICE_ACCOUNT_EMAIL} 
+          app_google_private_key.key=${APP_GOOGLE_PRIVATE_KEY} 
+          know_your_customer_api.key=${KNOW_YOUR_CUSTOMER_API_KEY} 
+          due_dill_api.key=${DUE_DILL_API_KEY} 
+          trulioo_api.key=${TRULIOO_API_KEY} 
+          service_account_private_key_id.key=${FIREBASE_SERVICE_ACCOUNT_PRIVATE_KEY_ID} 
+          service_account_client_id.key=${FIREBASE_SERVICE_ACCOUNT_CLIENT_ID} 
+          service_account_client_email.key=${FIREBASE_SERVICE_ACCOUNT_CLIENT_EMAIL} 
+          service_account_private_key.key=${FIREBASE_SERVICE_ACCOUNT_PRIVATE_KEY} 
+          companies_house_api.key=${COMPANIES_HOUSE_API_KEY} 
+          companies_house_api.id="Companies house"  -P staging --token $FIREBASE_TOKEN
+        env:
+          FIREBASE_TOKEN: ${{ secrets.STAGING_FIREBASE_TOKEN }}
+          COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY}}
+          DUE_DILL_API_KEY: ${{ secrets.DUE_DILL_API_KEY}}
+          TRULIOO_API_KEY: ${{ secrets.TRULIOO_API_KEY}}
+          KNOW_YOUR_CUSTOMER_API_KEY: ${{ secrets.KNOW_YOUR_CUSTOMER_API_KEY }}
+          FIREBASE_SERVICE_ACCOUNT_PRIVATE_KEY_ID: ${{ secrets.STAGING_FIREBASE_SERVICE_ACCOUNT_PRIVATE_KEY_ID}}
+          FIREBASE_SERVICE_ACCOUNT_PRIVATE_KEY: ${{ secrets.STAGING_FIREBASE_SERVICE_ACCOUNT_PRIVATE_KEY}}
+          FIREBASE_SERVICE_ACCOUNT_CLIENT_EMAIL: ${{ secrets.STAGING_FIREBASE_SERVICE_ACCOUNT_CLIENT_EMAIL}}
+          FIREBASE_SERVICE_ACCOUNT_CLIENT_ID: ${{ secrets.STAGING_FIREBASE_SERVICE_ACCOUNT_CLIENT_ID}}
+          FIREBASE_PROJECT_ID: ${{ secrets.STAGING_FIREBASE_PROJECT_ID}}
+          FIREBASE_DATABASE_URL: ${{ secrets.STAGING_FIREBASE_DATABASE_URL}}
+          FIREBASE_AUTH_API_KEY: ${{ secrets.STAGING_FIREBASE_AUTH_API_KEY}}
+          APP_GOOGLE_PRIVATE_KEY: ${{ secrets.APP_GOOGLE_PRIVATE_KEY }}
+          APP_GOOGLE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.APP_GOOGLE_SERVICE_ACCOUNT_EMAIL }}
+          XERO_AUTHENTICATE_CALLBACK_URL: ${{ secrets.STAGING_XERO_AUTHENTICATE_CALLBACK_URL}}
+          XERO_AUTHENTICATE_REDIRECT_URL: ${{ secrets.STAGING_XERO_AUTHENTICATE_REDIRECT_URL}}
+          XERO_CLIENT_ID: ${{ secrets.XERO_CLIENT_ID }}
+          XERO_CLIENT_SECRET: ${{ secrets.XERO_CLIENT_SECRET }}
+          REVOLUT_PRIVATE_KEY: ${{ secrets.STAGING_REVOLUT_PRIVATE_KEY }}
+          REVOLUT_AUTHENTICATE_REDIRECT_URL: ${{ secrets.STAGING_REVOLUT_AUTHENTICATE_REDIRECT_URL }}
+          REVOLUT_CLIENT_ID: ${{ secrets.STAGING_REVOLUT_CLIENT_ID }}
+          REVOLUT_ISSUER: ${{ secrets.STAGING_REVOLUT_ISSUER }}
+          CLICKSEND_EMAIL: ${{ secrets.CLICKSEND_EMAIL }}
+          CLICKSEND_API_KEY: ${{ secrets.CLICKSEND_API_KEY }}
+          BLINK_WEB_ADDRESS: ${{ secrets.STAGING_BLINK_WEB_ADDRESS }}
+          CRYPTR_KEY: ${{ secrets.CRYPTR_KEY }}
+          
+      - name: Install function dependencies
+        working-directory: ./app/functions
+        run: npm install 
+      - name: Deploy functions to Firebase
+        working-directory: ./app
+        run: ./node_modules/.bin/firebase deploy --only functions -P staging --token $FIREBASE_TOKEN
+        env:
+          FIREBASE_TOKEN: ${{ secrets.STAGING_FIREBASE_TOKEN }}

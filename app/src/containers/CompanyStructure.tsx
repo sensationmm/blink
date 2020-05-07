@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
@@ -9,6 +9,7 @@ import ShareholderList from '../components/shareholder/list';
 import Actions from '../layout/actions';
 import Box from '../layout/box';
 import FlexRow from '../layout/flex-row';
+import getValue from '../utils/functions/getValue';
 
 import { validateCompany, CompanyData } from '../utils/validation/request';
 
@@ -29,10 +30,12 @@ export const onGetValidation = async (
     setCompletion: (type: string, src: object) => void,
     hideLoader: () => void,
     push: (target: string) => void,
-    redirect: string
+    redirect: string | null,
+    ownershipThreshold: string,
+    markets: Array<market>
 ) => {
     showLoader();
-    const rules = await validateCompany(companyStructure, 'GB')
+    const rules = await validateCompany(companyStructure, ownershipThreshold, markets)
 
     Object.keys(rules).forEach(entity => {
         const marketCompletion = {
@@ -64,7 +67,7 @@ export const onGetValidation = async (
         setErrors(entity, marketErrors);
     })
     hideLoader();
-    push(redirect)
+    redirect && push(redirect)
 }
 
 const CompanyStructure = (props: any) => {
@@ -77,15 +80,18 @@ const CompanyStructure = (props: any) => {
         setErrors,
         showLoader,
         hideLoader,
+        markets
     } = props;
 
-    const [showOnlyOrdinaryShareTypes, toggleShowOnlyOrdinaryShareTypes] = useState(false)
+    // const [showOnlyOrdinaryShareTypes, 
+    //     toggleShowOnlyOrdinaryShareTypes
+    // ] = useState(false)
 
-    if (!company || !companyStructure) {
+    if (!company || !companyStructure || markets.length === 0) {
         return <Redirect to="/search" />;
     }
 
-    const ultimateOwners = companyStructure.distinctShareholders.filter((shareholder: any) => shareholder.totalShareholding >= ownershipThreshold && shareholder.shareholderType === 'P');
+    const ultimateOwners = companyStructure?.distinctShareholders?.filter((shareholder: any) => shareholder.totalShareholding >= ownershipThreshold && getValue(shareholder.shareholderType) === 'P');
 
     const getValidation = () => {
         onGetValidation(
@@ -95,15 +101,17 @@ const CompanyStructure = (props: any) => {
             setCompletion,
             hideLoader,
             props.history.push,
-            '/company-readiness'
+            '/company-readiness',
+            ownershipThreshold,
+            markets
         );
     };
 
     return (
         <MainStyled.MainSt>
             <ScreeningStatus
-                company={companyStructure.name}
-                country={companyStructure.incorporationCountry}
+                company={getValue(companyStructure.name)}
+                country={getValue(companyStructure.incorporationCountry)}
             />
 
             <MainStyled.Content>
@@ -121,19 +129,24 @@ const CompanyStructure = (props: any) => {
                                     min="0"
                                     max="100"
                                 />
-                                <Styled.ControlItem><div>{ultimateOwners.length}</div> Ultimate beneficial owners</Styled.ControlItem>
+                                <Styled.ControlItem><div>{ultimateOwners?.length}</div> Ultimate beneficial owners</Styled.ControlItem>
                             </Styled.Controls>
 
-                            {ultimateOwners.map((owner: any, count: number) => {
+                            {ultimateOwners?.map((owner: any, count: number) => {
                                 return (
-                                    <ShareholderList key={`shareholder-${count}`} name={owner.name} type={owner.shareholderType} shares={owner.totalShareholding} />
+                                    <ShareholderList
+                                        key={`shareholder-${count}`}
+                                        name={getValue(owner.name)}
+                                        type={getValue(owner.shareholderType)}
+                                        shares={owner.totalShareholding}
+                                    />
                                 )
                             })}
                         </Box>
 
                         <Box padded={false}>
                             <SignificantPersons
-                                showOnlyOrdinaryShareTypes={showOnlyOrdinaryShareTypes}
+                                // showOnlyOrdinaryShareTypes={showOnlyOrdinaryShareTypes}
                                 shareholderThreshold={ownershipThreshold}
                                 companyStructure={companyStructure}
                             />
@@ -150,6 +163,7 @@ const CompanyStructure = (props: any) => {
 }
 
 const mapStateToProps = (state: any) => ({
+    markets: state.screening.markets,
     company: state.screening.company,
     companyStructure: state.screening.companyStructure,
     ownershipThreshold: state.screening.ownershipThreshold,

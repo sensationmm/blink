@@ -5,20 +5,22 @@ import * as Styled from './styles';
 
 interface ButtonProps {
   label?: string;
-  onClick: () => void;
+  onClick: (e: any) => void;
   disabled?: boolean;
   fullWidth?: boolean;
   hidden?: boolean;
+  small?: boolean;
   icon?: string;
-  type?: 'primary' | 'secondary';
+  type?: 'primary' | 'secondary' | 'tertiary' | 'landing';
 }
 
 const Button: React.FC<ButtonProps> = ({
-  label = 'Submit',
+  label = 'Confirm',
   onClick,
   disabled = false,
   fullWidth = false,
   hidden = false,
+  small = false,
   icon,
   type = 'primary'
 }) => {
@@ -30,10 +32,10 @@ const Button: React.FC<ButtonProps> = ({
         type,
         { 'full': fullWidth },
         { 'disabled': disabled },
-        { 'hidden': hidden }
+        { 'hidden': hidden },
+        { 'small': small }
       )}
-      onClick={onClick}
-      style={{ color: '#fff' }}
+      onClick={(e) => { e.stopPropagation(); onClick(e); }}
     >
       <span>{label}</span>
       {icon &&

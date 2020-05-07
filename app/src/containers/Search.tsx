@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { withRouter } from 'react-router-dom';
+import { Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import CompanySearch from '../components/generic/search-company'
 import { requestCompanyProfile } from '../utils/kyckr/request';
@@ -10,7 +10,7 @@ import { requestCompanyUBOStructure } from '../utils/generic/request';
 import ScreeningStatus from '../components/screening-status';
 import Button from '../components/button';
 import Actions from '../layout/actions';
-import { setCountry, setCompany, setCompanyStructure } from '../redux/actions/screening';
+import { setCountry, setCompany, setCompanyStructure, setMarkets } from '../redux/actions/screening';
 import { showLoader, hideLoader } from '../redux/actions/loader';
 
 import * as Styled from "../components/styles";
@@ -24,13 +24,15 @@ const Search = (props: any) => {
         hideLoader,
         setCompanyStructure,
         selectedCountry,
-        selectedCompany
+        selectedCompany,
+        setMarkets,
+        currentUser
     } = props;
 
     const [ignoreDB, setIgnoreDB] = useState(false);
     const [showDirectors, toggleShowDirectors] = useState(true);
     const [showOnlyOrdinaryShareTypes, toggleShowOnlyOrdinaryShareTypes] = useState(false)
-    const [hackValue, setHackValue] = useState(Math.random());
+    // const [hackValue, setHackValue] = useState(Math.random());
     const [shareholderRange, changeShareholderRange] = useState(10);
 
     useEffect(
@@ -43,6 +45,10 @@ const Search = (props: any) => {
         },
         [selectedCompany, selectedCountry]
     );
+
+    if (!currentUser.admin) {
+        return <Redirect to="/onboarding" />;
+    }
 
     const orderReference = () => {
         const countryCode = selectedCompany.countryCode || selectedCountry.value;
@@ -78,14 +84,14 @@ const Search = (props: any) => {
 
     const requestedProfiles: any = [];
 
-    const startDoinIt = async () => {
+    const startDoinIt = async (redirect: string = '/company-structure') => {
         const countryCode = selectedCompany.countryCode || selectedCountry.value;
 
         const { companyId, code, registrationAuthorityCode } = selectedCompany;
 
         let searchCode = companyId;
 
-        console.log(selectedCompany);
+        // console.log(selectedCompany);
 
         if ((countryCode === "DE" || countryCode === "IT" || countryCode === "RO") && code) {
             searchCode = code; // for DE it's a proprietary code;
@@ -103,14 +109,17 @@ const Search = (props: any) => {
             await getCompanyProfile(companyId, searchCode, countryCode, registrationAuthorityCode, true);
             UBOStructure = await requestCompanyUBOStructure(companyId, countryCode);
             setCompanyStructure(UBOStructure);
-            setHackValue(Math.random())
+            // setHackValue(Math.random())
+            setMarkets(['GB', 'DE', 'FR', 'IT', 'SE', 'RO']);
             hideLoader();
-            props.history.push('/company-structure')
+            props.history.push(redirect)
         } else {
+            // console.log("UBOStructure", UBOStructure)
             setCompanyStructure(UBOStructure);
-            setHackValue(Math.random());
+            // setHackValue(Math.random());
+            setMarkets(['GB', 'DE', 'FR', 'IT', 'SE', 'RO']);
             hideLoader();
-            props.history.push('/company-structure')
+            props.history.push(redirect)
         }
     }
 
@@ -123,13 +132,17 @@ const Search = (props: any) => {
             if (companyProfile && companyProfile.shareholders) {
 
                 for (let i = 0; i < companyProfile.shareholders.length; i++) {
-                    if (companyProfile.shareholders[i].shareholderType === "C" && companyProfile.shareholders[i].companyId) {
 
-                        const nextCompanyId = companyProfile.shareholders[i].companyId;
-                        const nextCompanySearchCode = companyProfile.shareholders[i].code || companyProfile.shareholders[i].companyId;
+                    if (companyProfile.shareholders[i].shareholderType?.value === "C" && companyProfile.shareholders[i].companyId?.value) {
+
+                        const nextCompanyId = companyProfile.shareholders[i].companyId?.value;
+                        const nextCompanySearchCode = companyProfile.shareholders[i].code?.value || companyProfile.shareholders[i].companyId?.value;
+                        // added to ensure we use correct country code & registration authority code
+                        const nextCountryCode = companyProfile.shareholders[i].countryCode?.value || countryCode;
+                        const nextRegistrationAuthorityCode = companyProfile.shareholders[i].registrationAuthorityCode?.value || registrationAuthorityCode;
 
                         await new Promise(async (next) => {
-                            await getCompanyProfile(nextCompanyId, nextCompanySearchCode, countryCode, registrationAuthorityCode, isNewSearch);
+                            await getCompanyProfile(nextCompanyId, nextCompanySearchCode, nextCountryCode, nextRegistrationAuthorityCode, isNewSearch);
                             next()
                         })
                     }
@@ -138,9 +151,9 @@ const Search = (props: any) => {
         }
     }
 
-    const getStructure = () => {
+    const getStructure = (redirect: string) => {
         showLoader();
-        startDoinIt();
+        startDoinIt(redirect);
     }
 
     return (
@@ -167,7 +180,7 @@ const Search = (props: any) => {
                 </div>
 
                 <Actions>
-                    <Button onClick={getStructure} disabled={!(selectedCompany && selectedCompany.companyId && selectedCountry)} />
+                    <Button onClick={() => getStructure('/company-structure')} disabled={!(selectedCompany && selectedCompany.companyId && selectedCountry)} />
                 </Actions>
             </Styled.Content>
         </Styled.MainSt>
@@ -175,11 +188,12 @@ const Search = (props: any) => {
 }
 
 const mapStateToProps = (state: any) => ({
+    currentUser: state.auth.user,
     selectedCompany: state.screening.company,
     selectedCountry: state.screening.country,
 });
 
-const actions = { setCompany, setCountry, setCompanyStructure, showLoader, hideLoader };
+const actions = { setCompany, setCountry, setMarkets, setCompanyStructure, showLoader, hideLoader };
 
 export const RawComponent = Search;
 

@@ -8,36 +8,55 @@ import Button from '../components/button';
 import Actions from '../layout/actions';
 import Readiness from '../components/readiness';
 import ArrowRight from '../svg/arrow-right.svg';
+import getValue from '../utils/functions/getValue';
 
 const CompanyReadiness = (props: any) => {
     const {
         company,
         companyStructure,
         validation,
-        ownershipThreshold
+        ownershipThreshold,
+        markets
     } = props;
 
-    if (!company || !companyStructure) {
+    if (!company || !companyStructure || markets.length === 0) {
         return <Redirect to="/search" />;
-    } else if (!validation) {
+    } else if (!validation.company) {
         return <Redirect to="/company-structure" />;
     }
 
-    const shareholders = companyStructure.distinctShareholders.filter((shareholder: any) => shareholder.totalShareholding > ownershipThreshold && shareholder.shareholderType === 'P');
+    let hasShareholderOver25 = false;
+
+    const shareholders = companyStructure.distinctShareholders
+        .filter((shareholder: any) => shareholder.totalShareholding > ownershipThreshold && getValue(shareholder.shareholderType) === 'P')
+        .map((shareholder: any) => {
+            if (shareholder.totalShareholding > 25) {
+                hasShareholderOver25 = true;
+            }
+
+            return shareholder;
+        });
+
+
+    let officers = [];
+    if (!hasShareholderOver25) {
+        officers = companyStructure.officers;
+    }
 
     return (
         <Styled.MainSt>
             <ScreeningStatus
-                company={companyStructure.name}
-                country={companyStructure.incorporationCountry}
+                company={getValue(companyStructure.name)}
+                country={getValue(companyStructure.incorporationCountry)}
             />
 
             <Styled.ContentNarrow>
                 <Readiness
                     companyStructure={companyStructure}
                     ownershipThreshold={ownershipThreshold}
-                    shareholders={shareholders}
+                    shareholders={shareholders.concat(officers)}
                     validation={validation}
+                    markets={markets}
                 />
 
                 <Actions>
@@ -49,6 +68,7 @@ const CompanyReadiness = (props: any) => {
 }
 
 const mapStateToProps = (state: any) => ({
+    markets: state.screening.markets,
     company: state.screening.company,
     companyStructure: state.screening.companyStructure,
     ownershipThreshold: state.screening.ownershipThreshold,

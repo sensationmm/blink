@@ -32,7 +32,7 @@ export default function SearchCompany(props: SearchCompanyProps) {
     const [query, setQuery] = useState(props.selectedCompany ? props.selectedCompany.name : '');
     const [companies, setCompanies] = useState();
     const [typeAheadListVisible, showTypeAheadList] = useState(false);
-    const [status, setStatus] = useState();
+    // const [status, setStatus] = useState();
     const [errors, setErrors] = useState();
     const [selectedCountry, setSelectedCountry] = useState(props.selectedCountry);
 
@@ -75,7 +75,7 @@ export default function SearchCompany(props: SearchCompanyProps) {
         // console.log("query", query)
         // setCompanies(null);
         setErrors(null);
-        setStatus("searching")
+        // setStatus("searching")
         if (query === "") {
             return;
         }
@@ -92,7 +92,7 @@ export default function SearchCompany(props: SearchCompanyProps) {
         }
 
         if (res.errors) {
-            setStatus(null);
+            // setStatus(null);
             console.log(res.errors)
             setErrors(res.errors);
         } else {

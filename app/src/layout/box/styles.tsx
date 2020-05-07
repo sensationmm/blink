@@ -1,13 +1,19 @@
 import styled from 'styled-components';
 
 export const Main = styled.div`
+    position: relative;
     background: var(--basic-white);
     border: 1px solid var(--basic-shadow);
     border-radius: 10px;
-    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
+    &.hoverStyling:hover {
+        border: 1px solid var(--brand-secondary);
+    }
 
     &.padded {
-        padding: 15px 20px;
+        padding: 20px;
     }
 
     &.paddedLarge {
@@ -16,10 +22,19 @@ export const Main = styled.div`
 
     &.centered {
         text-align: center;
+        align-items: center;
     }
 
     &.shadowed {
         box-shadow: 0 0 5px var(--basic-shadow);
+        &.hoverStyling:hover {
+            box-shadow: 0 0 5px var(--brand-secondary);
+        }
+    }
+
+    &.add {
+        border: 1px dashed var(--brand-secondary);
+        color: var(--basic-shadow);
     }
 
     > div {

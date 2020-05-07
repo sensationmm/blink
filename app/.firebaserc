@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "blink-3b651"
+    "default": "blink-staging-20006",
+    "staging": "blink-staging-20006",
+    "production": "blink-3b651"
   }
 }

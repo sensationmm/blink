@@ -51,10 +51,13 @@ const Grid: React.FC<GridProps> = ({ labels, content, rowHeaderWidth }) => {
                         <FlexRow key={`row-${count}`} layout={layout}>
                             {spreadChildren(
                                 item.label ? <Styled.RowHeader key={`row-${count}-header`}>
-                                    {item.icon && <div>{typeof item.icon === 'string' ? <img src={item.icon} /> : item.icon}</div>}
+                                    {item.icon && <div>{typeof item.icon === 'string' ? <img alt={item.label} src={item.icon} /> : item.icon}</div>}
                                     {item.label}
                                 </Styled.RowHeader> : <div key={`row-${count}-header`} />,
                                 item.values.map((value, iter) => {
+                                    if (value === null) {
+                                        return <div key={`row-${count}-val-${iter}`} />
+                                    }
                                     return <Checkbox key={`row-${count}-val-${iter}`} checked={value} />;
                                 })
                             )}

@@ -17,19 +17,38 @@ server.post('*/', function (req: any, res: any) {
 
     const companyRef = admin.firestore().collection('companies');
 
+    const valueToObject = (value: any, sourceType: string = "registry", sourceCountry: string = "") => {
+        return {
+            value,
+            updatedAt: new Date(),
+            sourceType,
+            sourceCountry,
+            certification: "",
+            validation: '',
+            evidence: "",
+            evidenceExpiration: ""
+        };
+    }
+
+    const newCompanyStructure: any = {};
+
+    Object.keys(companyStructure).forEach(key => {
+        newCompanyStructure[key] = valueToObject(companyStructure[key]);
+    });
+
     if (ignoreDB) {
         // find and update
-        const companyQuery = companyRef.where('searchName', '==', companyStructure.searchName);
+        const companyQuery = companyRef.where('searchName.value', '==', newCompanyStructure.searchName.value);
         companyQuery.get().then(async (companies: any) => {
             if (companies.empty) {
-                companyRef.add({ ...companyStructure }, { merge: true }).then((doc: any) => res.send(doc.ref));;
+                companyRef.add({ ...newCompanyStructure }, { merge: true }).then((doc: any) => res.send(doc.ref));;
             } else {
                 const companyDoc = companies.docs[0];
-                companyDoc.ref.update({ ...companyStructure }, { merge: true }).then((doc: any) => res.send(doc.ref));;
+                companyDoc.ref.update({ ...newCompanyStructure }, { merge: true }).then((doc: any) => res.send(doc.ref));;
             }
         });
     } else {
-        companyRef.add({ ...companyStructure }).then((doc: any) => res.send(doc.ref));
+        companyRef.add({ ...newCompanyStructure }).then((doc: any) => res.send(doc.ref));
     }
 
 })

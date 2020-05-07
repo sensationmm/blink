@@ -9,6 +9,7 @@ import FullScreenExit from '../../svg/fullscreen-exit.svg';
 import Reset from '../../svg/reset.svg';
 import ZoomIn from '../../svg/zoom-in.svg';
 import ZoomOut from '../../svg/zoom-out.svg';
+import getValue from '../../utils/functions/getValue';
 
 import * as Styled from './styles';
 
@@ -16,10 +17,12 @@ interface IOrgChartProps {
     companyName: string;
     shareholders: object[];
     filter: (list: object[]) => object[];
-    docId?: string,
-    companyId?: string,
-    officialStatus?: string,
-    shareholderThreshold: number
+    docId?: string;
+    companyId?: string;
+    officialStatus?: string;
+    shareholderThreshold: number;
+    onClick?: (shareholder: any, shares: any) => void;
+    animate: boolean;
 }
 
 interface ITransformWrapperProps {
@@ -32,7 +35,7 @@ interface IOptions {
     defaultScale?: number;
 }
 
-const OrgChart = ({ companyName, filter, shareholders, docId, companyId, officialStatus }: IOrgChartProps) => {
+const OrgChart = ({ companyName, filter, shareholders, docId, companyId, officialStatus, onClick, animate }: IOrgChartProps) => {
     let chartContainer = useRef(null);
     let chartCanvas = useRef(null);
     let resizeTimeout: ReturnType<typeof setTimeout>;
@@ -42,17 +45,29 @@ const OrgChart = ({ companyName, filter, shareholders, docId, companyId, officia
     const [detail, showDetail] = useState(false);
     const [detailContent, setDetailContent] = useState(<></>);
     const [isFullScreen, setFullScreen] = useState(false);
-    const [defaultScale, setDefaultScale] = useState();
+    const [defaultScale, setDefaultScale] = useState(1);
     const [adjustScale, setAdjustScale] = useState(true);
     const [defaultPos, setDefaultPos] = useState({ top: 0, left: 0 });
 
     const renderShareholder = (shareholder: any, shareholderCount: string) => {
+        const name = getValue(shareholder.name) || getValue(shareholder.fullName);
 
         return (
-            <TreeNode key={`shareholder-${shareholderCount}`} label={<Shareholder name={shareholder.name || shareholder.fullName} 
-            // docId={shareholder.docId} 
-            isWithinShareholderThreshold={shareholder.isWithinShareholderThreshold}
-            shares={shareholder.totalShareholding * 100} type={shareholder.shareholderType} showDetail={showDetailModal} />}>
+            <TreeNode
+                key={`shareholder-${shareholderCount}`}
+                label={
+                    <Shareholder
+                        name={name}
+                        shareholder={shareholder}
+                        // docId={shareholder.docId}
+                        // isWithinShareholderThreshold={shareholder.isWithinShareholderThreshold}
+                        shares={shareholder.totalShareholding * 100}
+                        // type={getValue(shareholder.shareholderType)}
+                        showDetail={showDetailModal}
+                        onClick={onClick}
+                        animate={animate}
+                    />
+                }>
                 {shareholder.shareholders && filter(shareholder.shareholders).reverse().map((shareholder2: any, count2: number) => {
                     return renderShareholder(shareholder2, `${shareholderCount}-${count2}`);
                 })}
@@ -106,8 +121,8 @@ const OrgChart = ({ companyName, filter, shareholders, docId, companyId, officia
         }
         let newRatio = Math.round((ratio + Number.EPSILON) * 10) / 10;
 
-        const defaultLeft = ((containerSize.width - (canvasSize.width * newRatio)) / 2) + (ratio !== 1 ? 0 : 50);
-        const defaultTop = ((containerSize.height - (canvasSize.height * newRatio)) / 2) + (ratio !== 1 ? 0 : 50);
+        const defaultLeft = ((containerSize.width - (canvasSize.width * newRatio)) / 2) + 50;// + (ratio !== 1 ? 0 : 50);
+        const defaultTop = ((containerSize.height - (canvasSize.height * newRatio)) / 2) + 50;// + (ratio !== 1 ? 0 : 50);
 
         setDefaultScale(ratio);
         setDefaultPos({ top: defaultTop, left: defaultLeft });
@@ -144,10 +159,20 @@ const OrgChart = ({ companyName, filter, shareholders, docId, companyId, officia
                         <div>
                             <TransformComponent>
                                 <Styled.OrgChartInner ref={chartCanvas}>
-                                    <Tree label={<Shareholder 
-                                    isWithinShareholderThreshold
-                                    // docId={docId || ""} 
-                                    name={`${companyName}`} officialStatus={officialStatus} companyId={companyId} />} lineWidth={'2px'} lineBorderRadius={'5px'} lineHeight={'20px'} lineColor={'black'} nodePadding={'5px'}>
+                                    <Tree
+                                        label={
+                                            <Shareholder
+                                                name={companyName}
+                                                officialStatus={officialStatus}
+                                                companyId={companyId}
+                                                animate={animate}
+                                            />
+                                        }
+                                        lineWidth={'2px'} lineBorderRadius={'5px'}
+                                        lineHeight={'20px'}
+                                        lineColor={'black'}
+                                        nodePadding={'5px'}
+                                    >
                                         {filter(shareholders)?.reverse().map((shareholder: any, count: number) => {
                                             return renderShareholder(shareholder, `${count}`);
                                         })}

@@ -5,7 +5,6 @@ export const OrgChart = styled.div`
     position: relative;
     text-align: center;
     height: 50vh;
-    background: var(--basic-white);
 
     > div:first-of-type {
         width: 100% !important;
@@ -45,12 +44,16 @@ export const Controls = styled.div`
     top: 0;
     left: 0;
     background: rgba(255, 255, 255, 0.7);
-    padding: 20px 0 20px 20px;
+    padding: 20px 20px 20px 20px;
 
     img {
         max-width: 30px;
         margin-right: 15px;
         cursor: pointer;
+
+        &:last-of-type {
+            margin-right: 0;
+        }
     }
 `
 

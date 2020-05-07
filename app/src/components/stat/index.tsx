@@ -26,7 +26,7 @@ const Stat: React.FC<StatProps> = ({ icon, label, value, total }) => {
 const Stats: React.FC<StatsProps> = ({ list }) => {
     return (
         <Styled.Main>
-            {list.map((item, count) => <Stat key={`stat-${count}`} {...item} />)}
+            {list.filter(item => item.value).map((item, count) => <Stat key={`stat-${count}`} {...item} />)}
         </Styled.Main>
     )
 };
