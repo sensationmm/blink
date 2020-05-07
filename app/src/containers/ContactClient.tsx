@@ -110,7 +110,7 @@ const ContactClient = (props: any) => {
 
                     <ClientStyled.Add className={'add centered paddedLarge'} onClick={() => setAddNew(true)}>
                         {!addNew
-                            ? <span>+ Add additional people such as CEOs or CFOs of {company.name}</span>
+                            ? <span>+ Add additional people as Authorised Signers for {company.name}</span>
                             : <MainStyled.ContentMini>
                                 <Blocks>
                                     <FormInput
