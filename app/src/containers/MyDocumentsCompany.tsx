@@ -74,7 +74,7 @@ const MyDocumentsCompany = (props: any) => {
 
         //add in non-required fields
         fields.splice(1, 0, 'doingBusinessAsName');
-        fields.splice(8, 0, 'incorporationAddress');
+        fields.splice(8, 0, 'incorporationAddress.fullAddress');
 
         structure = [
             { type: FormInput, label: 'Company Name' },
@@ -83,7 +83,7 @@ const MyDocumentsCompany = (props: any) => {
             { type: FormInput, label: 'Company contact email', noConfirm: true },
             { type: FormInput, label: 'Company contact number', noConfirm: true },
             { type: FormInput, label: 'Company type', noConfirm: true },
-            { type: FormInput, label: 'Primary address' },
+            { type: FormInput, label: 'Primary address', noConfirm: true },
             { type: FormInput, label: 'Registered address', noConfirm: true },
             { type: FormInput, label: 'Incorporation address (if different)', noConfirm: true },
             { type: FormInput, label: 'Incorporation country', noConfirm: true },
@@ -168,6 +168,18 @@ const MyDocumentsCompany = (props: any) => {
         saveEditField(`${src}.value`, base64File)
     }
 
+    const explodeValue = (field: string) => {
+        let value: string;
+        const fieldParts = field.split('.');
+        if (fieldParts.length === 2) {
+            value = getValue(loadedCompanyStructure[fieldParts[0]][fieldParts[1]]);
+        } else {
+            value = getValue(loadedCompanyStructure[field]);
+        }
+
+        return value;
+    }
+
     return (
         <MainStyled.MainSt className="company">
             <SetupStatus markets={currentUser.markets} />
@@ -192,7 +204,7 @@ const MyDocumentsCompany = (props: any) => {
                                     }
                                 })
                                 .filter((item: any) => {
-                                    const value = getValue(loadedCompanyStructure[item.field]);
+                                    const value = explodeValue(item.field);
 
                                     return (
                                         (
@@ -212,7 +224,7 @@ const MyDocumentsCompany = (props: any) => {
 
                                     if (item.type === FormInput) {
                                         config.label = item.label;
-                                        config.value = getValue(companyStructure[item.field]);
+                                        config.value = explodeValue(item.field);
                                         config.isEdit = true;
                                         config.validated = hasValue(companyStructure, item.field);
                                     } else if (item.type === FormCheckboxGroup) {
