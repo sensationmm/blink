@@ -68,7 +68,7 @@ export const BusinessDetails = [
     'countriesOfPrimaryBusinessOperations',
     'numberofLocationsOrBranches',
     'revenueCurrency',
-    'revenue',
+    'revenueAmount',
     'fundingSources',
     'revenueSources',
     'numberOfEmployees',
@@ -79,7 +79,7 @@ export const BusinessDetails = [
     'isInternetOnlyBusiness',
     'isSpecialPurposeVehicle',
     'holdClientFunds',
-    'paymentIntermediaryCheckPassed',
+    'isPaymentIntermediary',
     'sanctionsCountryChecksPassed',
 ];
 
