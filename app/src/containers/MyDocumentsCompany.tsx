@@ -172,7 +172,7 @@ const MyDocumentsCompany = (props: any) => {
         let value: string;
         const fieldParts = field.split('.');
         if (fieldParts.length === 2) {
-            value = getValue(loadedCompanyStructure[fieldParts[0]][fieldParts[1]]);
+            value = getValue(loadedCompanyStructure[fieldParts[0]]?.[fieldParts[1]]);
         } else {
             value = getValue(loadedCompanyStructure[field]);
         }
