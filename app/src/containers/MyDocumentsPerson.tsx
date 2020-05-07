@@ -285,7 +285,7 @@ const MyDocumentsPerson = (props: any) => {
                                         <div>
                                             <FormInput
                                                 stateKey={'countryOfTaxResidence.value'}
-                                                label={'Country of tax residence'}
+                                                label={'Tax Residence Country'}
                                                 onChange={(field: any, value: any) => saveEditField(field, value, "distinctShareholders", shareholder.docId)}
                                                 value={getValue(shareholder.countryOfTaxResidence)}
                                                 isEdit
