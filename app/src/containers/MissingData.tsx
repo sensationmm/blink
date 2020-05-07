@@ -505,7 +505,7 @@ const MissingData = (props: any) => {
                 actionPrimary={getValidation}
                 disabledPrimary={!employeeConfirmed}
                 header={<TermsAccept>
-                    I confirm as a Blink employee this information is accurate based on the verifiable sources in accordance
+                    I confirm as a Blink employee this information is accurate based on verifiable sources in accordance
                     with existing policies and standards
                     <FormCheckbox style={'confirm'} onChange={() => setEmployeeConfirmed(!employeeConfirmed)} checked={employeeConfirmed} />
                 </TermsAccept>}
