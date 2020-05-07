@@ -42,7 +42,7 @@ export const Person = [
     'countryOfTaxResidence',
     'taxId',
     'emailAddress',
-    'phoneNumber',
+    'contactPhone',
     'role'
 ];
 

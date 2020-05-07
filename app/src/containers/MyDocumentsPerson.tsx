@@ -35,7 +35,7 @@ const ManualApproval = (props: any) => {
 
     const [mobile, setMobile] = useState('');
     const [email, setEmail] = useState('');
-    const [done, setDone] = useState(value ?.substr(0, 5) === 'Notif');
+    const [done, setDone] = useState(value?.substr(0, 5) === 'Notif');
 
     const onDone = () => {
         onSave(`${type}.value`, `Notification sent ${moment().format('DD.MM.YY')}`, "distinctShareholders", docId)
@@ -99,11 +99,11 @@ const MyDocumentsPerson = (props: any) => {
         hideLoader
     } = props;
 
-    const people = companyStructure ?.distinctShareholders.concat(companyStructure ?.officers);
+    const people = companyStructure?.distinctShareholders.concat(companyStructure?.officers);
     const shareholder = companyStructure && getByValue(people, 'docId', `${type}/${docId}`);
 
-    const manualPassport = shareholder ?.passport ?.file ?.substring(0, 5) === 'Notif';
-    const manualUtilityBill = shareholder ?.utilityBill ?.file ?.substring(0, 5) === 'Notif';
+    const manualPassport = shareholder?.passport?.file?.substring(0, 5) === 'Notif';
+    const manualUtilityBill = shareholder?.utilityBill?.file?.substring(0, 5) === 'Notif';
 
     const [manualID, setManualID] = useState(manualPassport);
     const [manualAddress, setManualAddress] = useState(manualUtilityBill);
@@ -119,8 +119,8 @@ const MyDocumentsPerson = (props: any) => {
         }
         Object.keys(validationErrors).forEach(market => {
             const marketErrors = validationErrors[market];
-            if (marketErrors ?.[field] ?.validation) {
-                errors = errors.concat(marketErrors[field] ?.validation);
+            if (marketErrors?.[field]?.validation) {
+                errors = errors.concat(marketErrors[field]?.validation);
             }
         });
 
@@ -139,8 +139,8 @@ const MyDocumentsPerson = (props: any) => {
 
     const saveShareholder = async () => {
         showLoader('Saving');
-        const passport = shareholder.passport ?.file;
-        const utilityBill = shareholder.utilityBill ?.file;
+        const passport = shareholder.passport?.file;
+        const utilityBill = shareholder.utilityBill?.file;
 
         Person.filter((item: any) => item !== 'passport.file' && item !== 'utilityBill.file')
             .forEach(async (item: any) => {
@@ -152,7 +152,7 @@ const MyDocumentsPerson = (props: any) => {
             passportValue.validation = "certified"
         }
         passport && await apiEditField(shareholder.docId, 'passport', passportValue, currentUser.localId);
-        
+
         const utilityBillValue: any = { file: utilityBill };
         if (utilityBillMustBeCertified) {
             utilityBillValue.validation = "certified"
@@ -216,7 +216,7 @@ const MyDocumentsPerson = (props: any) => {
                                     <FormUploader
                                         id={'passport'}
                                         onUpload={handleUpload}
-                                        uploaded={!manualPassport && shareholder.passport ?.file}
+                                        uploaded={!manualPassport && shareholder.passport?.file}
                                         onClearUpload={() => saveEditField('passport.value', null, 'distinctShareholders', shareholder.docId)}
                                     />
                                 </Blocks>
@@ -224,7 +224,7 @@ const MyDocumentsPerson = (props: any) => {
                                     type={'passport'}
                                     docId={shareholder.docId} onSave={saveEditField}
 
-                                    value={shareholder.passport ?.file}
+                                    value={shareholder.passport?.file}
                                 />
                             }
                         </>
@@ -264,7 +264,7 @@ const MyDocumentsPerson = (props: any) => {
                                     <FormUploader
                                         id={'utilityBill'}
                                         onUpload={handleUpload}
-                                        uploaded={!manualUtilityBill && shareholder.utilityBill ?.file}
+                                        uploaded={!manualUtilityBill && shareholder.utilityBill?.file}
                                         onClearUpload={() => saveEditField('utilityBill.value', null, 'distinctShareholders', shareholder.docId)}
                                     />
                                 </Blocks>
@@ -272,7 +272,7 @@ const MyDocumentsPerson = (props: any) => {
                                     type={'utilityBill'}
                                     docId={shareholder.docId}
                                     onSave={saveEditField}
-                                    value={shareholder.utilityBill ?.file}
+                                    value={shareholder.utilityBill?.file}
                                 />
                             }
                         </>
@@ -306,25 +306,25 @@ const MyDocumentsPerson = (props: any) => {
                                     }
                                 </Styled.TaxBlock>
 
-                                {validationResults.indexOf('contactEmail') > -1 &&
+                                {validationResults.indexOf('emailAddress') > -1 &&
                                     <div>
                                         <FormInput
-                                            stateKey={'contactEmail.value'}
+                                            stateKey={'emailAddress.value'}
                                             label={'Contact email'}
                                             onChange={(field: any, value: any) => saveEditField(field, value, "distinctShareholders", shareholder.docId)}
-                                            value={getValue(shareholder.contactEmail)}
+                                            value={getValue(shareholder.emailAddress)}
                                             isEdit
                                         />
                                     </div>
                                 }
 
-                                {validationResults.indexOf('phoneNumber') > -1 &&
+                                {validationResults.indexOf('contactPhone') > -1 &&
                                     <div>
                                         <FormInput
-                                            stateKey={'phoneNumber.value'}
+                                            stateKey={'contactPhone.value'}
                                             label={'Contact phone'}
                                             onChange={(field: any, value: any) => saveEditField(field, value, "distinctShareholders", shareholder.docId)}
-                                            value={getValue(shareholder.phoneNumber)}
+                                            value={getValue(shareholder.contactPhone)}
                                             isEdit
                                         />
                                     </div>

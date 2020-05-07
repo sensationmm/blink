@@ -87,7 +87,7 @@ const MissingData = (props: any) => {
         if (value !== undefined && value !== '') {
             showLoader('Saving');
 
-            const res = await apiEditField(docId || props.companyStructure.docId, field, value, currentUser);
+            const res = await apiEditField(docId || props.companyStructure.docId, field, value, currentUser.localId);
             console.log('onEditField', res)
 
             hideLoader();
@@ -522,7 +522,7 @@ const mapStateToProps = (state: any) => ({
     companyStructure: state.screening.companyStructure,
     ownershipThreshold: state.screening.ownershipThreshold,
     validation: state.screening.validation,
-    currentUser: state.auth.user.localId
+    currentUser: state.auth.user
 });
 
 const actions = { saveEditField, showLoader, hideLoader, setCompletion, setErrors };
