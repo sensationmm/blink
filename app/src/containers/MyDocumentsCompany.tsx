@@ -96,7 +96,7 @@ const MyDocumentsCompany = (props: any) => {
     } else if (section === 'business-details') {
         title = 'Business details';
         subTitle = 'Please confirm or edit information';
-        heading = "All you need to do is make sure the auto-filled information is correct,<br />and fill in anything that is missing and confirm. That's it!";
+        heading = "All you need to do is make sure the auto-filled information is correct, and fill in anything that is missing and confirm. That's it!";
         icon = IconBusiness;
         subIcon = IconEdit;
 
